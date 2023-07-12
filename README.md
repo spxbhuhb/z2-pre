@@ -1,8 +1,6 @@
-Libraries for Kotlin Multiplatform development
+Libraries for Kotlin Multiplatform (mostly browser + JVM backend) development.
 
-## IMPORTANT
-
-While we shared these libraries with the community we do not guarantee backward compatibility nor timely resolution of issues.
+Status: **experimental**
 
 ## Libraries available
 
