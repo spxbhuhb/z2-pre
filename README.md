@@ -1,8 +1,8 @@
-Libraries for Kotlin Multiplatform (mostly browser + JVM backend) development.
+Library modules for Kotlin Multiplatform (mostly browser + JVM backend) development.
 
 Status: **experimental**
 
-## Libraries available
+## Modules
 
 | Library                                             | Purpose                                                   |
 |-----------------------------------------------------|-----------------------------------------------------------|
