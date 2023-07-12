@@ -1,7 +1,10 @@
 Libraries for Kotlin Multiplatform development
 
-**IMPORTANT** While we shared these libraries with the community we do not guarantee backward compatibility nor timely resolution of issues.
+## IMPORTANT
 
+While we shared these libraries with the community we do not guarantee backward compatibility nor timely resolution of issues.
+
+## Libraries available
 
 | Library                                             | Purpose                                                   |
 |-----------------------------------------------------|-----------------------------------------------------------|
@@ -11,3 +14,19 @@ Libraries for Kotlin Multiplatform development
 | [Material](https://github.com/spxbhuhb/z2-material) | Material 3 components for web browsers.                   |
 | [Form](https://github.com/spxbhuhb/z2-form)         | Web forms based on schema and Material 3.                 |
 | [Table](https://github.com/spxbhuhb/z2-table)       | Web table based on Material 3.                            |
+
+## License
+
+> Copyright (c) 2020-2023 Simplexion Kft, Hungary and contributors
+>
+> Licensed under the Apache License, Version 2.0 (the "License");
+> you may not use this work except in compliance with the License.
+> You may obtain a copy of the License at
+>
+>    http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.
