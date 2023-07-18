@@ -11,7 +11,7 @@ Status: **initial development**
 | Library                                               | Purpose                                                                 |
 |-------------------------------------------------------|-------------------------------------------------------------------------|
 | [Commons](https://github.com/spxbhuhb/z2-commons)     | Very basic common functions and data structures, interfaces for I18N.   |
-| [RPC](https://github.com/spxbhuhb/z2-rpc)             | Client-Server communication with simple function calls.                 |
+| [Service](https://github.com/spxbhuhb/z2-service)     | Client-Server communication with simple function calls.                 |
 | [Schematic](https://github.com/spxbhuhb/z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
 | [Material](https://github.com/spxbhuhb/z2-material)   | Material 3 components for web browsers.                                 |
 | [Form](https://github.com/spxbhuhb/z2-form)           | Web forms based on schema and Material 3.                               |
