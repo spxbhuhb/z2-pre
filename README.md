@@ -8,15 +8,14 @@ Status: **initial development**
 
 ## Modules
 
-| Library                                               | Purpose                                                                 |
-|-------------------------------------------------------|-------------------------------------------------------------------------|
-| [Commons](https://github.com/spxbhuhb/z2-commons)     | Very basic common functions and data structures, interfaces for I18N.   |
-| [Service](https://github.com/spxbhuhb/z2-service)     | Client-Server communication with simple function calls.                 |
-| [Schematic](https://github.com/spxbhuhb/z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
-| [Material](https://github.com/spxbhuhb/z2-material)   | Material 3 components for web browsers.                                 |
-| [Form](https://github.com/spxbhuhb/z2-form)           | Web forms based on schema and Material 3.                               |
-| [Table](https://github.com/spxbhuhb/z2-table)         | Web table based on Material 3.                                          |
-| [I18N](https://github.com/spxbhuhb/z2-i18n)           | Management module for I18N (define locales, translations, etc.          |
+| Library                                               | Purpose                                                                                |
+|-------------------------------------------------------|----------------------------------------------------------------------------------------|
+| [Commons](https://github.com/spxbhuhb/z2-commons)     | Very basic common functions and data structures, interfaces for I18N.                  |
+| [Service](https://github.com/spxbhuhb/z2-service)     | Client-Server communication with simple function calls.                                |
+| [Schematic](https://github.com/spxbhuhb/z2-schematic) | Data schemas for UI building, validation, communication, user feedback.                |
+| [Exposed](https://github.com/spxbhuhb/z2-exposed)     | Integration of [Exposed](https://github.com/JetBrains/Exposed), Schematic and Service. |
+| [Material](https://github.com/spxbhuhb/z2-material)   | Material 3 and other components for web browsers (activeTable, form).                  |
+| [I18N](https://github.com/spxbhuhb/z2-i18n)           | Management module for I18N (define locales, translations, etc.                         |
 
 ## License
 
