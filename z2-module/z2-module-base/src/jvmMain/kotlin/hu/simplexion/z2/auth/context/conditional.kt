@@ -114,3 +114,9 @@ fun ServiceContext?.isAccount(account: UUID<AccountPrivate>): ContextCheckResult
  */
 val ServiceContext?.account
     get() = checkNotNull(getSessionOrNull()?.account) { "there is no session in the service context" }
+
+/**
+ * Get [Session.account] of present, null if it doesn't.
+ */
+val ServiceContext?.accountOrNull
+    get() = getSessionOrNull()?.account

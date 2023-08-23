@@ -13,7 +13,6 @@ import kotlinx.datetime.Instant
 
 class HistoryImpl : HistoryApi, ServiceImpl {
 
-
     private val historyEntryTable = HistoryEntryTable(
         AccountPrivateTable()
     )
@@ -25,7 +24,7 @@ class HistoryImpl : HistoryApi, ServiceImpl {
     }
 
     fun add(
-        createdBy: UUID<AccountPrivate>,
+        createdBy: UUID<AccountPrivate>?,
         flags: Int,
         content: String
     ) {
@@ -33,7 +32,7 @@ class HistoryImpl : HistoryApi, ServiceImpl {
     }
 
     fun add(
-        createdBy: UUID<AccountPrivate>,
+        createdBy: UUID<AccountPrivate>?,
         createdFor: UUID<*>,
         flags: Int,
         contentType: String,

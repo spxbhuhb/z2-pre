@@ -13,8 +13,7 @@ import org.jetbrains.exposed.sql.statements.UpdateStatement
 
 open class SchematicUuidTable<T : Schematic<T>>(
     name : String,
-    val template : T,
-    val linked : Boolean = false
+    val template : T
 ) : UUIDTable(name, columnName = "uuid") {
 
     fun newInstance() =
@@ -89,7 +88,10 @@ open class SchematicUuidTable<T : Schematic<T>>(
     fun UpdateBuilder<*>.fromSchematic(table: Table, schematic: Schematic<*>) {
         val statement = this
         for (field in schematic.schematicSchema.fields) {
-            if (!linked && field.name == "id") continue
+            // this let the SQL generate the uuid instead using the one in the schematic
+            // on the long run we'll probably need a version which uses the supplied id but
+            // it is OK for now.
+            if (field.name == "uuid") continue
 
             @Suppress("UNCHECKED_CAST")
             val column = table.columns.firstOrNull { it.name == field.name } as? Column<Any?> ?: continue
