@@ -1,0 +1,56 @@
+.menu {
+    position: relative;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    grid-auto-rows: 48px; /** this will be trouble with dividers */
+    padding: 8px 0 8px 0;
+    border-radius: 4px;
+    min-width: 112px;
+    max-width: 280px;
+    background-color: var(--md-sys-color-surface-container);
+    box-shadow: var(--md-sys-elevation-level-2);
+    align-items: center;
+}
+
+.menu-row {
+    height: 48px;
+    cursor: pointer;
+    z-index: 0;
+}
+
+.menu-item {
+    z-index: 1;
+    cursor: pointer;
+    align-self: center;
+    color: var(--md-sys-color-on-surface);
+}
+
+.menu-item:hover ~ .menu-row {
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0.08;
+}
+
+.menu-item:hover ~ .menu-row + .menu-item ~ .menu-row {
+    background-color: transparent;
+}
+
+.menu-icon {
+    padding-left: 12px;
+    padding-right: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    align-self: center;
+}
+
+.menu-trailing {
+    padding-right: 12px;
+}
+
+.menu-divider {
+    box-sizing: border-box;
+    margin-left: -12px; /* compensation for menu padding */
+    margin-right: -12px;
+    padding-top: 8px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    margin-bottom: 8px;
+}

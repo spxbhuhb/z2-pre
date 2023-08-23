@@ -1,0 +1,23 @@
+.border-primary {
+    border: 1px solid var(--md-sys-color-primary);
+}
+
+.border-outline {
+    border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.elevation-level-1 {
+    box-shadow: var(--md-sys-elevation-level-1);
+}
+
+.elevation-level-2 {
+    box-shadow: var(--md-sys-elevation-level-2);
+}
+
+.elevation-level-3 {
+    box-shadow: var(--md-sys-elevation-level-3);
+}
+
+.shape-corner-large {
+    border-right: var(--md-sys-shape-corner-large);
+}

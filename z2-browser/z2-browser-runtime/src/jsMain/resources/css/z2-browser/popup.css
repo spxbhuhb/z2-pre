@@ -1,0 +1,13 @@
+.popup-parent {
+    position: relative;
+}
+
+.popup {
+    position: fixed;
+    outline: none;
+    z-index: 100;
+}
+
+.global-popup-container {
+    position: absolute;
+}

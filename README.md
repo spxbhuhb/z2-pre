@@ -1,22 +1,55 @@
-Library modules for Kotlin Multiplatform (mostly browser + JVM backend) development.
+[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-boot)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-boot)
+[![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+![Kotlin](https://img.shields.io/github/languages/top/spxbhuhb/z2)
+
+Libraries for Kotlin Multiplatform (mostly browser + JVM backend) development.
 
 Status: **initial development**
 
 **====  Important ====**
 
-**Z2 is under its initial development. Links my be broken, parts may be missing.**
+**Z2 is under its initial development. Links may be broken, parts may be missing.**
 
 ## Modules
 
-| Library                                               | Purpose                                                                 |
-|-------------------------------------------------------|-------------------------------------------------------------------------|
-| [Commons](https://github.com/spxbhuhb/z2-commons)     | Very basic common functions and data structures, interfaces for I18N.   |
-| [Service](https://github.com/spxbhuhb/z2-service)     | Client-Server communication with simple function calls.                 |
-| [Schematic](https://github.com/spxbhuhb/z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
-| [Material](https://github.com/spxbhuhb/z2-material)   | Material 3 components for web browsers.                                 |
-| [Form](https://github.com/spxbhuhb/z2-form)           | Web forms based on schema and Material 3.                               |
-| [Table](https://github.com/spxbhuhb/z2-table)         | Web table based on Material 3.                                          |
-| [I18N](https://github.com/spxbhuhb/z2-i18n)           | Management module for I18N (define locales, translations, etc.          |
+| Library                   | Purpose                                                                 |
+|---------------------------|-------------------------------------------------------------------------|
+| [Commons](z2-commons)     | Very basic common functions and data structures, interfaces for I18N.   |
+| [Service](z2-service)     | Client-Server communication with simple function calls.                 |
+| [Schematic](z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
+| [Browser](z2-browser)     | Material 3 components for web browsers.                                 |
+| [Module](z2-module)       | Fully functional application modules (UI + Backend, SQL with Exposed)   |
+
+## Gradle Dependency
+
+You can use many of the modules independently, check the module documentation for details.
+
+That said, the easiest way is to depend on `z2-boot` which contains everything.
+
+`settings.gradle.kts`
+
+```kotlin
+pluginManagement {
+    includeBuild("../z2-schematic/z2-schematic-gradle-plugin")
+    includeBuild("../z2-service/z2-service-gradle-plugin")
+}
+```
+
+`build.gradle.kts`
+
+```kotlin
+plugins {
+    kotlin("multiplatform") version "1.9.0"
+    id("hu.simplexion.z2.schematic") version "<schematic-plugin-version>"
+    id("hu.simplexion.z2.service") version "<service-plugin-version>"
+}
+```
+
+```kotlin
+sourceSets["commonMain"].dependencies {
+    implementation("hu.simplexion.z2:z2-boot:$z2_boot_version")
+}
+```
 
 ## License
 

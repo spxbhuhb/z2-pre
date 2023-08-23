@@ -1,0 +1,30 @@
+@startuml
+
+left to right direction
+
+component Commons
+component Service
+component Schematic
+component I18N
+component Auth
+component Blob
+component Email
+
+[Service] --> [Commons]
+[Schematic] --> [Commons]
+
+component "Typically used together" {
+    [Exposed]
+    [Browser]
+    portin "used by"
+    portout "depends on"
+}
+
+"depends on" --> [Service]
+"depends on" --> [Schematic]
+
+[I18N] --> "used by"
+[Auth] --> "used by"
+[Blob] --> "used by"
+[Email] --> "used by"
+@enduml
