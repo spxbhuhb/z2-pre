@@ -2,7 +2,6 @@
 
 [![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-browser-runtime)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-browser-runtime)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
-![Kotlin](https://img.shields.io/github/languages/top/spxbhuhb/z2-browser)
 
 [Material 3](https://m3.material.io) and other components for Kotlin/JS.
 
