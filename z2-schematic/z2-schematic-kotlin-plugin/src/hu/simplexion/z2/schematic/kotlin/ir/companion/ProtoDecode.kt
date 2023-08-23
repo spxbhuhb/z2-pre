@@ -1,7 +1,7 @@
 package hu.simplexion.z2.schematic.kotlin.ir.companion
 
-import hu.simplexion.z2.schematic.kotlin.ir.DECODE_PROTO
-import hu.simplexion.z2.schematic.kotlin.ir.DECODE_PROTO_MESSAGE_NAME
+import hu.simplexion.z2.schematic.kotlin.DECODE_PROTO
+import hu.simplexion.z2.schematic.kotlin.DECODE_PROTO_MESSAGE_NAME
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter

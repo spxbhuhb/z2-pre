@@ -79,16 +79,20 @@ class Schema<ST : Schematic<ST>>(
 
     fun encodeProto(schematic: Schematic<*>) : ByteArray {
         val builder = ProtoMessageBuilder()
-        for (index in fields.indices) {
-            fields[index].encodeProto(schematic, index + 1, builder)
+        var fieldNumber = 1
+        for (field in fields) {
+            field.encodeProto(schematic, fieldNumber, builder)
+            fieldNumber += if (field.isNullable) 2 else 1
         }
         return builder.pack()
     }
 
     fun decodeProto(schematic: Schematic<*>, message: ProtoMessage?) : Schematic<*> {
         if (message == null) return schematic
-        for (index in fields.indices) {
-            fields[index].decodeProto(schematic, index + 1, message)
+        var fieldNumber = 1
+        for (field in fields) {
+            field.decodeProto(schematic, fieldNumber, message)
+            fieldNumber += if (field.isNullable) 2 else 1
         }
         return schematic
     }

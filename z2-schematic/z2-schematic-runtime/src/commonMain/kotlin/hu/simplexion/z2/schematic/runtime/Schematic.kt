@@ -122,11 +122,5 @@ abstract class Schematic<ST : Schematic<ST>> {
         ) = StringSchemaField(default, minLength, maxLength, blank, pattern)
 
         fun <UT> uuid(default: UUID<UT>? = null, nil: Boolean? = null) = UuidSchemaField(default, nil)
-
-        fun <VT> SchemaField<VT>.nullable(): SchemaField<VT?> {
-            this.nullable = true
-            @Suppress("UNCHECKED_CAST")
-            return this as SchemaField<VT?>
-        }
     }
 }

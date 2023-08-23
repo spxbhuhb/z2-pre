@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.companion
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_SCHEMA_PROPERTY
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_SCHEMA_PROPERTY
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import hu.simplexion.z2.schematic.kotlin.ir.util.IrBuilder
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder

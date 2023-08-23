@@ -18,8 +18,8 @@ internal fun Z2.list() =
             table<Language> {
 
                 title {
-                    text = strings.languages
-                    action(strings.addLanguage) { add() }
+                    text = i18nStrings.languages
+                    action(i18nStrings.addLanguage) { add() }
                 }
 
                 rowId = { it.id }

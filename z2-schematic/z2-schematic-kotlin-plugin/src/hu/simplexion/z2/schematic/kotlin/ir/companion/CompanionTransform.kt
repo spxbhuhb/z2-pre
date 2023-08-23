@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.companion
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_COMPANION_CLASS
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_COMPANION_CLASS
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import hu.simplexion.z2.schematic.kotlin.ir.klass.SchematicClassTransform
 import hu.simplexion.z2.schematic.kotlin.ir.util.IrBuilder

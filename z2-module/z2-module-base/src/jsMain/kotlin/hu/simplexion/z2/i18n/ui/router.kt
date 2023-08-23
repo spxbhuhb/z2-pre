@@ -5,8 +5,8 @@ import hu.simplexion.z2.browser.routing.NavRouter
 
 @Suppress("unused")
 object languagesRouter : NavRouter() {
-    override val label = strings.languages
-    override val icon = icons.languages
+    override val label = i18nStrings.languages
+    override val icon = i18nIcons.languages
 
     override var useParentNav = true
 

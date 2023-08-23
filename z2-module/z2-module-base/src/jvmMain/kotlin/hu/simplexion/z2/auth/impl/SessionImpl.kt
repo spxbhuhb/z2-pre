@@ -9,8 +9,8 @@ import hu.simplexion.z2.auth.context.getSessionOrNull
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.CredentialType
 import hu.simplexion.z2.auth.model.Session
-import hu.simplexion.z2.auth.model.Session.Companion.SESSION_UUID
-import hu.simplexion.z2.auth.ui.strings
+import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
+import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.auth.util.Unauthorized
 import hu.simplexion.z2.commons.util.UUID
@@ -41,22 +41,22 @@ class SessionImpl: SessionApi, ServiceImpl {
         val account = accountPrivateTable.getByAccountNameOrNull(name)
 
         if (account == null) {
-            securityHistory(anonymousUuid, strings.loginFail, strings.accountNotFound)
+            securityHistory(anonymousUuid, authStrings.loginFail, authStrings.accountNotFound)
             return -1
         }
 
         try {
-            authenticate(account.id, password)
+            authenticate(account.uuid, password)
         } catch (ex : Unauthorized) {
             // FIXME, is locked meaningful? if we send it to the user it is possible to find account names by N failed auth
-            securityHistory(anonymousUuid, strings.loginFail, ex.reason, ex.locked)
+            securityHistory(anonymousUuid, authStrings.loginFail, ex.reason, ex.locked)
             return -1
         }
 
-        requireNotNull(serviceContext).data[SESSION_UUID] = Session().also {
-            it.account = account.id
+        requireNotNull(serviceContext).data[SESSION_TOKEN_UUID] = Session().also {
+            it.account = account.uuid
             it.fullName = account.fullName
-            it.roles = roleGrantTable.rolesOf(account.id, UUID.nil()).joinToString { r -> r.programmaticName }
+            it.roles = roleGrantTable.rolesOf(account.uuid, null).joinToString { r -> r.programmaticName }
         }
 
         return 0
@@ -64,9 +64,9 @@ class SessionImpl: SessionApi, ServiceImpl {
 
     override suspend fun logout() {
         ensureLoggedIn()
-        securityHistory(strings.logout, serviceContext.getSessionOrNull()?.id)
+        securityHistory(authStrings.logout, serviceContext.getSessionOrNull()?.uuid)
 
-        serviceContext?.data?.remove(SESSION_UUID)
+        serviceContext?.data?.remove(SESSION_TOKEN_UUID)
     }
 
     override suspend fun logout(session: UUID<Session>) {
@@ -117,8 +117,8 @@ class SessionImpl: SessionApi, ServiceImpl {
                 state.lastLoginFail = Clock.System.now()
                 state.locked = state.locked || (state.loginFailCount > securityPolicy.maxFailedLogins)
 
-                accountStatusTable.update(state.id, state)
-                securityHistory(accountId, strings.loginFail, result.reason, result.locked)
+                accountStatusTable.update(state.uuid, state)
+                securityHistory(accountId, authStrings.loginFail, result.reason, result.locked)
 
                 TransactionManager.current().commit()
 
@@ -130,7 +130,7 @@ class SessionImpl: SessionApi, ServiceImpl {
 
             state.loginFailCount = 0
 
-            securityHistory(accountId, strings.loginSuccess)
+            securityHistory(accountId, authStrings.loginSuccess)
 
             TransactionManager.current().commit()
 

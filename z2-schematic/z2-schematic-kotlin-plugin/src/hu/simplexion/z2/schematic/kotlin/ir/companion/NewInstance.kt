@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.companion
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_COMPANION_NEW_INSTANCE
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_COMPANION_NEW_INSTANCE
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody

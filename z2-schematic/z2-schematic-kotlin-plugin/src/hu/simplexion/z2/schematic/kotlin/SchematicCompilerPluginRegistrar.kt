@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
 
 /**
  * Registers the extensions into the compiler.
@@ -18,6 +19,7 @@ class SchematicCompilerPluginRegistrar: CompilerPluginRegistrar() {
     override val supportsK2 = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
+        FirExtensionRegistrarAdapter.registerExtension(SchematicPluginRegistrar())
         IrGenerationExtension.registerExtension(SchematicGenerationExtension())
     }
 

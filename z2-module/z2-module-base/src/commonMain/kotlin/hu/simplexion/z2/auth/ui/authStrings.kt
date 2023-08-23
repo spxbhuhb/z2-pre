@@ -3,7 +3,7 @@ package hu.simplexion.z2.auth.ui
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
 import hu.simplexion.z2.commons.util.UUID
 
-internal object strings : LocalizedTextStore(UUID("3638da2e-03ec-4f8b-88bf-e5e7a66cb063")) {
+object authStrings : LocalizedTextStore(UUID("3638da2e-03ec-4f8b-88bf-e5e7a66cb063")) {
     val login by "Belépés"
 
     val roles by "Szerepkörök"

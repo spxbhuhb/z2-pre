@@ -3,6 +3,10 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.klass
 
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_CHANGE
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_COMPANION_PROPERTY
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_SCHEMA_PROPERTY
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_VALUES_PROPERTY
 import hu.simplexion.z2.schematic.kotlin.ir.*
 import hu.simplexion.z2.schematic.kotlin.ir.companion.CompanionTransform
 import hu.simplexion.z2.schematic.kotlin.ir.util.IrBuilder

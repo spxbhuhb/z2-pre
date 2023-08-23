@@ -3,8 +3,8 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.klass
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_CHANGE_FIELD_INDEX_INDEX
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_CHANGE_VALUE_INDEX
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_CHANGE_FIELD_INDEX_INDEX
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_CHANGE_VALUE_INDEX
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import hu.simplexion.z2.schematic.kotlin.ir.util.IrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext

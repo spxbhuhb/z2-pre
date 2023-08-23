@@ -1,6 +1,6 @@
 package hu.simplexion.z2.schematic.kotlin.ir.util
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_COMPANION_NAME
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_COMPANION_NAME
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder

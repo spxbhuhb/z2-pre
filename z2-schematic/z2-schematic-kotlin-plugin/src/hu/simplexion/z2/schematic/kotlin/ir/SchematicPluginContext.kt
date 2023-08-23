@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir
 
+import hu.simplexion.z2.schematic.kotlin.*
 import hu.simplexion.z2.schematic.kotlin.ir.util.SchematicFunctionCache
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName

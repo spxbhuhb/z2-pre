@@ -16,12 +16,12 @@ interface RoleApi : Service {
 
     suspend fun remove(uuid: UUID<Role>)
 
-    suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : UUID<Any>)
+    suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?)
 
-    suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : UUID<Any>)
+    suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?)
 
-    suspend fun rolesOf(account: UUID<AccountPrivate>, context : UUID<Any>): List<Role>
+    suspend fun rolesOf(account: UUID<AccountPrivate>, context : String?): List<Role>
 
-    suspend fun grantedTo(role: UUID<Role>, context : UUID<Any>): List<AccountPublic>
+    suspend fun grantedTo(role: UUID<Role>, context : String?): List<AccountPublic>
 
 }

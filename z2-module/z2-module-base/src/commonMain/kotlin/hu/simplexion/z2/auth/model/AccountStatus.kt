@@ -4,7 +4,7 @@ import hu.simplexion.z2.schematic.runtime.Schematic
 
 class AccountStatus : Schematic<AccountStatus>() {
 
-    val id by uuid<AccountStatus>()
+    val uuid by uuid<AccountStatus>()
 
     var account by uuid<AccountPrivate>()
 

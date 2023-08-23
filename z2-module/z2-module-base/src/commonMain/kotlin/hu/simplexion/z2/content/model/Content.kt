@@ -8,5 +8,5 @@ class Content : Schematic<Content>() {
     var type by string(maxLength = 40)
     var size by long(min = 0)
     var sha256 by string(maxLength = 44).nullable()
-    var status by enum(ContentStatus.entries.toTypedArray())
+    var status by enum<ContentStatus>()
 }

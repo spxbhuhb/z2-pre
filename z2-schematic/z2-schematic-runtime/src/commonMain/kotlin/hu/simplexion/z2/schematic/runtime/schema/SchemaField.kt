@@ -5,16 +5,14 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.SchematicChange
 import hu.simplexion.z2.schematic.runtime.placeholder
-import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
-import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
-import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfoNull
+import hu.simplexion.z2.schematic.runtime.schema.validation.*
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
     var name: String
     val type: SchemaFieldType
-    var nullable: Boolean
+    val isNullable: Boolean
     val definitionDefault: VT?
     val naturalDefault : VT
 
@@ -32,7 +30,11 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
         val fails = mutableListOf<ValidationFailInfo>()
         val value = toTypedValue(anyValue, fails)
 
-        validateNullable(value, fails)
+        if (value != null) {
+            validateValue(value, fails)
+        } else {
+            validateNull(fails)
+        }
 
         return FieldValidationResult(
             name,
@@ -45,14 +47,13 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
         return validate(anyValue)
     }
 
-    fun validateNullable(value: VT?, fails: MutableList<ValidationFailInfo>) {
-        when {
-            value != null -> validateNotNullable(value, fails)
-            !nullable -> fails += ValidationFailInfoNull
-        }
+    fun validateValue(value: VT, fails: MutableList<ValidationFailInfo>) {
+
     }
 
-    fun validateNotNullable(value: VT, fails: MutableList<ValidationFailInfo>)
+    fun validateNull(fails: MutableList<ValidationFailInfo>) {
+        if (!isNullable) fails += fail(validationStrings.nullFail)
+    }
 
     fun asChange(value: Any?) = SchematicChange(name, value)
 
@@ -65,7 +66,7 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
     fun initWithDefault(schematic: Schematic<*>) {
         val value = when {
             definitionDefault != null -> definitionDefault
-            nullable -> null
+            isNullable -> null
             else -> naturalDefault
         }
         check(schematic.schematicValues.put(name, value) == null) { "value already initialized" }

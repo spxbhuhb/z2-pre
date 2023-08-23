@@ -23,7 +23,7 @@ internal fun Z2.list() =
             table<HistoryEntry> {
 
                 title {
-                    text = strings.historyOverview
+                    text = historyStrings.historyOverview
                 }
 
                 rowId = { it.id }

@@ -10,7 +10,7 @@ class Language : Schematic<Language>() {
     var isoCode by string() minLength 2 maxLength 2
     var countryCode by string() minLength 2 maxLength 2 pattern Regex("[A-Z]{2}")
     var nativeName by string() minLength 2 maxLength 30 blank false
-    var visible by boolean()
+    var visible by boolean().nullable()
 
     var parent by schematic<Language>().nullable()
     var type by enum<SchemaFieldType>()

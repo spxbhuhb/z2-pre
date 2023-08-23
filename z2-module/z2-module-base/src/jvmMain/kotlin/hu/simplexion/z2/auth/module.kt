@@ -5,7 +5,7 @@ import hu.simplexion.z2.auth.impl.RoleImpl
 import hu.simplexion.z2.auth.impl.SessionImpl
 import hu.simplexion.z2.auth.model.*
 import hu.simplexion.z2.auth.tables.*
-import hu.simplexion.z2.auth.ui.strings
+import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.registerWithTransaction
@@ -63,11 +63,11 @@ private fun getOrMakeSecurityOfficerRole(): Role {
         roleTable.list().firstOrNull { it.programmaticName == securityOfficerRoleName }
     } ?: Role()
 
-    if (role.id == UUID.NIL) {
+    if (role.uuid == UUID.NIL) {
         transaction {
             role.programmaticName = "security-officer"
             role.displayName = "Security Officer"
-            role.id = roleTable.insert(role)
+            role.uuid = roleTable.insert(role)
         }
     }
 
@@ -82,7 +82,7 @@ private fun getOrMakeAccount(
     val account = transaction {
         accountPrivateTable.getByAccountNameOrNull(name)
     }
-    if (account != null) return account.id
+    if (account != null) return account.uuid
 
     return transaction {
 
@@ -112,7 +112,7 @@ private fun getOrMakeAccount(
             }
         )
 
-        securityHistory(accountId, strings.addAccount, name, accountId)
+        securityHistory(accountId, authStrings.addAccount, name, accountId)
 
         return@transaction accountId
     }
@@ -120,8 +120,8 @@ private fun getOrMakeAccount(
 
 private fun grantRole(role: Role, account: UUID<AccountPrivate>) {
     transaction {
-        if (role.id in roleGrantTable.rolesOf(account, UUID.nil()).map { it.id }) return@transaction
-        roleGrantTable.insert(role.id, account, UUID.nil())
-        securityHistory(securityOfficerUuid, strings.grantRole, securityOfficerUuid, role.id, role.programmaticName, role.displayName)
+        if (role.uuid in roleGrantTable.rolesOf(account, null).map { it.uuid }) return@transaction
+        roleGrantTable.insert(role.uuid, account, null)
+        securityHistory(securityOfficerUuid, authStrings.grantRole, securityOfficerUuid, role.uuid, role.programmaticName, role.displayName)
     }
 }

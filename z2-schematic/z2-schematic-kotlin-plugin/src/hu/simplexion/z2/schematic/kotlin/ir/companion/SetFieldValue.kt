@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.schematic.kotlin.ir.companion
 
-import hu.simplexion.z2.schematic.kotlin.ir.SCHEMATIC_COMPANION_SET_FIELD_VALUE
+import hu.simplexion.z2.schematic.kotlin.SCHEMATIC_COMPANION_SET_FIELD_VALUE
 import hu.simplexion.z2.schematic.kotlin.ir.SchematicPluginContext
 import hu.simplexion.z2.schematic.kotlin.ir.klass.SchematicFieldVisitor
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder

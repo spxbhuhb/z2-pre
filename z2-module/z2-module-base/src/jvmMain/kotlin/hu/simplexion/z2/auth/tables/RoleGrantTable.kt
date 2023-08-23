@@ -21,13 +21,13 @@ open class RoleGrantTable(
 
     val account = reference("account", accountPrivateTable).index()
     val role = reference("role", roleTable)
-    val context = uuid("context").index()
+    val context = varchar("context", 50).index().nullable()
 
-    fun insert(inRole : UUID<Role>, inAccount: UUID<AccountPrivate>, inContext : UUID<Any>) {
+    fun insert(inRole : UUID<Role>, inAccount: UUID<AccountPrivate>, inContext : String?) {
         insert {
             it[role] = inRole.jvm
             it[account] = inAccount.jvm
-            it[context] = inContext.jvm
+            it[context] = inContext
         }
     }
 
@@ -35,18 +35,18 @@ open class RoleGrantTable(
         deleteWhere { role eq inRole.jvm }
     }
 
-    fun remove(inRole: UUID<Role>, inAccount: UUID<AccountPrivate>, inContext: UUID<Any>) {
+    fun remove(inRole: UUID<Role>, inAccount: UUID<AccountPrivate>, inContext: String?) {
         deleteWhere {
-            (role eq inRole.jvm) and (account eq inAccount.jvm) and (context eq inContext.jvm)
+            (role eq inRole.jvm) and (account eq inAccount.jvm) and (context eq inContext)
         }
     }
 
-    fun rolesOf(inAccount: UUID<AccountPrivate>, inContext : UUID<Any>?) : List<Role> {
+    fun rolesOf(inAccount: UUID<AccountPrivate>, inContext : String?) : List<Role> {
 
         val condition = if (inContext == null) {
             Op.build { account eq inAccount.jvm}
         } else {
-            Op.build { (account eq inAccount.jvm) and (context eq inContext.jvm)}
+            Op.build { (account eq inAccount.jvm) and (context eq inContext)}
         }
 
         return this
@@ -60,7 +60,7 @@ open class RoleGrantTable(
             .select(condition)
             .map {
                 Role().apply {// FIXME schematic init pattern
-                    id = it[role].value.z2()
+                    uuid = it[role].value.z2()
                     contextName = it[roleTable.contextName]
                     programmaticName = it[roleTable.programmaticName]
                     displayName = it[roleTable.displayName]
@@ -68,11 +68,11 @@ open class RoleGrantTable(
             }
     }
 
-    fun grantedTo(inRole: UUID<Role>, inContext: UUID<Any>?) : List<AccountPublic> {
+    fun grantedTo(inRole: UUID<Role>, inContext: String?) : List<AccountPublic> {
         val condition = if (inContext == null) {
             Op.build { role eq inRole.jvm}
         } else {
-            Op.build { (role eq inRole.jvm) and (context eq inContext.jvm)}
+            Op.build { (role eq inRole.jvm) and (context eq inContext)}
         }
 
         return this
@@ -88,7 +88,7 @@ open class RoleGrantTable(
             .select(condition)
             .map {
                 AccountPublic().apply {
-                    id = it[roleGrantTable.account].value.z2()
+                    uuid = it[roleGrantTable.account].value.z2()
                     fullName = it[accountPrivateTable.fullName]
                 }
             }

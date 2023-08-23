@@ -6,7 +6,7 @@ import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.context.has
 import hu.simplexion.z2.auth.context.isAccount
 import hu.simplexion.z2.auth.model.*
-import hu.simplexion.z2.auth.ui.strings
+import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.securityHistory
@@ -27,7 +27,7 @@ class AccountImpl: AccountApi, ServiceImpl {
     ) : UUID<AccountPrivate> {
 
         ensure(securityOfficerRole)
-        securityHistory(strings.addAccount, account.dump(), roles.joinToString("\n"))
+        securityHistory(authStrings.addAccount, account.dump(), roles.joinToString("\n"))
 
         val accountUuid = accountPrivateTable.insert(account)
 
@@ -37,7 +37,7 @@ class AccountImpl: AccountApi, ServiceImpl {
         accountCredentialsTable.insert(credentials)
 
         for(role in roles) {
-            roleGrantTable.insert(role, accountUuid, UUID.nil())
+            roleGrantTable.insert(role, accountUuid, null)
         }
         
         return accountUuid
@@ -45,7 +45,7 @@ class AccountImpl: AccountApi, ServiceImpl {
 
     override suspend fun add(credentials: AccountCredentials) {
         ensure(securityOfficerRole)
-        securityHistory(strings.changeCredentials, credentials.type, credentials.account)
+        securityHistory(authStrings.changeCredentials, credentials.type, credentials.account)
 
         // TODO enforce security policy
         accountCredentialsTable.insert(credentials)
@@ -63,14 +63,14 @@ class AccountImpl: AccountApi, ServiceImpl {
 
     override suspend fun lock(uuid: UUID<AccountPrivate>) {
         ensure(securityOfficerRole)
-        securityHistory(strings.setLocked, uuid, true)
+        securityHistory(authStrings.setLocked, uuid, true)
 
         accountStatusTable.setLocked(uuid, true)
     }
 
     override suspend fun unlock(uuid: UUID<AccountPrivate>) {
         ensure(securityOfficerRole)
-        securityHistory(strings.setLocked, uuid, false)
+        securityHistory(authStrings.setLocked, uuid, false)
 
         accountStatusTable.setLocked(uuid, true)
     }
