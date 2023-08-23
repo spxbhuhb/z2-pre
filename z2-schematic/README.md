@@ -33,9 +33,19 @@ When using schematic we work with:
 
 The first two is quite straightforward, while the third is a bit tricky, but very powerful.
 
-### Schematic Data Classes
+## Schematic Data Classes
 
 Schematic data classes store the data the application handles:
+
+```kotlin
+class Book : Schematic<Book>() { 
+    var title by string maxLength 100 blank false
+    var authors by list<Author> minSize 1 maxSize 10
+    var publicationDate by localDate after LocalDate(1970,1,1)
+}
+```
+
+If you don't like the infix notation, you can use parameters directly:
 
 ```kotlin
 class Book : Schematic<Book>() { 
@@ -48,23 +58,39 @@ class Book : Schematic<Book>() {
 When you have a schematic class, you can:
 
 * get and set the properties just as you do with any other class,
-* get the changes with the `schematicCollect` function
-* apply the changes to another instance of the class with the `schematicPatch` function
-* add event listeners which are called whenever a field changes
+* listen to events fired when a property value changes
+* collect the changes to perform partial updates
 * validate the data with the `Schema` of the class
 
-#### Default Values
+### Data Types
+
+Support for the following data types is built in. 
+
+| Stereotype   | Kotlin Type   | Definition Function | Natural Default                |
+|--------------|---------------|---------------------|--------------------------------|
+|              | Boolean       | `boolean()`         | `false`                        |
+|              | Duration      | `duration()`        | `Duration.ZERO`                |
+| email        | String        | `email()`           | `""`                           |
+|              | Enum<E>       | `enum<E>()`         | `E.entries.first()`            |
+|              | Instant       | `instant()`         | `Clock.System.now()`           |
+|              | Int           | `int()`             | `0`                            |
+|              | LocalDate     | `localDate()`       | `LocalDate.fromEpochDays(0)`   |
+|              | LocalDateTime | `localDateTime()`   | `LocalDateTime(0,1,1,0,0,0,0)` |
+|              | Long          | `long()`            | `0L`                           |
+| phone number | String        | `phoneNumber()`     | `""`                           |
+|              | Schematic<T>  | `schematic<T>()`    | `T()`                          |
+| secret       | String        | `secret()`          | `""`                           |
+|              | String        | `string()`          | `"" `                          |
+|              | UUID<T>       | `uuid<T>()`         | `UUID.nil<T>()`                |
 
 * All fields are initialized to their "natural" default values.
-* If you want a different value use the `default` parameter.
+* For nullable fields the natural default is `null`.
+* If you want a different default value use the `default` parameter or infix function.
+* Datetime types are from `kotlinx.datetime`
+* UUID is from Z2 Commons
 
-| Type              | Natural Default  |
-|-------------------|------------------|
-| any nullable type | `null`           |
-| Boolean           | `false`          |
-| Int               | `0`              |
-| String            | `"" `            |
-| UUID<T>           | `UUID.nil<T>()`  |
+To add a new field type just extend the existing ones or define your own by implementing
+the `SchemaField` interface.
 
 ### Schemas
 
@@ -144,8 +170,7 @@ data.
 
 ### Schematic Classes
 
-To define a schematic class, extend `Schematic` and use the provided field definition functions. You may find the [list
-of available functions](#field-definition-functions) below or [define your own](#writing-field-definition-functions).
+To define a schematic class, extend `Schematic` and use the provided field definition functions.
 
 ```kotlin
 class Test : Schematic<Test>() {
@@ -178,90 +203,3 @@ class Test : Schematic<Test> {
 The schema is independent of the data instances, but any given instance can access its own schema through the
 `schematicSchema` property.
 
-### Field Definition Functions
-
-```kotlin
-fun boolean(
-    default: Boolean = false
-)
-```
-
-```kotlin
-fun int(
-    default : Int = 0,
-    min : Int? = null,
-    max : Int? = null
-) : Int
-```
-
-```kotlin
-fun string(
-    default : String = "",
-    minLength : Int? = null,
-    maxLength : Int? = null,
-    blank : Boolean = true,
-    pattern : Regex? = null
-)
-```
-
-```kotlin
- fun <V> uuid(
-     default: UUID<V>? = null,
-     nil : Boolean? = null,
- )
-```
-
-### Writing Field Definition Functions
-
-To define an FDF you need to:
-
-1. create the function itself
-2. create a schema field class that extends `SchemaField`
-   1. All parameters of the FDF must be present as parameters of the field class constructor with the same name and same order after the overridden fields.
-
-```kotlin
-@Suppress("UNUSED_PARAMETER")
-@FieldDefinitionFunction(IntSchemaField::class)
-fun int(
-    default: Int = 0,
-    min: Int? = null,
-    max: Int? = null
-) = PlaceholderDelegateProvider<T,Int>()
-```
-
-```kotlin
-class IntSchemaField(
-    override val name: String,
-    val default: Int = 0,
-    val min: Int? = null,
-    val max: Int? = null,
-) : SchemaField {
-
-    override val type: SchemaFieldType
-        get() = SchemaFieldType.Int
-
-   override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): Int? {
-      if (anyValue == null) return null
-
-      return when (anyValue) {
-         is Int -> anyValue
-         is Number -> anyValue.toInt()
-         is String -> anyValue.toIntOrNull()
-         else -> {
-            fails += fail(validationStrings.integerFail)
-            null
-         }
-      }
-   }
-
-   override fun validateNotNullable(value: Int, fails: MutableList<ValidationFailInfo>) {
-      if (min != null && value < min) fails += fail(validationStrings.minValueFail, min)
-      if (max != null && value > max) fails += fail(validationStrings.maxValueFail, max)
-   }
-}
-```
-
-### Definition Transform Functions
-
-As of now there is one definition transform function (DTF): `nullable`.
-This transforms the field into a nullable one.

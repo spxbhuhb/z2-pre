@@ -31,12 +31,13 @@ class SchematicPluginContext(
     val schemaFieldNotFound = SCHEMA_FIELD_NOT_FOUND_CLASS.runtimeClass(RUNTIME_SCHEMA_PACKAGE).owner.constructors.first().symbol
     val schemaFieldIsImmutable = SCHEMA_FIELD_IS_IMMUTABLE.runtimeClass(RUNTIME_SCHEMA_PACKAGE).owner.constructors.first().symbol
 
-    val fdfAnnotationConstructor = FIELD_DEFINITION_FUNCTION_CLASS.runtimeClass().owner.constructors.first().symbol
-    val dtfAnnotationConstructor = DEFINITION_TRANSFORM_FUNCTION_CLASS.runtimeClass().owner.constructors.first().symbol
     val safAnnotationConstructor = SCHEMATIC_ACCESS_FUNCTION_CLASS.runtimeClass().owner.constructors.first().symbol
 
     val schemaFieldClass = SCHEMA_FIELD_CLASS.runtimeClass(RUNTIME_SCHEMA_PACKAGE)
     val schemaFieldType = schemaFieldClass.defaultType
+    val schemaFieldSetName = schemaFieldClass.functionByName(SCHEMA_FIELD_SET_FIELD_NAME)
+    val schematicSchemaFieldClass = SCHEMATIC_SCHEMA_FIELD_CLASS.runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
+    val schematicSchemaFieldSetCompanion = schematicSchemaFieldClass.functionByName(SCHEMATIC_SCHEMA_FIELD_SET_COMPANION)
 
     val schematicCompanionClass = SCHEMATIC_COMPANION_CLASS.runtimeClass()
     val schematicCompanionSchematicSchema = schematicCompanionClass.propertySymbol(SCHEMATIC_SCHEMA_PROPERTY)

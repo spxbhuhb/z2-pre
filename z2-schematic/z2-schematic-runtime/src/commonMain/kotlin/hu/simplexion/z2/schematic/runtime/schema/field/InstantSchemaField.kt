@@ -11,12 +11,14 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 
-class InstantSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: Instant?
+open class InstantSchemaField(
+    override var definitionDefault: Instant?
 ) : SchemaField<Instant> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.Instant
@@ -50,4 +52,8 @@ class InstantSchemaField(
         schematic.schematicValues[name] = value
     }
 
+    infix fun default(value: Instant?): InstantSchemaField {
+        this.definitionDefault = value
+        return this
+    }
 }

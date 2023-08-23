@@ -19,8 +19,8 @@ class Test : Schematic<Test>() {
     val booleanNullWithDefaultFalse by boolean(default = false).nullable() // false
     val booleanNullWithDefaultTrue by boolean(default = true).nullable() // true
 
-    val enum by enum(E.values())
-    val enumWithDefault by enum(E.values(), default = E.V2)
+    val enum by enum<E>()
+    val enumWithDefault by enum(E.V2)
 
     val int by int()
     val intWithDefault by int(default = 5)

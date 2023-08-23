@@ -13,7 +13,7 @@ class Test : Schematic<Test>() {
 
     var booleanField by boolean()
     var durationField by duration()
-    var enumField by enum(E.values())
+    var enumField by enum<E>()
     var emailField by email()
     var instantField by instant()
     var intField by int()

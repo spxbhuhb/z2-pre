@@ -8,13 +8,15 @@ import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
+import kotlinx.datetime.Instant
 
-class EnumSchemaField<E : Enum<E>>(
-    override val name: String,
-    override val nullable: Boolean,
+open class EnumSchemaField<E : Enum<E>>(
     val entries: Array<E>,
-    override val definitionDefault: E?
+    override var definitionDefault: E?
 ) : SchemaField<E> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.Enum
@@ -49,6 +51,11 @@ class EnumSchemaField<E : Enum<E>>(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.int(fieldNumber)
         schematic.schematicValues[name] = entries[value]
+    }
+
+    infix fun default(value: E?): EnumSchemaField<E> {
+        this.definitionDefault = value
+        return this
     }
 
 }

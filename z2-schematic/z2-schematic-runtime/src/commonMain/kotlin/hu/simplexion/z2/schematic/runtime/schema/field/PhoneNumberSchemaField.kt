@@ -18,11 +18,12 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
  * +CCC.NNNNNNNNNNNNNNxEEEEE
  * ```
  */
-class PhoneNumberSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    val blank : Boolean?
+open class PhoneNumberSchemaField(
+    var blank : Boolean?
 ) : SchemaField<String> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.Phone
@@ -54,6 +55,11 @@ class PhoneNumberSchemaField(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.string(fieldNumber)
         schematic.schematicValues[name] = value
+    }
+
+    infix fun blank(value: Boolean): PhoneNumberSchemaField {
+        this.blank = value
+        return this
     }
 
 }

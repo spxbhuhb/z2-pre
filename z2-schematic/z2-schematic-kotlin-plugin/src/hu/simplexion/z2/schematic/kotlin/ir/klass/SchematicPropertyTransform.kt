@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.isNullable
 
 /**
  * Replace the delegation with a getter and a setter.
@@ -95,15 +96,15 @@ class SchematicPropertyTransform(
                 args = arrayOf(irConst(property.name.identifier))
             )
 
-            val beforeAs = if (!fieldVisitor.nullable) {
+            val beforeAs = if (type.isNullable()) {
+                getValue
+            } else {
                 irCall(
                     irBuiltIns.checkNotNullSymbol,
                     args = arrayOf(getValue)
                 ).apply {
                     putTypeArgument(0, irBuiltIns.anyType)
                 }
-            } else {
-                getValue
             }
 
             +irReturn(

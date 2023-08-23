@@ -26,5 +26,4 @@ fun box(): String {
     if (test.schematicValues["intField"] != 11) return "Fail: not in schematicValues"
 
     return if (test.intField == 11) "OK" else "Fail: wrong value by field access"
-    return "OK"
 }

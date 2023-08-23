@@ -11,11 +11,12 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
 import kotlinx.datetime.LocalDateTime
 
-class LocalDateTimeSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: LocalDateTime?
+open class LocalDateTimeSchemaField(
+    override var definitionDefault: LocalDateTime?
 ) : SchemaField<LocalDateTime> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.LocalDateTime
@@ -47,6 +48,11 @@ class LocalDateTimeSchemaField(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.instance(fieldNumber, ProtoLocalDateTime)
         schematic.schematicValues[name] = value
+    }
+
+    infix fun default(value: LocalDateTime?): LocalDateTimeSchemaField {
+        this.definitionDefault = value
+        return this
     }
 
 }

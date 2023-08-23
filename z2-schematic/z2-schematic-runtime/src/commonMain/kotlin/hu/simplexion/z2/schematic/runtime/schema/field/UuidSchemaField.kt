@@ -10,12 +10,13 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
 
-class UuidSchemaField<T>(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: UUID<T>?,
-    val nil : Boolean?
+open class UuidSchemaField<T>(
+    override var definitionDefault: UUID<T>?,
+    var nil : Boolean?
 ) : SchemaField<UUID<T>> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.UUID
@@ -48,6 +49,16 @@ class UuidSchemaField<T>(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.uuid<T>(fieldNumber)
         schematic.schematicValues[name] = value
+    }
+
+    infix fun default(value: UUID<T>?): UuidSchemaField<T> {
+        this.definitionDefault = value
+        return this
+    }
+
+    infix fun nil(value: Boolean): UuidSchemaField<T> {
+        this.nil = value
+        return this
     }
 
 }

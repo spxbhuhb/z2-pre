@@ -14,7 +14,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
-abstract class Schematic<T : Schematic<T>> {
+abstract class Schematic<ST : Schematic<ST>> {
 
     /**
      * The unique handle of this schematic instance.
@@ -31,13 +31,13 @@ abstract class Schematic<T : Schematic<T>> {
      * Get the schema of this schematic. Returns with the value of
      * `schematicCompanion.schematicSchema`.
      */
-    open val schematicSchema : Schema<T>
+    open val schematicSchema: Schema<ST>
         get() = placeholder()
 
     /**
      * Get the companion object of this schematic.
      */
-    open val schematicCompanion : SchematicCompanion<T>
+    open val schematicCompanion: SchematicCompanion<ST>
         get() = placeholder()
 
     /**
@@ -62,7 +62,7 @@ abstract class Schematic<T : Schematic<T>> {
      * Creates a [SchematicChange] by calling `SchematicField.asChange` and then
      * calls [schematicChange] with it.
      */
-    fun schematicChange(fieldIndex : Int, value : Any?) {
+    fun schematicChange(fieldIndex: Int, value: Any?) {
         val field = schematicSchema.fields[fieldIndex]
         schematicChange(field, field.asChange(value))
     }
@@ -71,147 +71,62 @@ abstract class Schematic<T : Schematic<T>> {
      * Creates a [SchematicChange] by calling `SchematicField.asChange` and then
      * calls [schematicChange] with it.
      */
-    fun schematicChange(field : SchemaField<*>, value : Any?) {
+    fun schematicChange(field: SchemaField<*>, value: Any?) {
         schematicChange(field, field.asChange(value))
-    }
-
-    // -----------------------------------------------------------------------------------
-    // Delegation
-    //
-    // These are used to trick the compiler and the IDE into the proper data types while
-    // providing the schema information at the same time.
-    //
-    // Actually, the compiler plugin:
-    //
-    // - replaces all these delegations with:
-    //   - a get from schematicValues (for the getter)
-    //   - and call of schematicChange (for the setter)
-    // - creates a schema field with the appropriate type and settings
-    // - adds the schema field to the schema defined in the companion object
-    // -----------------------------------------------------------------------------------
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(BooleanSchemaField::class)
-    fun boolean(
-        default: Boolean? = null
-    ) = PlaceholderDelegateProvider<T,Boolean>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(DurationSchemaField::class)
-    fun duration(
-        default: Duration? = null
-    ) = PlaceholderDelegateProvider<T,Duration>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(EmailSchemaField::class)
-    fun email(
-        blank: Boolean? = null
-    ) = PlaceholderDelegateProvider<T,String>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(EnumSchemaField::class)
-    fun <E: Enum<E>> enum(
-        // TODO replace with enumEntries when it's available
-        // https://youtrack.jetbrains.com/issue/KT-53154/Deprecate-enumValues-and-replace-it-with-enumEntries-in-standard-library
-        entries : Array<E>,
-        default: E? = null
-    ) = PlaceholderDelegateProvider<T,E>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(InstantSchemaField::class)
-    fun instant(
-        default: Instant? = null
-    ) = PlaceholderDelegateProvider<T,Instant>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(IntSchemaField::class)
-    fun int(
-        default: Int? = null,
-        min: Int? = null,
-        max: Int? = null
-    ) = PlaceholderDelegateProvider<T,Int>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(LocalDateSchemaField::class)
-    fun localDate(
-        default: LocalDate? = null
-    ) = PlaceholderDelegateProvider<T, LocalDate>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(LocalDateTimeSchemaField::class)
-    fun localDateTime(
-        default: LocalDateTime? = null
-    ) = PlaceholderDelegateProvider<T,LocalDateTime>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(LongSchemaField::class)
-    fun long(
-        default: Long? = null,
-        min: Long? = null,
-        max: Long? = null
-    ) = PlaceholderDelegateProvider<T,Long>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(SchematicSchemaField::class)
-    fun <V:Schematic<V>> schematic(
-        default: V? = null
-    ) = PlaceholderDelegateProvider<T,V>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(PhoneNumberSchemaField::class)
-    fun phoneNumber(
-        blank: Boolean? = null
-    ) = PlaceholderDelegateProvider<T,String>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(StringSchemaField::class)
-    fun secret(
-        default: String? = null,
-        minLength: Int? = null,
-        maxLength: Int? = null,
-        blank : Boolean? = null,
-        pattern : Regex? = null
-    ) = PlaceholderDelegateProvider<T,String>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(StringSchemaField::class)
-    fun string(
-        default: String? = null,
-        minLength: Int? = null,
-        maxLength: Int? = null,
-        blank : Boolean? = null,
-        pattern : Regex? = null
-    ) = PlaceholderDelegateProvider<T,String>()
-
-    @Suppress("UNUSED_PARAMETER")
-    @FieldDefinitionFunction(UuidSchemaField::class)
-    fun <V> uuid(
-        default: UUID<V>? = null,
-        nil : Boolean? = null,
-    ) = PlaceholderDelegateProvider<T,UUID<V>>()
-
-    @Suppress("UNCHECKED_CAST")
-    @DefinitionTransformFunction
-    fun <V> PlaceholderDelegateProvider<T,V>.nullable() : PlaceholderDelegateProvider<T,V?> {
-        return this as PlaceholderDelegateProvider<T,V?>
-    }
-
-    class PlaceholderDelegate<T, V> : ReadWriteProperty<T, V> {
-        override fun getValue(thisRef: T, property: KProperty<*>): V = placeholder()
-        override fun setValue(thisRef: T, property: KProperty<*>, value : V) = placeholder()
-    }
-
-    class PlaceholderDelegateProvider<T, V> {
-        operator fun provideDelegate(thisRef: T, prop: KProperty<*>): ReadWriteProperty<T,V> {
-            return PlaceholderDelegate()
-        }
     }
 
     // -----------------------------------------------------------------------------------
     // Accessor Support
     // -----------------------------------------------------------------------------------
 
-    fun toSchematicAccessContext(fieldName : String) : SchematicAccessContext =
+    fun toSchematicAccessContext(fieldName: String): SchematicAccessContext =
         SchematicAccessContext(this, schematicSchema.getField(fieldName), schematicValues[fieldName])
 
+    companion object {
+
+        fun boolean(default: Boolean? = null) = BooleanSchemaField(default)
+
+        fun duration(default: Duration? = null) = DurationSchemaField(default)
+
+        fun email(blank: Boolean? = null) = EmailSchemaField(blank)
+
+        inline fun <reified E : Enum<E>> enum(default: E? = null) = EnumSchemaField(enumValues<E>(), default)
+
+        fun instant(default: Instant? = null) = InstantSchemaField(default)
+
+        fun int(default: Int? = null, min: Int? = null, max: Int? = null) = IntSchemaField(default, min, max)
+
+        fun localDate(default: LocalDate? = null) = LocalDateSchemaField(default)
+
+        fun localDateTime(default: LocalDateTime? = null) = LocalDateTimeSchemaField(default)
+
+        fun long(default: Long? = null, min: Long? = null, max: Long? = null) = LongSchemaField(default, min, max)
+
+        fun <VT : Schematic<VT>> schematic(default: VT? = null) = SchematicSchemaField(default)
+
+        fun phoneNumber(blank: Boolean? = null) = PhoneNumberSchemaField(blank)
+
+        fun secret(
+            default: String? = null,
+            minLength: Int? = null,
+            maxLength: Int? = null,
+            blank: Boolean? = null,
+        ) = SecretSchemaField(default, minLength, maxLength, blank)
+
+        fun string(
+            default: String? = null,
+            minLength: Int? = null,
+            maxLength: Int? = null,
+            blank: Boolean? = null,
+            pattern: Regex? = null
+        ) = StringSchemaField(default, minLength, maxLength, blank, pattern)
+
+        fun <UT> uuid(default: UUID<UT>? = null, nil: Boolean? = null) = UuidSchemaField(default, nil)
+
+        fun <VT> SchemaField<VT>.nullable(): SchemaField<VT?> {
+            this.nullable = true
+            @Suppress("UNCHECKED_CAST")
+            return this as SchemaField<VT?>
+        }
+    }
 }

@@ -22,7 +22,6 @@ class SchematicFunctionCache(
 ) {
 
     val types = mutableMapOf<IrSymbol, SchematicFunctionType>()
-    val fieldClasses = mutableMapOf<IrSymbol, FieldClassEntry>()
 
     class FieldClassEntry(
         val type : IrType,
@@ -35,10 +34,6 @@ class SchematicFunctionCache(
         return types.getOrPut(symbol) { add(symbol) }
     }
 
-    fun getFieldClass(symbol : IrSymbol) : FieldClassEntry {
-        return checkNotNull(fieldClasses[symbol]) { "missing field class for $symbol"}
-    }
-
     fun add(symbol: IrSimpleFunctionSymbol): SchematicFunctionType {
         val function = symbol.owner
         val annotations = function.annotations
@@ -46,25 +41,11 @@ class SchematicFunctionCache(
 
         for (annotation in function.annotations) {
             when (annotation.symbol) {
-                pluginContext.fdfAnnotationConstructor -> return add(symbol, annotation)
-                pluginContext.dtfAnnotationConstructor -> return SchematicFunctionType.DefinitionTransform
                 pluginContext.safAnnotationConstructor -> return SchematicFunctionType.SchematicAccess
             }
         }
 
         return SchematicFunctionType.Other
-    }
-
-    fun add(symbol: IrSimpleFunctionSymbol, annotation: IrConstructorCall): SchematicFunctionType {
-        val fieldClassExpression = annotation.getValueArgument(FDF_ANNOTATION_FIELD_CLASS_INDEX)
-        check(fieldClassExpression is IrClassReference) { "FDF annotation parameter is not a class reference" }
-
-        val classType = fieldClassExpression.classType
-        val constructor = checkNotNull(classType.getClass()?.primaryConstructor?.symbol) { "missing field class constructor for $classType" }
-
-        fieldClasses[symbol] = FieldClassEntry(classType, constructor)
-
-        return SchematicFunctionType.FieldDefinition
     }
 
 }

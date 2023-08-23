@@ -8,12 +8,14 @@ import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
+import kotlinx.datetime.Instant
 
-class BooleanSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: Boolean?
-) : SchemaField<Boolean> {
+open class BooleanSchemaField(
+    override var definitionDefault: Boolean?
+): SchemaField<Boolean> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.Boolean
@@ -45,6 +47,11 @@ class BooleanSchemaField(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.boolean(fieldNumber)
         schematic.schematicValues[name] = value
+    }
+
+    infix fun default(value: Boolean?): BooleanSchemaField {
+        this.definitionDefault = value
+        return this
     }
 
 }

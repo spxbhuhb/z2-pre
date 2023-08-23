@@ -8,9 +8,9 @@ import hu.simplexion.z2.schematic.runtime.SchematicCompanion
 import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
 import hu.simplexion.z2.schematic.runtime.schema.validation.SchematicValidationResult
 
-class Schema<T : Schematic<T>>(
-    val companion : SchematicCompanion<T>,
-    vararg val fields : SchemaField<T>
+class Schema<ST : Schematic<ST>>(
+    val companion : SchematicCompanion<ST>,
+    vararg val fields : SchemaField<*>
 ) {
 
     /**
@@ -74,7 +74,7 @@ class Schema<T : Schematic<T>>(
     }
 
     @PublicApi
-    fun newInstance() : T =
+    fun newInstance() : ST =
         companion.newInstance()
 
     fun encodeProto(schematic: Schematic<*>) : ByteArray {

@@ -40,6 +40,11 @@ const val FIELD_CONSTRUCTOR_VARARG_INDEX = 2
 const val RUNTIME_SCHEMA_PACKAGE = "hu.simplexion.z2.schematic.runtime.schema"
 const val SCHEMA_CLASS = "Schema"
 const val SCHEMA_FIELD_CLASS = "SchemaField"
+const val SCHEMA_FIELD_SET_FIELD_NAME = "setFieldName"
+
+const val RUNTIME_SCHEMA_FIELD_PACKAGE = "hu.simplexion.z2.schematic.runtime.schema.field"
+const val SCHEMATIC_SCHEMA_FIELD_CLASS = "SchematicSchemaField"
+const val SCHEMATIC_SCHEMA_FIELD_SET_COMPANION = "setCompanion"
 
 const val RUNTIME_CONTEXT_PACKAGE = "hu.simplexion.z2.schematic.runtime.access"
 const val SCHEMATIC_ACCESS_CONTEXT = "SchematicAccessContext"

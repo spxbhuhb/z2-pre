@@ -4,18 +4,29 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.SchematicChange
+import hu.simplexion.z2.schematic.runtime.placeholder
 import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfoNull
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
-interface SchemaField<T> {
-    val name: String
+interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
+    var name: String
     val type: SchemaFieldType
-    val nullable: Boolean
-    val definitionDefault: T?
-    val naturalDefault : T
+    var nullable: Boolean
+    val definitionDefault: VT?
+    val naturalDefault : VT
 
-    fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): T?
+    /**
+     * Called by the compiler plugin to set the field name.
+     */
+    fun setFieldName(name : String) : SchemaField<VT> {
+        this.name = name
+        return this
+    }
+
+    fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): VT?
 
     fun validate(anyValue: Any?): FieldValidationResult {
         val fails = mutableListOf<ValidationFailInfo>()
@@ -34,14 +45,14 @@ interface SchemaField<T> {
         return validate(anyValue)
     }
 
-    fun validateNullable(value: T?, fails: MutableList<ValidationFailInfo>) {
+    fun validateNullable(value: VT?, fails: MutableList<ValidationFailInfo>) {
         when {
             value != null -> validateNotNullable(value, fails)
             !nullable -> fails += ValidationFailInfoNull
         }
     }
 
-    fun validateNotNullable(value: T, fails: MutableList<ValidationFailInfo>)
+    fun validateNotNullable(value: VT, fails: MutableList<ValidationFailInfo>)
 
     fun asChange(value: Any?) = SchematicChange(name, value)
 
@@ -63,5 +74,9 @@ interface SchemaField<T> {
     fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder)
 
     fun decodeProto(schematic: Schematic<*>, fieldNumber : Int, message: ProtoMessage)
+
+    override fun getValue(thisRef: Any, property: KProperty<*>): VT = placeholder()
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value : VT) = placeholder()
 
 }

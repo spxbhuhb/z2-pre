@@ -9,13 +9,15 @@ import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
+import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-class DurationSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: Duration?
+open class DurationSchemaField(
+    override var definitionDefault: Duration?
 ) : SchemaField<Duration> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.Duration
@@ -49,4 +51,8 @@ class DurationSchemaField(
         schematic.schematicValues[name] = value
     }
 
+    infix fun default(value: Duration?): DurationSchemaField {
+        this.definitionDefault = value
+        return this
+    }
 }

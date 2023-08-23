@@ -10,14 +10,15 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.fail
 import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
 
 open class StringSchemaField(
-    override val name: String,
-    override val nullable: Boolean,
-    override val definitionDefault: String?,
-    val minLength: Int?,
-    val maxLength: Int?,
-    val blank : Boolean?,
-    val pattern : Regex?
+    override var definitionDefault: String?,
+    var minLength: Int?,
+    var maxLength: Int?,
+    var blank: Boolean?,
+    var pattern: Regex?
 ) : SchemaField<String> {
+
+    override var name: String = ""
+    override var nullable: Boolean = false
 
     override val type: SchemaFieldType
         get() = SchemaFieldType.String
@@ -36,10 +37,10 @@ open class StringSchemaField(
     override fun validateNotNullable(value: String, fails: MutableList<ValidationFailInfo>) {
         val length = value.length
 
-        if (minLength != null && length < minLength) fails += fail(validationStrings.minLengthFail, minLength)
-        if (maxLength != null && length > maxLength) fails += fail(validationStrings.maxValueFail, maxLength)
+        minLength?.let { if (length < it) fails += fail(validationStrings.minLengthFail, it) }
+        maxLength?.let { if (length > it) fails += fail(validationStrings.maxValueFail, it) }
         if (blank == false && value.isBlank()) fails += fail(validationStrings.blankFail)
-        if (pattern != null && !pattern.matches(value)) fails += fail(validationStrings.patternFail)
+        pattern?.let { if (! it.matches(value)) fails += fail(validationStrings.patternFail) }
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
@@ -50,6 +51,31 @@ open class StringSchemaField(
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.string(fieldNumber)
         schematic.schematicValues[name] = value
+    }
+
+    infix fun default(value: String?): StringSchemaField {
+        this.definitionDefault = value
+        return this
+    }
+
+    infix fun minLength(value: Int): StringSchemaField {
+        this.minLength = value
+        return this
+    }
+
+    infix fun maxLength(value: Int): StringSchemaField {
+        this.maxLength = value
+        return this
+    }
+
+    infix fun blank(value: Boolean): StringSchemaField {
+        this.blank = value
+        return this
+    }
+
+    infix fun pattern(value: Regex): StringSchemaField {
+        this.pattern = value
+        return this
     }
 
 }

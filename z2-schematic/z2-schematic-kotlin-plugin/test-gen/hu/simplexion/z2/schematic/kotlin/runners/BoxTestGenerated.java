@@ -3,9 +3,10 @@
 package hu.simplexion.z2.schematic.kotlin.runners;
 
 import com.intellij.testFramework.TestDataPath;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -31,6 +32,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("getAndSet.kt")
     public void testGetAndSet() throws Exception {
         runTest("testData/box/getAndSet.kt");
+    }
+
+    @Test
+    @TestMetadata("infix.kt")
+    public void testInfix() throws Exception {
+        runTest("testData/box/infix.kt");
     }
 
     @Test
