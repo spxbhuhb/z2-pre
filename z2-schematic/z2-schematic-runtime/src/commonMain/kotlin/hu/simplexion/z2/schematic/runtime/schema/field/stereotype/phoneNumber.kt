@@ -1,4 +1,4 @@
-package hu.simplexion.z2.schematic.runtime.schema.field
+package hu.simplexion.z2.schematic.runtime.schema.field.stereotype
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
@@ -27,7 +27,7 @@ interface PhoneNumberSchemaFieldCommon {
 
     fun validateValueCommon(value: String, fails: MutableList<ValidationFailInfo>) {
         if (blank == false && value.isBlank()) fails += fail(validationStrings.blankFail)
-        if (value.isNotBlank() && !phoneRegex.matches(value)) fails += fail(validationStrings.patternFail)
+        if (value.isNotBlank() && ! phoneRegex.matches(value)) fails += fail(validationStrings.patternFail)
     }
 }
 
@@ -102,7 +102,7 @@ open class NullablePhoneNumberSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.stringOrNull(fieldNumber, fieldNumber + 1, value)
     }
 

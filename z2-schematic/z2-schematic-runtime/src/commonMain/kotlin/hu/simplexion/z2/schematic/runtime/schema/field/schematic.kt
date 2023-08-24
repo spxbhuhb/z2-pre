@@ -4,6 +4,8 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.SchematicCompanion
+import hu.simplexion.z2.schematic.runtime.SchematicList
+import hu.simplexion.z2.schematic.runtime.schema.ListSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.Schema
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
@@ -129,7 +131,7 @@ open class NullableSchematicSchemaField<T : Schematic<T>>(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.instanceOrNull(fieldNumber, fieldNumber + 1, schema.companion, value)
     }
 
@@ -149,4 +151,31 @@ open class NullableSchematicSchemaField<T : Schematic<T>>(
         return this
     }
 
+}
+
+class SchematicListSchemaField<T : Schematic<T>>(
+    definitionDefault : MutableList<T>?
+) : ListSchemaField<T> {
+
+    override var name: String = ""
+
+    override val itemSchemaField = SchematicSchemaField<T>(null)
+
+    override val definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
+
+    // called by the compiler plugin to set the companion
+    fun setCompanion(companion: SchematicCompanion<T>) : SchematicListSchemaField<T> {
+        itemSchemaField.companion = companion
+        return this
+    }
+
+    override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        builder.instanceList(fieldNumber, itemSchemaField.companion, value)
+    }
+
+    override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
+        val value = message.instanceList(fieldNumber, itemSchemaField.companion)
+        schematic.schematicValues[name] = value
+    }
 }

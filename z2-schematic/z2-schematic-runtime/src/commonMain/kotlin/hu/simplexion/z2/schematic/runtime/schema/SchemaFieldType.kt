@@ -7,6 +7,7 @@ enum class SchemaFieldType {
     Email,
     Instant,
     Int,
+    List,
     LocalDate,
     LocalDateTime,
     Long,

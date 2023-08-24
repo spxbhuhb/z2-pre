@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.name.Name
 class SchematicPluginContext(
     val irContext: IrPluginContext,
 ) {
-
+    // TODO globals.kt and inline names here got a bit confused, clear it up
     val schematicClass = SCHEMATIC_CLASS.runtimeClass()
     val schematicToAccessContext = checkNotNull(schematicClass.getSimpleFunction(SCHEMATIC_TO_ACCESS_CONTEXT)) { "missing Schematic.toSchematicAccessContext"}
 
@@ -37,8 +37,15 @@ class SchematicPluginContext(
     val schemaFieldClass = SCHEMA_FIELD_CLASS.runtimeClass(RUNTIME_SCHEMA_PACKAGE)
     val schemaFieldType = schemaFieldClass.defaultType
     val schemaFieldSetName = schemaFieldClass.functionByName(SCHEMA_FIELD_SET_FIELD_NAME)
-    val schematicSchemaFieldClass = SCHEMATIC_SCHEMA_FIELD_CLASS.runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
-    val schematicSchemaFieldSetCompanion = schematicSchemaFieldClass.functionByName(SCHEMATIC_SCHEMA_FIELD_SET_COMPANION)
+
+    val schematicSchemaFieldClass = "SchematicSchemaField".runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
+    val schematicSchemaFieldSetCompanion = schematicSchemaFieldClass.functionByName("setCompanion")
+
+    val nullableSchematicSchemaFieldClass = "NullableSchematicSchemaField".runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
+    val nullableSchematicSchemaFieldSetCompanion = nullableSchematicSchemaFieldClass.functionByName("setCompanion")
+
+    val schematicListSchemaFieldClass = "SchematicListSchemaField".runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
+    val schematicListSchemaFieldClassSetCompanion = schematicListSchemaFieldClass.functionByName("setCompanion")
 
     val schematicCompanionClass = SCHEMATIC_COMPANION_CLASS.runtimeClass()
     val schematicCompanionSchematicSchema = schematicCompanionClass.propertySymbol(SCHEMATIC_SCHEMA_PROPERTY)

@@ -2,7 +2,11 @@ package hu.simplexion.z2.schematic.runtime.schema.field
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.runtime.SchematicCompanion
+import hu.simplexion.z2.schematic.runtime.SchematicList
+import hu.simplexion.z2.schematic.runtime.schema.ListSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
@@ -121,7 +125,7 @@ open class NullableStringSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.stringOrNull(fieldNumber, fieldNumber + 1, value)
     }
 
@@ -159,4 +163,54 @@ open class NullableStringSchemaField(
         return this
     }
 
+}
+
+class StringListSchemaField(
+    definitionDefault: MutableList<String>?,
+    minLength: Int?,
+    maxLength: Int?,
+    blank: Boolean?,
+    pattern: Regex?
+) : ListSchemaField<String> {
+
+    override var name: String = ""
+
+    override val itemSchemaField = StringSchemaField(null, minLength, maxLength, blank, pattern)
+
+    override var definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
+
+    override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        builder.stringList(fieldNumber, value)
+    }
+
+    override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
+        val value = message.stringList(fieldNumber).toMutableList()
+        schematic.schematicValues[name] = SchematicList(value, this)
+    }
+
+    infix fun default(value: MutableList<String>?): StringListSchemaField {
+        definitionDefault = value?.let { SchematicList(it, this) }
+        return this
+    }
+
+    infix fun minLength(value: Int): StringListSchemaField {
+        itemSchemaField.minLength = value
+        return this
+    }
+
+    infix fun maxLength(value: Int): StringListSchemaField {
+        itemSchemaField.maxLength = value
+        return this
+    }
+
+    infix fun blank(value: Boolean): StringListSchemaField {
+        itemSchemaField.blank = value
+        return this
+    }
+
+    infix fun pattern(value: Regex): StringListSchemaField {
+        itemSchemaField.pattern = value
+        return this
+    }
 }

@@ -1,6 +1,8 @@
-package hu.simplexion.z2.schematic.runtime.schema.field
+package hu.simplexion.z2.schematic.runtime.schema.field.stereotype
 
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.runtime.schema.field.NullableStringSchemaField
+import hu.simplexion.z2.schematic.runtime.schema.field.StringSchemaField
 
 open class SecretSchemaField(
     definitionDefault: String?,

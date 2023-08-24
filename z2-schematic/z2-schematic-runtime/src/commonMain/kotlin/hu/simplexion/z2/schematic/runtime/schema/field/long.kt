@@ -105,7 +105,7 @@ open class NullableLongSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.longOrNull(fieldNumber, fieldNumber + 1, value)
     }
 

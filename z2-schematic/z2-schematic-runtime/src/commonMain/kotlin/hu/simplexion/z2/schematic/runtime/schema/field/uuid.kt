@@ -4,6 +4,8 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.runtime.SchematicList
+import hu.simplexion.z2.schematic.runtime.schema.ListSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
@@ -97,7 +99,7 @@ open class NullableUuidSchemaField<T>(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.uuidOrNull(fieldNumber, fieldNumber + 1, value)
     }
 
@@ -120,4 +122,36 @@ open class NullableUuidSchemaField<T>(
         return this
     }
 
+}
+
+class UuidListSchemaField<T>(
+    definitionDefault: MutableList<UUID<T>>?,
+    nil: Boolean?,
+) : ListSchemaField<UUID<T>> {
+
+    override var name: String = ""
+
+    override val itemSchemaField = UuidSchemaField<T>(null, nil)
+
+    override var definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
+
+    override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        builder.uuidList(fieldNumber, value)
+    }
+
+    override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
+        val value = message.uuidList<T>(fieldNumber).toMutableList()
+        schematic.schematicValues[name] = SchematicList(value, this)
+    }
+
+    infix fun default(value: MutableList<UUID<T>>?): UuidListSchemaField<T> {
+        definitionDefault = value?.let { SchematicList(it, this) }
+        return this
+    }
+
+    infix fun nil(value: Boolean): UuidListSchemaField<T> {
+        itemSchemaField.nil = value
+        return this
+    }
 }

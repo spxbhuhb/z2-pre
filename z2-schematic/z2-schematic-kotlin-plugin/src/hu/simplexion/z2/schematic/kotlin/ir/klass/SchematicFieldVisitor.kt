@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrVarargElement
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.getClass
@@ -64,18 +65,25 @@ class SchematicFieldVisitor(
         val schemaFieldType = fieldBuildCall.type
         check(schemaFieldType.isSubtypeOfClass(pluginContext.schemaFieldClass)) { "delegate does not implement SchemaField: $codePoint" }
 
-        if (! schemaFieldType.isSubtypeOfClass(pluginContext.schematicSchemaFieldClass)) {
-            return fieldBuildCall
+        return with (pluginContext) {
+            when {
+                schemaFieldType.isSubtypeOfClass(schematicSchemaFieldClass) -> setCompanion(fieldBuildCall, schematicSchemaFieldSetCompanion)
+                schemaFieldType.isSubtypeOfClass(nullableSchematicSchemaFieldClass) -> setCompanion(fieldBuildCall, nullableSchematicSchemaFieldSetCompanion)
+                schemaFieldType.isSubtypeOfClass(schematicListSchemaFieldClass) -> setCompanion(fieldBuildCall, schematicListSchemaFieldClassSetCompanion)
+                else -> fieldBuildCall
+            }
         }
+    }
 
-        val companion = fieldBuildCall.typeArguments
+    fun setCompanion(fieldBuildCall: IrCall, setCompanionFun : IrSimpleFunctionSymbol) : IrExpression {
+        val companion = getTypeArguments(fieldBuildCall)
             .filterNotNull()
             .filter { it.isSubtypeOfClass(pluginContext.schematicClass) }
             .map { it.getCompanion() }
             .single()
 
         return irCall(
-            pluginContext.schematicSchemaFieldSetCompanion,
+            setCompanionFun,
             dispatchReceiver = fieldBuildCall
         ).also {
             it.putValueArgument(0, irGetObject(companion.symbol))
@@ -90,6 +98,19 @@ class SchematicFieldVisitor(
         val classId = ClassId(typeFqName.parent(), Name.identifier(typeFqName.shortName().identifier + "\$Companion")) //.createNestedClassId(Name.identifier(COMPANION_OBJECT_NAME))
 
         return checkNotNull(pluginContext.irContext.referenceClass(classId)) { "cannot load companion for ${classId.asString()}" }.owner
+    }
+
+    fun getTypeArguments(call : IrCall) : List<IrType?> {
+        var current = call
+        while (current.typeArguments.isEmpty()) {
+            val receiver = current.dispatchReceiver
+            if (receiver is IrCall) {
+                current = receiver
+            } else {
+                return emptyList()
+            }
+        }
+        return current.typeArguments
     }
 }
 

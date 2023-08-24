@@ -43,8 +43,11 @@ const val SCHEMA_FIELD_CLASS = "SchemaField"
 const val SCHEMA_FIELD_SET_FIELD_NAME = "setFieldName"
 
 const val RUNTIME_SCHEMA_FIELD_PACKAGE = "hu.simplexion.z2.schematic.runtime.schema.field"
-const val SCHEMATIC_SCHEMA_FIELD_CLASS = "SchematicSchemaField"
-const val SCHEMATIC_SCHEMA_FIELD_SET_COMPANION = "setCompanion"
+
+const val NULLABLE_SCHEMATIC_SCHEMA_FIELD_CLASS = "NullableSchematicSchemaField"
+const val SCHEMATIC_LIST_SCHEMA_FIELD_CLASS = "SchematicListSchemaField"
+
+const val SET_COMPANION = "setCompanion"
 
 const val RUNTIME_CONTEXT_PACKAGE = "hu.simplexion.z2.schematic.runtime.access"
 const val SCHEMATIC_ACCESS_CONTEXT = "SchematicAccessContext"

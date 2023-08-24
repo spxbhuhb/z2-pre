@@ -75,7 +75,7 @@ open class NullableLocalDateSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoLocalDate, value)
     }
 

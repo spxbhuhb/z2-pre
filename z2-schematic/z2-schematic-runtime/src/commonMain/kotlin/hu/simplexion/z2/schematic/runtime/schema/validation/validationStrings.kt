@@ -22,4 +22,5 @@ object validationStrings : LocalizedTextStore(UUID("63080e45-1b3e-41f6-aaa9-0bc6
     val localDateTimeFail by "Date and time value required"
     val schematicFail by "Value required"
     val enumFail by "Value from the pre-defined set required"
+    val listFail by "Value is not a list"
 }

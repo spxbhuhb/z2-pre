@@ -38,20 +38,32 @@ The first two is quite straightforward, while the third is a bit tricky, but ver
 Schematic data classes store the data the application handles:
 
 ```kotlin
-class Book : Schematic<Book>() { 
-    var title by string maxLength 100 blank false
-    var authors by list<Author> minSize 1 maxSize 10
-    var publicationDate by localDate after LocalDate(1970,1,1)
+import hu.simplexion.z2.schematic.runtime.Schematic
+
+class Author : Schematic<Author>() {
+    var name by string() minLength 5 maxLength 5 blank false
+}
+
+class Book : Schematic<Book>() {
+    var title by string() maxLength 100 blank false
+    var authors by schematicList<Author>()
+    var publicationDate by localDate()
 }
 ```
 
 If you don't like the infix notation, you can use parameters directly:
 
 ```kotlin
+import hu.simplexion.z2.schematic.runtime.Schematic
+
+class Author : Schematic<Author>() {
+    var name by string(minLength = 5, maxLength = 5, blank = false)
+}
+
 class Book : Schematic<Book>() { 
-    var title by string(maxLength = 100, blank = false)
-    var authors by list<Author>(minSize = 1, maxSize = 10)
-    var publicationDate by localDate(after = LocalDate(1970,1,1))
+    var title by string(minLength = 1, maxLength = 100, blank = false)
+    var authors by schematicList<Author>()
+    var publicationDate by localDate()
 }
 ```
 
@@ -66,31 +78,35 @@ When you have a schematic class, you can:
 
 Support for the following data types is built in. 
 
-| Stereotype   | Kotlin Type   | Definition Function | Natural Default                |
-|--------------|---------------|---------------------|--------------------------------|
-|              | Boolean       | `boolean()`         | `false`                        |
-|              | Duration      | `duration()`        | `Duration.ZERO`                |
-| email        | String        | `email()`           | `""`                           |
-|              | Enum<E>       | `enum<E>()`         | `E.entries.first()`            |
-|              | Instant       | `instant()`         | `Clock.System.now()`           |
-|              | Int           | `int()`             | `0`                            |
-|              | LocalDate     | `localDate()`       | `LocalDate.fromEpochDays(0)`   |
-|              | LocalDateTime | `localDateTime()`   | `LocalDateTime(0,1,1,0,0,0,0)` |
-|              | Long          | `long()`            | `0L`                           |
-| phone number | String        | `phoneNumber()`     | `""`                           |
-|              | Schematic<T>  | `schematic<T>()`    | `T()`                          |
-| secret       | String        | `secret()`          | `""`                           |
-|              | String        | `string()`          | `"" `                          |
-|              | UUID<T>       | `uuid<T>()`         | `UUID.nil<T>()`                |
+| Stereotype   | Kotlin Type               | Definition Function  | Natural Default                |
+|--------------|---------------------------|----------------------|--------------------------------|
+|              | Boolean                   | `boolean()`          | `false`                        |
+|              | Duration                  | `duration()`         | `Duration.ZERO`                |
+| email        | String                    | `email()`            | `""`                           |
+|              | Enum<E>                   | `enum<E>()`          | `E.entries.first()`            |
+|              | Instant                   | `instant()`          | `Clock.System.now()`           |
+|              | Int                       | `int()`              | `0`                            |
+|              | LocalDate                 | `localDate()`        | `LocalDate.fromEpochDays(0)`   |
+|              | LocalDateTime             | `localDateTime()`    | `LocalDateTime(0,1,1,0,0,0,0)` |
+|              | Long                      | `long()`             | `0L`                           |
+| phone number | String                    | `phoneNumber()`      | `""`                           |
+|              | Schematic<T>              | `schematic<T>()`     | `T()`                          |
+|              | MutableList<Schematic<T>> | `schematicList<T>()` | mutableListOf<T>()`            |
+| secret       | String                    | `secret()`           | `""`                           |
+|              | String                    | `string()`           | `"" `                          |
+|              | MutableList<String<T>>    | `stringList<T>()`    | mutableListOf<String>()`       |
+|              | UUID<T>                   | `uuid<T>()`          | `UUID.nil<T>()`                |
+|              | MutableList<UUID<T>>      | `uuidList<T>()`      | mutableListOf<UUID<T>>()`      |
 
 * All fields are initialized to their "natural" default values.
 * For nullable fields the natural default is `null`.
 * If you want a different default value use the `default` parameter or infix function.
 * Datetime types are from `kotlinx.datetime`
 * UUID is from Z2 Commons
+* List types are added on-demand and as of now they cannot contain null values.
 
 To add a new field type just extend the existing ones or define your own by implementing
-the `SchemaField` interface.
+the `SchemaField` or `ListSchemaField` interface. For example check the existing field definitions.
 
 ### Schemas
 

@@ -9,6 +9,10 @@ enum class E {
     V2
 }
 
+class A : Schematic<A>() {
+    var intField by int()
+}
+
 class Test : Schematic<Test>() {
 
     var booleanField by boolean()
@@ -21,10 +25,17 @@ class Test : Schematic<Test>() {
     var localDateTimeField by localDateTime()
     var longField by long()
     var phoneField by phoneNumber()
+
+    var schematicField by schematic<A>()
+    var schematicListField by schematic<Test>().nullable()
+
     var secretField by secret()
+
     var stringField by string()
+    var stringListField by stringList()
+
     var uuidField by uuid<Test>()
-    var schematicField by schematic<Test>().nullable()
+    var uuidListField by uuidList<Test>()
 }
 
 fun box(): String {

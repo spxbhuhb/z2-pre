@@ -75,7 +75,7 @@ open class NullableBooleanSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.booleanOrNull(fieldNumber, fieldNumber + 1, value)
     }
 

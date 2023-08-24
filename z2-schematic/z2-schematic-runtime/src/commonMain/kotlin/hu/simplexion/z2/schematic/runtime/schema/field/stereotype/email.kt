@@ -1,4 +1,4 @@
-package hu.simplexion.z2.schematic.runtime.schema.field
+package hu.simplexion.z2.schematic.runtime.schema.field.stereotype
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
@@ -98,7 +98,7 @@ open class NullableEmailSchemaField(
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
-        val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
+        val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
         builder.stringOrNull(fieldNumber, fieldNumber + 1, value)
     }
 

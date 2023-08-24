@@ -7,11 +7,12 @@ import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.runtime.schema.Schema
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 import hu.simplexion.z2.schematic.runtime.schema.field.*
+import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.EmailSchemaField
+import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.PhoneNumberSchemaField
+import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.SecretSchemaField
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
 abstract class Schematic<ST : Schematic<ST>> {
@@ -104,6 +105,8 @@ abstract class Schematic<ST : Schematic<ST>> {
 
         fun <VT : Schematic<VT>> schematic(default: VT? = null) = SchematicSchemaField(default)
 
+        fun <VT : Schematic<VT>> schematicList(default: MutableList<VT>? = null) = SchematicListSchemaField(default)
+
         fun phoneNumber(blank: Boolean? = null) = PhoneNumberSchemaField(blank)
 
         fun secret(
@@ -121,6 +124,23 @@ abstract class Schematic<ST : Schematic<ST>> {
             pattern: Regex? = null
         ) = StringSchemaField(default, minLength, maxLength, blank, pattern)
 
-        fun <UT> uuid(default: UUID<UT>? = null, nil: Boolean? = null) = UuidSchemaField(default, nil)
+        fun stringList(
+            default: MutableList<String>? = null,
+            minLength: Int? = null,
+            maxLength: Int? = null,
+            blank: Boolean? = null,
+            pattern: Regex? = null
+        ) = StringListSchemaField(default, minLength, maxLength, blank, pattern)
+
+        fun <UT> uuid(
+            default: UUID<UT>? = null,
+            nil: Boolean? = null
+        ) = UuidSchemaField(default, nil)
+
+        fun <UT> uuidList(
+            default: MutableList<UUID<UT>>? = null,
+            nil: Boolean? = null
+        ) = UuidListSchemaField(default, nil)
+
     }
 }

@@ -65,6 +65,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("schematicListField.kt")
+    public void testSchematicListField() throws Exception {
+        runTest("testData/box/schematicListField.kt");
+    }
+
+    @Test
     @TestMetadata("simple.kt")
     public void testSimple() throws Exception {
         runTest("testData/box/simple.kt");
