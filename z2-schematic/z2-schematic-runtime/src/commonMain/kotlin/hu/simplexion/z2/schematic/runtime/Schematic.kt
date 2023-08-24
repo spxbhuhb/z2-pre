@@ -62,6 +62,8 @@ abstract class Schematic<ST : Schematic<ST>> {
         check(fails.isEmpty()) { "cannot change field value: ${this::class.simpleName}.${field.name} value is type of ${value?.let{it::class.simpleName}}"}
 
         schematicValues[field.name] = typedValue
+
+        EventCentral.fire(SchematicEvent(handle, this, field))
     }
 
     /**

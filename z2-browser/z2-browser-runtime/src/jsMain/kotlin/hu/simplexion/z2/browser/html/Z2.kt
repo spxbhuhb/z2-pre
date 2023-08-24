@@ -46,12 +46,31 @@ open class Z2(
         htmlElement.focus()
     }
 
+    /**
+     * Clear the content of this element. Call [dispose] of all children
+     * and then remove all children. Clear the content of [htmlElement].
+     *
+     * Keeps itself functional, new children may be added and event listeners
+     * are still in effect.
+     *
+     * [clear] is intentionally not open, cleanup functions should go
+     * into [dispose].
+     */
     fun clear() {
         for (child in children) {
-            child.clear()
+            child.dispose()
         }
         children.clear()
         htmlElement.innerText = ""
+    }
+
+    /**
+     * Clear the content of this element by calling [clear], detach
+     * all even listeners. After [dispose] the element is considered
+     * non-existing.
+     */
+    open fun dispose() {
+        clear()
     }
 
     inline fun text(builder: () -> Any?) {

@@ -74,6 +74,11 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
 
     fun decodeProto(schematic: Schematic<*>, fieldNumber : Int, message: ProtoMessage)
 
+    fun getValue(schematic: Schematic<*>) : VT {
+        @Suppress("UNCHECKED_CAST") // TODO remove cast from getValue and build on field type
+        return schematic.schematicValues[name] as VT
+    }
+
     override fun getValue(thisRef: Any, property: KProperty<*>): VT = placeholder()
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value : VT) = placeholder()

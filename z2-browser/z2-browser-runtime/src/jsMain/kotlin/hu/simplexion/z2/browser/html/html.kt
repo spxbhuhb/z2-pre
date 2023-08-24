@@ -7,7 +7,7 @@ fun Z2.div(vararg classes: String, builder: Z2.() -> Unit): Z2 =
     Z2(this, document.createElement("div") as HTMLDivElement, classes, builder)
 
 fun Z2.pre(vararg classes: String, builder: Z2.() -> Unit): Z2 =
-    Z2(this, document.createElement("pre") as HTMLDivElement, classes, builder)
+    Z2(this, document.createElement("pre") as HTMLPreElement, classes, builder)
 
 fun Z2.input(vararg classes: String, builder: Z2.() -> Unit): Z2 =
     Z2(this, document.createElement("input") as HTMLInputElement, classes, builder)

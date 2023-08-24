@@ -15,7 +15,7 @@ import org.w3c.dom.HTMLInputElement
 
 class TextField(
     parent: Z2,
-    val value: String,
+    value: String,
     val label: LocalizedText? = null,
     val supportingText: LocalizedText? = null,
     val filled: Boolean = false,
@@ -49,6 +49,15 @@ class TextField(
         }
 
     val input = Z2(this, document.createElement("input") as HTMLInputElement, emptyArray(), {})
+
+    var value
+        get() = (input.htmlElement as HTMLInputElement).value
+        set(value) {
+            (input.htmlElement as HTMLInputElement).value = value
+            if (value.isNotEmpty()) {
+                showLabel()
+            }
+        }
 
     var beforeEditValue = value
 
@@ -148,10 +157,7 @@ class TextField(
 
         input.onFocus {
             setState(ComponentState.Focused)
-            when {
-                filled -> labelOuter.removeClass("hidden")
-                outlined -> labelInner.labelOutlinedContent()
-            }
+            showLabel()
         }
 
         input.onBlur {
@@ -170,6 +176,17 @@ class TextField(
                 "Enter" -> leave()
                 "Escape" -> inputElement.value = beforeEditValue
             }
+        }
+
+        input.onInput {
+            onChange(inputElement.value)
+        }
+    }
+
+    fun showLabel() {
+        when {
+            filled -> labelOuter.removeClass("hidden")
+            outlined -> labelInner.labelOutlinedContent()
         }
     }
 

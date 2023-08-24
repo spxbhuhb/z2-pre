@@ -4,6 +4,7 @@
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
+import hu.simplexion.z2.browser.demo.form.formDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
 import hu.simplexion.z2.browser.demo.pages.administration.administrationRouter
@@ -63,6 +64,7 @@ object componentRouter : NavRouter() {
     val card             by render(strings.card)             { cardDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
+    val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
     val modal            by render(strings.modal)            { modalDemo() }
     val navigationDrawer by render(strings.navigationDrawer) { navigationDrawerDemo() }
