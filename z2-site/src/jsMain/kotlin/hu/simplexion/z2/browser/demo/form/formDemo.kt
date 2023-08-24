@@ -12,7 +12,7 @@ import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.dump
 
 class TestData : Schematic<TestData>() {
-    var stringField by string()
+    var stringField by string() blank false
 }
 
 fun Z2.formDemo() =

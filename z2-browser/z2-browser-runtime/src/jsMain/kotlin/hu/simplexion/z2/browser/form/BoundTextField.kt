@@ -10,9 +10,9 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
 class BoundTextField(
-    parent : Z2? = null,
-    context : SchematicAccessContext,
-    buildFun : Z2.() -> TextField
+    parent: Z2? = null,
+    context: SchematicAccessContext,
+    buildFun: Z2.() -> TextField
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
@@ -22,7 +22,12 @@ class BoundTextField(
     val field = context.field
     lateinit var textField: TextField
 
-    val listener = AnonymousEventListener { textField.value = field.getValue(schematic).toString() }
+    val listener = AnonymousEventListener {
+        val value = field.getValue(schematic).toString()
+        textField.value = value
+        val vr = schematic.schematicSchema.validate(schematic)
+        textField.error = !(vr.fieldResults[field.name]?.valid ?: true)
+    }
 
     init {
         EventCentral.attach(schematic.handle, listener)
@@ -34,7 +39,6 @@ class BoundTextField(
         EventCentral.detach(schematic.handle, listener)
         super.clear()
     }
-
 
 
 }
