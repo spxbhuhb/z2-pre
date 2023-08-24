@@ -11,8 +11,3 @@ fun ServiceContext?.getSession(): Session =
 
 fun ServiceContext?.getSessionOrNull() =
     this?.let { it[SESSION_TOKEN_UUID] }
-
-fun ServiceContext?.addToken(uuid: UUID<*>) {
-    val session = getSession()
-    if (uuid.toString() !in session.tokens) session.tokens += ";$uuid"
-}

@@ -7,9 +7,8 @@ class Session : Schematic<Session>() {
 
     val uuid by uuid<Session>()
     val createdAt by instant()
-    var account by uuid <AccountPrivate>().nullable()
-    var roles by string() // FIXME session.roles should be a list
-    var tokens by string() // FIXME session.tokens shuld be a list
+    var account by uuid<AccountPrivate>().nullable()
+    var roles by stringList()
     var fullName by string()
 
     companion object {

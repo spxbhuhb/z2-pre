@@ -16,6 +16,4 @@ class HistoryEntry : Schematic<HistoryEntry>() {
 
     var contentType by string()
     var content by string()
-
-    companion object : SchematicCompanion<HistoryEntry>
 }

@@ -10,6 +10,7 @@ import hu.simplexion.z2.schematic.runtime.schema.field.*
 import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.EmailSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.PhoneNumberSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.field.stereotype.SecretSchemaField
+import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -52,28 +53,22 @@ abstract class Schematic<ST : Schematic<ST>> {
     // -----------------------------------------------------------------------------------
 
     /**
-     * Change the value of a field.
-     */
-    fun schematicChange(field: SchemaField<*>, change: SchematicChange) {
-        change.patch(schematicValues)
-        EventCentral.fire(SchematicEvent(handle, this, field))
-    }
-
-    /**
-     * Creates a [SchematicChange] by calling `SchematicField.asChange` and then
-     * calls [schematicChange] with it.
-     */
-    fun schematicChange(fieldIndex: Int, value: Any?) {
-        val field = schematicSchema.fields[fieldIndex]
-        schematicChange(field, field.asChange(value))
-    }
-
-    /**
-     * Creates a [SchematicChange] by calling `SchematicField.asChange` and then
-     * calls [schematicChange] with it.
+     * Changes the value of a field specified by [fieldIndex].
      */
     fun schematicChange(field: SchemaField<*>, value: Any?) {
-        schematicChange(field, field.asChange(value))
+        val fails = mutableListOf<ValidationFailInfo>()
+        val typedValue = field.toTypedValue(value, fails)
+
+        check(fails.isEmpty()) { "cannot change field value: ${this::class.simpleName}.${field.name} value is type of ${value?.let{it::class.simpleName}}"}
+
+        schematicValues[field.name] = typedValue
+    }
+
+    /**
+     * Changes the value of a field specified by [fieldIndex].
+     */
+    fun schematicChange(fieldIndex: Int, value: Any?) {
+        schematicChange(schematicSchema.fields[fieldIndex], value)
     }
 
     // -----------------------------------------------------------------------------------

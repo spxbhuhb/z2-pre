@@ -55,8 +55,6 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
         if (!isNullable) fails += fail(validationStrings.nullFail)
     }
 
-    fun asChange(value: Any?) = SchematicChange(name, value)
-
     /**
      * Initializes the field to its default value. This does **NOT** go through
      * the normal change process. No change added nor listener called.

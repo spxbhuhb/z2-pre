@@ -35,7 +35,7 @@ class SessionImpl : SessionApi, ServiceImpl {
 
     override suspend fun roles(): List<String> {
         ensuredByLogic("Session owner gets its own roles.")
-        return serviceContext.getSessionOrNull()?.roles?.split(";") ?: emptyList()
+        return serviceContext.getSessionOrNull()?.roles ?: emptyList()
     }
 
     override suspend fun login(name: String, password: String): Int {
@@ -57,7 +57,7 @@ class SessionImpl : SessionApi, ServiceImpl {
         requireNotNull(serviceContext).data[SESSION_TOKEN_UUID] = Session().also {
             it.account = account.uuid
             it.fullName = account.fullName
-            it.roles = roleGrantTable.rolesOf(account.uuid, null).joinToString { r -> r.programmaticName }
+            it.roles = roleGrantTable.rolesOf(account.uuid, null).map { it.programmaticName }
         }
 
         return 0

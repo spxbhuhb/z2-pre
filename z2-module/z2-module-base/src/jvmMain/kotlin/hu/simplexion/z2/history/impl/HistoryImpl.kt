@@ -39,7 +39,7 @@ class HistoryImpl : HistoryApi, ServiceImpl {
         content: String
     ) {
         historyEntryTable.insert(
-            HistoryEntry {
+            HistoryEntry().apply {
                 this.createdBy = createdBy
                 @Suppress("UNCHECKED_CAST")
                 this.createdFor = createdFor as UUID<Any>
