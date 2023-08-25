@@ -62,7 +62,7 @@ open class BrowserRouter(
 
             if (changeState) {
                 window.history.pushState(incrementNavCounter(), "", url)
-                trace { "[routing]  pushState  url=$url" }
+                trace { "[routing]  push-state  url=$url" }
             }
 
             val path = newPath.split('/')
@@ -110,7 +110,7 @@ open class BrowserRouter(
 
             val path = decodeURIComponent(window.location.pathname)
 
-            trace { "[routing]  onPopState  $path" }
+            trace { "[routing]  pop-state  $path" }
 
             open(path, window.location.search, window.location.hash, false)
         }

@@ -3,12 +3,12 @@ package hu.simplexion.z2.browser.demo.pages.administration.languages
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
-import hu.simplexion.z2.browser.form.field
-import hu.simplexion.z2.browser.form.submitTextButton
+import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
+import hu.simplexion.z2.browser.schematic.schematicTextButton
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 
@@ -44,6 +44,6 @@ internal fun languageModal(
 
         buttons {
             textButton(basicStrings.cancel) { closeWith(null) }
-            submitTextButton(language, buttonLabel) { closeWith(language) }
+            schematicTextButton(language, buttonLabel) { closeWith(language) }
         }
     }

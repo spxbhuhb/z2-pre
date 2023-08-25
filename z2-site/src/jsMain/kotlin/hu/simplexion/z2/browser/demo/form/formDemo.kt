@@ -1,11 +1,12 @@
 package hu.simplexion.z2.browser.demo.form
 
 import hu.simplexion.z2.browser.demo.strings
-import hu.simplexion.z2.browser.form.field
+import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.pre
 import hu.simplexion.z2.browser.layout.low
 import hu.simplexion.z2.browser.material.button.textButton
+import hu.simplexion.z2.browser.schematic.attach
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.util.hereAndNow
 import hu.simplexion.z2.schematic.runtime.Schematic
@@ -23,7 +24,7 @@ fun Z2.formDemo() =
 
         val dump = pre { }
 
-        EventCentral.attach(data.handle) {
+        attach(data) {
             dump.clear()
             dump.htmlElement.innerText = "${hereAndNow()}\n\n" + data.dump()
         }

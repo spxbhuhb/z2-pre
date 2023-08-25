@@ -3,10 +3,6 @@ package hu.simplexion.z2.browser.html
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 
-fun Z2.grid(vararg classes: String, builder: Z2.() -> Unit): Z2 =
-    Z2(this, document.createElement("div") as HTMLDivElement, classes, builder)
-        .apply { style.display = "grid" }
-
 var Z2.gridTemplateRows: String
     get() = style.getPropertyValue("grid-template-rows")
     set(value) {

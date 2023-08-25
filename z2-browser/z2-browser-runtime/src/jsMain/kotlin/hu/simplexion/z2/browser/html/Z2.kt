@@ -1,14 +1,16 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.commons.event.EventCentral
+import hu.simplexion.z2.commons.event.Z2EventListener
 import kotlinx.dom.addClass
 import kotlinx.dom.appendText
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLElement
 
 open class Z2(
-    val parent : Z2? = null,
+    val parent: Z2? = null,
     val htmlElement: HTMLElement,
-    classes : Array<out String>,
+    classes: Array<out String>,
     val builder: (Z2.() -> Unit)? = null,
 ) {
     val style
@@ -16,10 +18,15 @@ open class Z2(
 
     val children = mutableListOf<Z2>()
 
+    val listeners = mutableListOf<Z2EventListener>()
+
     init {
         builder?.let { this.it() }
         htmlElement.addClass(*classes)
-        parent?.htmlElement?.append(this.htmlElement)
+        parent?.let {
+            it.htmlElement.append(this.htmlElement)
+            it.children += this
+        }
     }
 
     fun append(child: Z2) {
@@ -32,12 +39,12 @@ open class Z2(
         htmlElement.removeChild(child.htmlElement)
     }
 
-    fun addClass(vararg classes : String) : Z2 {
+    fun addClass(vararg classes: String): Z2 {
         htmlElement.addClass(*classes)
         return this
     }
 
-    fun removeClass(vararg classes : String) : Z2 {
+    fun removeClass(vararg classes: String): Z2 {
         htmlElement.removeClass(*classes)
         return this
     }
@@ -70,6 +77,7 @@ open class Z2(
      * non-existing.
      */
     open fun dispose() {
+        EventCentral.detachAll(listeners)
         clear()
     }
 

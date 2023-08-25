@@ -19,7 +19,7 @@ abstract class Router<R>(
     val targets = mutableListOf<RoutingTarget<R>>()
 
     override fun open(receiver: R, path: List<String>) {
-        trace { "[routing]  $relativePath  OPEN  $absolutePath  path.size=${path.size} path=${path.joinToString("/")}" }
+        trace { "[routing]  open  router=${this::class.simpleName}  relativePath=$relativePath  absolutePath=$absolutePath  path.size=${path.size} path=${path.joinToString("/")}" }
 
         val subPath = path.drop(1 + parameters.size)
 
@@ -53,7 +53,7 @@ abstract class Router<R>(
     }
 
     open fun notFound(receiver: R, path: List<String>) {
-        trace { "[routing]  NOTFOUND  $absolutePath  remaining=$path" }
+        trace { "[routing]  notfound  router=${this::class.simpleName}  absolutePath=$absolutePath  remaining=$path" }
         throw IllegalStateException("routing path not found: fullPath=${absolutePath.joinToString { ", " }}  path=${path.joinToString { "/" }}")
     }
 

@@ -35,7 +35,7 @@ interface SchematicNode {
      * This method is **NOT** thread safe.
      */
     fun attach(listener: Z2EventListener) {
-        EventCentral.attach(schematicHandle, listener)
+        EventCentral.attach(listener)
         schematicListenerCount ++
     }
 
@@ -46,7 +46,7 @@ interface SchematicNode {
      */
     fun detach(listener: Z2EventListener) {
         schematicListenerCount --
-        EventCentral.detach(schematicHandle, listener)
+        EventCentral.detach(listener)
     }
 }
 

@@ -6,14 +6,14 @@ import hu.simplexion.z2.commons.util.use
 
 object EventCentral {
 
-    var trace = false
+    var trace = true
 
     private val mutex = Lock()
 
     val buses = mutableMapOf<Z2Handle, EventBus>()
 
     fun fire(event: Z2Event) {
-        if (trace) println("EventCentral.fire $event")
+        if (trace) println("[event-central]  fire  event=$event")
 
         val bus = mutex.use { buses[event.busHandle] } ?: return
 
@@ -22,27 +22,32 @@ object EventCentral {
         }
     }
 
-    fun attach(handle: Z2Handle, listenerFun: (event: Z2Event) -> Unit) {
-        if (trace) println("EventCentral.attach bus: $handle")
-        attach(handle, AnonymousEventListener(listenerFun))
+    fun attach(busHandle: Z2Handle, listenerFun: (event: Z2Event) -> Unit) {
+        attach(AnonymousEventListener(busHandle, listenerFun))
     }
 
-    fun attach(busHandle: Z2Handle, listener: Z2EventListener) {
-        if (trace) println("EventCentral.attach bus: $busHandle listener: ${listener.listenerHandle}")
+    fun attach(listener: Z2EventListener) {
+        if (trace) println("[event-central]  attach bus=${listener.busHandle} listener=${listener.listenerHandle}")
         mutex.use {
-            val bus = buses.getOrPut(busHandle) { EventBus(busHandle) }
+            val bus = buses.getOrPut(listener.busHandle) { EventBus(listener.busHandle) }
             bus.listeners += listener
         }
     }
 
-    fun detach(busHandle: Z2Handle, listener: Z2EventListener) {
-        if (trace) println("EventCentral.attach bus: $busHandle listener: ${listener.listenerHandle}")
+    fun detach(listener: Z2EventListener) {
+        if (trace) println("[event-central]  detach  bus=${listener.busHandle} listener=${listener.listenerHandle}")
 
         mutex.use {
-            buses[busHandle]?.let {
+            buses[listener.busHandle]?.let {
                 it.listeners -= listener
                 if (it.listeners.isEmpty()) buses.remove(it.handle)
             }
+        }
+    }
+
+    fun detachAll(listeners: Collection<Z2EventListener>) {
+        for (listener in listeners) {
+            detach(listener)
         }
     }
 

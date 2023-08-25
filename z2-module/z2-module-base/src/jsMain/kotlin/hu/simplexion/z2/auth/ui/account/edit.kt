@@ -7,7 +7,7 @@ import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
-import hu.simplexion.z2.browser.form.field
+import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton

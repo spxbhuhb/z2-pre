@@ -6,6 +6,10 @@ import org.w3c.dom.*
 fun Z2.div(vararg classes: String, builder: Z2.() -> Unit): Z2 =
     Z2(this, document.createElement("div") as HTMLDivElement, classes, builder)
 
+fun Z2.grid(vararg classes: String, builder: Z2.() -> Unit): Z2 =
+    Z2(this, document.createElement("div") as HTMLDivElement, classes, builder)
+        .apply { style.display = "grid" }
+
 fun Z2.pre(vararg classes: String, builder: Z2.() -> Unit): Z2 =
     Z2(this, document.createElement("pre") as HTMLPreElement, classes, builder)
 

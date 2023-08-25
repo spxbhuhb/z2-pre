@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.form
+package hu.simplexion.z2.browser.schematic
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.button.textButton
@@ -28,10 +28,3 @@ fun Z2.field(context : SchematicAccessContext? = null, @Suppress("UNUSED_PARAMET
     }
 }
 
-/**
- * A text button that is disabled when [schematic] is invalid.
- */
-fun Z2.submitTextButton(schematic: Schematic<*>, title : LocalizedText, onClick : (event : Event) -> Unit) =
-    textButton(title, onClick).also { button ->
-        button.isDisabled = schematic.isValid
-    }
