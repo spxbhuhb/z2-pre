@@ -9,6 +9,10 @@ open class SessionTable : SchematicUuidTable<Session>(
     Session()
 ) {
 
+    companion object {
+        val sessionTable = SessionTable()
+    }
+
     val account = uuid("account")
     val fullName = varchar("fullName", 100)
     val email = varchar("email", 264)

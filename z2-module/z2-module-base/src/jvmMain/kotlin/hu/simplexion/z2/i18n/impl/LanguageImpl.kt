@@ -8,11 +8,14 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.i18n.api.LanguageApi
 import hu.simplexion.z2.i18n.model.Language
 import hu.simplexion.z2.i18n.tables.LanguageTable
+import hu.simplexion.z2.i18n.tables.LanguageTable.Companion.languageTable
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
-class LanguageImpl : LanguageApi, ServiceImpl {
+class LanguageImpl : LanguageApi, ServiceImpl<LanguageImpl> {
 
-    private val languageTable = LanguageTable()
+    companion object {
+        val languageImpl = LanguageImpl()
+    }
 
     override suspend fun list(): List<Language> {
         ensuredByLogic("list of known languages is available for all users")

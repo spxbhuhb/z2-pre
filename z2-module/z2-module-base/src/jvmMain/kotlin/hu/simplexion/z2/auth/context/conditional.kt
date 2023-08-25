@@ -63,7 +63,7 @@ fun ServiceContext?.isLoggedIn(): ContextCheckResult {
  */
 fun ServiceContext?.has(role: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
-    if (! session.roles.contains(role.uuid.toString())) return ContextCheckResult.Deny
+    if (! session.roles.contains(role.programmaticName)) return ContextCheckResult.Deny
     // FIXME if (! session.roles.any { it.id == role.id }) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
@@ -76,7 +76,7 @@ fun ServiceContext?.has(role: Role): ContextCheckResult {
 fun ServiceContext?.hasAll(vararg roles: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
-        if (! session.roles.contains(role.uuid.toString())) return ContextCheckResult.Deny
+        if (! session.roles.contains(role.programmaticName)) return ContextCheckResult.Deny
         // FIXME if (! session.roles.any { it.id == role.id }) return ContextCheckResult.Deny
     }
     return ContextCheckResult.Allow

@@ -14,6 +14,10 @@ class ContentTable(
     Content()
 ) {
 
+    companion object {
+        val contentTable = ContentTable("content")
+    }
+
     val name = varchar("name", 200)
     val type = varchar("type", 40)
     val size = long("size")

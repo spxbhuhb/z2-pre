@@ -23,17 +23,23 @@ fun debugSql(active: Boolean) {
     logger.level = if (active) Level.DEBUG else Level.INFO
 }
 
-inline fun withTransaction(wrappedService: () -> ServiceImpl): ServiceImpl =
+inline fun withTransaction(wrappedService: () -> ServiceImpl<*>) =
     ExposedTransactionWrapper(wrappedService())
-
-fun registerWithTransaction(vararg services: ServiceImpl) {
-    for (service in services) {
-        defaultServiceImplFactory += withTransaction { service }
-    }
-}
 
 fun <T> java.util.UUID.z2() =
     UUID<T>(this.toString())
 
-val UUID<*>.jvm
+val UUID<*>.jvm : java.util.UUID
     get() = java.util.UUID.fromString(this.toString())
+
+fun tables(vararg tables : Table) {
+    transaction {
+        SchemaUtils.createMissingTablesAndColumns(*tables)
+    }
+}
+
+fun implementations(vararg implementations : ServiceImpl<*>) {
+    for (implementation in implementations) {
+        defaultServiceImplFactory += withTransaction { implementation }
+    }
+}

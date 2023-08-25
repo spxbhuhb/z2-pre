@@ -1,7 +1,9 @@
 package hu.simplexion.z2.auth.context
 
+import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
+import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
 /**
@@ -12,7 +14,7 @@ import hu.simplexion.z2.service.runtime.ServiceImpl
  *
  * @throws   AccessDenied  There is a service context.
  */
-fun <T> ServiceImpl.ensureInternal(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureInternal(block : () -> T) : T {
     if (serviceContext.isInternal() != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -25,7 +27,7 @@ fun <T> ServiceImpl.ensureInternal(block : () -> T) : T {
  *
  * @throws   AccessDenied  There is a service context.
  */
-fun ServiceImpl.ensureInternal() {
+fun ServiceImpl<*>.ensureInternal() {
     if (serviceContext.isInternal() != ContextCheckResult.Allow) throw AccessDenied()
 }
 
@@ -35,7 +37,7 @@ fun ServiceImpl.ensureInternal() {
  *
  * @throws   AccessDenied  There is no account in the context.
  */
-fun <T> ServiceImpl.ensureLoggedIn(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureLoggedIn(block : () -> T) : T {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -45,7 +47,7 @@ fun <T> ServiceImpl.ensureLoggedIn(block : () -> T) : T {
  *
  * @throws   AccessDenied  The account does not have the security officer role.
  */
-fun <T> ServiceImpl.ensureSecurityOfficer(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureSecurityOfficer(block : () -> T) : T {
     ensure(securityOfficerRole)
     return block()
 }
@@ -55,7 +57,7 @@ fun <T> ServiceImpl.ensureSecurityOfficer(block : () -> T) : T {
  *
  * @throws   AccessDenied  The account does not have the security officer role.
  */
-fun ServiceImpl.ensureSecurityOfficer() {
+fun ServiceImpl<*>.ensureSecurityOfficer() {
     ensure(securityOfficerRole)
 }
 
@@ -64,7 +66,7 @@ fun ServiceImpl.ensureSecurityOfficer() {
  *
  * @throws   AccessDenied  There is no account in the context.
  */
-fun ServiceImpl.ensureLoggedIn()  {
+fun ServiceImpl<*>.ensureLoggedIn()  {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
 }
 
@@ -74,7 +76,7 @@ fun ServiceImpl.ensureLoggedIn()  {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl.ensure(vararg roles: Role) {
+fun ServiceImpl<*>.ensure(vararg roles: Role) {
     if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
 }
 
@@ -84,7 +86,7 @@ fun ServiceImpl.ensure(vararg roles: Role) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun <T> ServiceImpl.ensure(vararg roles: Role, block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensure(vararg roles: Role, block : () -> T) : T {
     if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -95,7 +97,7 @@ fun <T> ServiceImpl.ensure(vararg roles: Role, block : () -> T) : T {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun <T> ServiceImpl.ensureAny(vararg roles: Role, block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureAny(vararg roles: Role, block : () -> T) : T {
     if (serviceContext.hasAny(*roles) != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -131,4 +133,8 @@ inline fun <T> ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String,
  */
 fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {
     // nothing to do here, this is just a marker
+}
+
+fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(account : UUID<AccountPrivate>) {
+    ensure(serviceContext.isAccount(account) or serviceContext.has(securityOfficerRole))
 }

@@ -4,19 +4,22 @@ import hu.simplexion.z2.auth.context.ensureInternal
 import hu.simplexion.z2.auth.context.ensuredByLogic
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.api.ContentApi
-import hu.simplexion.z2.content.contentTable
 import hu.simplexion.z2.content.impl.upload.ChunkData
 import hu.simplexion.z2.content.impl.upload.Upload
 import hu.simplexion.z2.content.impl.upload.UploadAbortException
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
+import hu.simplexion.z2.content.tables.ContentTable.Companion.contentTable
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.service.runtime.get
 import java.nio.file.Paths
 
-var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(Paths.get("."))
+open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
 
-open class ContentImpl : ContentApi, ServiceImpl {
+    companion object {
+        var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(Paths.get("."))
+        val contentImpl = ContentImpl()
+    }
 
     val placementStrategy: ContentPlacementStrategy
         get() = globalContentPlacementStrategy

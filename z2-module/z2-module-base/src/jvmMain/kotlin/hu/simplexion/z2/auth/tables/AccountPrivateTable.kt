@@ -9,6 +9,10 @@ open class AccountPrivateTable : SchematicUuidTable<AccountPrivate>(
     AccountPrivate()
 ) {
 
+    companion object {
+        val accountPrivateTable = AccountPrivateTable()
+    }
+
     val accountName = varchar("accountName", 50).uniqueIndex()
     val fullName = varchar("fullName", 100)
     val email = varchar("email", 264)

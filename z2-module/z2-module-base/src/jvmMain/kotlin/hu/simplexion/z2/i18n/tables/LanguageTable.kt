@@ -11,6 +11,10 @@ open class LanguageTable : SchematicUuidTable<Language>(
     Language()
 ) {
 
+    companion object {
+        val languageTable = LanguageTable()
+    }
+
     val isoCode = char("isoCode", 2)
     val countryCode = char("countryCode", 2)
     val nativeName = varchar("nativeName", 30)

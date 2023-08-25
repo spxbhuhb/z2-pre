@@ -10,6 +10,11 @@ import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.CredentialType
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
+import hu.simplexion.z2.auth.tables.AccountCredentialsTable.Companion.accountCredentialsTable
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.tables.AccountStatusTable.Companion.accountStatusTable
+import hu.simplexion.z2.auth.tables.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.tables.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.auth.util.Unauthorized
@@ -22,7 +27,11 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class SessionImpl : SessionApi, ServiceImpl {
+class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
+
+    companion object {
+        val sessionImpl = SessionImpl()
+    }
 
     // ----------------------------------------------------------------------------------
     // API functions

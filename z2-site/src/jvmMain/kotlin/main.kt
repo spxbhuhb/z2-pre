@@ -1,8 +1,8 @@
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import hu.simplexion.z2.auth.auth
-import hu.simplexion.z2.history.history
-import hu.simplexion.z2.i18n.i18n
+import hu.simplexion.z2.auth.authJvm
+import hu.simplexion.z2.history.historyJvm
+import hu.simplexion.z2.i18n.i18nJvm
 import hu.simplexion.z2.service.ktor.server.basicWebsocketServiceCallTransport
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -19,10 +19,10 @@ fun main() {
 
 fun db() {
     val config = HikariConfig().apply {
-        jdbcUrl         = "jdbc:postgresql://10.173.6.22/p1150"
-        driverClassName = "org.postgresql.Driver"
-        username        = "p1150"
-        password        = "1aTYrppzDY9JGmY"
+        jdbcUrl         = System.getenv("DB_JDBC_URL")
+        driverClassName = System.getenv("DB_DRIVER_CLASS_NAME")
+        username        = System.getenv("DB_USER_NAME")
+        password        = System.getenv("DB_PASSWORD")
         maximumPoolSize = 10
     }
     val dataSource = HikariDataSource(config)
@@ -38,9 +38,9 @@ fun Application.module() {
         masking = false
     }
 
-    history()
-    auth()
-    i18n()
+    historyJvm()
+    authJvm()
+    i18nJvm()
 
     routing {
         basicWebsocketServiceCallTransport("/z2/services")

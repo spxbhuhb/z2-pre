@@ -12,7 +12,7 @@ interface BasicService : Service {
 
 val basicServiceConsumer = getService<BasicService>()
 
-class BasicServiceImpl : BasicService, ServiceImpl {
+class BasicServiceImpl : BasicService, ServiceImpl<BasicServiceImpl> {
 
     override suspend fun a(arg1: Int): Int {
         return arg1 + 1

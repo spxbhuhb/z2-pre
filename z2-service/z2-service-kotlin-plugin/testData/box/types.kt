@@ -222,7 +222,7 @@ interface TypesService : Service {
 
 val typesServiceConsumer = getService<TypesService>()
 
-class TypesServiceImpl : TypesService, ServiceImpl {
+class TypesServiceImpl : TypesService, ServiceImpl<TypesServiceImpl> {
 
     override suspend fun testFun() = Unit
 

@@ -1,6 +1,7 @@
 package hu.simplexion.z2.history.tables
 
 import hu.simplexion.z2.auth.tables.AccountPrivateTable
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.history.model.HistoryEntry
 import kotlinx.datetime.Instant
@@ -14,6 +15,10 @@ open class HistoryEntryTable(
     "history_entry",
     HistoryEntry()
 ) {
+
+    companion object {
+        val historyEntryTable = HistoryEntryTable(accountPrivateTable)
+    }
 
     val createdAt = timestamp("createdAt")
     val createdBy = reference("createdBy", accountPrivateTable)

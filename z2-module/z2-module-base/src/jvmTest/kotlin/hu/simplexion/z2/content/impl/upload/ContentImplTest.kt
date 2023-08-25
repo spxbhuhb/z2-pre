@@ -1,12 +1,12 @@
 package hu.simplexion.z2.content.impl.upload
 
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.content.contentTable
 import hu.simplexion.z2.content.impl.BasicPlacementStrategy
 import hu.simplexion.z2.content.impl.ContentImpl
-import hu.simplexion.z2.content.impl.globalContentPlacementStrategy
+import hu.simplexion.z2.content.impl.ContentImpl.Companion.globalContentPlacementStrategy
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
+import hu.simplexion.z2.content.tables.ContentTable.Companion.contentTable
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.service.runtime.BasicServiceContext
 import hu.simplexion.z2.service.runtime.set

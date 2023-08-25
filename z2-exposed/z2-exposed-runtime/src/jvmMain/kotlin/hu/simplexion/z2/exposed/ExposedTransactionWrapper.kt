@@ -8,14 +8,14 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExposedTransactionWrapper(
-    val wrappedService: ServiceImpl
-) : ServiceImpl {
+    val wrappedService: ServiceImpl<*>
+) : ServiceImpl<ExposedTransactionWrapper> {
 
     override var serviceName: String
         get() = wrappedService.serviceName
         set(value) { wrappedService.serviceName = value }
 
-    override fun newInstance(serviceContext: ServiceContext?) : ServiceImpl {
+    override fun newInstance(serviceContext: ServiceContext?) : ExposedTransactionWrapper {
         return ExposedTransactionWrapper(wrappedService.newInstance(serviceContext))
     }
 

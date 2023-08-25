@@ -46,7 +46,7 @@ class ConsumerClassBuilder(
         interfaceClass.file.addChild(it)
     }
 
-    override val overiddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
+    override val overriddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
 
     override val serviceNames = mutableListOf<String>()
 
@@ -57,7 +57,7 @@ class ConsumerClassBuilder(
 
         addServiceNameProperty()
 
-        for (serviceFunction in overiddenServiceFunctions) {
+        for (serviceFunction in overriddenServiceFunctions) {
             addServiceFunction(serviceFunction.owner)
         }
 
@@ -80,10 +80,12 @@ class ConsumerClassBuilder(
     }
 
     private fun addServiceFunction(original: IrSimpleFunction) {
+        val local = (original.modality == Modality.OPEN)
+
         irFactory.buildFun {
             name = original.name
             returnType = original.returnType
-            modality = Modality.FINAL
+            modality = if (local) Modality.OPEN else Modality.FINAL
         }.also { function ->
 
             function.isSuspend = true
@@ -96,6 +98,7 @@ class ConsumerClassBuilder(
 
             for (typeParameter in original.typeParameters) {
                 function.addTypeParameter {
+                    name = typeParameter.name
                     updateFrom(typeParameter)
                     superTypes += typeParameter.superTypes // FIXME use type parameter mapper somehow... check addTypeParameter source
                 }
@@ -108,20 +111,24 @@ class ConsumerClassBuilder(
                 }
             }
 
-            function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
-                +irReturn(
-                    irCall(
-                        pluginContext.callFunction,
-                        dispatchReceiver = getServiceTransport()
-                    ).also {
-                        it.type = function.returnType
-                        it.putTypeArgument(CALL_TYPE_INDEX, function.returnType)
-                        it.putValueArgument(CALL_SERVICE_NAME_INDEX, getServiceName(function))
-                        it.putValueArgument(CALL_FUN_NAME_INDEX, irConst(FunctionSignature(pluginContext, function).signature()))
-                        it.putValueArgument(CALL_PAYLOAD_INDEX, buildPayload(function))
-                        it.putValueArgument(CALL_DECODER_INDEX, ProtoOneIrBuilder(pluginContext).getDecoder(function.returnType))
-                    }
-                )
+            if (local) {
+                function.isFakeOverride = true
+            } else {
+                function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
+                    + irReturn(
+                        irCall(
+                            pluginContext.callFunction,
+                            dispatchReceiver = getServiceTransport()
+                        ).also {
+                            it.type = function.returnType
+                            it.putTypeArgument(CALL_TYPE_INDEX, function.returnType)
+                            it.putValueArgument(CALL_SERVICE_NAME_INDEX, getServiceName(function))
+                            it.putValueArgument(CALL_FUN_NAME_INDEX, irConst(FunctionSignature(pluginContext, function).signature()))
+                            it.putValueArgument(CALL_PAYLOAD_INDEX, buildPayload(function))
+                            it.putValueArgument(CALL_DECODER_INDEX, ProtoOneIrBuilder(pluginContext).getDecoder(function.returnType))
+                        }
+                    )
+                }
             }
 
             consumerClass.declarations += function

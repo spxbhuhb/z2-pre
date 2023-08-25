@@ -87,3 +87,4 @@ Thumbs.db
 **/build
 
 /kotlin-js-store/yarn.lock
+/.run/*

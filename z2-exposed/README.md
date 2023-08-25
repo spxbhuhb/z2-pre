@@ -13,7 +13,7 @@ Integration between [Exposed](https://github.com/JetBrains/Exposed),
 * Use it as any other Exposed table.
 * Automatic mapping between schematic instances and the table.
 * Column name and schematic field name must equal.
-* The `id` field in the schematic is mandatory.
+* The `uuid` field in the schematic is mandatory.
 
 ```kotlin
 class TestSchematic : Schematic<TestSchematic>() {
@@ -27,7 +27,14 @@ class TestSchematic : Schematic<TestSchematic>() {
 
 }
 
-object TestTable : SchematicUuidTable<TestSchematic>({ TestSchematic() }) {
+class TestTable : SchematicUuidTable<TestSchematic>(
+    "test_table",
+    { TestSchematic() }
+) {
+
+    companion object {
+        val accountCredentialsTable = AccountCredentialsTable(accountPrivateTable)
+    }
 
     val booleanField = bool("booleanField")
     val intField = integer("intField")
@@ -64,28 +71,24 @@ class SchematicUuidTableTest {
 }
 ```
 
-## Transaction Service Wrappers
+## Registration Helpers
 
-Register a service provider with a wrapper that puts all service calls inside 
-Exposed `transaction` blocks:
-
-```kotlin
-defaultServiceImplRegistry += withTransaction(FirstServiceImpl())
-```
-
-Register all service providers with a wrapper that puts all service calls inside
-Exposed `transaction` blocks:
+Register tables and implementations with the `tables` and `implementations`.
 
 ```kotlin
-registerWithTransaction(LocaleServiceImpl(), SecondServiceImpl())
+tables(table1, table2)
+implementations(impl1, impl2)
 ```
+
+* `tables` calls `SchemaUtils.createMissingTablesAndColumns` in an Exposed transaction
+* `implemenations` adds the implementations to `defaultServiceImplFactory` with a wrapper that calls service functions in an Exposed transaction
 
 ## Testing
 
 Create an in-memory H2 database and add all tables:
 
 ```kotlin
- h2Test(FirstTable, SecondTable)
+ h2Test(table1, table2)
 ```
 
 ## License

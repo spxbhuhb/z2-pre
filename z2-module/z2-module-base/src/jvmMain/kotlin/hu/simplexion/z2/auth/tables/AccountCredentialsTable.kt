@@ -2,6 +2,7 @@ package hu.simplexion.z2.auth.tables
 
 import hu.simplexion.z2.auth.model.AccountCredentials
 import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
@@ -16,6 +17,10 @@ open class AccountCredentialsTable(
     "auth_account_credential",
     AccountCredentials(),
 ) {
+
+    companion object {
+        val accountCredentialsTable = AccountCredentialsTable(accountPrivateTable)
+    }
 
     val account = reference("account", accountPrivateTable)
     val type = varchar("type", 50)

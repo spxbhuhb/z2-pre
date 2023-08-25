@@ -1,24 +1,23 @@
 package hu.simplexion.z2.auth
 
-import hu.simplexion.z2.auth.impl.AccountImpl
-import hu.simplexion.z2.auth.impl.RoleImpl
-import hu.simplexion.z2.auth.impl.SessionImpl
+import hu.simplexion.z2.auth.impl.AccountImpl.Companion.accountImpl
+import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
+import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.*
-import hu.simplexion.z2.auth.tables.*
+import hu.simplexion.z2.auth.tables.AccountCredentialsTable.Companion.accountCredentialsTable
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.tables.AccountStatusTable.Companion.accountStatusTable
+import hu.simplexion.z2.auth.tables.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.tables.RoleTable
+import hu.simplexion.z2.auth.tables.RoleTable.Companion.roleTable
+import hu.simplexion.z2.auth.tables.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.exposed.registerWithTransaction
+import hu.simplexion.z2.exposed.implementations
+import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.history.securityHistory
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-
-val accountPrivateTable = AccountPrivateTable()
-val accountStatusTable = AccountStatusTable(accountPrivateTable)
-val accountCredentialsTable = AccountCredentialsTable(accountPrivateTable)
-val roleTable = RoleTable()
-val roleGrantTable = RoleGrantTable(accountPrivateTable, roleTable)
-val sessionTable = SessionTable()
 
 internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB
 
@@ -30,29 +29,27 @@ const val securityOfficerRoleName = "security-officer"
 const val securityOfficerAccountName = "so"
 const val anonymousAccountName = "anonymous"
 
-fun auth() {
+fun authJvm(initialSoPassword : String = "so") {
 
-    transaction {
-        SchemaUtils.createMissingTablesAndColumns(
-            accountPrivateTable,
-            accountCredentialsTable,
-            accountStatusTable,
-            roleTable,
-            roleGrantTable,
-            sessionTable
-        )
-    }
+    tables(
+        accountPrivateTable,
+        accountCredentialsTable,
+        accountStatusTable,
+        roleTable,
+        roleGrantTable,
+        sessionTable
+    )
 
     securityOfficerRole = getOrMakeSecurityOfficerRole()
-    securityOfficerUuid = getOrMakeAccount(securityOfficerAccountName, "Security Officer", "so") // FIXME initial SO password
+    securityOfficerUuid = getOrMakeAccount(securityOfficerAccountName, "Security Officer", initialSoPassword)
     anonymousUuid = getOrMakeAccount(anonymousAccountName, "Anonymous")
 
     grantRole(securityOfficerRole, securityOfficerUuid)
 
-    registerWithTransaction(
-        AccountImpl(),
-        RoleImpl(),
-        SessionImpl()
+    implementations(
+        accountImpl,
+        roleImpl,
+        sessionImpl
     )
 }
 
@@ -74,7 +71,7 @@ private fun getOrMakeSecurityOfficerRole(): Role {
     return role
 }
 
-private fun getOrMakeAccount(
+internal fun getOrMakeAccount(
     name: String,
     fullName: String,
     password: String? = null

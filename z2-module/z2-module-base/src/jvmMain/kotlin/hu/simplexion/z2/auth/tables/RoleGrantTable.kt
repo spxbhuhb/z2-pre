@@ -1,11 +1,10 @@
 package hu.simplexion.z2.auth.tables
 
-import hu.simplexion.z2.auth.accountPrivateTable
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.AccountPublic
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.roleGrantTable
-import hu.simplexion.z2.auth.roleTable
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.tables.RoleTable.Companion.roleTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.exposed.z2
@@ -18,6 +17,10 @@ open class RoleGrantTable(
 ) : Table(
     "auth_role_grant"
 ) {
+
+    companion object {
+        val roleGrantTable = RoleGrantTable(accountPrivateTable, roleTable)
+    }
 
     val account = reference("account", accountPrivateTable).index()
     val role = reference("role", roleTable)

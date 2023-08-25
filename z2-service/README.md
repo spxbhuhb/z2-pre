@@ -73,6 +73,23 @@ interface HelloService : Service {
 }
 ```
 
+You can define local functions in service definitions. These are **NOT** sent to the service implementations on
+the server side. In the example below `hello` is sent to the server, `helloWorld` is not. When you call `helloWorld`
+it calls `hello` locally on the client side.
+
+These are like API extensions which are implemented locally.
+
+```kotlin
+interface HelloService : Service {
+    
+    suspend fun hello(myName : String) : String
+
+    suspend fun helloWorld() : String {
+        return hello("World")
+    }
+}
+```
+
 ### Service Consumers
 
 Service consumers let the clients use the service. Use the `getService` function to 
@@ -100,7 +117,7 @@ fun main() {
 On the server side create a service implementation that does whatever this service should do:
 
 ```kotlin
-class HelloServiceImpl : HelloService, ServiceImpl {
+class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
 
     override suspend fun hello(myName: String): String {
         return "Hello $myName!"
@@ -124,7 +141,7 @@ a bit of an overkill, but it makes the handling of the [service context](#Servic
 **IMPORTANT** This **DOES NOT WORK**. As each call gets a new instance `clicked` will be 0 all the time.
 
 ```kotlin
-class ClickServiceImpl : ClickService, ServiceImpl {
+class ClickServiceImpl : ClickService, ServiceImpl<ClickServiceImpl> {
 
     val clicked = AtomicInteger(0)
 
@@ -139,7 +156,7 @@ Replace the code above with this, this works:
 ```kotlin
 val clicked = AtomicInteger(0)
 
-class ClickServiceImpl : ClickService, ServiceImpl {
+class ClickServiceImpl : ClickService, ServiceImpl<ClickServiceImpl> {
     override suspend fun click(): Int {
         return clicked.incrementAndGet()
     }
@@ -154,7 +171,7 @@ This context may contain the identity of the user, along with other information.
 Each service implementation call gets the service context which is reachable in the `serviceContext` property:
 
 ```kotlin
-class HelloServiceImpl : HelloService, ServiceImpl {
+class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
 
     override suspend fun hello(myName: String): String {
         if (serviceContext.isAnonymous) {
@@ -383,7 +400,7 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.service.runtime.ServiceContext
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
-class TestServiceImpl : TestService, ServiceImpl {
+class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
     override suspend fun dispatch(
         funName: String,

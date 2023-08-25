@@ -7,16 +7,20 @@ import hu.simplexion.z2.auth.context.isAccount
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.AccountPublic
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.roleGrantTable
-import hu.simplexion.z2.auth.roleTable
 import hu.simplexion.z2.auth.securityOfficerRole
+import hu.simplexion.z2.auth.tables.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.tables.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.securityHistory
 import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
-class RoleImpl : RoleApi, ServiceImpl {
+class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
+
+    companion object {
+        val roleImpl = RoleImpl()
+    }
 
     override suspend fun list(): List<Role> {
         ensure(securityOfficerRole)

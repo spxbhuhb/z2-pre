@@ -36,7 +36,7 @@ class ImplClassTransform(
     override lateinit var serviceNameGetter: IrSimpleFunctionSymbol
     lateinit var serviceContextGetter: IrSimpleFunctionSymbol
 
-    override val overiddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
+    override val overriddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
 
     override val serviceNames = mutableListOf<String>()
 
@@ -77,6 +77,8 @@ class ImplClassTransform(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
 
+        // FIXME report an error when an implementation tries to override a non-abstract API function
+        // see z2-modules-base/SettingApi.get
         val function = declaration.asServiceFun() ?: return declaration
 
         if (function.isFakeOverride) return declaration

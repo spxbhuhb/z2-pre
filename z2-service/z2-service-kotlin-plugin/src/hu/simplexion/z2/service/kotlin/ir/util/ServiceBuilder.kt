@@ -14,7 +14,7 @@ interface ServiceBuilder : IrBuilder {
 
     var serviceNameGetter: IrSimpleFunctionSymbol
 
-    val overiddenServiceFunctions: MutableList<IrSimpleFunctionSymbol>
+    val overriddenServiceFunctions: MutableList<IrSimpleFunctionSymbol>
 
     val serviceNames : MutableList<String>
 
@@ -22,7 +22,7 @@ interface ServiceBuilder : IrBuilder {
         for (superType in klass.superTypes) {
             if (superType.isSubtypeOfClass(pluginContext.serviceClass) && superType.classFqName != SERVICE_IMPL_FQ_NAME) {
                 serviceNames += superType.classFqName!!.asString()
-                overiddenServiceFunctions += pluginContext.serviceFunctionCache[superType]
+                overriddenServiceFunctions += pluginContext.serviceFunctionCache[superType]
             }
         }
     }
@@ -30,7 +30,7 @@ interface ServiceBuilder : IrBuilder {
     fun IrFunction.asServiceFun(): IrSimpleFunction? {
         if (this !is IrSimpleFunction) return null
         for (overriddenSymbol in this.overriddenSymbols) {
-            if (overriddenSymbol in overiddenServiceFunctions) return this
+            if (overriddenSymbol in overriddenServiceFunctions) return this
         }
         return null
     }

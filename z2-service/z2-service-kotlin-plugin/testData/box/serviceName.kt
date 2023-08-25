@@ -20,14 +20,14 @@ interface TestService : Service {
 val test = getService<TestService>()
 val test2 = getService<TestService>().also { it.serviceName = "manual" }
 
-class TestServiceImpl : TestService, ServiceImpl {
+class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"
 
 }
 
-class TestServiceImpl2 : TestService, ServiceImpl {
+class TestServiceImpl2 : TestService, ServiceImpl<TestServiceImpl2> {
 
     override var serviceName = "manual"
 

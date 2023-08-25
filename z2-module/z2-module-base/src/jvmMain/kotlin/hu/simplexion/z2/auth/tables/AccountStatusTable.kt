@@ -2,6 +2,7 @@ package hu.simplexion.z2.auth.tables
 
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.AccountStatus
+import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
@@ -15,6 +16,10 @@ open class AccountStatusTable(
     "auth_account_status",
     AccountStatus()
 ) {
+
+    companion object {
+        val accountStatusTable = AccountStatusTable(accountPrivateTable)
+    }
 
     val account = reference("account", accountPrivateTable)
     val validated = bool("validated")

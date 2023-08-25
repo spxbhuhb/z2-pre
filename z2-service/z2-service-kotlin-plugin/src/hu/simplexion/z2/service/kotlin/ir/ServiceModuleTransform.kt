@@ -8,6 +8,7 @@ import hu.simplexion.z2.service.kotlin.ir.impl.ImplClassTransform
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.types.classFqName
 
 class ServiceModuleTransform(
     private val pluginContext: ServicePluginContext
@@ -20,7 +21,7 @@ class ServiceModuleTransform(
             return declaration
         }
 
-        if (declaration.superTypes.contains(pluginContext.serviceImplType)) {
+        if (declaration.superTypes.map { it.classFqName }.contains(pluginContext.serviceImplType.classFqName)) {
             return declaration.accept(ImplClassTransform(pluginContext), null) as IrStatement
         }
 

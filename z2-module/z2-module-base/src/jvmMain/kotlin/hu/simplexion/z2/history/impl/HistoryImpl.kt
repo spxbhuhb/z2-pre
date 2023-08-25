@@ -8,20 +8,24 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.tables.HistoryEntryTable
+import hu.simplexion.z2.history.tables.HistoryEntryTable.Companion.historyEntryTable
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import kotlinx.datetime.Instant
 
-class HistoryImpl : HistoryApi, ServiceImpl {
+class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
 
-    private val historyEntryTable = HistoryEntryTable(
-        AccountPrivateTable()
-    )
+    companion object {
+        val historyImpl = HistoryImpl()
+    }
 
     override suspend fun list(flags: Int, start: Instant, end: Instant, limit: Int): List<HistoryEntry> {
-        // FIXME history list role
         ensure(securityOfficerRole)
         return historyEntryTable.list(flags, start, end, limit)
     }
+
+    // ------------------------------------------------------------------------------------------
+    // Internal functions
+    // ------------------------------------------------------------------------------------------
 
     fun add(
         createdBy: UUID<AccountPrivate>?,

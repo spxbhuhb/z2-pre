@@ -8,6 +8,10 @@ open class RoleTable : SchematicUuidTable<Role>(
     Role()
 ) {
 
+    companion object {
+        val roleTable = RoleTable()
+    }
+
     val contextName = varchar("contextName", 50).nullable()
     val programmaticName = varchar("programmaticName", 100)
     val displayName = varchar("displayName", 50)

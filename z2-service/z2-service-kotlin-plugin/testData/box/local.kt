@@ -18,6 +18,10 @@ interface TestService : Service {
 
     suspend fun testFun(arg1: Int, arg2: String): String
 
+    suspend fun testFun2() : String {
+        return testFun(1, "a") + "b"
+    }
+
 }
 
 val testServiceConsumer = getService<TestService>()
@@ -25,18 +29,20 @@ val testServiceConsumer = getService<TestService>()
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
-        "i:$arg1 s:$arg2 $serviceContext"
+        "i:$arg1 s:$arg2"
 
 }
 
 fun box(): String {
     var response : String = ""
+
     runBlocking {
         defaultServiceImplFactory += TestServiceImpl()
         defaultServiceCallTransport = DumpTransport()
-        response = testServiceConsumer.testFun(1, "hello")
+        response = testServiceConsumer.testFun2()
     }
-    return if (response.startsWith("i:1 s:hello BasicServiceContext(")) "OK" else "Fail (response=$response)"
+
+    return if (response.startsWith("i:1 s:ab")) "OK" else "Fail (response=$response)"
 }
 
 class DumpTransport : ServiceCallTransport {
