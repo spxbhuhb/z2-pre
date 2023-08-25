@@ -1,5 +1,7 @@
 package hu.simplexion.z2.schematic.runtime
 
+import hu.simplexion.z2.commons.util.Lock
+
 /**
  * Placeholder for generated code. Throws [IllegalStateException] exception if called.
  */

@@ -15,7 +15,7 @@ interface ListSchemaField<VT> : SchemaField<List<VT>> {
         get() = false
 
     override val naturalDefault: SchematicList<VT>
-        get() = SchematicList(mutableListOf(), this)
+        get() = SchematicList(null, mutableListOf(), this)
 
     val itemSchemaField: SchemaField<VT>
 
@@ -28,12 +28,12 @@ interface ListSchemaField<VT> : SchemaField<List<VT>> {
 
             is SchematicList<*> -> {
                 @Suppress("UNCHECKED_CAST") // TODO think about schematic list assignment
-                return SchematicList(anyValue.backingList as MutableList<VT>, this)
+                return SchematicList(null, anyValue.backingList as MutableList<VT>, this)
             }
 
             is Collection<*> -> {
                 @Suppress("UNCHECKED_CAST") // TODO think about schematic list assignment
-                return SchematicList(anyValue.toMutableList() as MutableList<VT>, this)
+                return SchematicList(null, anyValue.toMutableList() as MutableList<VT>, this)
             }
 
             else -> {

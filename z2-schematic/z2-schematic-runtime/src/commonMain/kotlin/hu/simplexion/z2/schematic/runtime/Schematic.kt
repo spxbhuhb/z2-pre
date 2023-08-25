@@ -16,12 +16,13 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlin.time.Duration
 
-abstract class Schematic<ST : Schematic<ST>> {
+abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
 
-    /**
-     * The unique handle of this schematic instance.
-     */
-    val handle = nextHandle()
+    override var schematicParent: SchematicNode? = null
+
+    override val schematicHandle = nextHandle()
+
+    override var schematicListenerCount = 0
 
     /**
      * The actual values stored in this schematic. Key is the name of the
@@ -53,17 +54,24 @@ abstract class Schematic<ST : Schematic<ST>> {
     // -----------------------------------------------------------------------------------
 
     /**
-     * Changes the value of a field specified by [fieldIndex].
+     * Changes the value of a field if it can be converted to the given data type.
+     * Throws exception if the conversion fails.
+     * If there are any listeners (that is, [listenerCount] is not 0), validates
+     * the schematic and fires a [SchematicFieldEvent].
      */
     fun schematicChange(field: SchemaField<*>, value: Any?) {
         val fails = mutableListOf<ValidationFailInfo>()
         val typedValue = field.toTypedValue(value, fails)
 
-        check(fails.isEmpty()) { "cannot change field value: ${this::class.simpleName}.${field.name} value is type of ${value?.let{it::class.simpleName}}"}
+        check(fails.isEmpty()) { "cannot change field value: ${this::class.simpleName}.${field.name} value is type of ${value?.let { it::class.simpleName }}" }
+
+        if (typedValue is SchematicNode) {
+            typedValue.schematicParent = this
+        }
 
         schematicValues[field.name] = typedValue
 
-        EventCentral.fire(SchematicEvent(handle, this, field))
+        fireEvent(field)
     }
 
     /**
@@ -71,6 +79,12 @@ abstract class Schematic<ST : Schematic<ST>> {
      */
     fun schematicChange(fieldIndex: Int, value: Any?) {
         schematicChange(schematicSchema.fields[fieldIndex], value)
+    }
+
+    override fun fireEvent(field: SchemaField<*>) {
+        if (schematicListenerCount <= 0) return
+        val validationResult = schematicSchema.validate(this)
+        EventCentral.fire(SchematicFieldEvent(schematicHandle, this, field, validationResult))
     }
 
     // -----------------------------------------------------------------------------------
