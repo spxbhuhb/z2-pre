@@ -5,6 +5,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.name
+import kotlin.streams.toList
 
 fun runtimeClassPath() : List<File> =
     listOf(

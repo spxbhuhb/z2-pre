@@ -50,7 +50,7 @@ object TestServiceConsumer : TestService {
 
 }
 
-class TestServiceImpl(override val serviceContext: ServiceContext?) : TestService, ServiceImpl {
+class TestServiceImpl(override val serviceContext: ServiceContext?) : TestService, ServiceImpl<TestServiceImpl> {
 
     override var serviceName = "TestService"
 
@@ -65,7 +65,7 @@ class TestServiceImpl(override val serviceContext: ServiceContext?) : TestServic
         }
     }
 
-    override fun newInstance(serviceContext: ServiceContext?) : ServiceImpl {
+    override fun newInstance(serviceContext: ServiceContext?) : TestServiceImpl {
         return TestServiceImpl(serviceContext)
     }
 

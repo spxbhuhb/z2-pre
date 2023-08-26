@@ -18,7 +18,7 @@ fun <T> ServiceContext?.ensure(vararg roles: String, block: () -> T): T {
 
 val testServiceConsumer = getService<TestService>()
 
-class TestServiceImpl : TestService, ServiceImpl {
+class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"

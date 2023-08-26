@@ -35,16 +35,16 @@ class EventCentralTest {
 
         val busHandle = nextHandle()
 
-        val listener = AnonymousEventListener { value++ }
+        val listener = AnonymousEventListener(busHandle) { value++ }
 
-        EventCentral.attach(busHandle, listener)
+        EventCentral.attach(listener)
         assertEquals(1, busCount)
         assertEquals(1, listenerCount)
 
         EventCentral.fire(BasicEvent(busHandle))
         assertTrue(value == 1)
 
-        EventCentral.detach(busHandle, listener)
+        EventCentral.detach(listener)
         assertEquals(0, busCount)
     }
 
@@ -54,14 +54,14 @@ class EventCentralTest {
 
         val busHandle = nextHandle()
 
-        val listener1 = AnonymousEventListener { value++ }
-        val listener2 = AnonymousEventListener { value++ }
+        val listener1 = AnonymousEventListener(busHandle) { value++ }
+        val listener2 = AnonymousEventListener(busHandle) { value++ }
 
-        EventCentral.attach(busHandle, listener1)
+        EventCentral.attach(listener1)
         assertEquals(1, busCount)
         assertEquals(1, listenerCount)
 
-        EventCentral.attach(busHandle, listener2)
+        EventCentral.attach(listener2)
         assertEquals(1, busCount)
         assertEquals(2, listenerCount)
 
@@ -69,11 +69,11 @@ class EventCentralTest {
 
         assertTrue(value == 2)
 
-        EventCentral.detach(busHandle, listener1)
+        EventCentral.detach(listener1)
         assertEquals(1, busCount)
         assertEquals(1, listenerCount)
 
-        EventCentral.detach(busHandle, listener2)
+        EventCentral.detach(listener2)
         assertEquals(0, busCount)
     }
 
@@ -84,14 +84,14 @@ class EventCentralTest {
         val busHandle1 = nextHandle()
         val busHandle2 = nextHandle()
 
-        val listener1 = AnonymousEventListener { value++ }
-        val listener2 = AnonymousEventListener { value++ }
+        val listener1 = AnonymousEventListener(busHandle1) { value++ }
+        val listener2 = AnonymousEventListener(busHandle2) { value++ }
 
-        EventCentral.attach(busHandle1, listener1)
+        EventCentral.attach(listener1)
         assertEquals(1, busCount)
         assertEquals(1, listenerCount)
 
-        EventCentral.attach(busHandle2, listener2)
+        EventCentral.attach(listener2)
         assertEquals(2, busCount)
         assertEquals(1, listenerCount)
 
@@ -101,11 +101,11 @@ class EventCentralTest {
         EventCentral.fire(BasicEvent(busHandle2))
         assertTrue(value == 2)
 
-        EventCentral.detach(busHandle1, listener1)
+        EventCentral.detach(listener1)
         assertEquals(1, busCount)
         assertEquals(1, listenerCount)
 
-        EventCentral.detach(busHandle2, listener2)
+        EventCentral.detach(listener2)
         assertEquals(0, busCount)
     }
 }
