@@ -10,6 +10,7 @@ import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
+import hu.simplexion.z2.i18n.Languages
 import hu.simplexion.z2.i18n.model.Language
 
 internal fun add() =

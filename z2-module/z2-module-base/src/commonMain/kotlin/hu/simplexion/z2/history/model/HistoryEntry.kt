@@ -2,7 +2,6 @@ package hu.simplexion.z2.history.model
 
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicCompanion
 
 class HistoryEntry : Schematic<HistoryEntry>() {
 
@@ -15,5 +14,6 @@ class HistoryEntry : Schematic<HistoryEntry>() {
     var flags by int()
 
     var contentType by string()
-    var content by string()
+    var textContent by string()
+
 }

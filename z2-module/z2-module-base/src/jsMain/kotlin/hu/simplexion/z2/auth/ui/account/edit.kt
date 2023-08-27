@@ -2,7 +2,7 @@ package hu.simplexion.z2.auth.ui.account
 
 import hu.simplexion.z2.auth.model.AccountCredentials
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.ui.Accounts
+import hu.simplexion.z2.auth.Accounts
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24

@@ -6,14 +6,14 @@ import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.context.has
 import hu.simplexion.z2.auth.context.isAccount
 import hu.simplexion.z2.auth.model.*
-import hu.simplexion.z2.auth.tables.AccountCredentialsTable.Companion.accountCredentialsTable
-import hu.simplexion.z2.auth.tables.AccountPrivateTable.Companion.accountPrivateTable
-import hu.simplexion.z2.auth.tables.AccountStatusTable.Companion.accountStatusTable
-import hu.simplexion.z2.auth.tables.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCredentialsTable
+import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
+import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.history.securityHistory
+import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.service.runtime.ServiceImpl
 

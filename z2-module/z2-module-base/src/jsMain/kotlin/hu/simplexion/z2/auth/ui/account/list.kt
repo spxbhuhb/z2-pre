@@ -1,7 +1,7 @@
 package hu.simplexion.z2.auth.ui.account
 
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.ui.Accounts
+import hu.simplexion.z2.auth.Accounts
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline

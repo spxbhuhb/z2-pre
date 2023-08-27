@@ -1,5 +1,6 @@
 package hu.simplexion.z2.schematic.runtime.schema.field.stereotype
 
+import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.field.NullableStringSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.field.StringSchemaField
@@ -17,6 +18,10 @@ open class SecretSchemaField(
     override fun nullable() : NullableSecretSchemaField {
         return NullableSecretSchemaField(definitionDefault, minLength, maxLength, blank)
     }
+
+    override fun toString(schematic: Schematic<*>) : String {
+        return "********"
+    }
 }
 
 open class NullableSecretSchemaField(
@@ -31,5 +36,9 @@ open class NullableSecretSchemaField(
 
     override fun nullable() : NullableSecretSchemaField {
         return this
+    }
+
+    override fun toString(schematic: Schematic<*>) : String {
+        return "********"
     }
 }

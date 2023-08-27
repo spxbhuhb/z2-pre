@@ -3,12 +3,10 @@ package hu.simplexion.z2.history.impl
 import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.securityOfficerRole
-import hu.simplexion.z2.auth.tables.AccountPrivateTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
-import hu.simplexion.z2.history.tables.HistoryEntryTable
-import hu.simplexion.z2.history.tables.HistoryEntryTable.Companion.historyEntryTable
+import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTable
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import kotlinx.datetime.Instant
 
@@ -49,7 +47,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
                 this.createdFor = createdFor as UUID<Any>
                 this.flags = flags
                 this.contentType = contentType
-                this.content = content
+                this.textContent = content
             }
         )
     }

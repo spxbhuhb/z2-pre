@@ -6,7 +6,7 @@ import hu.simplexion.z2.content.impl.ContentImpl
 import hu.simplexion.z2.content.impl.ContentImpl.Companion.globalContentPlacementStrategy
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
-import hu.simplexion.z2.content.tables.ContentTable.Companion.contentTable
+import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.service.runtime.BasicServiceContext
 import hu.simplexion.z2.service.runtime.set

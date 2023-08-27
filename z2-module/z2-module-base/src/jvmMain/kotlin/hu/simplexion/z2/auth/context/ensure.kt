@@ -62,6 +62,15 @@ fun ServiceImpl<*>.ensureSecurityOfficer() {
 }
 
 /**
+ * Ensures that the account has the security officer role.
+ *
+ * @throws   AccessDenied  The account does not have the security officer role.
+ */
+fun ServiceImpl<*>.ensureTechnicalAdmin() {
+    ensure(securityOfficerRole) // TODO introduce a technial admin role
+}
+
+/**
  * Ensures that there is an account in the context (Session.account != null).
  *
  * @throws   AccessDenied  There is no account in the context.

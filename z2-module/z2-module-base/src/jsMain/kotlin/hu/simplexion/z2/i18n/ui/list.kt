@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.layout.lowest
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.table.schematicColumn
 import hu.simplexion.z2.browser.table.table
+import hu.simplexion.z2.i18n.Languages
 import hu.simplexion.z2.i18n.model.Language
 
 internal fun Z2.list() =

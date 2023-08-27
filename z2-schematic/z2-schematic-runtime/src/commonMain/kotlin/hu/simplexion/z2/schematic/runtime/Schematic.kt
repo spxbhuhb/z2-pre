@@ -154,4 +154,20 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         ) = UuidListSchemaField(default, nil)
 
     }
+
+    // -----------------------------------------------------------------------------------
+    // Utility
+    // -----------------------------------------------------------------------------------
+
+    override fun toString() : String {
+        return this::class.simpleName + "(" + toString("=", ",") + ")"
+    }
+
+    fun toString(valueSeparator : String = "=", fieldSeparator : String = ", ") : String {
+        val fields = mutableListOf<String>()
+        for (field in schematicSchema.fields) {
+            fields += field.name + valueSeparator + field.toString(this)
+        }
+        return fields.joinToString(fieldSeparator)
+    }
 }

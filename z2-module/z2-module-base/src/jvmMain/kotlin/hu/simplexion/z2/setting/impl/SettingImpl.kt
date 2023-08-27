@@ -3,11 +3,11 @@ package hu.simplexion.z2.setting.impl
 import hu.simplexion.z2.auth.context.ensureSelfOrSecurityOfficer
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.history.settingHistory
+import hu.simplexion.z2.history.util.settingHistory
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.setting.api.SettingApi
 import hu.simplexion.z2.setting.model.Setting
-import hu.simplexion.z2.setting.tables.SettingTable.Companion.settingTable
+import hu.simplexion.z2.setting.table.SettingTable.Companion.settingTable
 
 class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
 

@@ -1,7 +1,7 @@
 package hu.simplexion.z2.auth.ui.role
 
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.ui.Roles
+import hu.simplexion.z2.auth.Roles
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline

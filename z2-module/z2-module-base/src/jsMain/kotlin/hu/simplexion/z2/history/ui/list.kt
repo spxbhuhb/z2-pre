@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.layout.lowest
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.table.schematicColumn
 import hu.simplexion.z2.browser.table.table
+import hu.simplexion.z2.history.histories
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.model.HistoryFlags
 import kotlinx.datetime.Clock
@@ -31,7 +32,7 @@ internal fun Z2.list() =
 
                 schematicColumn { HistoryEntry().createdAt }
                 schematicColumn { HistoryEntry().createdBy }
-                schematicColumn { HistoryEntry().content }
+                schematicColumn { HistoryEntry().textContent }
 
                 actionColumn {
                     action {

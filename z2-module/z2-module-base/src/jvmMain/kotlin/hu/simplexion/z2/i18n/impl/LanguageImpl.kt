@@ -7,8 +7,7 @@ import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.i18n.api.LanguageApi
 import hu.simplexion.z2.i18n.model.Language
-import hu.simplexion.z2.i18n.tables.LanguageTable
-import hu.simplexion.z2.i18n.tables.LanguageTable.Companion.languageTable
+import hu.simplexion.z2.i18n.table.LanguageTable.Companion.languageTable
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
 class LanguageImpl : LanguageApi, ServiceImpl<LanguageImpl> {
