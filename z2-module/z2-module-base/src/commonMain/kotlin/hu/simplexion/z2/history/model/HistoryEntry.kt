@@ -9,9 +9,10 @@ class HistoryEntry : Schematic<HistoryEntry>() {
 
     var createdAt by instant()
     var createdBy by uuid<AccountPrivate>().nullable()
-    var createdFor by uuid<Any>().nullable()
 
     var flags by int()
+    var topic by string()
+    var subject by uuid<Any>().nullable()
 
     var contentType by string()
     var textContent by string()

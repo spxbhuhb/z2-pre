@@ -8,6 +8,7 @@ import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.setting.api.SettingApi
 import hu.simplexion.z2.setting.model.Setting
 import hu.simplexion.z2.setting.table.SettingTable.Companion.settingTable
+import hu.simplexion.z2.setting.ui.settingStrings
 
 class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
 
@@ -17,14 +18,14 @@ class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
 
     override suspend fun put(owner: UUID<AccountPrivate>, path: String, value: String) {
         ensureSelfOrSecurityOfficer(owner)
-        settingHistory(owner, path, value)
+        settingHistory(owner, settingStrings.settingsChange, path, value)
         settingTable.put(owner, path, value)
     }
 
     override suspend fun put(owner: UUID<AccountPrivate>, settings: List<Setting>) {
         ensureSelfOrSecurityOfficer(owner)
         for (setting in settings) {
-            settingHistory(owner, setting.path, setting.value)
+            settingHistory(owner, settingStrings.settingsChange, setting.path, setting.value)
             settingTable.put(owner, setting.path, setting.value) // TODO put all settings into one insert
         }
     }

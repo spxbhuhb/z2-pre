@@ -28,24 +28,27 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     fun add(
         createdBy: UUID<AccountPrivate>?,
         flags: Int,
+        topic: String,
         content: String
     ) {
-        add(createdBy, UUID.NIL, flags, "text/plain", content)
+        add(createdBy, flags, topic, UUID.NIL, "text/plain", content)
     }
 
     fun add(
         createdBy: UUID<AccountPrivate>?,
-        createdFor: UUID<*>,
         flags: Int,
+        topic: String,
+        subject: UUID<*>?,
         contentType: String,
         content: String
     ) {
         historyEntryTable.insert(
             HistoryEntry().apply {
                 this.createdBy = createdBy
-                @Suppress("UNCHECKED_CAST")
-                this.createdFor = createdFor as UUID<Any>
                 this.flags = flags
+                this.topic = topic
+                @Suppress("UNCHECKED_CAST")
+                this.subject = subject as? UUID<Any>
                 this.contentType = contentType
                 this.textContent = content
             }

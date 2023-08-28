@@ -14,11 +14,11 @@ object fieldNameFallbacks : LocalizedTextStore(UUID.nil())
 
 fun SchemaField<*>.label() : LocalizedText {
     for (store in textStoreRegistry) {
-        val localized = store.map[name]
+        val localized = store._map[name]
         if (localized != null) return localized
     }
 
-    return fieldNameFallbacks.map.getOrPut(name) {
+    return fieldNameFallbacks._map.getOrPut(name) {
         BasicLocalizedText(name, name.toCamelCaseWords(), fieldNameFallbacks)
     }
 }

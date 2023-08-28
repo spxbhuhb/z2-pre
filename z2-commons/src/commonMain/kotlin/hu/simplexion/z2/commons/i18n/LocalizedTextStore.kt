@@ -1,3 +1,5 @@
+@file:Suppress("PropertyName")
+
 package hu.simplexion.z2.commons.i18n
 
 import hu.simplexion.z2.commons.util.PublicApi
@@ -8,14 +10,14 @@ import kotlin.reflect.KProperty
 @PublicApi
 open class LocalizedTextStore(
     @PublicApi
-    val uuid : UUID<LocalizedTextStore>
+    val _uuid : UUID<LocalizedTextStore>
 ) {
-    val map = mutableMapOf<String, LocalizedText>()
-    val support = mutableMapOf<String, LocalizedTextSupport>()
+    val _map = mutableMapOf<String, LocalizedText>()
+    val _support = mutableMapOf<String, LocalizedTextSupport>()
 
     class LocalizedTextDelegate : ReadOnlyProperty<LocalizedTextStore, LocalizedText> {
         override fun getValue(thisRef: LocalizedTextStore, property: KProperty<*>): LocalizedText {
-            return thisRef.map[property.name] !!
+            return thisRef._map[property.name] !!
         }
     }
 
@@ -24,14 +26,14 @@ open class LocalizedTextStore(
     }
 
     operator fun String.provideDelegate(thisRef: LocalizedTextStore, prop: KProperty<*>): ReadOnlyProperty<LocalizedTextStore, LocalizedText> {
-        thisRef.map[prop.name] = BasicLocalizedText(prop.name, this, thisRef)
+        thisRef._map[prop.name] = BasicLocalizedText(prop.name, this, thisRef)
         return LocalizedTextDelegate()
     }
 
     operator fun Pair<LocalizedText,String>.provideDelegate(thisRef: LocalizedTextStore, prop: KProperty<*>): ReadOnlyProperty<LocalizedTextStore, LocalizedText> {
         BasicLocalizedTextSupport(prop.name, this.first.key, this.second).also {
-            thisRef.map[prop.name] = it
-            thisRef.support[it.supportFor] = it
+            thisRef._map[prop.name] = it
+            thisRef._support[it.supportFor] = it
         }
         return LocalizedTextDelegate()
     }

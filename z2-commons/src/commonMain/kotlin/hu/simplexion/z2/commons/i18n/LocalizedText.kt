@@ -14,6 +14,6 @@ interface LocalizedText {
     val support : LocalizedTextSupport?
         get() {
             if (this !is BasicLocalizedText) return null
-            return this.store.support[key]
+            return this.store._support[key]
         }
 }

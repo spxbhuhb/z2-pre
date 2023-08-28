@@ -11,6 +11,7 @@ import hu.simplexion.z2.browser.table.schematicColumn
 import hu.simplexion.z2.browser.table.table
 import hu.simplexion.z2.i18n.Languages
 import hu.simplexion.z2.i18n.model.Language
+import hu.simplexion.z2.setting.ui.settingStrings
 
 internal fun Z2.list() =
     lowest(borderOutline) {
@@ -19,8 +20,8 @@ internal fun Z2.list() =
             table<Language> {
 
                 title {
-                    text = i18nStrings.languages
-                    action(i18nStrings.addLanguage) { add() }
+                    text = settingStrings.languages
+                    action(settingStrings.addLanguage) { add() }
                 }
 
                 rowId = { it.id }

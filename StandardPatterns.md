@@ -26,6 +26,7 @@ src / jvmMain / kotlin / <module-package>
 
     impl             - service API implementations
     table            - Exposed table definitions
+    runtime          - runtime support for service implementations and workers
     worker           - background workers
     util             - utility functions and classes
     module.kt        - module definition function for JVM, `authJvm` for example

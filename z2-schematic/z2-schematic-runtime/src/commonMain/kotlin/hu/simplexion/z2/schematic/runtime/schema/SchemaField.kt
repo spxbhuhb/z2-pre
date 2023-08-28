@@ -83,6 +83,10 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
         return getValue(schematic).toString()
     }
 
+    fun copy(value : Any?) : VT? {
+        return toTypedValue(value, mutableListOf())
+    }
+
     override fun getValue(thisRef: Any, property: KProperty<*>): VT = placeholder()
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value : VT) = placeholder()

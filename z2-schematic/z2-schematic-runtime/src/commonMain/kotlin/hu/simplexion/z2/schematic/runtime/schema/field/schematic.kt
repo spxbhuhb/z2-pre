@@ -97,6 +97,13 @@ open class SchematicSchemaField<T : Schematic<T>>(
         return NullableSchematicSchemaField(definitionDefault)
     }
 
+    override fun copy(value: Any?): T? {
+        if (value == null) return null
+        @Suppress("UNCHECKED_CAST")
+        value as Schematic<T>
+        return value.copy()
+    }
+
 }
 
 open class NullableSchematicSchemaField<T : Schematic<T>>(

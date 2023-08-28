@@ -64,4 +64,16 @@ interface ListSchemaField<VT> : SchemaField<List<VT>> {
         )
     }
 
+    @Suppress("UNCHECKED_CAST")
+    override fun copy(value: Any?): List<VT>? {
+        if (value == null) return null
+
+        value as SchematicList<VT>
+
+        return SchematicList(
+            null,
+            value.map { itemSchemaField.copy(it) }.toMutableList() as MutableList<VT>,
+            this
+        )
+    }
 }

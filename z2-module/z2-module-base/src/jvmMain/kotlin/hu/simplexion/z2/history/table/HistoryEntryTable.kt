@@ -22,8 +22,9 @@ open class HistoryEntryTable(
 
     val createdAt = timestamp("createdAt")
     val createdBy = reference("createdBy", accountPrivateTable)
-    val createdFor = uuid("createdFor")
     val flags = integer("flags")
+    val topic = text("topic")
+    val subject = uuid("subject").nullable()
     val contentType = varchar("contentType", 120)
     val textContent = text("textContent")
 

@@ -22,53 +22,33 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
     override suspend fun add(registration: WorkerRegistration): UUID<WorkerRegistration> {
         ensureTechnicalAdmin()
         validate(registration)
-        technicalHistory(registration)
-
-        registration.uuid = workerRegistrationTable.insert(registration)
-
-        runtime += registration
-
-        return registration.uuid
+        return runtime.add(serviceContext, registration)
     }
 
     override suspend fun update(registration: WorkerRegistration) {
         ensureTechnicalAdmin()
         validate(registration)
-        technicalHistory(registration)
-
-        if (registration.enabled) {
-            start(registration)
-        } else {
-            stop(registration)
-        }
-
-        workerRegistrationTable.update(registration.uuid, registration)
+        runtime.update(serviceContext, registration)
     }
 
     override suspend fun remove(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
-        technicalHistory(registration)
-
-        workerRegistrationTable.remove(registration)
+        runtime.remove(serviceContext, registration)
     }
 
     override suspend fun list(): List<WorkerRegistration> {
         ensureTechnicalAdmin()
-        return workerRegistrationTable.list()
+        return runtime.list()
     }
 
     override suspend fun enable(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
-        technicalHistory(registration)
-        workerRegistrationTable.setEnabled(registration, true)
-        runtime.start(registration)
+        runtime.setEnabled(serviceContext, registration, true)
     }
 
     override suspend fun disable(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
-        technicalHistory(registration)
-        workerRegistrationTable.setEnabled(registration, true)
-        runtime.stop(registration)
+        runtime.setEnabled(serviceContext, registration, false)
     }
 
     override suspend fun copy(registration: UUID<WorkerRegistration>): UUID<WorkerRegistration> {

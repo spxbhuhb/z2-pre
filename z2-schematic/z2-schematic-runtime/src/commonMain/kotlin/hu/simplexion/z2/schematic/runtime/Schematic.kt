@@ -159,6 +159,15 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
     // Utility
     // -----------------------------------------------------------------------------------
 
+    // FIXME this is a real mess, fix schematic field type handling already!
+    fun copy() : ST {
+        val newInstance = schematicCompanion.newInstance()
+        for (field in schematicSchema.fields) {
+            newInstance.schematicValues[field.name] = field.copy(this.schematicValues[field.name])
+        }
+        return newInstance
+    }
+
     override fun toString() : String {
         return this::class.simpleName + "(" + toString("=", ",") + ")"
     }
