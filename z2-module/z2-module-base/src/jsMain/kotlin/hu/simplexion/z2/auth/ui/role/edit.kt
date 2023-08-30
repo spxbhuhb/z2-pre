@@ -1,7 +1,7 @@
 package hu.simplexion.z2.auth.ui.role
 
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.Roles
+import hu.simplexion.z2.auth.roles
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
@@ -15,10 +15,10 @@ import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 
 internal fun add() =
-    roleModal(Role(), authStrings.addRole, basicStrings.add) { Roles.add(it) }
+    roleModal(Role(), authStrings.addRole, basicStrings.add) { roles.add(it) }
 
 internal fun edit(role: Role) =
-    roleModal(role, authStrings.editRole, basicStrings.edit) { Roles.update(it) }
+    roleModal(role, authStrings.editRole, basicStrings.edit) { roles.update(it) }
 
 internal fun roleModal(
     role: Role,

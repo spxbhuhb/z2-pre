@@ -1,7 +1,7 @@
 package hu.simplexion.z2.auth.ui.account
 
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.Accounts
+import hu.simplexion.z2.auth.accounts
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
@@ -25,7 +25,7 @@ internal fun Z2.list() =
                 }
 
                 rowId = { it.uuid }
-                query = { Accounts.list() }
+                query = { accounts.list() }
 
                 schematicColumn { AccountPrivate().email }
                 schematicColumn { AccountPrivate().fullName }

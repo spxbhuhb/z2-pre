@@ -13,6 +13,7 @@ class SchematicUuidTableTest {
 
         val schematic = TestSchematic().apply {
             booleanField = true
+            enumField = TestEnum.EnumValue2
             intField = 12
             stringField = "abc"
             uuidField = UUID()
@@ -37,6 +38,7 @@ class SchematicUuidTableTest {
 
             readback = TestTable.get(schematic.uuid)
             assertEquals(789, readback.intField)
+            assertEquals(TestEnum.EnumValue2, readback.enumField)
 
             TestTable.remove(schematic.uuid)
             assertEquals(0, TestTable.list().size)

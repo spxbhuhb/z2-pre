@@ -10,14 +10,14 @@ import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
-import hu.simplexion.z2.i18n.Languages
+import hu.simplexion.z2.i18n.languages
 import hu.simplexion.z2.i18n.model.Language
 
 internal fun add() =
-    languageModal(Language(), i18nStrings.addLanguage, basicStrings.add) { Languages.add(it) }
+    languageModal(Language(), i18nStrings.addLanguage, basicStrings.add) { languages.add(it) }
 
 internal fun edit(language: Language) =
-    languageModal(language, i18nStrings.editLanguage, basicStrings.edit) { Languages.update(it) }
+    languageModal(language, i18nStrings.editLanguage, basicStrings.edit) { languages.update(it) }
 
 internal fun languageModal(
     language: Language,

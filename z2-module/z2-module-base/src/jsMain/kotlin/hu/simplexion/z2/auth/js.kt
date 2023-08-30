@@ -5,9 +5,9 @@ import hu.simplexion.z2.auth.api.RoleApi
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.service.runtime.getService
 
-val Accounts = getService<AccountApi>()
-val Roles = getService<RoleApi>()
-val Sessions = getService<SessionApi>()
+val accounts = getService<AccountApi>()
+val roles = getService<RoleApi>()
+val sessions = getService<SessionApi>()
 
 fun authJs() {
     authCommon()

@@ -1,9 +1,6 @@
 package hu.simplexion.z2.browser.table.builders
 
-import hu.simplexion.z2.browser.css.alignSelfCenter
-import hu.simplexion.z2.browser.css.gridGap16
-import hu.simplexion.z2.browser.css.titleLarge
-import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
+import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton
@@ -13,6 +10,8 @@ import hu.simplexion.z2.commons.i18n.LocalizedText
 class TitleBuilder<T> {
 
     var text: LocalizedText = basicStrings.EMPTY
+
+    var textClasses = arrayOf(textTransformCapitalize)
 
     val actions = mutableListOf<TableActionBuilder<T>>()
 
@@ -33,7 +32,7 @@ class TitleBuilder<T> {
                     gridTemplateColumns = "min-content min-content"
                     gridTemplateRows = "min-content"
 
-                    div(alignSelfCenter, titleLarge, whiteSpaceNoWrap) {
+                    div(alignSelfCenter, titleLarge, whiteSpaceNoWrap, *textClasses) {
                         text { text }
                     }
                 }

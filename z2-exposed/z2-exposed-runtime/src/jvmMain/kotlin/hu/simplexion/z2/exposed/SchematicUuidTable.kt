@@ -97,7 +97,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
             val column = table.columns.firstOrNull { it.name == field.name } as? Column<Any?> ?: continue
             val value = schematic.schematicValues[field.name]
             if (field.type == SchemaFieldType.UUID) {
-                statement[column] = (value as UUID<*>).jvm
+                statement[column] = (value as? UUID<*>)?.jvm
             } else {
                 statement[column] = value
             }

@@ -3,8 +3,8 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.0"
-    id("hu.simplexion.z2.schematic") version "2023.7.30-SNAPSHOT"
-    id("hu.simplexion.z2.service") version "2023.8.21-SNAPSHOT"
+    id("hu.simplexion.z2.schematic") version "2023.8.30-SNAPSHOT"
+    id("hu.simplexion.z2.service") version "2023.8.30-SNAPSHOT"
 
     java
     application
