@@ -13,4 +13,8 @@ object workerStrings : LocalizedTextStore(UUID("885e18c7-cb5c-4e50-842f-58bd34ee
     val missingProvider by "Cannot start worker, provider is missing"
     val unexpectedError by "unexpected error"
     val statusChange by "Worker Status Change"
+    val startRuntime by "starting worker runtime and all auto-start workers"
+    val stopRuntime by "stopping all workers and the worker runtime"
+    val addProvider by "add worker provider"
+    val provider by "provider"
 }

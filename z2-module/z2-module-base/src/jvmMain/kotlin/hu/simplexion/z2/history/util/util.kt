@@ -4,6 +4,7 @@ import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.accountOrNull
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.i18n.format
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.impl.HistoryImpl.Companion.historyImpl
 import hu.simplexion.z2.history.model.HistoryFlags
@@ -35,21 +36,22 @@ fun ServiceImpl<*>.settingHistory(owner : UUID<AccountPrivate>, topic: Localized
 }
 
 fun systemHistory(topic: LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    technicalHistory(UUID.nil(), topic, subject, *parameters)
+    // TECHNICAL here is intentional, system history is actually technical history
+    history(UUID.nil(), HistoryFlags.TECHNICAL, topic, subject, *parameters)
 }
 
 fun ServiceImpl<*>.technicalHistory(topic : LocalizedText, vararg parameters: Pair<LocalizedText, Any?>) {
-    technicalHistory(serviceContext.accountOrNull, topic, null, *parameters)
+    history(serviceContext.accountOrNull, HistoryFlags.TECHNICAL, topic, null, *parameters)
 }
 
 fun technicalHistory(serviceContext: ServiceContext?, topic : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    technicalHistory(serviceContext?.accountOrNull, topic, subject, *parameters)
+    history(serviceContext?.accountOrNull, HistoryFlags.TECHNICAL, topic, subject, *parameters)
 }
 
-fun technicalHistory(account : UUID<AccountPrivate>?, topic: LocalizedText, subject: UUID<*>?, vararg parameters: Pair<LocalizedText, Any?>) {
-    val formatted = mutableListOf<String>()
-    for (parameter in parameters) {
-        formatted += parameter.first.toString() + "=" + parameter.second
-    }
-    historyImpl.add(account, HistoryFlags.TECHNICAL, topic.toString(), subject, "text/plain", formatted.joinToString())
+fun technicalHistory(createdBy: UUID<AccountPrivate>, topic : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
+    history(createdBy, HistoryFlags.TECHNICAL, topic, subject, *parameters)
+}
+
+fun history(account : UUID<AccountPrivate>?, flags : Int, topic: LocalizedText, subject: UUID<*>?, vararg parameters: Pair<LocalizedText, Any?>) {
+    historyImpl.add(account, flags, topic.toString(), subject, "text/plain", parameters.format())
 }

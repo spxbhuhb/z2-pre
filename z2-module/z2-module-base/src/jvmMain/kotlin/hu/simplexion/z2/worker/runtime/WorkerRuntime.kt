@@ -1,107 +1,242 @@
 package hu.simplexion.z2.worker.runtime
 
 import hu.simplexion.z2.alarm.impl.AlarmImpl.Companion.alarmImpl
-import hu.simplexion.z2.auth.context.accountOrNull
+import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.commons.util.use
-import hu.simplexion.z2.history.ui.historyStrings.technicalHistory
 import hu.simplexion.z2.history.util.systemHistory
 import hu.simplexion.z2.history.util.technicalHistory
-import hu.simplexion.z2.service.runtime.ServiceContext
+import hu.simplexion.z2.logging.util.info
 import hu.simplexion.z2.worker.model.*
 import hu.simplexion.z2.worker.table.WorkerRegistrationTable.Companion.workerRegistrationTable
 import hu.simplexion.z2.worker.ui.workerStrings
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Clock.System.now
+import org.jetbrains.exposed.sql.transactions.transaction
 
-object WorkerRuntime {
+open class WorkerRuntime {
 
-    private val workerLock = Lock()
+    companion object {
+        private var workerRuntime: WorkerRuntime? = null
 
-    private val workerProviders = mutableMapOf<UUID<WorkerProvider>, WorkerProvider>()
+        private val runtimeLock = Lock()
 
-    private val workerRegistrations = mutableMapOf<UUID<WorkerRegistration>, WorkerRegistration>()
-
-    private val workerInstances = mutableMapOf<UUID<WorkerRegistration>, BackgroundWorker>()
-
-    private val workerScope = CoroutineScope(Dispatchers.IO)
-
-    fun start() {
-        for (registration in workerRegistrationTable.list()) {
-            workerLock.use {
-                workerRegistrations[registration.uuid] = registration
+        fun start() {
+            runtimeLock.use {
+                check(workerRuntime != null) { "attempting to start workerRuntime twice" }
+                info(workerStrings.workers, workerStrings.startRuntime)
+                WorkerRuntime().also {
+                    workerRuntime = it
+                    it.start()
+                }
             }
-            start(registration)
+        }
+
+        fun stop() {
+            runtimeLock.use {
+                info(workerStrings.workers, workerStrings.stopRuntime)
+                workerRuntime?.stop(wait = true)
+                workerRuntime = null
+            }
+        }
+
+        suspend fun sendAndWait(
+            executor: UUID<AccountPrivate>,
+            type: WorkerRuntimeMessageType,
+            registration: WorkerRegistration? = null,
+            registrationUuid: UUID<WorkerRegistration>? = null,
+            provider: WorkerProvider? = null,
+            timeout: Long = 3000L
+        ): WorkerRuntimeResponse {
+            val responseChannel = Channel<WorkerRuntimeResponse>()
+
+            checkNotNull(workerRuntime).messages.send(
+                WorkerRuntimeRequest(
+                    executor, type, registration, registrationUuid, provider, responseChannel
+                )
+            )
+
+            return withTimeout(timeout) {
+                val response = responseChannel.receive()
+                if (response.exception != null) throw response.exception
+                response
+            }
         }
     }
 
-    fun stop() {
-        workerLock.use {
-            workerScope.cancel()
+    protected val workerProviders = mutableMapOf<UUID<WorkerProvider>, WorkerProvider>()
+
+    protected val workerRegistrations = mutableMapOf<UUID<WorkerRegistration>, WorkerRegistration>()
+
+    protected val workerInstances = mutableMapOf<UUID<WorkerRegistration>, BackgroundWorker>()
+
+    protected val scope = CoroutineScope(Dispatchers.IO)
+
+    val messages = Channel<WorkerRuntimeRequest>(100)
+
+    protected fun start() {
+        scope.launch { main() }
+    }
+
+    protected fun stop(wait: Boolean = true) {
+        runBlocking {
+            messages.close()
+            while (wait && scope.isActive) {
+                delay(100)
+            }
+        }
+    }
+
+    protected suspend fun main() {
+        for (registration in workerRegistrationTable.list()) {
+            workerRegistrations[registration.uuid] = registration
+            start(registration)
+        }
+
+        try {
+
+            for (message in messages) {
+                try {
+                    process(message)
+                } catch (ex: Exception) {
+                    if (message.responseChannel != null) {
+                        message.responseChannel.trySend(WorkerRuntimeResponse(exception = ex))
+                    }
+                }
+            }
+
+        } finally {
+            scope.cancel()
             workerInstances.clear()
         }
     }
 
-    operator fun plusAssign(registration: WorkerRegistration) {
-        workerLock.use {
-            require(registration.uuid !in workerRegistrations)
-            workerRegistrations[registration.uuid] = registration
-            if (registration.enabled) {
-                start(registration)
+    protected suspend fun process(message: WorkerRuntimeRequest) {
+        transaction {
+            runBlocking {
+                when (message.type) {
+                    WorkerRuntimeMessageType.AddProvider -> addProvider(message)
+                    WorkerRuntimeMessageType.AddRegistration -> addRegistration(message)
+                    WorkerRuntimeMessageType.UpdateRegistration -> TODO()
+                    WorkerRuntimeMessageType.RemoveRegistration -> removeRegistration(message)
+                    WorkerRuntimeMessageType.ListRegistrations -> listRegistrations(message)
+                    WorkerRuntimeMessageType.StartWorker -> startWorker(requireNotNull(message.registrationUuid))
+                    WorkerRuntimeMessageType.StopWorker -> stopWorker(requireNotNull(message.registrationUuid))
+                    WorkerRuntimeMessageType.EnableRegistration -> setEnabled(message, true)
+                    WorkerRuntimeMessageType.DisableRegistration -> setEnabled(message, false)
+                }
             }
         }
     }
 
-    suspend operator fun minusAssign(registration: UUID<WorkerRegistration>) {
-        workerLock.use {
-            requireNotNull(workerRegistrations[registration]).also {
-                stop(it)
-                workerRegistrations.remove(registration)
-            }
-        }
-    }
-
-    operator fun plusAssign(provider: WorkerProvider) {
+    protected fun addProvider(message: WorkerRuntimeRequest) {
+        val provider = requireNotNull(message.provider)
+        require(provider.uuid !in workerProviders) { "attempt to register a provider twice: ${provider.uuid}" }
         workerProviders[provider.uuid] = provider
+        message.responseChannel?.trySend(WorkerRuntimeResponse())
+
+        info(workerStrings.worker, workerStrings.addProvider, workerStrings.provider to provider.uuid)
     }
 
-    internal fun start(registration: UUID<WorkerRegistration>): Boolean {
+    protected fun addRegistration(message: WorkerRuntimeRequest) {
+        val registration = requireNotNull(message.registration)
+
+        val uuid = workerRegistrationTable.insert(registration)
+        val internal = registration.copy().also { it.uuid = uuid }
+
+        technicalHistory(message.executor, workerStrings.worker, registration.uuid, commonStrings.operation to commonStrings.add)
+
+        workerRegistrations[registration.uuid] = internal
+
+        if (registration.enabled && registration.startMode != WorkerStartMode.Manual) {
+            start(registration)
+        }
+
+        message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
+    }
+
+    protected suspend fun updateRegistration(message: WorkerRuntimeRequest) {
+        val update = requireNotNull(message.registration)
+        val internal = requireNotNull(workerRegistrations[update.uuid])
+
+        workerRegistrationTable.update(internal.uuid, internal)
+
+        if (! internal.enabled) {
+            stopWorker(internal.uuid)
+        }
+
+        technicalHistory(message.executor, workerStrings.worker, internal.uuid, commonStrings.operation to commonStrings.update)
+
+        message.responseChannel?.trySend(WorkerRuntimeResponse())
+    }
+
+    protected suspend fun removeRegistration(message: WorkerRuntimeRequest) {
+        val uuid = requireNotNull(message.registrationUuid)
+
+        technicalHistory(message.executor, workerStrings.worker, uuid, commonStrings.operation to commonStrings.remove)
+
+        workerRegistrations[uuid]?.also {
+            stop(it)
+            workerRegistrations.remove(uuid)
+            workerRegistrationTable.remove(uuid)
+        }
+
+        message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
+    }
+
+    protected suspend fun setEnabled(message: WorkerRuntimeRequest, enabled : Boolean) {
+        val uuid = requireNotNull(message.registrationUuid)
+
+        workerRegistrationTable.setEnabled(uuid, enabled)
+
+        if (!enabled) {
+            stopWorker(uuid)
+        }
+
+        technicalHistory(message.executor, workerStrings.worker, uuid, commonStrings.operation to commonStrings.update, commonStrings.enabled to enabled)
+
+        message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
+    }
+
+    protected fun listRegistrations(message: WorkerRuntimeRequest) {
+        message.responseChannel?.trySend(
+            WorkerRuntimeResponse(
+                registrationList = workerRegistrations.values.map { it.copy() }
+            )
+        )
+    }
+
+    protected fun startWorker(registration: UUID<WorkerRegistration>): Boolean {
         return start(requireNotNull(workerRegistrations[registration]))
     }
 
-    internal fun start(registration: WorkerRegistration): Boolean {
-        workerLock.use {
-            if (registration.uuid in workerInstances) return false
+    protected fun start(registration: WorkerRegistration): Boolean {
+        if (registration.uuid in workerInstances) return false
 
-            val provider = workerProviders[registration.provider]
-            check(provider != null) { workerStrings.missingProvider } // TODO documentation
+        val provider = workerProviders[registration.provider]
+        check(provider != null) { workerStrings.missingProvider } // TODO documentation
 
-            val instance = provider.newBackgroundWorker(registration)
-            workerInstances[registration.uuid] = instance
-            workerScope.launch { runWorker(instance) }
-            return true
-        }
+        val instance = provider.newBackgroundWorker(registration)
+        workerInstances[registration.uuid] = instance
+        scope.launch { runWorker(instance) }
+        return true
     }
 
-    internal suspend fun stop(registration: UUID<WorkerRegistration>) {
+    protected suspend fun stopWorker(registration: UUID<WorkerRegistration>) {
         stop(requireNotNull(workerRegistrations[registration]))
     }
 
-    internal suspend fun stop(registration: WorkerRegistration) {
-        workerLock.use {
-            // TODO think about the proper way to stop workers, maybe there is no proper way?
-            // for sure the we should wait with other worker related operations until it
-            // is stopping
-            workerInstances.remove(registration.uuid)?.stop()
-        }
+    protected suspend fun stop(registration: WorkerRegistration) {
+        // TODO think about the proper way to stop workers, maybe there is no proper way?
+        // for sure the we should wait with other worker related operations until it
+        // is stopping
+        workerInstances.remove(registration.uuid)?.stop()
     }
 
-    suspend fun runWorker(instance: BackgroundWorker) {
+    protected suspend fun runWorker(instance: BackgroundWorker) {
         val uuid = instance.registration
         uuid.setStatus(WorkerStatus.Running)
 
@@ -115,59 +250,22 @@ object WorkerRuntime {
         }
     }
 
-    fun UUID<WorkerRegistration>.setStatus(inStatus: WorkerStatus, message: String = "") : WorkerRegistration {
-        return workerLock.use {
-            workerRegistrations[this] !!.apply {
-                status = inStatus
-                lastStatusMessage = message
-                lastStatusChange = now()
-            }
+    protected fun UUID<WorkerRegistration>.setStatus(inStatus: WorkerStatus, message: String = ""): WorkerRegistration {
+        return workerRegistrations[this] !!.apply {
+            status = inStatus
+            lastStatusMessage = message
+            lastStatusChange = now()
         }.also {
             workerRegistrationTable.setStatus(it)
-            systemHistory(workerStrings.statusChange, it.uuid, commonStrings.name to it.name, commonStrings.uuid to it.uuid, commonStrings.status to it.status)
+            systemHistory(
+                workerStrings.worker,
+                it.uuid,
+                commonStrings.operation to commonStrings.update,
+                commonStrings.name to it.name,
+                commonStrings.uuid to it.uuid,
+                commonStrings.status to it.status
+            )
         }
     }
-
-    // --------------------------------------------------------
-    // API support
-    // --------------------------------------------------------
-
-    fun add(serviceContext: ServiceContext?, registration: WorkerRegistration): UUID<WorkerRegistration> {
-        val uuid = workerRegistrationTable.insert(registration)
-        technicalHistory(serviceContext, workerStrings.addWorker, uuid, commonStrings.data to registration)
-
-        val internal = registration.copy().also { it.uuid = uuid }
-
-        workerLock.use {
-            workerRegistrations[uuid] = internal
-            if (internal.enabled && internal.startMode != WorkerStartMode.Manual) {
-                start(internal)
-            }
-        }
-
-        return uuid
-    }
-
-    fun update(serviceContext: ServiceContext?, registration: WorkerRegistration) {
-        val internal = workerLock.use {
-
-        }
-
-        technicalHistory(serviceContext, workerStrings.addWorker, uuid, commonStrings.data to registration)
-
-    }
-
-    fun remove(serviceContext: ServiceContext?, registration: UUID<WorkerRegistration>) {
-
-    }
-
-    fun list(): List<WorkerRegistration> {
-
-    }
-
-    fun setEnabled(serviceContext: ServiceContext?, registration: UUID<WorkerRegistration>, value : Boolean) {
-
-    }
-
 
 }
