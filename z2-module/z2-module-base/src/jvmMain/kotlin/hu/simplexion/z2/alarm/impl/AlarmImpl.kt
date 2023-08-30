@@ -11,8 +11,8 @@ class AlarmImpl : AlarmApi, ServiceImpl<AlarmImpl> {
         val alarmImpl = AlarmImpl()
     }
 
-    override suspend fun alarm(subject: UUID<*>, message: LocalizedText, ex: Exception) {
-        println("$subject $message")
-        ex.printStackTrace()
-    }
+//    override suspend fun alarm(subject: UUID<*>, message: LocalizedText, ex: Exception) {
+//        println("$subject $message")
+//        ex.printStackTrace()
+//    }
 }

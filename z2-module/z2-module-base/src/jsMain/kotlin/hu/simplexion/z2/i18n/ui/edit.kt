@@ -3,22 +3,21 @@ package hu.simplexion.z2.i18n.ui
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
-import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
+import hu.simplexion.z2.browser.schematic.field
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.i18n.Languages
 import hu.simplexion.z2.i18n.model.Language
-import hu.simplexion.z2.setting.ui.settingStrings
 
 internal fun add() =
-    languageModal(Language(), settingStrings.addLanguage, basicStrings.add) { Languages.add(it) }
+    languageModal(Language(), i18nStrings.addLanguage, basicStrings.add) { Languages.add(it) }
 
 internal fun edit(language: Language) =
-    languageModal(language, settingStrings.editLanguage, basicStrings.edit) { Languages.update(it) }
+    languageModal(language, i18nStrings.editLanguage, basicStrings.edit) { Languages.update(it) }
 
 internal fun languageModal(
     language: Language,

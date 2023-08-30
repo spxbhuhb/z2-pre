@@ -245,7 +245,7 @@ open class WorkerRuntime {
             uuid.setStatus(WorkerStatus.Stopped)
         } catch (ex: Exception) {
             uuid.setStatus(WorkerStatus.Fault, ex.localizedMessage).also {
-                alarmImpl.alarm(it.uuid, workerStrings.unexpectedError, ex)
+                // fIXME alarmImpl.alarm(it.uuid, workerStrings.unexpectedError, ex)
             }
         }
     }

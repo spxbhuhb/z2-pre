@@ -11,7 +11,7 @@ class TestProvider : WorkerProvider {
         get() = UUID
 
     override fun newBackgroundWorker(registration: WorkerRegistration): BackgroundWorker {
-        return TestWorker(registration)
+        return TestWorker(registration.uuid)
     }
 
     companion object {

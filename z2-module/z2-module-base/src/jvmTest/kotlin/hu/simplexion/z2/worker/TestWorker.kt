@@ -6,7 +6,7 @@ import hu.simplexion.z2.worker.model.WorkerRegistration
 import java.util.concurrent.ConcurrentHashMap
 
 class TestWorker(
-    override val registration: WorkerRegistration
+    override val registration: UUID<WorkerRegistration>
 ) : BackgroundWorker {
 
     companion object {
@@ -14,15 +14,15 @@ class TestWorker(
     }
 
     init {
-        state[registration.uuid] = false
+        state[registration] = false
     }
 
     override suspend fun start() {
-        state[registration.uuid] = true
+        state[registration] = true
     }
 
     override suspend fun stop() {
-        state[registration.uuid] = false
+        state[registration] = false
     }
 
 }

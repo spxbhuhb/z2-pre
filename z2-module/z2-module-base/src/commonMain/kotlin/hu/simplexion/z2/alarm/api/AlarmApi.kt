@@ -5,5 +5,5 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.Service
 
 interface AlarmApi : Service {
-    suspend fun alarm(subject : UUID<*>, message : LocalizedText, ex : Exception)
+    //suspend fun alarm(subject : UUID<*>, message : LocalizedText, ex : Exception)
 }

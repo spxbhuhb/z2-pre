@@ -17,7 +17,7 @@ interface EmailApi : Service {
      *
      * Requires technical administrator role or internal call.
      */
-    fun send(
+    suspend fun send(
         recipients: String,
         subject: String,
         content : String,
@@ -30,7 +30,7 @@ interface EmailApi : Service {
      *
      * Requires technical administrator role.
      */
-    fun query(query : EmailQuery) : List<Email>
+    suspend fun query(query : EmailQuery) : List<Email>
 
     /**
      * Stop the given e-mail if it hasn't been sent already.
@@ -38,7 +38,7 @@ interface EmailApi : Service {
      * Requires technical administrator role or the account has to be the same
      * as the `createdBy` of the e-mail.
      */
-    fun cancel(email : UUID<Email>)
+    suspend fun cancel(email : UUID<Email>)
 
     /**
      * Enable the e-mail worker, so it sends out e-mails. The system
@@ -47,7 +47,7 @@ interface EmailApi : Service {
      *
      * Requires technical administrator role.
      */
-    fun enableWorker()
+    suspend fun enableWorker()
 
     /**
      * Disable the e-mail worker, so it won't send e-mails.The system
@@ -56,17 +56,17 @@ interface EmailApi : Service {
      *
      * Requires technical administrator role.
      */
-    fun disableWorker()
+    suspend fun disableWorker()
 
     /**
      * Get the settings of the e-mail subsystem.
      *
      * Requires technical administrator role.
      */
-    fun getSettings() : EmailSettings
+    suspend fun getSettings() : EmailSettings
 
     /**
      * Set the settings of the e-mail subsystem.
      */
-    fun setSettings(settings : EmailSettings)
+    suspend fun setSettings(settings : EmailSettings)
 }
