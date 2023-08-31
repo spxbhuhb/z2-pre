@@ -9,41 +9,52 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.MouseEvent
 
 class StateLayer(
-    parent : Z2,
-    classes : Array<out String>
+    parent: Z2,
+    classes: Array<out String>,
+    disabled : Boolean
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
     classes
 ) {
-    var hasHover : Boolean = false
-    var hasFocus : Boolean = false
+    var disabled : Boolean = disabled
+        set(value) {
+            field = value
+            updateState()
+        }
+
+    var pressCount: Int = 0
+    var hasHover: Boolean = false
+    var hasFocus: Boolean = false
 
     init {
-        addClass(positionAbsolute)
+        addClass(positionAbsolute, overflowHidden)
         addEventListeners()
     }
 
     fun addEventListeners() {
-        onMouseEnter {
+        parent !!.onMouseEnter {
             hasHover = true
             updateState()
         }
-        onMouseLeave {
+
+        parent.onMouseLeave {
             hasHover = false
             updateState()
         }
 
-        parent!!.onFocus {
+        parent.onFocus {
             hasFocus = true
             updateState()
         }
+
         parent.onBlur {
             hasFocus = false
             updateState()
         }
 
         parent.onMouseDown {
+            pressCount++
             ripple(it)
         }
     }
@@ -51,8 +62,9 @@ class StateLayer(
     fun updateState() {
         removeClass(displayNone, stateLayerOpacityHover, stateLayerOpacityFocus)
 
-       when {
-            hasFocus -> addClass(stateLayerOpacityFocus)
+        when {
+            disabled -> addClass(displayNone)
+            hasFocus -> addClass(primary, stateLayerOpacityFocus)
             hasHover -> addClass(stateLayerOpacityHover)
             else -> addClass(displayNone)
         }
@@ -61,10 +73,10 @@ class StateLayer(
     /**
      * credit: https://www.geeksforgeeks.org/how-to-create-a-ripple-effect-on-click-the-button/
      */
-    fun ripple(event : MouseEvent) {
-        val target = (event.target as HTMLElement)
-        val x = event.clientX - target.offsetLeft
-        val y = event.clientY - target.offsetTop
+    fun ripple(event: MouseEvent) {
+        val boundingRect = parent!!.htmlElement.getBoundingClientRect()
+        val x = event.clientX - boundingRect.x
+        val y = event.clientY - boundingRect.y
 
         val ripple = document.createElement("span") as HTMLElement
         ripple.addClass("ripple")
@@ -73,6 +85,10 @@ class StateLayer(
 
         htmlElement.appendChild(ripple)
 
-        window.setTimeout({ ripple.remove() }, 300)
+        window.setTimeout({
+            ripple.remove()
+            pressCount--
+            updateState()
+        }, 1000)
     }
 }

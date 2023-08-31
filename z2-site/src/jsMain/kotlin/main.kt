@@ -69,6 +69,7 @@ object componentRouter : NavRouter() {
     val modal            by render(strings.modal)            { modalDemo() }
     val navigationDrawer by render(strings.navigationDrawer) { navigationDrawerDemo() }
     val popup            by render(strings.popup)            { popupDemo() }
+    val radioButton      by render(strings.radioButton)      { radioButtonDemo() }
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }

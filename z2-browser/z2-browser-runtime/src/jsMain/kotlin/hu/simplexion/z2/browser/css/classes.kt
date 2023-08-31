@@ -60,6 +60,9 @@ const val mb8 = "mb8"
 
 const val opacity38 = "opacity-38"
 
+const val outlineNone = "outline-none"
+
+const val overflowHidden = "overflow-hidden"
 const val overflowYAuto = "overflow-y-auto"
 
 const val p0 = "p0"

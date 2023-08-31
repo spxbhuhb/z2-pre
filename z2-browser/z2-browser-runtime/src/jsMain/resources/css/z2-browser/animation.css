@@ -4,20 +4,18 @@
 .ripple {
     position: absolute;
     border-radius: 50%;
-    /* To make it round */
     background-color: rgba(0, 0, 0, 0.3);
 
     width: 100px;
     height: 100px;
     margin-top: -50px;
-    /* for positioning */
     margin-left: -50px;
 
-    animation: ripple 1s;
+    animation: ripple-animation 1s;
     opacity: 0;
 }
 
-@keyframes ripple {
+@keyframes ripple-animation {
     from {
         opacity: 1;
         transform: scale(0);
@@ -25,6 +23,6 @@
 
     to {
         opacity: 0;
-        transform: scale(10);
+        transform: scale(1);
     }
 }

@@ -58,7 +58,7 @@ kotlin {
             }
         }
 
-        tasks["compileKotlinJs"].dependsOn("z2BrowserExtract")
+        tasks["jsBrowserRun"].dependsOn("z2BrowserExtract")
     }
 
     sourceSets["commonMain"].dependencies {

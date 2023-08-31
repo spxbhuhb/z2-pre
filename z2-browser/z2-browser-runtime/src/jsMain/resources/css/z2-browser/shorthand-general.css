@@ -56,6 +56,9 @@
 
 .opacity-38 { opacity: 0.38; }
 
+.outline-none { outline: none; }
+
+.overflow-hidden { overflow: hidden; }
 .overflow-y-auto { overflow-y: auto; }
 
 .p0 { padding: 0; }

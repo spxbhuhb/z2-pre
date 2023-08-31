@@ -16,6 +16,10 @@ open class Z2(
     val style
         get() = htmlElement.style
 
+    var zIndex : Int
+        get() = style.zIndex.toInt()
+        set(value) { style.zIndex = value.toString() }
+
     /**
      * Set `htmlElement.tabIndex`
      *
