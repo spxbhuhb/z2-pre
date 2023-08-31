@@ -4,7 +4,7 @@
 @import url(extensions.css);
 @import url(extensions.light.css); /* (prefers-color-scheme: light);*/
 /*@import url(extensions.dark.css) (prefers-color-scheme: dark);*/
-@import url(general.css)
+@import url(general.css);
 @import url(icon.css);
 @import url(layout.css);
 @import url(menu.css);
