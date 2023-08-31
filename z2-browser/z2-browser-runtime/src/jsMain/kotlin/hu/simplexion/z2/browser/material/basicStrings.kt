@@ -27,4 +27,6 @@ object basicStrings : LocalizedTextStore(UUID("2c9624be-efc7-499d-a5e3-6ca5b3da2
     val ok by "rendben"
     val previous by "előző"
     val next by "következő"
+    val searchInProgress = "...keresés..."
+    val noHits = "nincs találat"
 }

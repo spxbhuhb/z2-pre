@@ -6,6 +6,7 @@ const val bodySmall = "body-small"
 
 const val borderPrimary = "border-primary"
 const val borderOutline = "border-outline"
+const val borderTopOutline = "border-top-outline"
 
 const val primary = "primary"
 const val primaryText = "primary-text"
@@ -33,7 +34,6 @@ const val surfaceContainerHigh = "surface-container-high"
 const val surfaceContainer = "surface-container"
 const val surfaceContainerLow = "surface-container-low"
 const val surfaceContainerLowest = "surface-container-lowest"
-
 
 const val headlineLarge = "headline-large"
 const val headlineMedium = "headline-medium"

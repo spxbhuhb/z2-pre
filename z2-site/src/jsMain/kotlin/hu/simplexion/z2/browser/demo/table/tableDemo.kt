@@ -7,7 +7,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.container
 import hu.simplexion.z2.browser.layout.low
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.browser.table.table
+import hu.simplexion.z2.browser.components.table.table
 
 fun Z2.tableDemo() =
     low(p0) {

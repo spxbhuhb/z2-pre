@@ -1,10 +1,10 @@
-package hu.simplexion.z2.browser.table.builders
+package hu.simplexion.z2.browser.components.table.builders
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.material.basicStrings
-import hu.simplexion.z2.browser.table.Table
-import hu.simplexion.z2.browser.table.TableColumn
+import hu.simplexion.z2.browser.components.table.Table
+import hu.simplexion.z2.browser.components.table.TableColumn
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
 open class ColumnBuilder<T> {

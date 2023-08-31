@@ -7,8 +7,8 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.container
 import hu.simplexion.z2.browser.layout.lowest
 import hu.simplexion.z2.browser.material.basicStrings
-import hu.simplexion.z2.browser.table.schematicColumn
-import hu.simplexion.z2.browser.table.table
+import hu.simplexion.z2.browser.components.table.schematicColumn
+import hu.simplexion.z2.browser.components.table.table
 import hu.simplexion.z2.history.histories
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.model.HistoryFlags

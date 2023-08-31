@@ -2,11 +2,11 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.z2.browser.table
+package hu.simplexion.z2.browser.components.table
 
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.table.builders.TableBuilder
+import hu.simplexion.z2.browser.components.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.applySuspend
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry

@@ -1,12 +1,12 @@
-package hu.simplexion.z2.browser.table.builders
+package hu.simplexion.z2.browser.components.table.builders
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.browser.table.Table
-import hu.simplexion.z2.browser.table.TableColumn
+import hu.simplexion.z2.browser.components.table.Table
+import hu.simplexion.z2.browser.components.table.TableColumn
 
 class ActionColumnBuilder<T> : ColumnBuilder<T>() {
 

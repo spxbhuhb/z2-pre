@@ -12,14 +12,23 @@ const val b0 = "b0"
 
 const val backgroundTransparent = "background-transparent"
 
+const val borderBottomLeftRadius0 = "border-bottom-left-radius-0"
+const val borderBottomLeftRadius28 = "border-bottom-left-radius-28"
+const val borderBottomRightRadius0 = "border-bottom-right-radius-0"
+const val borderBottomRightRadius28 = "border-bottom-right-radius-28"
+
 const val borderRadius2 = "border-radius-2"
 const val borderRadius4 = "border-radius-4"
 const val borderRadius8 = "border-radius-8"
 const val borderRadius12 = "border-radius-12"
 const val borderRadius16 = "border-radius-16"
 const val borderRadius20 = "border-radius-20"
+const val borderRadius28 = "border-radius-28"
 
-const val boxSizingBorder = "box-sizing-border"
+const val borderTopLeftRadius28 = "border-top-left-radius-28"
+const val borderTopRightRadius28 = "border-top-right-radius-28"
+
+const val boxSizingBorderBox = "box-sizing-border-box"
 
 const val cursorPointer = "cursor-pointer"
 
@@ -44,6 +53,8 @@ const val h24 = "h24"
 const val h32 = "h32"
 const val h40 = "h40"
 const val h42 = "h42"
+const val h46 = "h46"
+const val h56 = "h56"
 const val h60 = "h60"
 const val hFull = "h-full"
 

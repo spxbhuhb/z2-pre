@@ -25,7 +25,7 @@ open class ModalBase<T : Any?>(
 ) : Z2(
     null,
     document.createElement("div") as HTMLElement,
-    arrayOf(boxSizingBorder, onSurfaceText, surface, borderRadius12),
+    arrayOf(boxSizingBorderBox, onSurfaceText, surface, borderRadius12),
     builder as (Z2.() -> Unit)
 ) {
 

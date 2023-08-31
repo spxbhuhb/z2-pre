@@ -51,8 +51,9 @@ object strings : LocalizedTextStore(UUID("c6a52ab3-7a5a-4f07-ad49-239775845386")
     val other by "Other"
     val form by "Form"
     val dump by "Dump"
-    val setProgramatically by "Set Programatically"
+    val setProgrammatically by "Set Programmatically"
     val item1 by "item 1"
     val item2 by "item 2"
     val item3 by "item 3"
+    val search by "Search"
 }

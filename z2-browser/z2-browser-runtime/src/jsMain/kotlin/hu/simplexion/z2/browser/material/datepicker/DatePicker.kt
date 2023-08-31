@@ -37,7 +37,7 @@ class DatePicker(
     }
 
     fun Z2.headerContainer(builder : Z2Builder) =
-        grid(justifySelfCenter, wFull, pt20, pb30, boxSizingBorder) {
+        grid(justifySelfCenter, wFull, pt20, pb30, boxSizingBorderBox) {
             gridTemplateColumns = "1fr 1fr"
             gridTemplateRows = "24px"
             builder()

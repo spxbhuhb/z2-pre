@@ -1,12 +1,12 @@
 package hu.simplexion.z2.browser.demo.form
 
 import hu.simplexion.z2.browser.demo.strings
-import hu.simplexion.z2.browser.schematic.field
+import hu.simplexion.z2.browser.components.schematic.field
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.pre
 import hu.simplexion.z2.browser.layout.low
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.browser.schematic.attach
+import hu.simplexion.z2.browser.components.schematic.attach
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.util.hereAndNow
 import hu.simplexion.z2.schematic.runtime.Schematic
@@ -29,7 +29,7 @@ fun Z2.formDemo() =
             dump.htmlElement.innerText = "${hereAndNow()}\n\n" + data.dump()
         }
 
-        textButton(strings.setProgramatically) {
+        textButton(strings.setProgrammatically) {
             data.stringField = "Programmatically set at ${hereAndNow()}"
         }
     }

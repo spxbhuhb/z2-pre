@@ -1,6 +1,6 @@
-package hu.simplexion.z2.browser.table.builders
+package hu.simplexion.z2.browser.components.table.builders
 
-import hu.simplexion.z2.browser.table.TableConfiguration
+import hu.simplexion.z2.browser.components.table.TableConfiguration
 
 open class TableBuilder<T> : TableConfiguration<T>() {
 

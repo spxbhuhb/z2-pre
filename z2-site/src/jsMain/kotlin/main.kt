@@ -11,6 +11,7 @@ import hu.simplexion.z2.browser.demo.pages.administration.administrationRouter
 import hu.simplexion.z2.browser.demo.pages.loginDemo
 import hu.simplexion.z2.browser.demo.pages.loginStrings
 import hu.simplexion.z2.browser.demo.routing.routingRouter
+import hu.simplexion.z2.browser.demo.search.searchDemo
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.demo.table.tableDemo
 import hu.simplexion.z2.browser.html.*
@@ -70,6 +71,7 @@ object componentRouter : NavRouter() {
     val navigationDrawer by render(strings.navigationDrawer) { navigationDrawerDemo() }
     val popup            by render(strings.popup)            { popupDemo() }
     val radioButton      by render(strings.radioButton)      { radioButtonDemo() }
+    val search           by render(strings.search)           { searchDemo() }
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }
@@ -98,7 +100,7 @@ object otherRouter : NavRouter() {
 
 
 fun Z2.defaultLayout(router: Router<Z2>, nav: Z2Builder, content: Z2Builder) {
-    grid(wFull, hFull, pr16, pb16, boxSizingBorder) {
+    grid(wFull, hFull, pr16, pb16, boxSizingBorderBox) {
         gridTemplateRows = "min-content 1fr"
         gridTemplateColumns = "min-content 1fr"
 

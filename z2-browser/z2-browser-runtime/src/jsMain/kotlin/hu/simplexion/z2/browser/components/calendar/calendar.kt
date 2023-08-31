@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.calendar
+package hu.simplexion.z2.browser.components.calendar
 
 import hu.simplexion.z2.browser.css.p8
 import hu.simplexion.z2.browser.html.Z2

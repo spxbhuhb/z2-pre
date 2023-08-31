@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.schematic
+package hu.simplexion.z2.browser.components.schematic
 
 import hu.simplexion.z2.browser.css.displayContents
 import hu.simplexion.z2.browser.html.Z2

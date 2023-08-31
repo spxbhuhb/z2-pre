@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.table.builders
+package hu.simplexion.z2.browser.components.table.builders
 
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.commons.i18n.LocalizedText

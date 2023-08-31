@@ -1,7 +1,7 @@
-package hu.simplexion.z2.browser.table
+package hu.simplexion.z2.browser.components.table
 
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.table.builders.TableBuilder
+import hu.simplexion.z2.browser.components.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.label
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
