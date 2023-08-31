@@ -5,6 +5,7 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
@@ -14,6 +15,7 @@ import org.w3c.dom.HTMLInputElement
 class Search<T>(
     parent: Z2,
     val query: suspend (text: String) -> List<T>,
+    val hint : LocalizedText? = null,
     val onSelect: (value: T) -> Unit
 ) : Z2(
     parent,
@@ -52,6 +54,7 @@ class Search<T>(
 
                 input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, b0) {
                     input = this.htmlElement as HTMLInputElement
+                    hint?.let { input.placeholder = it.toString() }
                     onInput {
                         runQuery(input.value)
                     }

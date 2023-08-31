@@ -19,6 +19,6 @@ fun Z2.searchDemo() =
 
             div { text { "Items: 'aa', 'ba', 'ca'" } }
 
-            Search(this, { value -> listOf("aa", "ba", "ca").filter { value in it } }) {  }
+            Search(this, { value -> listOf("aa", "ba", "ca").filter { value in it } }, strings.search) {  }
         }
     }
