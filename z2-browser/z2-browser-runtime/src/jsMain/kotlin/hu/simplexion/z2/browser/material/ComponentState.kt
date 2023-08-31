@@ -4,7 +4,7 @@ enum class ComponentState {
     Enabled,
     Disabled,
     Hover,
-    Focused,
+    Focus,
     Activated,
     Pressed,
     Dragged

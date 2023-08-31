@@ -16,6 +16,19 @@ open class Z2(
     val style
         get() = htmlElement.style
 
+    /**
+     * Set `htmlElement.tabIndex`
+     *
+     * ```text
+     * -1    not focusable
+     * 0     in order in document source
+     * N     before m > N but after 0
+     * ```
+     */
+    var tabIndex : Int
+        get() = htmlElement.tabIndex
+        set(value) { htmlElement.tabIndex = value }
+
     val children = mutableListOf<Z2>()
 
     val listeners = mutableListOf<Z2EventListener>()

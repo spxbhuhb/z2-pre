@@ -156,7 +156,7 @@ class TextField(
         }
 
         input.onFocus {
-            setState(ComponentState.Focused)
+            setState(ComponentState.Focus)
             showLabel()
         }
 

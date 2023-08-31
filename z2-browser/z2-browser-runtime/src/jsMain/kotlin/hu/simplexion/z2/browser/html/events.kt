@@ -29,5 +29,11 @@ fun Z2.onKeyDown(handler: (event: KeyboardEvent) -> Unit): Z2 =
 fun Z2.onMouseDown(handler: (event: MouseEvent) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("mousedown", { handler(it as MouseEvent) }) }
 
+fun Z2.onMouseEnter(handler: (event: MouseEvent) -> Unit): Z2 =
+    this.apply { htmlElement.addEventListener("mouseenter", { handler(it as MouseEvent) }) }
+
+fun Z2.onMouseLeave(handler: (event: MouseEvent) -> Unit): Z2 =
+    this.apply { htmlElement.addEventListener("mouseleave", { handler(it as MouseEvent) }) }
+
 fun Z2.onScroll(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("scroll", handler) }

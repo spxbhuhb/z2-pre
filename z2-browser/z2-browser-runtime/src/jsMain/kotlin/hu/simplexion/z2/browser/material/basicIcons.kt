@@ -21,4 +21,6 @@ object basicIcons : LocalizedIconStore(UUID("3e5fb9a5-2d5f-4c86-9d26-1a760d1d1c6
     val left by "chevron_left"
     val right by "chevron_right"
     val down by "arrow_drop_down"
+    val radioButtonChecked by "radio_button_checked"
+    val radioButtonUnchecked by "radio_button_unchecked"
 }

@@ -9,7 +9,10 @@ const val borderOutline = "border-outline"
 
 const val primaryText = "primary-text"
 
+const val onSurface = "on-surface"
 const val onSurfaceText = "on-surface-text"
+const val onSurfaceVariant = "on-surface-variant"
+
 const val surface = "surface"
 
 const val elevationLevel1 = "elevation-level-1"
@@ -17,6 +20,11 @@ const val elevationLevel2 = "elevation-level-2"
 const val elevationLevel3 = "elevation-level-3"
 
 const val shapeCornerLarge = "shape-corner-large"
+
+const val stateLayerOpacityHover = "state-layer-opacity-hover"
+const val stateLayerOpacityFocus = "state-layer-opacity-focus"
+const val stateLayerOpacityPress = "state-layer-opacity-press"
+const val stateLayerOpacityDrag = "state-layer-opacity-drag"
 
 const val surfaceContainerHighest = "surface-container-highest"
 const val surfaceContainerHigh = "surface-container-high"

@@ -21,3 +21,19 @@
 .shape-corner-large {
     border-right: var(--md-sys-shape-corner-large);
 }
+
+.state-layer-opacity-hover {
+    opacity: 8%;
+}
+
+.state-layer-opacity-focus {
+    opacity: 12%;
+}
+
+.state-layer-opacity-press {
+    opacity: 12%;
+}
+
+.state-layer-opacity-drag {
+    opacity: 16%;
+}
