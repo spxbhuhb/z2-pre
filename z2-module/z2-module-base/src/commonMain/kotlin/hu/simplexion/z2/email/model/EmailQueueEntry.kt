@@ -6,7 +6,7 @@ class EmailQueueEntry : Schematic<EmailQueueEntry>() {
 
     var email by uuid<Email>()
     var tries by int()
-    var lastTry by instant()
-    var lastFailMessage by string()
+    var lastTry by instant().nullable()
+    var lastFailMessage by string().nullable()
 
 }

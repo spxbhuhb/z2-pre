@@ -4,5 +4,6 @@ enum class EmailStatus {
     Preparation,
     SendWait,
     Sent,
-    RetryWait
+    RetryWait,
+    Failed
 }

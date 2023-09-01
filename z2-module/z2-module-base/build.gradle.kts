@@ -26,6 +26,8 @@ val z2_exposed_version: String by project
 val z2_service_version: String by project
 val z2_schematic_version: String by project
 
+val javamail_version: String by project
+
 kotlin {
     jvm {
         jvmToolchain(11)
@@ -52,9 +54,11 @@ kotlin {
         }
         sourceSets["jvmMain"].dependencies {
             implementation("hu.simplexion.z2:z2-exposed-runtime:${z2_exposed_version}")
+            implementation("com.sun.mail:javax.mail:${javamail_version}")
         }
         sourceSets["jvmTest"].dependencies {
             implementation("com.h2database:h2:2.1.214")
+            implementation("org.subethamail:subethasmtp:3.1.7")
         }
     }
 }

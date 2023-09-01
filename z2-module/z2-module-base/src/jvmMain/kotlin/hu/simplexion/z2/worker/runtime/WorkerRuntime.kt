@@ -8,13 +8,19 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.systemHistory
 import hu.simplexion.z2.history.util.technicalHistory
 import hu.simplexion.z2.logging.util.info
-import hu.simplexion.z2.worker.model.*
+import hu.simplexion.z2.worker.model.WorkerProvider
+import hu.simplexion.z2.worker.model.WorkerRegistration
+import hu.simplexion.z2.worker.model.WorkerStartMode
+import hu.simplexion.z2.worker.model.WorkerStatus
 import hu.simplexion.z2.worker.table.WorkerRegistrationTable.Companion.workerRegistrationTable
 import hu.simplexion.z2.worker.ui.workerStrings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlin.coroutines.coroutineContext
 
 open class WorkerRuntime {
 
@@ -26,7 +32,9 @@ open class WorkerRuntime {
 
     protected val workerRegistrations = mutableMapOf<UUID<WorkerRegistration>, WorkerRegistration>()
 
-    protected val workerInstances = mutableMapOf<UUID<WorkerRegistration>, BackgroundWorker>()
+    protected val instancesMutex = Mutex()
+
+    protected val workerInstances = mutableMapOf<UUID<WorkerRegistration>, WorkerInstance>()
 
     protected val scope = CoroutineScope(Dispatchers.IO)
 
@@ -64,7 +72,7 @@ open class WorkerRuntime {
     }
 
     open fun start() {
-        info(workerStrings.workers, workerStrings.startRuntime)
+        info(workerStrings.worker, workerStrings.startRuntime)
         scope.launch { main() }
     }
 
@@ -167,7 +175,7 @@ open class WorkerRuntime {
         technicalHistory(message.executor, workerStrings.worker, commonStrings.remove, uuid)
 
         workerRegistrations[uuid]?.also {
-            stop(it)
+            stopWorker(uuid)
             workerRegistrations.remove(uuid)
             workerRegistrationTable.remove(uuid)
         }
@@ -209,38 +217,56 @@ open class WorkerRuntime {
     }
 
     protected fun start(registration: WorkerRegistration): Boolean {
-        if (registration.uuid in workerInstances) return false
-
         val provider = workerProviders[registration.provider]
         check(provider != null) { workerStrings.missingProvider } // TODO documentation
 
-        val instance = provider.newBackgroundWorker(registration)
-        workerInstances[registration.uuid] = instance
-        scope.launch { runWorker(instance) }
-        return true
+        val instance = WorkerInstance(provider.newBackgroundWorker(registration))
+
+        return runBlocking {
+            instancesMutex.withLock {
+                if (registration.uuid in workerInstances) {
+                    false
+                } else {
+                    workerInstances[registration.uuid] = instance
+                    scope.launch { runWorker(instance) }
+                    while (! instance.hasJob()) {
+                        delay(5)
+                    }
+                    true
+                }
+            }
+        }
     }
 
-    protected suspend fun stopWorker(registration: UUID<WorkerRegistration>) {
-        stop(requireNotNull(workerRegistrations[registration]))
+    protected suspend fun stopWorker(registrationUuid: UUID<WorkerRegistration>) {
+        val registration = requireNotNull(workerRegistrations[registrationUuid])
+        workerInstances[registration.uuid]?.getJob()?.cancel()
     }
 
-    protected suspend fun stop(registration: WorkerRegistration) {
-        // TODO think about the proper way to stop workers, maybe there is no proper way?
-        // for sure the we should wait with other worker related operations until it
-        // is stopping
-        workerInstances.remove(registration.uuid)?.stop()
-    }
+    /**
+     * This method runs in a different coroutine context than the others, therefore
+     * synchronization is necessary.
+     */
+    protected suspend fun runWorker(instance: WorkerInstance) {
+        val job = coroutineContext[Job] !!
+        instance.setJob(job)
 
-    protected suspend fun runWorker(instance: BackgroundWorker) {
-        val uuid = instance.registration
+        val uuid = instance.worker.registration
         uuid.setStatus(WorkerStatus.Running)
 
         try {
-            instance.start()
+            instance.worker.run(job)
+            uuid.setStatus(WorkerStatus.Stopped)
+        } catch (ex: CancellationException) {
             uuid.setStatus(WorkerStatus.Stopped)
         } catch (ex: Exception) {
-            uuid.setStatus(WorkerStatus.Fault, ex.localizedMessage).also {
+            uuid.setStatus(WorkerStatus.Fault, ex.stackTraceToString()).also {
                 // fIXME alarmImpl.alarm(it.uuid, workerStrings.unexpectedError, ex)
+                ex.printStackTrace()
+            }
+        } finally {
+            instancesMutex.withLock {
+                workerInstances.remove(instance.worker.registration)
             }
         }
     }

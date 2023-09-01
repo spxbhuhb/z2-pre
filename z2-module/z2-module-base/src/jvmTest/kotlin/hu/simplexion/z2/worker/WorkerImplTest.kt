@@ -7,6 +7,8 @@ import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.model.WorkerStatus
 import hu.simplexion.z2.worker.runtime.WorkerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -41,6 +43,11 @@ class WorkerImplTest {
             assertTrue(TestWorker.state[workerUuid] == false)
 
             workerImpl(so).disable(workerUuid)
+            withTimeout(1000) {
+                while (TestWorker.state[workerUuid] == true) {
+                    delay(10)
+                }
+            }
 
             workerImpl(so).list().assertOne(workerUuid, "Test Worker", enabled = false, status = WorkerStatus.Stopped)
             assertTrue(TestWorker.state[workerUuid] == false)

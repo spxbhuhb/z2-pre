@@ -22,7 +22,7 @@ open class SettingTable : Table(
     val value = text("value").nullable()
 
     fun put(inOwner: UUID<AccountPrivate>, inPath: String, inValue: String?) {
-        deleteWhere { (owner eq inOwner.jvm) and (path like "$inPath%") }
+        deleteWhere { (owner eq inOwner.jvm) and ((path eq inPath) or (path like "$inPath/%")) }
         insert {
             it[owner] = inOwner.jvm
             it[path] = inPath

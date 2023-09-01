@@ -8,6 +8,7 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTable
+import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import kotlinx.datetime.Instant
 
@@ -55,6 +56,8 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
                 this.subject = subject as? UUID<Any>
                 this.contentType = contentType
                 this.textContent = content
+            }.also {
+                println("${it.createdAt}  [${it.topic.padEnd(30)}]  ${it.verb.padEnd(20)}  ${it.textContent}")
             }
         )
     }

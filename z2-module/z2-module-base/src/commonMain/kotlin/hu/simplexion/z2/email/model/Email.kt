@@ -13,6 +13,7 @@ class Email : Schematic<Email>() {
     var sentAt by instant().nullable()
 
     var sensitive by boolean()
+    var hasAttachment by boolean()
 
     var recipients by string()
     var subject by string() maxLength 200

@@ -4,6 +4,8 @@ import hu.simplexion.z2.auth.authJvm
 import hu.simplexion.z2.auth.getOrMakeAccount
 import hu.simplexion.z2.auth.impl.SessionImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
+import hu.simplexion.z2.email.emailJvm
+import hu.simplexion.z2.exposed.debugSql
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.history.historyJvm
 import hu.simplexion.z2.service.runtime.BasicServiceContext
@@ -13,13 +15,21 @@ import hu.simplexion.z2.worker.workerJvm
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun integrated(login : Boolean = true, withTransaction : Boolean = true, testFun: suspend (context: ServiceContext) -> Unit) {
+fun integrated(
+    login : Boolean = true,
+    withTransaction : Boolean = true,
+    debugSql: Boolean = false,
+    testFun: suspend (context: ServiceContext) -> Unit
+) {
     runBlocking {
+        debugSql(debugSql)
         h2Test()
         historyJvm()
         settingJvm()
         authJvm()
         workerJvm()
+        emailJvm()
+
         getOrMakeAccount("test", "test", "test")
 
         val context = BasicServiceContext()
@@ -44,8 +54,13 @@ fun integrated(login : Boolean = true, withTransaction : Boolean = true, testFun
     }
 }
 
-fun integratedWithSo(login : Boolean = true, withTransaction : Boolean = true, testFun: suspend (test: ServiceContext, so : ServiceContext) -> Unit) {
-    integrated(login, withTransaction) { test ->
+fun integratedWithSo(
+    login : Boolean = true,
+    withTransaction : Boolean = true,
+    debugSql : Boolean = false,
+    testFun: suspend (test: ServiceContext, so : ServiceContext) -> Unit
+) {
+    integrated(login, withTransaction, debugSql) { test ->
         testFun(test, securityOfficerContext())
     }
 }

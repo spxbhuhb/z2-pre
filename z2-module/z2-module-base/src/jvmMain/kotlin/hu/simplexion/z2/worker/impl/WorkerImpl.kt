@@ -19,7 +19,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
 
     override suspend fun add(registration: WorkerRegistration): UUID<WorkerRegistration> {
         ensureTechnicalAdmin()
-        validate(registration)
+        // FIXME uuid validation during create validate(registration)
 
         workerRuntime.sendAndWait(
             serviceContext.account,

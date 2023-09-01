@@ -2,14 +2,17 @@ package hu.simplexion.z2.email.table
 
 import hu.simplexion.z2.auth.table.AccountPrivateTable
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQuery
 import hu.simplexion.z2.email.model.EmailStatus
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.history.model.HistoryEntry
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
@@ -30,7 +33,7 @@ open class EmailTable(
     val createdBy = reference("createdBy", accountPrivateTable).nullable()
 
     val status = enumerationByName<EmailStatus>("status", 20)
-    val sentAt = timestamp("sentAt")
+    val sentAt = timestamp("sentAt").nullable()
 
     val sensitive = bool("sensitive")
     val hasAttachment = bool("hasAttachment")
@@ -40,6 +43,13 @@ open class EmailTable(
 
     val contentType = varchar("contentType", 60)
     val contentText = text("contentText")
+
+    fun sent(inUuid : UUID<Email>) {
+        update(inUuid) {
+            it[status] = EmailStatus.Sent
+            it[sentAt] = now()
+        }
+    }
 
     fun query(query : EmailQuery) : List<Email> {
         val statement = selectAll()

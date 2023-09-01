@@ -3,6 +3,8 @@ package hu.simplexion.z2.worker
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import java.util.concurrent.ConcurrentHashMap
 
 class TestWorker(
@@ -17,11 +19,15 @@ class TestWorker(
         state[registration] = false
     }
 
-    override suspend fun start() {
+    override suspend fun run(job : Job) {
         state[registration] = true
-    }
-
-    override suspend fun stop() {
+        while (job.isActive) {
+            try {
+                delay(10)
+            } catch (ex : CancellationException) {
+                // nothing to do here
+            }
+        }
         state[registration] = false
     }
 

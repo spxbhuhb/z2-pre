@@ -21,9 +21,9 @@ interface EmailApi : Service {
     suspend fun send(
         recipients: String,
         subject: String,
-        content : String,
-        contentMimeType : String = "text/plain",
-        attachments : List<UUID<Content>>
+        contentType : String = "text/plain",
+        contentText : String,
+        attachments : List<UUID<Content>> = emptyList()
     )
 
     /**

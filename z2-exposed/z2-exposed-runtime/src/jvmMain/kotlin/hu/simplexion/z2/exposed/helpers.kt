@@ -21,7 +21,7 @@ fun h2Test(vararg tables: Table) {
 
 fun debugSql(active: Boolean) {
     val logger = LoggerFactory.getLogger("Exposed") as Logger
-    logger.level = if (active) Level.DEBUG else Level.INFO
+    logger.level = if (active) Level.DEBUG else Level.WARN
 }
 
 inline fun withTransaction(wrappedService: () -> ServiceImpl<*>) =
