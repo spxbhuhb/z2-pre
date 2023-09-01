@@ -2,6 +2,7 @@ package hu.simplexion.z2.worker.api
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.worker.model.WorkerProvider
 import hu.simplexion.z2.worker.model.WorkerRegistration
 
 interface WorkerApi : Service {
@@ -18,8 +19,7 @@ interface WorkerApi : Service {
 
     suspend fun disable(registration : UUID<WorkerRegistration>)
 
-    suspend fun copy(registration : UUID<WorkerRegistration>) : UUID<WorkerRegistration>
-
-    suspend fun notify(registration : UUID<WorkerRegistration>, notification : UUID<*>)
+    suspend fun hasRegistrationFor(providerUuid: UUID<WorkerProvider>) =
+        list().any { it.provider == providerUuid }
 
 }

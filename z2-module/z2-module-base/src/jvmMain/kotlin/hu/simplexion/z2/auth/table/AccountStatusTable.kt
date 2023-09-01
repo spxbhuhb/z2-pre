@@ -21,7 +21,7 @@ open class AccountStatusTable(
         val accountStatusTable = AccountStatusTable(accountPrivateTable)
     }
 
-    val account = reference("account", accountPrivateTable)
+    val account = reference("account", accountPrivateTable).uniqueIndex()
     val validated = bool("validated")
     val locked = bool("locked")
     val expired = bool("expired")

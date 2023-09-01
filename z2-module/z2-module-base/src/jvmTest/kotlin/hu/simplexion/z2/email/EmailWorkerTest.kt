@@ -10,6 +10,7 @@ import hu.simplexion.z2.setting.util.CommonSettings.putSystemSettings
 import hu.simplexion.z2.testing.integratedWithSo
 import hu.simplexion.z2.worker.impl.WorkerImpl.Companion.workerImpl
 import hu.simplexion.z2.worker.model.WorkerRegistration
+import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout

@@ -3,6 +3,7 @@ package hu.simplexion.z2.worker.runtime
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
+import hu.simplexion.z2.auth.util.runBlockingAsSecurityOfficer
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.systemHistory
@@ -25,7 +26,7 @@ import kotlin.coroutines.coroutineContext
 open class WorkerRuntime {
 
     companion object {
-        val workerRuntime = WorkerRuntime().also { it.start() }
+        val workerRuntime = WorkerRuntime()
     }
 
     protected val workerProviders = mutableMapOf<UUID<WorkerProvider>, WorkerProvider>()
@@ -64,10 +65,8 @@ open class WorkerRuntime {
     }
 
     operator fun plusAssign(provider: WorkerProvider) {
-        runAsSecurityOfficer { context ->
-            runBlocking {
-                sendAndWait(context.account, WorkerRuntimeMessageType.AddProvider, null, null, provider)
-            }
+        runBlockingAsSecurityOfficer { context ->
+            sendAndWait(context.account, WorkerRuntimeMessageType.AddProvider, null, null, provider)
         }
     }
 
@@ -80,6 +79,7 @@ open class WorkerRuntime {
         runBlocking {
             info(workerStrings.workers, workerStrings.stopRuntime)
             messages.close()
+            scope.cancel()
             while (wait && scope.isActive) {
                 delay(100)
             }
@@ -130,7 +130,12 @@ open class WorkerRuntime {
 
     protected fun addProvider(message: WorkerRuntimeRequest) {
         val provider = requireNotNull(message.provider)
-        require(provider.uuid !in workerProviders) { "attempt to register a provider twice: ${provider.uuid}" }
+        val existing = workerProviders[provider.uuid]
+        if (existing != null) {
+            require(provider::class == existing::class) {
+                "attempt to register different providers with the same UUID: ${provider.uuid} ${provider::class.qualifiedName} ${existing::class.qualifiedName}"
+            }
+        }
         workerProviders[provider.uuid] = provider
         message.responseChannel?.trySend(WorkerRuntimeResponse())
 
@@ -218,7 +223,11 @@ open class WorkerRuntime {
 
     protected fun start(registration: WorkerRegistration): Boolean {
         val provider = workerProviders[registration.provider]
-        check(provider != null) { workerStrings.missingProvider } // TODO documentation
+        if (provider == null) {
+            // TODO warning and start if a provider is added later
+            // check(provider != null) { workerStrings.missingProvider } // TODO documentation
+            return false
+        }
 
         val instance = WorkerInstance(provider.newBackgroundWorker(registration))
 

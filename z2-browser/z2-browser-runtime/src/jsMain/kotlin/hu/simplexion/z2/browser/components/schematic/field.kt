@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.components.schematic
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.button.textButton
+import hu.simplexion.z2.browser.material.textfield.filledTextField
 import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.browser.util.label
 import hu.simplexion.z2.commons.i18n.LocalizedText
@@ -22,7 +23,7 @@ fun Z2.field(context : SchematicAccessContext? = null, @Suppress("UNUSED_PARAMET
     val label = field.label()
 
     BoundTextField(this, context) {
-        outlinedTextField("", label, label.support) {
+        filledTextField("", label, label.support) {
             context.schematic.schematicChange(context.field, it)
         }
     }

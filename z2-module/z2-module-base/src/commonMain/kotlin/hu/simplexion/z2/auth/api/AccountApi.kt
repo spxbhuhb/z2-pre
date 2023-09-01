@@ -14,7 +14,7 @@ interface AccountApi : Service {
 
     suspend fun add(credentials: AccountCredentials)
 
-    suspend fun status(uuid : UUID<AccountStatus>) : AccountStatus
+    suspend fun status(uuid : UUID<AccountPrivate>) : AccountStatus
 
     suspend fun lock(uuid: UUID<AccountPrivate>)
 

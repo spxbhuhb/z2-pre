@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.material.textfield
 
+import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.basicIcons
@@ -109,7 +110,7 @@ class TextField(
         div {
             labelOuter = this
             addClass("text-field-label-filled", "body-small")
-            if (value.isEmpty()) addClass("hidden")
+            if (value.isEmpty()) addClass(displayNone)
             text { label }
         }
 
@@ -163,7 +164,7 @@ class TextField(
         input.onBlur {
             if (inputElement.value.isEmpty()) {
                 when {
-                    filled -> labelOuter.addClass("hidden")
+                    filled -> labelOuter.addClass(displayNone)
                     outlined -> labelInner.clear()
                 }
             }
@@ -185,7 +186,7 @@ class TextField(
 
     fun showLabel() {
         when {
-            filled -> labelOuter.removeClass("hidden")
+            filled -> labelOuter.removeClass(displayNone)
             outlined -> labelInner.labelOutlinedContent()
         }
     }

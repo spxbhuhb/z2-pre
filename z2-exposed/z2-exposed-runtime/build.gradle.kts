@@ -46,6 +46,7 @@ kotlin {
         api("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
 
         api("ch.qos.logback:logback-classic:${logback_version}")
+        implementation("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
     }
 
     sourceSets["jvmTest"].dependencies {

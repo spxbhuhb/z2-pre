@@ -6,10 +6,12 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.validate
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.worker.api.WorkerApi
+import hu.simplexion.z2.worker.model.WorkerProvider
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.runtime.WorkerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntimeMessageType
+import hu.simplexion.z2.worker.table.WorkerRegistrationTable.Companion.workerRegistrationTable
 
 class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
 
@@ -80,14 +82,6 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
             WorkerRuntimeMessageType.DisableRegistration,
             registrationUuid = registration
         )
-    }
-
-    override suspend fun copy(registration: UUID<WorkerRegistration>): UUID<WorkerRegistration> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun notify(registration: UUID<WorkerRegistration>, notification: UUID<*>) {
-        TODO("Not yet implemented")
     }
 
 }

@@ -66,9 +66,9 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
         return accountPrivateTable.get(uuid)
     }
     
-    override suspend fun status(uuid: UUID<AccountStatus>): AccountStatus {
+    override suspend fun status(uuid: UUID<AccountPrivate>): AccountStatus {
         ensure(securityOfficerRole)
-        return accountStatusTable.get(uuid)
+        return requireNotNull(accountStatusTable.readOrNull(uuid))
     }
 
     override suspend fun lock(uuid: UUID<AccountPrivate>) {
