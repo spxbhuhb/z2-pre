@@ -12,4 +12,5 @@ class EmailQuery : Schematic<EmailQuery>() {
     var hasAttachment by boolean().nullable()
     var status by enum<EmailStatus>().nullable()
     var limit by int(default = 100, max = 10000)
+    var offset by long(default = 0)
 }

@@ -12,24 +12,38 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.statements.UpdateStatement
 
 open class SchematicUuidTable<T : Schematic<T>>(
-    name : String,
-    val template : T
+    name: String,
+    val template: T
 ) : UUIDTable(name, columnName = "uuid") {
 
     fun newInstance() =
         template.schematicCompanion.newInstance()
 
-    fun list() : List<T> =
-        selectAll().map {
-            it.toSchematic(this, newInstance())
+    fun list(limit: Int? = null, offset: Long? = null): List<T> {
+        var statement = selectAll()
+
+        if (limit != null) {
+            statement = if (offset != null) statement.limit(limit, offset) else statement.limit(limit)
         }
 
-    fun list(where: SqlExpressionBuilder.() -> Op<Boolean>) : List<T> =
-        select(where).map {
+        return statement.map {
             it.toSchematic(this, newInstance())
         }
+    }
 
-    fun get(uuid: UUID<T>) : T =
+    fun list(limit: Int? = null, offset: Long? = null, where: SqlExpressionBuilder.() -> Op<Boolean>): List<T> {
+        var statement = select(where)
+
+        if (limit != null) {
+            statement = if (offset != null) statement.limit(limit, offset) else statement.limit(limit)
+        }
+
+        return statement.map {
+            it.toSchematic(this, newInstance())
+        }
+    }
+
+    fun get(uuid: UUID<T>): T =
         select { id eq uuid.jvm }
             .map {
                 it.toSchematic(this, newInstance())
@@ -57,7 +71,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
         deleteWhere { id eq uuid.jvm }
     }
 
-    fun ResultRow.toSchematic(table: Table, schematic: T) : T {
+    fun ResultRow.toSchematic(table: Table, schematic: T): T {
         val row = this
         val fails = mutableListOf<ValidationFailInfo>()
         val sv = schematic.schematicValues
@@ -71,9 +85,11 @@ open class SchematicUuidTable<T : Schematic<T>>(
                     val idValue = exposedValue.value as java.util.UUID
                     sv[field.name] = UUID<Any>(idValue.mostSignificantBits, idValue.leastSignificantBits)
                 }
+
                 field.type == SchemaFieldType.UUID && exposedValue is java.util.UUID -> {
                     sv[field.name] = UUID<Any>(exposedValue.mostSignificantBits, exposedValue.leastSignificantBits)
                 }
+
                 else -> {
                     sv[field.name] = field.toTypedValue(exposedValue, fails)
                 }

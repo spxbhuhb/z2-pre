@@ -4,6 +4,7 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQuery
+import hu.simplexion.z2.email.model.EmailQueueEntry
 import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.service.runtime.Service
 
@@ -33,30 +34,26 @@ interface EmailApi : Service {
     suspend fun query(query : EmailQuery) : List<Email>
 
     /**
+     * Query the size of the e-mail queue.
+     *
+     * Requires technical administrator role.
+     */
+    suspend fun queryQueueSize() : Long
+
+    /**
+     * Query the e-mail queue.
+     *
+     * Requires technical administrator role.
+     */
+    suspend fun queryQueue(limit : Int = 1000, offset : Long = 0) : List<EmailQueueEntry>
+
+    /**
      * Stop the given e-mail if it hasn't been sent already.
      *
      * Requires technical administrator role or the account has to be the same
      * as the `createdBy` of the e-mail.
      */
     suspend fun cancel(email : UUID<Email>)
-
-    /**
-     * Enable the e-mail worker, so it sends out e-mails. The system
-     * remembers the status of the worker. If it is enabled before
-     * a restart it will start automatically after the restart.
-     *
-     * Requires technical administrator role.
-     */
-    suspend fun enableWorker()
-
-    /**
-     * Disable the e-mail worker, so it won't send e-mails.The system
-     * remembers the status of the worker. If it is disabled before
-     * a restart it will NOT start automatically after the restart.
-     *
-     * Requires technical administrator role.
-     */
-    suspend fun disableWorker()
 
     /**
      * Get the settings of the e-mail subsystem.
