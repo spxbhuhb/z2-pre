@@ -1,15 +1,14 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.auth.*
+import hu.simplexion.z2.auth.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
-import hu.simplexion.z2.auth.context.ensure
-import hu.simplexion.z2.auth.context.ensureLoggedIn
-import hu.simplexion.z2.auth.context.ensuredByLogic
-import hu.simplexion.z2.auth.context.getSessionOrNull
+import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.CredentialType
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
+import hu.simplexion.z2.auth.securityOfficerRole
+import hu.simplexion.z2.auth.securityPolicy
 import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCredentialsTable
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
@@ -51,7 +50,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val account = accountPrivateTable.getByAccountNameOrNull(name)
 
         if (account == null) {
-            securityHistory(anonymousUuid, authStrings.loginFail, authStrings.accountNotFound)
+            securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, authStrings.accountNotFound)
             return - 1
         }
 
@@ -59,7 +58,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             authenticate(account.uuid, password)
         } catch (ex: Unauthorized) {
             // FIXME, is locked meaningful? if we send it to the user it is possible to find account names by N failed auth
-            securityHistory(anonymousUuid, authStrings.loginFail, ex.reason, ex.locked)
+            securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, ex.reason, ex.locked)
             return - 1
         }
 
@@ -74,8 +73,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     override suspend fun logout() {
         ensureLoggedIn()
-        securityHistory(authStrings.logout, serviceContext.getSessionOrNull()?.uuid)
-
+        securityHistory(authStrings.account, authStrings.logout, serviceContext.account)
         serviceContext?.data?.remove(SESSION_TOKEN_UUID)
     }
 
@@ -128,7 +126,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
                 state.locked = state.locked || (state.loginFailCount > securityPolicy.maxFailedLogins)
 
                 accountStatusTable.update(state.uuid, state)
-                securityHistory(accountId, authStrings.loginFail, result.reason, result.locked)
+                securityHistory(accountId, authStrings.account, authStrings.loginFail, accountId, result.reason, result.locked)
 
                 TransactionManager.current().commit()
 
@@ -143,7 +141,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
                 it.account = accountId
             }
 
-            securityHistory(accountId, authStrings.loginSuccess)
+            securityHistory(accountId, authStrings.account, authStrings.loginSuccess, accountId)
 
             TransactionManager.current().commit()
 

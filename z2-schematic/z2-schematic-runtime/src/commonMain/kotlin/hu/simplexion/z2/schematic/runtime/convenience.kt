@@ -7,5 +7,6 @@ fun Schematic<*>.dump(separator : String = "\n") : String =
     schematicSchema.dump(this, "", mutableListOf()).joinToString(separator)
 
 fun validate(schematic : Schematic<*>) {
-    if (!schematic.isValid) throw IllegalArgumentException()
+    val report = schematic.schematicSchema.validate(schematic)
+    if (!report.valid) throw IllegalArgumentException(report.fieldResults.toString())
 }

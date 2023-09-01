@@ -1,11 +1,10 @@
 package hu.simplexion.z2.worker.runtime
 
-import hu.simplexion.z2.alarm.impl.AlarmImpl.Companion.alarmImpl
+import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.commons.i18n.commonStrings
-import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.commons.util.use
 import hu.simplexion.z2.history.util.systemHistory
 import hu.simplexion.z2.history.util.technicalHistory
 import hu.simplexion.z2.logging.util.info
@@ -20,51 +19,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 open class WorkerRuntime {
 
     companion object {
-        private var workerRuntime: WorkerRuntime? = null
-
-        private val runtimeLock = Lock()
-
-        fun start() {
-            runtimeLock.use {
-                check(workerRuntime != null) { "attempting to start workerRuntime twice" }
-                info(workerStrings.workers, workerStrings.startRuntime)
-                WorkerRuntime().also {
-                    workerRuntime = it
-                    it.start()
-                }
-            }
-        }
-
-        fun stop() {
-            runtimeLock.use {
-                info(workerStrings.workers, workerStrings.stopRuntime)
-                workerRuntime?.stop(wait = true)
-                workerRuntime = null
-            }
-        }
-
-        suspend fun sendAndWait(
-            executor: UUID<AccountPrivate>,
-            type: WorkerRuntimeMessageType,
-            registration: WorkerRegistration? = null,
-            registrationUuid: UUID<WorkerRegistration>? = null,
-            provider: WorkerProvider? = null,
-            timeout: Long = 3000L
-        ): WorkerRuntimeResponse {
-            val responseChannel = Channel<WorkerRuntimeResponse>()
-
-            checkNotNull(workerRuntime).messages.send(
-                WorkerRuntimeRequest(
-                    executor, type, registration, registrationUuid, provider, responseChannel
-                )
-            )
-
-            return withTimeout(timeout) {
-                val response = responseChannel.receive()
-                if (response.exception != null) throw response.exception
-                response
-            }
-        }
+        val workerRuntime = WorkerRuntime().also { it.start() }
     }
 
     protected val workerProviders = mutableMapOf<UUID<WorkerProvider>, WorkerProvider>()
@@ -77,12 +32,45 @@ open class WorkerRuntime {
 
     val messages = Channel<WorkerRuntimeRequest>(100)
 
-    protected fun start() {
+    suspend fun sendAndWait(
+        executor: UUID<AccountPrivate>,
+        type: WorkerRuntimeMessageType,
+        registration: WorkerRegistration? = null,
+        registrationUuid: UUID<WorkerRegistration>? = null,
+        provider: WorkerProvider? = null,
+        timeout: Long = 3000L
+    ): WorkerRuntimeResponse {
+        val responseChannel = Channel<WorkerRuntimeResponse>(1)
+
+        messages.send(
+            WorkerRuntimeRequest(
+                executor, type, registration, registrationUuid, provider, responseChannel
+            )
+        )
+
+        return withTimeout(timeout) {
+            val response = responseChannel.receive()
+            if (response.exception != null) throw response.exception
+            response
+        }
+    }
+
+    operator fun plusAssign(provider: WorkerProvider) {
+        runAsSecurityOfficer { context ->
+            runBlocking {
+                sendAndWait(context.account, WorkerRuntimeMessageType.AddProvider, null, null, provider)
+            }
+        }
+    }
+
+    open fun start() {
+        info(workerStrings.workers, workerStrings.startRuntime)
         scope.launch { main() }
     }
 
-    protected fun stop(wait: Boolean = true) {
+    open fun stop(wait: Boolean = true) {
         runBlocking {
+            info(workerStrings.workers, workerStrings.stopRuntime)
             messages.close()
             while (wait && scope.isActive) {
                 delay(100)
@@ -91,9 +79,11 @@ open class WorkerRuntime {
     }
 
     protected suspend fun main() {
-        for (registration in workerRegistrationTable.list()) {
-            workerRegistrations[registration.uuid] = registration
-            start(registration)
+        transaction {
+            for (registration in workerRegistrationTable.list()) {
+                workerRegistrations[registration.uuid] = registration
+                start(registration)
+            }
         }
 
         try {
@@ -102,9 +92,7 @@ open class WorkerRuntime {
                 try {
                     process(message)
                 } catch (ex: Exception) {
-                    if (message.responseChannel != null) {
-                        message.responseChannel.trySend(WorkerRuntimeResponse(exception = ex))
-                    }
+                    message.responseChannel?.trySend(WorkerRuntimeResponse(exception = ex))
                 }
             }
 
@@ -147,12 +135,12 @@ open class WorkerRuntime {
         val uuid = workerRegistrationTable.insert(registration)
         val internal = registration.copy().also { it.uuid = uuid }
 
-        technicalHistory(message.executor, workerStrings.worker, registration.uuid, commonStrings.operation to commonStrings.add)
+        technicalHistory(message.executor, workerStrings.worker, commonStrings.add, registration.uuid)
 
-        workerRegistrations[registration.uuid] = internal
+        workerRegistrations[uuid] = internal
 
-        if (registration.enabled && registration.startMode != WorkerStartMode.Manual) {
-            start(registration)
+        if (internal.enabled && internal.startMode != WorkerStartMode.Manual) {
+            start(internal)
         }
 
         message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
@@ -168,7 +156,7 @@ open class WorkerRuntime {
             stopWorker(internal.uuid)
         }
 
-        technicalHistory(message.executor, workerStrings.worker, internal.uuid, commonStrings.operation to commonStrings.update)
+        technicalHistory(message.executor, workerStrings.worker, commonStrings.update, internal.uuid)
 
         message.responseChannel?.trySend(WorkerRuntimeResponse())
     }
@@ -176,7 +164,7 @@ open class WorkerRuntime {
     protected suspend fun removeRegistration(message: WorkerRuntimeRequest) {
         val uuid = requireNotNull(message.registrationUuid)
 
-        technicalHistory(message.executor, workerStrings.worker, uuid, commonStrings.operation to commonStrings.remove)
+        technicalHistory(message.executor, workerStrings.worker, commonStrings.remove, uuid)
 
         workerRegistrations[uuid]?.also {
             stop(it)
@@ -187,16 +175,23 @@ open class WorkerRuntime {
         message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
     }
 
-    protected suspend fun setEnabled(message: WorkerRuntimeRequest, enabled : Boolean) {
+    protected suspend fun setEnabled(message: WorkerRuntimeRequest, enabled: Boolean) {
         val uuid = requireNotNull(message.registrationUuid)
 
+        val registration = requireNotNull(workerRegistrations[uuid]) { "registration not found" }
+
+        registration.enabled = enabled
         workerRegistrationTable.setEnabled(uuid, enabled)
 
-        if (!enabled) {
+        if (! enabled) {
             stopWorker(uuid)
+        } else {
+            if (registration.startMode != WorkerStartMode.Manual) {
+                startWorker(uuid)
+            }
         }
 
-        technicalHistory(message.executor, workerStrings.worker, uuid, commonStrings.operation to commonStrings.update, commonStrings.enabled to enabled)
+        technicalHistory(message.executor, workerStrings.worker, commonStrings.update, uuid, commonStrings.enabled to enabled)
 
         message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
     }
@@ -256,15 +251,17 @@ open class WorkerRuntime {
             lastStatusMessage = message
             lastStatusChange = now()
         }.also {
-            workerRegistrationTable.setStatus(it)
-            systemHistory(
-                workerStrings.worker,
-                it.uuid,
-                commonStrings.operation to commonStrings.update,
-                commonStrings.name to it.name,
-                commonStrings.uuid to it.uuid,
-                commonStrings.status to it.status
-            )
+            transaction {
+                workerRegistrationTable.setStatus(it)
+                systemHistory(
+                    workerStrings.worker,
+                    commonStrings.update,
+                    it.uuid,
+                    commonStrings.name to it.name,
+                    commonStrings.uuid to it.uuid,
+                    commonStrings.status to it.status
+                )
+            }
         }
     }
 

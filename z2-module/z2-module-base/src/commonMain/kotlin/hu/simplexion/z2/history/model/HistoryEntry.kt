@@ -12,6 +12,7 @@ class HistoryEntry : Schematic<HistoryEntry>() {
 
     var flags by int()
     var topic by string()
+    var verb by string()
     var subject by uuid<Any>().nullable()
 
     var contentType by string()

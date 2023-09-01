@@ -6,12 +6,14 @@ import hu.simplexion.z2.commons.util.UUID
 object authStrings : LocalizedTextStore(UUID("3638da2e-03ec-4f8b-88bf-e5e7a66cb063")) {
     val login by "Belépés"
 
+    val role by "Szerepkör"
     val roles by "Szerepkörök"
     val rolesSupport by roles.support("Szerepkörök listája, hozzáadás, szerepkörrel rendelkező felhasználók.")
     val addRole by "Szerepkör hozzáadása"
     val editRole by "Szerepkör szerkesztése"
     val removeRole by "Szerepkör törlése"
 
+    val account by "Fiók"
     val accounts by "Fiókok"
     val accountsSupport by accounts.support("Felhasználói fiókok kezelése. Hozzáadás, szerkesztés, jelszó beállítás.")
     val addAccount by "Fiók hozzáadása"

@@ -11,9 +11,11 @@ import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.ui.authStrings
+import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.runtime.dump
+import hu.simplexion.z2.schematic.runtime.validate
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
 class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
@@ -29,21 +31,27 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     override suspend fun add(role: Role) : UUID<Role> {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.addRole, role.dump())
+        // FIXME uuid validation validate(role)
 
-        return roleTable.insert(role)
+        val roleUuid = roleTable.insert(role)
+
+        securityHistory(authStrings.role, commonStrings.add, roleUuid, role.dump())
+
+        return roleUuid
     }
 
     override suspend fun update(role: Role) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.editRole, role.dump())
+        validate(role)
+
+        securityHistory(authStrings.role, commonStrings.update, role.uuid, role.dump())
 
         roleTable.update(role.uuid, role)
     }
 
     override suspend fun remove(uuid: UUID<Role>) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.removeRole, uuid)
+        securityHistory(authStrings.role, commonStrings.remove, uuid)
 
         roleGrantTable.remove(uuid)
         roleTable.remove(uuid)
@@ -51,14 +59,14 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     override suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.grantRole, role, account, context)
+        securityHistory(authStrings.role, authStrings.grantRole, account, role, context)
 
         roleGrantTable.insert(role, account, context)
     }
 
     override suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.revokeRole, role, account, context)
+        securityHistory(authStrings.role, authStrings.revokeRole, account, role, context)
 
         roleGrantTable.remove(role, account, context)
     }

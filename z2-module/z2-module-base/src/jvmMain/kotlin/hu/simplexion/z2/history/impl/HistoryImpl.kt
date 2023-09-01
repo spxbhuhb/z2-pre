@@ -3,6 +3,7 @@ package hu.simplexion.z2.history.impl
 import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.securityOfficerRole
+import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
@@ -28,16 +29,18 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     fun add(
         createdBy: UUID<AccountPrivate>?,
         flags: Int,
-        topic: String,
+        topic: LocalizedText,
+        verb: LocalizedText,
         content: String
     ) {
-        add(createdBy, flags, topic, UUID.NIL, "text/plain", content)
+        add(createdBy, flags, topic, verb, UUID.NIL, "text/plain", content)
     }
 
     fun add(
         createdBy: UUID<AccountPrivate>?,
         flags: Int,
-        topic: String,
+        topic: LocalizedText,
+        verb : LocalizedText,
         subject: UUID<*>?,
         contentType: String,
         content: String
@@ -46,7 +49,8 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
             HistoryEntry().apply {
                 this.createdBy = createdBy
                 this.flags = flags
-                this.topic = topic
+                this.topic = topic.toString()
+                this.verb = verb.toString()
                 @Suppress("UNCHECKED_CAST")
                 this.subject = subject as? UUID<Any>
                 this.contentType = contentType

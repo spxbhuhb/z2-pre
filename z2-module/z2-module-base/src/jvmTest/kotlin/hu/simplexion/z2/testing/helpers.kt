@@ -9,6 +9,7 @@ import hu.simplexion.z2.history.historyJvm
 import hu.simplexion.z2.service.runtime.BasicServiceContext
 import hu.simplexion.z2.service.runtime.ServiceContext
 import hu.simplexion.z2.setting.settingJvm
+import hu.simplexion.z2.worker.workerJvm
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -18,6 +19,7 @@ fun integrated(login : Boolean = true, withTransaction : Boolean = true, testFun
         historyJvm()
         settingJvm()
         authJvm()
+        workerJvm()
         getOrMakeAccount("test", "test", "test")
 
         val context = BasicServiceContext()

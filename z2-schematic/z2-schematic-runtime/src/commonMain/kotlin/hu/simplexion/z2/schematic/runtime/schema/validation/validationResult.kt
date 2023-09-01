@@ -2,12 +2,12 @@ package hu.simplexion.z2.schematic.runtime.schema.validation
 
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
-class SchematicValidationResult(
+data class SchematicValidationResult(
     val valid : Boolean,
     val fieldResults : Map<String, FieldValidationResult>
 )
 
-class FieldValidationResult(
+data class FieldValidationResult(
     val path : String,
     val valid : Boolean,
     val fails : List<ValidationFailInfo>
@@ -15,7 +15,11 @@ class FieldValidationResult(
 
 open class ValidationFailInfo(
     val message : String
-)
+) {
+    override fun toString(): String {
+        return message
+    }
+}
 
 fun fail(template :LocalizedText, vararg parameters : Any) : ValidationFailInfo {
     return ValidationFailInfo(

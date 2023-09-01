@@ -8,6 +8,7 @@ import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.worker.api.WorkerApi
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.runtime.WorkerRuntime
+import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntimeMessageType
 
 class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
@@ -20,7 +21,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
         validate(registration)
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.AddRegistration,
             registration
@@ -33,7 +34,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
         validate(registration)
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.UpdateRegistration,
             registration
@@ -43,7 +44,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
     override suspend fun remove(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.RemoveRegistration,
             registrationUuid = registration
@@ -53,7 +54,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
     override suspend fun list(): List<WorkerRegistration> {
         ensureTechnicalAdmin()
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.ListRegistrations
         ).also {
@@ -64,7 +65,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
     override suspend fun enable(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.EnableRegistration,
             registrationUuid = registration
@@ -74,7 +75,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
     override suspend fun disable(registration: UUID<WorkerRegistration>) {
         ensureTechnicalAdmin()
 
-        WorkerRuntime.sendAndWait(
+        workerRuntime.sendAndWait(
             serviceContext.account,
             WorkerRuntimeMessageType.DisableRegistration,
             registrationUuid = registration

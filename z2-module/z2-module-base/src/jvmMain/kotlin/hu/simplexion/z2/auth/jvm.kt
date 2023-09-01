@@ -13,6 +13,7 @@ import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
+import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables
@@ -29,7 +30,7 @@ const val securityOfficerRoleName = "security-officer"
 const val securityOfficerAccountName = "so"
 const val anonymousAccountName = "anonymous"
 
-fun authJvm(initialSoPassword : String = "so") {
+fun authJvm(initialSoPassword: String = "so") {
 
     tables(
         accountPrivateTable,
@@ -109,7 +110,7 @@ internal fun getOrMakeAccount(
             }
         )
 
-        securityHistory(accountId, authStrings.addAccount, name, accountId)
+        securityHistory(accountId, authStrings.account, commonStrings.add, accountId, name)
 
         return@transaction accountId
     }
@@ -119,6 +120,6 @@ private fun grantRole(role: Role, account: UUID<AccountPrivate>) {
     transaction {
         if (role.uuid in roleGrantTable.rolesOf(account, null).map { it.uuid }) return@transaction
         roleGrantTable.insert(role.uuid, account, null)
-        securityHistory(securityOfficerUuid, authStrings.grantRole, securityOfficerUuid, role.uuid, role.programmaticName, role.displayName)
+        securityHistory(securityOfficerUuid, authStrings.role, authStrings.grantRole, securityOfficerUuid, account, role.uuid, role.programmaticName, role.displayName)
     }
 }
