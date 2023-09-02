@@ -4,9 +4,13 @@ import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.SchematicCompanion
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
+import kotlin.time.Duration
 
 class Language : Schematic<Language>() {
     var uuid by uuid<Language>()
+
+    var duration by duration()
+
     var isoCode by string() minLength 2 maxLength 2
     var countryCode by string() minLength 2 maxLength 2 pattern Regex("[A-Z]{2}")
     var nativeName by string() minLength 2 maxLength 30 blank false
@@ -33,5 +37,6 @@ fun box(): String {
     val bytes = l.schematicCompanion.encodeProto(l)
     val l2 = l.schematicCompanion.decodeProto(ProtoMessage(bytes))
 
+    if (l.duration != Duration.ZERO) return "Fail"
     return "OK"
 }

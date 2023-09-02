@@ -2,10 +2,9 @@ package hu.simplexion.z2.testing
 
 import hu.simplexion.z2.auth.authJvm
 import hu.simplexion.z2.auth.getOrMakeAccount
-import hu.simplexion.z2.auth.impl.SessionImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.email.emailJvm
-import hu.simplexion.z2.exposed.debugSql
+import hu.simplexion.z2.exposed.debugExposed
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.history.historyJvm
 import hu.simplexion.z2.service.runtime.BasicServiceContext
@@ -18,11 +17,11 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun integrated(
     login : Boolean = true,
     withTransaction : Boolean = true,
-    debugSql: Boolean = false,
+    debugExposed: Boolean = false,
     testFun: suspend (context: ServiceContext) -> Unit
 ) {
     runBlocking {
-        debugSql(debugSql)
+        debugExposed(debugExposed)
         h2Test()
         historyJvm()
         settingJvm()
@@ -57,10 +56,10 @@ fun integrated(
 fun integratedWithSo(
     login : Boolean = true,
     withTransaction : Boolean = true,
-    debugSql : Boolean = false,
+    debugExposed : Boolean = false,
     testFun: suspend (test: ServiceContext, so : ServiceContext) -> Unit
 ) {
-    integrated(login, withTransaction, debugSql) { test ->
+    integrated(login, withTransaction, debugExposed) { test ->
         testFun(test, securityOfficerContext())
     }
 }

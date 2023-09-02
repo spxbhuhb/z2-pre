@@ -16,13 +16,13 @@ import org.w3c.dom.events.Event
  * the type of the field.
  */
 @SchematicAccessFunction
-fun Z2.field(context : SchematicAccessContext? = null, @Suppress("UNUSED_PARAMETER") accessor : () -> Any?) {
+fun <T> Z2.field(context : SchematicAccessContext? = null, @Suppress("UNUSED_PARAMETER") accessor : () -> T) : BoundField<T> {
     checkNotNull(context)
 
     val field = context.field
     val label = field.label()
 
-    BoundTextField(this, context) {
+    return BoundTextField(this, context) {
         filledTextField("", label, label.support) {
             context.schematic.schematicChange(context.field, it)
         }

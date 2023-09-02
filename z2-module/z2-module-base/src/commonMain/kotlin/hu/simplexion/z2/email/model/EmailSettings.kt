@@ -16,5 +16,5 @@ class EmailSettings : Schematic<EmailSettings>() {
     var tls by boolean()
     var debug by boolean()
 
-    var retryCheckInterval by duration(300.seconds)
+    var retryCheckInterval by long(300_000) // FIXME this should be a duration, but it fails for some reason
 }

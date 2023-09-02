@@ -3,6 +3,7 @@ package foo.bar
 import hu.simplexion.z2.schematic.runtime.schema.Schema
 import hu.simplexion.z2.schematic.runtime.schema.field.IntSchemaField
 import hu.simplexion.z2.schematic.runtime.Schematic
+import kotlin.time.Duration
 
 enum class E {
     V1,
@@ -40,5 +41,6 @@ class Test : Schematic<Test>() {
 
 fun box(): String {
     val test = Test()
+    if (test.durationField != Duration.ZERO) return "Fail: duration"
     return "OK"
 }

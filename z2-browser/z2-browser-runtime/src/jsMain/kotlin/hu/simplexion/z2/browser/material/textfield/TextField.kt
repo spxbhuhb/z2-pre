@@ -41,13 +41,21 @@ class TextField(
     lateinit var labelInner: Z2
     lateinit var support: Z2
 
+    var effectiveSupportingText: String = supportingText.toString()
+
     var errorIcon: LocalizedIcon = basicIcons.error
 
+    /**
+     * The text to show when is there a validation error. Use [setState] to change.
+     */
+    var errorSupportingText: String? = null
+        private set
+
+    /**
+     * Indicates whether is there a validation error or not. Use [setState] to change.
+     */
     var error: Boolean = error
-        set(value) {
-            field = value
-            setState(state)
-        }
+        private set
 
     val input = Z2(this, document.createElement("input") as HTMLInputElement, emptyArray(), {})
 
@@ -87,6 +95,12 @@ class TextField(
             }
         }
 
+        setState(state)
+    }
+
+    fun setState(error : Boolean, errorSupportingText : String?) {
+        this.error = error
+        this.errorSupportingText = errorSupportingText
         setState(state)
     }
 
@@ -226,7 +240,7 @@ class TextField(
     fun Z2.supportingText() =
         div("text-field-support", "body-small") {
             support = this
-            text { supportingText }
+            text { effectiveSupportingText }
         }
 
     fun setState(newState: ComponentState) {
@@ -239,9 +253,14 @@ class TextField(
             addClass(newClass)
             if (error) {
                 addClass("field-error")
+                effectiveSupportingText = errorSupportingText ?: supportingText?.toString() ?: ""
             } else {
                 removeClass("field-error")
+                effectiveSupportingText = supportingText?.toString() ?: ""
             }
+
+            support.clear()
+            support.apply { text { effectiveSupportingText } }
         }
 
         trailingState()

@@ -4,17 +4,12 @@ import hu.simplexion.z2.email.impl.EmailImpl.Companion.emailImpl
 import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.worker.EmailWorkerProvider
 import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
-import hu.simplexion.z2.setting.util.CommonSettings
 import hu.simplexion.z2.setting.util.CommonSettings.putSystemSettings
 import hu.simplexion.z2.testing.integratedWithSo
 import hu.simplexion.z2.worker.impl.WorkerImpl.Companion.workerImpl
 import hu.simplexion.z2.worker.model.WorkerRegistration
-import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
-import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.AfterClass
 import org.junit.BeforeClass
@@ -48,7 +43,7 @@ class EmailWorkerTest {
     fun basic() {
         wiser.messages.clear()
 
-        integratedWithSo(debugSql = true, withTransaction = false) { _, so ->
+        integratedWithSo(debugExposed = true, withTransaction = false) { _, so ->
             prepare(so)
 
             transaction {
