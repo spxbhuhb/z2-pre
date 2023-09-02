@@ -1,24 +1,24 @@
 /*
- * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.i18n.locales
+package hu.simplexion.z2.commons.i18n.locales
 
 import hu.simplexion.z2.commons.i18n.numbersToStringTable
 import kotlinx.datetime.*
 
-object HuLocalizedFormats : AbstractLocalizedFormats(
+
+object EnLocalizedFormats : AbstractLocalizedFormats(
     LocalizationConfig(
-        thousandSeparator = ".",
-        decimalSeparator = ","
+        thousandSeparator = ",",
+        decimalSeparator = "."
     )
 ) {
-
     override fun format(value: Instant): String {
         return format(value.toLocalDateTime(TimeZone.currentSystemDefault()))
     }
 
     override fun format(value: LocalDate): String {
-        return value.toString().replace("-", ".") + "."
+        return value.toString().replace("-", "/")
     }
 
     override fun format(value: LocalDateTime): String {
@@ -29,10 +29,7 @@ object HuLocalizedFormats : AbstractLocalizedFormats(
         val minute = numbersToStringTable[value.minute]
         val second = numbersToStringTable[value.second]
         val micros = (value.nanosecond / 1_000).toString().padStart(6, '0')
-        
-        return "$year.$month.$day. $hour:$minute:$second.$micros"
+
+        return "$year/$day/$month $hour:$minute:$second.$micros"
     }
-
-
-
 }

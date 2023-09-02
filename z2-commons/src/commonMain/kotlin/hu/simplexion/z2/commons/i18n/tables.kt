@@ -9,6 +9,7 @@ val dayNameTable = arrayOf(
     commonStrings.saturday,
     commonStrings.sunday
 )
+
 val monthNameTable = arrayOf(
     commonStrings.january,
     commonStrings.february,
@@ -22,6 +23,21 @@ val monthNameTable = arrayOf(
     commonStrings.october,
     commonStrings.november,
     commonStrings.december
+)
+
+val monthShortNameTable = arrayOf(
+    commonStrings.januaryShort,
+    commonStrings.februaryShort,
+    commonStrings.marchShort,
+    commonStrings.aprilShort,
+    commonStrings.mayShort,
+    commonStrings.juneShort,
+    commonStrings.julyShort,
+    commonStrings.augustShort,
+    commonStrings.septemberShort,
+    commonStrings.octoberShort,
+    commonStrings.novemberShort,
+    commonStrings.decemberShort
 )
 
 val numbersToStringTable = arrayOf(

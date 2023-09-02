@@ -1,6 +1,9 @@
 package hu.simplexion.z2.browser.material.textfield
 
+import hu.simplexion.z2.browser.css.bodySmall
 import hu.simplexion.z2.browser.css.displayNone
+import hu.simplexion.z2.browser.css.h20
+import hu.simplexion.z2.browser.css.pt4
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.basicIcons
@@ -114,7 +117,7 @@ class TextField(
 
     fun classes(): Array<String> {
         val classes = mutableListOf("text-field-main")
-        if (value.isEmpty()) classes += "empty"
+        if (beforeEditValue.isEmpty()) classes += "empty"
         if (filled) classes += "filled"
         if (outlined) classes += "outlined"
         return classes.toTypedArray()
@@ -124,7 +127,7 @@ class TextField(
         div {
             labelOuter = this
             addClass("text-field-label-filled", "body-small")
-            if (value.isEmpty()) addClass(displayNone)
+            if (beforeEditValue.isEmpty()) addClass(displayNone)
             text { label }
         }
 
@@ -136,7 +139,7 @@ class TextField(
 
             div("text-field-label-inner", "body-small") {
                 labelInner = this
-                if (value.isNotEmpty()) labelOutlinedContent()
+                if (beforeEditValue.isNotEmpty()) labelOutlinedContent()
             }
 
             div("text-field-top-right-corner") {}
@@ -163,7 +166,7 @@ class TextField(
         val inputElement = input.htmlElement as HTMLInputElement
 
         input.addClass("text-field-input", "body-large")
-        inputElement.value = value
+        inputElement.value = beforeEditValue
         label?.let { inputElement.placeholder = it.toString() }
 
         input.onMouseDown {
@@ -238,7 +241,7 @@ class TextField(
     }
 
     fun Z2.supportingText() =
-        div("text-field-support", "body-small") {
+        div("text-field-support", bodySmall, h20, pt4) {
             support = this
             text { effectiveSupportingText }
         }

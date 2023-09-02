@@ -129,6 +129,8 @@
 .w40 { width: 40px; }
 .w42 { width: 42px; }
 .w60 { width: 60px; }
+.w80 { width: 80px; }
+.w100 { width: 100px; }
 .w400 { width: 400px; }
 .w-full { width: 100%; }
 .w-min-content { width: min-content; }

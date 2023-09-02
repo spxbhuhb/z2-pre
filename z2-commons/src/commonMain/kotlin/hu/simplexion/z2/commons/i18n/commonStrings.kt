@@ -36,4 +36,19 @@ object commonStrings : LocalizedTextStore(UUID("7daef093-c00e-41dc-bc52-8848aee3
     val october by "október"
     val november by "november"
     val december by "december"
+
+    val januaryShort by "jan"
+    val februaryShort by "feb"
+    val marchShort by "már"
+    val aprilShort by "ápr"
+    val mayShort by "máj"
+    val juneShort by "jún"
+    val julyShort by "júl"
+    val augustShort by "aug"
+    val septemberShort by "szep"
+    val octoberShort by "okt"
+    val novemberShort by "nov"
+    val decemberShort by "dec"
+
+    val localDateSupportText by "YYYY/MM/DD"
 }

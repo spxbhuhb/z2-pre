@@ -10,16 +10,21 @@ import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.menu.menuItem
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.commons.i18n.monthNameTable
+import hu.simplexion.z2.commons.i18n.monthShortNameTable
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.browser.document
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import org.w3c.dom.HTMLElement
 import kotlin.math.max
 
-class DatePicker(
+class DockedDatePickerSelector(
     parent: Z2? = null,
-    var date: LocalDate = hereAndNow().date,
-    val onSelected : (date : LocalDate) -> Unit
+    date: LocalDate = hereAndNow().date,
+    val onClose: () -> Unit = { },
+    val onSelected: (date: LocalDate) -> Unit,
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
@@ -31,6 +36,13 @@ class DatePicker(
         const val MONTH_SELECT = 1
         const val YEAR_SELECT = 2
     }
+
+    var date: LocalDate = date
+        set(value) {
+            onSelected(value)
+            field = value
+            dayView()
+        }
 
     init {
         build()
@@ -60,7 +72,7 @@ class DatePicker(
         gridTemplateColumns = "1fr"
         header(DAY_SELECT)
         div(pl12, pr12) {
-            month(date.year, date.month, dense = false) { onSelected(it) }
+            month(date.year, date.month, markedDays = listOf(date), dense = false) { onSelected(it) }
         }
         actions()
     }
@@ -74,45 +86,47 @@ class DatePicker(
             }
 
             div(displayFlex, alignItemsCenter, pl12) {
-                left(mode)
+                left(mode) { date = date.minus(1, DateTimeUnit.MONTH) }
                 monthMenu(mode)
-                right(mode)
+                right(mode) { date = date.plus(1, DateTimeUnit.MONTH) }
             }
 
             div(displayFlex, alignItemsCenter, justifySelfEnd, pr24) {
-                left(mode)
+                left(mode) { date = date.minus(1, DateTimeUnit.YEAR) }
                 yearMenu(mode)
-                right(mode)
+                right(mode) { date = date.plus(1, DateTimeUnit.YEAR) }
             }
         }
 
-    fun Z2.left(mode: Int) =
+    fun Z2.left(mode: Int, onClick: () -> Unit) =
         if (mode == DAY_SELECT) {
-            actionIcon(basicIcons.left, basicStrings.previous, inline = true) { }
+            actionIcon(basicIcons.left, basicStrings.previous, inline = true) { onClick() }
         } else {
             div(pl24) { }
         }
 
-    fun Z2.right(mode: Int) =
+    fun Z2.right(mode: Int, onClick: () -> Unit) =
         if (mode == DAY_SELECT) {
-            actionIcon(basicIcons.right, basicStrings.next, inline = true) { }
+            actionIcon(basicIcons.right, basicStrings.next, inline = true) { onClick() }
         } else {
             div(pl24) { }
         }
 
     fun Z2.actions() =
         div(displayFlex, justifyContentEnd, pl12, pr12) {
-            textButton(basicStrings.cancel) { }
-            textButton(basicStrings.ok) { }
+            textButton(basicStrings.cancel) { onClose() }
+            textButton(basicStrings.ok) { onClose() }
         }
 
     fun Z2.monthMenu(mode: Int) =
         div(bodySmall, textTransformCapitalize, displayFlex, pl8, cursorPointer) {
-            div(alignSelfCenter) { text { monthNameTable[date.monthNumber - 1] } }
-            if (mode != YEAR_SELECT) {
-                icon(basicIcons.down, size = 20)
-            } else {
-                div(pl20) {  }
+            div(displayFlex, w60, justifyContentCenter) {
+                div(alignSelfCenter, overflowHidden) { text { monthShortNameTable[date.monthNumber - 1] } }
+                if (mode != YEAR_SELECT) {
+                    icon(basicIcons.down, size = 20)
+                } else {
+                    div(pl20) { }
+                }
             }
             when (mode) {
                 DAY_SELECT -> onClick { monthSelectView() }
@@ -127,7 +141,7 @@ class DatePicker(
             if (mode != MONTH_SELECT) {
                 icon(basicIcons.down, size = 20)
             } else {
-                div(pl20) {  }
+                div(pl20) { }
             }
             when (mode) {
                 DAY_SELECT -> onClick { yearSelectView() }
@@ -168,25 +182,9 @@ class DatePicker(
 
     fun monthSelected(monthNumber: Int) {
         date = LocalDate(date.year, monthNumber, date.dayOfMonth)
+        onSelected(date)
         dayView()
     }
-
-    fun Z2.monthHeader() =
-        headerContainer(pb16) {
-            addClass(borderBottomOutlineVariant)
-
-            div(displayFlex, alignItemsCenter, pl24, pr24) {
-                monthMenu(MONTH_SELECT)
-            }
-
-            div(bodySmall, displayFlex, alignItemsCenter, justifySelfEnd, pl24, pr24) {
-                div(onSurfaceText, opacity38) { text { date.year } }
-                div(pr20) { }
-            }
-
-            onClick { dayView() }
-        }
-
 
     // ------------------------------------------------------------------------------
     // Year View
@@ -220,6 +218,7 @@ class DatePicker(
 
     fun yearSelected(year: Int) {
         date = LocalDate(year, date.monthNumber, date.dayOfMonth)
+        onSelected(date)
         dayView()
     }
 

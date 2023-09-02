@@ -4,11 +4,11 @@ import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.i18n.locales.localized
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTable
-import hu.simplexion.z2.i18n.locales.localized
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import kotlinx.datetime.Instant
 

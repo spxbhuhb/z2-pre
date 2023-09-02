@@ -24,4 +24,5 @@ object basicIcons : LocalizedIconStore(UUID("3e5fb9a5-2d5f-4c86-9d26-1a760d1d1c6
     val radioButtonChecked by "radio_button_checked"
     val radioButtonUnchecked by "radio_button_unchecked"
     val check by "check"
+    val calendar by "calendar_today"
 }
