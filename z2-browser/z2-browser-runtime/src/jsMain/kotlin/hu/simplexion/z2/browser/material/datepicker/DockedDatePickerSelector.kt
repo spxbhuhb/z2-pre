@@ -22,7 +22,7 @@ import kotlin.math.max
 
 class DockedDatePickerSelector(
     parent: Z2? = null,
-    date: LocalDate = hereAndNow().date,
+    value: LocalDate = hereAndNow().date,
     val onClose: () -> Unit = { },
     val onSelected: (date: LocalDate) -> Unit,
 ) : Z2(
@@ -37,7 +37,7 @@ class DockedDatePickerSelector(
         const val YEAR_SELECT = 2
     }
 
-    var date: LocalDate = date
+    var value: LocalDate = value
         set(value) {
             onSelected(value)
             field = value
@@ -72,7 +72,7 @@ class DockedDatePickerSelector(
         gridTemplateColumns = "1fr"
         header(DAY_SELECT)
         div(pl12, pr12) {
-            month(date.year, date.month, markedDays = listOf(date), dense = false) { onSelected(it) }
+            month(value.year, value.month, markedDays = listOf(value), dense = false) { onSelected(it) }
         }
         actions()
     }
@@ -86,15 +86,15 @@ class DockedDatePickerSelector(
             }
 
             div(displayFlex, alignItemsCenter, pl12) {
-                left(mode) { date = date.minus(1, DateTimeUnit.MONTH) }
+                left(mode) { value = value.minus(1, DateTimeUnit.MONTH) }
                 monthMenu(mode)
-                right(mode) { date = date.plus(1, DateTimeUnit.MONTH) }
+                right(mode) { value = value.plus(1, DateTimeUnit.MONTH) }
             }
 
             div(displayFlex, alignItemsCenter, justifySelfEnd, pr24) {
-                left(mode) { date = date.minus(1, DateTimeUnit.YEAR) }
+                left(mode) { value = value.minus(1, DateTimeUnit.YEAR) }
                 yearMenu(mode)
-                right(mode) { date = date.plus(1, DateTimeUnit.YEAR) }
+                right(mode) { value = value.plus(1, DateTimeUnit.YEAR) }
             }
         }
 
@@ -121,7 +121,7 @@ class DockedDatePickerSelector(
     fun Z2.monthMenu(mode: Int) =
         div(bodySmall, textTransformCapitalize, displayFlex, pl8, cursorPointer) {
             div(displayFlex, w60, justifyContentCenter) {
-                div(alignSelfCenter, overflowHidden) { text { monthShortNameTable[date.monthNumber - 1] } }
+                div(alignSelfCenter, overflowHidden) { text { monthShortNameTable[value.monthNumber - 1] } }
                 if (mode != YEAR_SELECT) {
                     icon(basicIcons.down, size = 20)
                 } else {
@@ -137,7 +137,7 @@ class DockedDatePickerSelector(
 
     fun Z2.yearMenu(mode: Int) =
         div(bodySmall, displayFlex, pl8, cursorPointer) {
-            div(alignSelfCenter) { text { date.year } }
+            div(alignSelfCenter) { text { value.year } }
             if (mode != MONTH_SELECT) {
                 icon(basicIcons.down, size = 20)
             } else {
@@ -166,7 +166,7 @@ class DockedDatePickerSelector(
                 menuItem(
                     monthNumber,
                     leading = {
-                        if (date.monthNumber == monthNumber) {
+                        if (value.monthNumber == monthNumber) {
                             icon(basicIcons.check)
                         } else {
                             div(pr24) {}
@@ -176,13 +176,13 @@ class DockedDatePickerSelector(
                 ) { monthSelected(monthNumber) }
             }
         }.also {
-            it.htmlElement.scrollTop = max((48.0 * (date.monthNumber - 3)), 0.0)
+            it.htmlElement.scrollTop = max((48.0 * (value.monthNumber - 3)), 0.0)
         }
     }
 
     fun monthSelected(monthNumber: Int) {
-        date = LocalDate(date.year, monthNumber, date.dayOfMonth)
-        onSelected(date)
+        value = LocalDate(value.year, monthNumber, value.dayOfMonth)
+        onSelected(value)
         dayView()
     }
 
@@ -202,7 +202,7 @@ class DockedDatePickerSelector(
                 menuItem(
                     year,
                     leading = {
-                        if (date.year == year) {
+                        if (value.year == year) {
                             icon(basicIcons.check)
                         } else {
                             div(pr24) {}
@@ -212,13 +212,13 @@ class DockedDatePickerSelector(
                 ) { yearSelected(year) }
             }
         }.also {
-            it.htmlElement.scrollTop = max((48.0 * (date.year - datePickerStartYear - 3)), 0.0)
+            it.htmlElement.scrollTop = max((48.0 * (value.year - datePickerStartYear - 3)), 0.0)
         }
     }
 
     fun yearSelected(year: Int) {
-        date = LocalDate(year, date.monthNumber, date.dayOfMonth)
-        onSelected(date)
+        value = LocalDate(year, value.monthNumber, value.dayOfMonth)
+        onSelected(value)
         dayView()
     }
 

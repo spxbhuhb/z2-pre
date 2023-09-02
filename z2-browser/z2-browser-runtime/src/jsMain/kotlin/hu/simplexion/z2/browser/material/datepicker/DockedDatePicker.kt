@@ -25,7 +25,7 @@ class DockedDatePicker(
     leadingIcon: LocalizedIcon? = null,
     state: ComponentState = ComponentState.Enabled,
     error: Boolean = false,
-    onChange: (value: LocalDate) -> Unit
+    val onChange: (value: LocalDate) -> Unit
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
@@ -40,32 +40,19 @@ class DockedDatePicker(
 
     val textField = outlinedTextField(value.localized, label, supportingText, leadingIcon, basicIcons.calendar)
 
-    val selector = div(positionRelative, displayNone) { }
+    val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
     init {
         style.width = 304.px
 
-        with(selector) {
-            zIndex = 100
-            div(positionAbsolute) {
-                DockedDatePickerSelector(this, value, { close() }) {
-                    this@DockedDatePicker.value = it
-                    textField.value = it.localized
-                    onChange(value)
-                }
-            }.onMouseDown {
-                it.preventDefault()
-            }
-        }
-
         textField.input.onFocus {
+            selector.buildContent()
             selector.removeClass(displayNone)
         }
 
         textField.input.onBlur {
             selector.addClass(displayNone)
         }
-
     }
 
     fun close() {
@@ -74,6 +61,19 @@ class DockedDatePicker(
 
     fun setState(error: Boolean, errorSupportingText: String? = null) {
         textField.setState(error, errorSupportingText)
+    }
+
+    fun Z2.buildContent() {
+        clear()
+        div(positionAbsolute) {
+            DockedDatePickerSelector(this, value, { close() }) {
+                this@DockedDatePicker.value = it
+                textField.value = it.localized
+                onChange(value)
+            }
+        }.onMouseDown {
+            it.preventDefault()
+        }
     }
 
 }
