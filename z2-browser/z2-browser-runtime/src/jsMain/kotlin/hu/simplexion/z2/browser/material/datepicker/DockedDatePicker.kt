@@ -13,14 +13,13 @@ import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.i18n.locales.localized
-import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.browser.document
 import kotlinx.datetime.LocalDate
 import org.w3c.dom.HTMLElement
 
 class DockedDatePicker(
     parent: Z2? = null,
-    var value: LocalDate = hereAndNow().date,
+    value: LocalDate,
     label: LocalizedText? = null,
     supportingText: LocalizedText? = commonStrings.localDateSupportText,
     leadingIcon: LocalizedIcon? = null,
@@ -33,14 +32,21 @@ class DockedDatePicker(
     classes = arrayOf(wFull, positionRelative)
 ) {
 
+    var value: LocalDate = value
+        set(value) {
+            field = value
+            textField.value = value.localized
+        }
+
     val textField = outlinedTextField(value.localized, label, supportingText, leadingIcon, basicIcons.calendar)
 
-    val selector = div(positionRelative, displayNone) {  }
+    val selector = div(positionRelative, displayNone) { }
 
     init {
         style.width = 304.px
 
         with(selector) {
+            zIndex = 100
             div(positionAbsolute) {
                 DockedDatePickerSelector(this, value, { close() }) {
                     this@DockedDatePicker.value = it
@@ -65,4 +71,9 @@ class DockedDatePicker(
     fun close() {
         textField.input.htmlElement.blur()
     }
+
+    fun setState(error: Boolean, errorSupportingText: String? = null) {
+        textField.setState(error, errorSupportingText)
+    }
+
 }
