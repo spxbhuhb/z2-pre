@@ -4,12 +4,14 @@ import hu.simplexion.z2.commons.i18n.LocalizedText
 
 data class SchematicValidationResult(
     val valid : Boolean,
+    val validForCreate : Boolean,
     val fieldResults : Map<String, FieldValidationResult>
 )
 
 data class FieldValidationResult(
     val path : String,
     val valid : Boolean,
+    val validForCreate : Boolean,
     val fails : List<ValidationFailInfo>
 )
 

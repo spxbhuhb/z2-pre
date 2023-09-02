@@ -16,6 +16,8 @@ interface RoleApi : Service {
 
     suspend fun remove(uuid: UUID<Role>)
 
+    suspend fun getByName(name : String) : Role
+
     suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?)
 
     suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?)

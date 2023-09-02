@@ -2,8 +2,10 @@ package hu.simplexion.z2.auth.context
 
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
+import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.ServiceContext
+import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.service.runtime.get
 
 fun ServiceContext?.getSession(): Session =
@@ -11,3 +13,6 @@ fun ServiceContext?.getSession(): Session =
 
 fun ServiceContext?.getSessionOrNull() =
     this?.let { it[SESSION_TOKEN_UUID] }
+
+val ServiceImpl<*>.isSecurityOfficer
+    get() = serviceContext.has(securityOfficerRole).isAllowed

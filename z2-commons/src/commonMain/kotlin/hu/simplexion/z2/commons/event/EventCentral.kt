@@ -6,7 +6,7 @@ import hu.simplexion.z2.commons.util.use
 
 object EventCentral {
 
-    var trace = true
+    var trace = false
 
     private val mutex = Lock()
 

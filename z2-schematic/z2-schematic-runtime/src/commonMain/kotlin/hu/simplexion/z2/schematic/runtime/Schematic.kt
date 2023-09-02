@@ -44,10 +44,20 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         get() = placeholder()
 
     /**
-     * Validates the schema (calls [Schema.validate]) and returns with the result.
+     * Validates the schema (calls [Schema.validate] with `create = false`) and
+     * returns with the result. For any schematics that are about to be created
+     * use [isValidForCreate] as [isValid] usually fails for them (because of
+     * field values that are not finalized yet, such as ids).
      */
     val isValid
         get() = schematicSchema.validate(this).valid
+
+    /**
+     * Validates the schema (calls [Schema.validate] with `create = true`) and
+     * returns with the result.
+     */
+    val isValidForCreate
+        get() = schematicSchema.validate(this).validForCreate
 
     // -----------------------------------------------------------------------------------
     // Change management
@@ -128,25 +138,26 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         ) = SecretSchemaField(default, minLength, maxLength, blank)
 
         fun string(
+            maxLength: Int? = null,
             default: String? = null,
             minLength: Int? = null,
-            maxLength: Int? = null,
             blank: Boolean? = null,
             pattern: Regex? = null
         ) = StringSchemaField(default, minLength, maxLength, blank, pattern)
 
         fun stringList(
+            maxLength: Int? = null,
             default: MutableList<String>? = null,
             minLength: Int? = null,
-            maxLength: Int? = null,
             blank: Boolean? = null,
             pattern: Regex? = null
         ) = StringListSchemaField(default, minLength, maxLength, blank, pattern)
 
         fun <UT> uuid(
+            validForCreate : Boolean = false,
             default: UUID<UT>? = null,
-            nil: Boolean? = null
-        ) = UuidSchemaField(default, nil)
+            nil: Boolean? = null,
+        ) = UuidSchemaField(default, nil, validForCreate)
 
         fun <UT> uuidList(
             default: MutableList<UUID<UT>>? = null,

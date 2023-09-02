@@ -2,6 +2,7 @@ package hu.simplexion.z2.auth.impl
 
 import hu.simplexion.z2.auth.api.RoleApi
 import hu.simplexion.z2.auth.context.ensure
+import hu.simplexion.z2.auth.context.ensureLoggedIn
 import hu.simplexion.z2.auth.context.has
 import hu.simplexion.z2.auth.context.isAccount
 import hu.simplexion.z2.auth.model.AccountPrivate
@@ -15,7 +16,7 @@ import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.runtime.dump
-import hu.simplexion.z2.schematic.runtime.validate
+import hu.simplexion.z2.schematic.runtime.ensureValid
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
 class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
@@ -35,16 +36,16 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
         val roleUuid = roleTable.insert(role)
 
-        securityHistory(authStrings.role, commonStrings.add, roleUuid, role.dump())
+        securityHistory(authStrings.role, commonStrings.add, roleUuid, role)
 
         return roleUuid
     }
 
     override suspend fun update(role: Role) {
         ensure(securityOfficerRole)
-        validate(role)
+        ensureValid(role)
 
-        securityHistory(authStrings.role, commonStrings.update, role.uuid, role.dump())
+        securityHistory(authStrings.role, commonStrings.update, role.uuid, role)
 
         roleTable.update(role.uuid, role)
     }
@@ -55,6 +56,11 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
         roleGrantTable.remove(uuid)
         roleTable.remove(uuid)
+    }
+
+    override suspend fun getByName(name: String): Role {
+        ensureLoggedIn()
+        return roleTable.getByName(name)
     }
 
     override suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {

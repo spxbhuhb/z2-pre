@@ -90,7 +90,12 @@ open class WorkerRuntime {
         transaction {
             for (registration in workerRegistrationTable.list()) {
                 workerRegistrations[registration.uuid] = registration
-                start(registration)
+                if (registration.status != WorkerStatus.Stopped) {
+                    registration.uuid.setStatus(WorkerStatus.Stopped, workerStrings.setStoppedDuringStart.toString())
+                }
+                if (registration.provider in workerProviders && registration.enabled && registration.startMode == WorkerStartMode.Automatic) {
+                    start(registration)
+                }
             }
         }
 
@@ -119,7 +124,7 @@ open class WorkerRuntime {
                     WorkerRuntimeMessageType.UpdateRegistration -> TODO()
                     WorkerRuntimeMessageType.RemoveRegistration -> removeRegistration(message)
                     WorkerRuntimeMessageType.ListRegistrations -> listRegistrations(message)
-                    WorkerRuntimeMessageType.StartWorker -> startWorker(requireNotNull(message.registrationUuid))
+                    WorkerRuntimeMessageType.StartWorker -> start(requireNotNull(message.registrationUuid))
                     WorkerRuntimeMessageType.StopWorker -> stopWorker(requireNotNull(message.registrationUuid))
                     WorkerRuntimeMessageType.EnableRegistration -> setEnabled(message, true)
                     WorkerRuntimeMessageType.DisableRegistration -> setEnabled(message, false)
@@ -135,11 +140,19 @@ open class WorkerRuntime {
             require(provider::class == existing::class) {
                 "attempt to register different providers with the same UUID: ${provider.uuid} ${provider::class.qualifiedName} ${existing::class.qualifiedName}"
             }
+            return
         }
         workerProviders[provider.uuid] = provider
-        message.responseChannel?.trySend(WorkerRuntimeResponse())
 
         info(workerStrings.worker, workerStrings.addProvider, workerStrings.provider to provider.uuid)
+
+        for (registration in workerRegistrations.values) {
+            if (registration.provider == provider.uuid && registration.status == WorkerStatus.Stopped && registration.startMode != WorkerStartMode.Manual) {
+                start(registration)
+            }
+        }
+
+        message.responseChannel?.trySend(WorkerRuntimeResponse())
     }
 
     protected fun addRegistration(message: WorkerRuntimeRequest) {
@@ -152,7 +165,7 @@ open class WorkerRuntime {
 
         workerRegistrations[uuid] = internal
 
-        if (internal.enabled && internal.startMode != WorkerStartMode.Manual) {
+        if (internal.enabled && internal.startMode != WorkerStartMode.Manual && registration.provider in workerProviders) {
             start(internal)
         }
 
@@ -199,8 +212,8 @@ open class WorkerRuntime {
         if (! enabled) {
             stopWorker(uuid)
         } else {
-            if (registration.startMode != WorkerStartMode.Manual) {
-                startWorker(uuid)
+            if (registration.provider in workerProviders && registration.startMode != WorkerStartMode.Manual) {
+                start(uuid)
             }
         }
 
@@ -217,17 +230,13 @@ open class WorkerRuntime {
         )
     }
 
-    protected fun startWorker(registration: UUID<WorkerRegistration>): Boolean {
+    protected fun start(registration: UUID<WorkerRegistration>): Boolean {
         return start(requireNotNull(workerRegistrations[registration]))
     }
 
     protected fun start(registration: WorkerRegistration): Boolean {
         val provider = workerProviders[registration.provider]
-        if (provider == null) {
-            // TODO warning and start if a provider is added later
-            // check(provider != null) { workerStrings.missingProvider } // TODO documentation
-            return false
-        }
+        check(provider != null) { workerStrings.missingProvider }
 
         val instance = WorkerInstance(provider.newBackgroundWorker(registration))
 

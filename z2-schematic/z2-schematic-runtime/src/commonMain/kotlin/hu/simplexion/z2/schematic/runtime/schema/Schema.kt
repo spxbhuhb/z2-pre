@@ -24,16 +24,20 @@ class Schema<ST : Schematic<ST>>(
      */
     fun validate(schematic : Schematic<*>) : SchematicValidationResult {
         var valid = true
+        var validForCreate = true
+
         val fieldResults = mutableMapOf<String,FieldValidationResult>()
 
         for (field in fields) {
             val fieldResult = field.validate(schematic.schematicValues[field.name])
             valid = valid && fieldResult.valid
+            validForCreate = validForCreate && fieldResult.validForCreate
             fieldResults[field.name] = fieldResult
         }
 
         return SchematicValidationResult(
             valid,
+            validForCreate,
             fieldResults
         )
     }
@@ -45,16 +49,19 @@ class Schema<ST : Schematic<ST>>(
     @PublicApi
     suspend fun validateSuspend(schematic : Schematic<*>) : SchematicValidationResult{
         var valid = true
+        var validForCreate = true
         val fieldResults = mutableMapOf<String,FieldValidationResult>()
 
         for (field in fields) {
             val fieldResult = field.validateSuspend(schematic.schematicValues[field.name])
             valid = valid && fieldResult.valid
+            validForCreate = validForCreate && fieldResult.validForCreate
             fieldResults[field.name] = fieldResult
         }
 
         return SchematicValidationResult(
             valid,
+            validForCreate,
             fieldResults
         )
     }

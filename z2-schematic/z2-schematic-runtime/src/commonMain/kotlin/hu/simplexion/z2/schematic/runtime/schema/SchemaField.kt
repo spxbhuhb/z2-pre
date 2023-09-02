@@ -17,6 +17,14 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
     val naturalDefault : VT
 
     /**
+     * When true (in case extending classes override) the field will be marked as
+     * valid for create. This is a mechanics to allow incomplete fields during
+     * initial data entry.
+     */
+    val validForCreate : Boolean
+        get() = false
+
+    /**
      * Called by the compiler plugin to set the field name.
      */
     fun setFieldName(name : String) : SchemaField<VT> {
@@ -36,9 +44,12 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
             validateNull(fails)
         }
 
+        val valid = fails.isEmpty()
+
         return FieldValidationResult(
             name,
-            fails.isEmpty(),
+            valid,
+            valid || validForCreate,
             fails
         )
     }

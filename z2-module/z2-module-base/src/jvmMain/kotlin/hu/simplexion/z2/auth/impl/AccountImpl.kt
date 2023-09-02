@@ -39,7 +39,7 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
 
         val accountUuid = accountPrivateTable.insert(account)
 
-        securityHistory(authStrings.account, commonStrings.add, accountUuid, account.dump(), roles.joinToString("\n"))
+        securityHistory(authStrings.account, commonStrings.add, accountUuid, account, roles.joinToString("\n"))
 
         credentials.account = accountUuid
         credentials.value = BCrypt.hashpw(credentials.value, BCrypt.gensalt())

@@ -34,7 +34,8 @@ interface UuidSchemaFieldCommon<T> {
 
 open class UuidSchemaField<T>(
     override var definitionDefault: UUID<T>?,
-    override var nil : Boolean?
+    override var nil : Boolean?,
+    override val validForCreate : Boolean
 ) : SchemaField<UUID<T>>, UuidSchemaFieldCommon<T> {
 
     override val type: SchemaFieldType get() = SchemaFieldType.UUID
@@ -131,7 +132,7 @@ class UuidListSchemaField<T>(
 
     override var name: String = ""
 
-    override val itemSchemaField = UuidSchemaField<T>(null, nil)
+    override val itemSchemaField = UuidSchemaField<T>(null, nil, false)
 
     override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
 

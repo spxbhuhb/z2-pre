@@ -60,6 +60,7 @@ interface ListSchemaField<VT> : SchemaField<List<VT>> {
         return FieldValidationResult(
             name,
             fails.isEmpty(),
+            fails.isEmpty(),
             fails
         )
     }

@@ -10,6 +10,8 @@ import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
+import hu.simplexion.z2.email.ui.emailStrings
+import hu.simplexion.z2.logging.util.info
 import hu.simplexion.z2.setting.util.CommonSettings.getSystemSettings
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
@@ -143,6 +145,7 @@ class EmailWorker(
             }
 
         } catch (ex: Exception) {
+            ex.printStackTrace()
             // TODO retry
         }
     }

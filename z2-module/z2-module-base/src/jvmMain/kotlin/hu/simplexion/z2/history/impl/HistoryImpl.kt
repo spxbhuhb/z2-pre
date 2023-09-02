@@ -9,11 +9,8 @@ import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTable
 import hu.simplexion.z2.i18n.locales.localized
-import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
 

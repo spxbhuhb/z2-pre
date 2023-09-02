@@ -17,4 +17,5 @@ object workerStrings : LocalizedTextStore(UUID("885e18c7-cb5c-4e50-842f-58bd34ee
     val stopRuntime by "stopping all workers and the worker runtime"
     val addProvider by "add worker provider"
     val provider by "provider"
+    val setStoppedDuringStart by "Worker status set to stopped because it cannot be running during startup. This may happen if the system had an uncontrolled shutdown."
 }

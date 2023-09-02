@@ -3,15 +3,12 @@ package hu.simplexion.z2.worker.impl
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.schematic.runtime.validate
+import hu.simplexion.z2.schematic.runtime.ensureValid
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.worker.api.WorkerApi
-import hu.simplexion.z2.worker.model.WorkerProvider
 import hu.simplexion.z2.worker.model.WorkerRegistration
-import hu.simplexion.z2.worker.runtime.WorkerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
 import hu.simplexion.z2.worker.runtime.WorkerRuntimeMessageType
-import hu.simplexion.z2.worker.table.WorkerRegistrationTable.Companion.workerRegistrationTable
 
 class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
 
@@ -34,7 +31,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
 
     override suspend fun update(registration: WorkerRegistration) {
         ensureTechnicalAdmin()
-        validate(registration)
+        ensureValid(registration)
 
         workerRuntime.sendAndWait(
             serviceContext.account,
