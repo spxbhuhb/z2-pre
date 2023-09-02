@@ -28,7 +28,7 @@ class StateLayer(
     var hasFocus: Boolean = false
 
     init {
-        addClass(positionAbsolute, overflowHidden)
+        addClass(positionAbsolute, overflowHidden, primary, displayNone)
         addEventListeners()
     }
 
@@ -64,7 +64,7 @@ class StateLayer(
 
         when {
             disabled -> addClass(displayNone)
-            hasFocus -> addClass(primary, stateLayerOpacityFocus)
+            hasFocus -> addClass(stateLayerOpacityFocus)
             hasHover -> addClass(stateLayerOpacityHover)
             else -> addClass(displayNone)
         }

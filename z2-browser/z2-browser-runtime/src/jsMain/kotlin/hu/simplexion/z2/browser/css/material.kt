@@ -6,10 +6,13 @@ const val bodySmall = "body-small"
 
 const val borderPrimary = "border-primary"
 const val borderOutline = "border-outline"
-const val borderTopOutline = "border-top-outline"
+const val borderTopOutlineVariant = "border-top-outline-variant"
+const val borderBottomOutlineVariant = "border-bottom-outline-variant"
 
 const val primary = "primary"
 const val primaryText = "primary-text"
+
+const val onPrimaryText = "on-primary-text"
 
 const val onSurface = "on-surface"
 const val onSurfaceText = "on-surface-text"

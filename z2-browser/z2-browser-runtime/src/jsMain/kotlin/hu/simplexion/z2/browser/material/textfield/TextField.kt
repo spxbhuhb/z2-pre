@@ -98,7 +98,7 @@ class TextField(
         setState(state)
     }
 
-    fun setState(error : Boolean, errorSupportingText : String?) {
+    fun setState(error : Boolean, errorSupportingText : String? = null) {
         this.error = error
         this.errorSupportingText = errorSupportingText
         setState(state)

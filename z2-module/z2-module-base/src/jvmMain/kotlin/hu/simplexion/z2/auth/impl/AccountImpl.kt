@@ -1,11 +1,11 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.auth.*
 import hu.simplexion.z2.auth.api.AccountApi
 import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.context.has
 import hu.simplexion.z2.auth.context.isAccount
 import hu.simplexion.z2.auth.model.*
+import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCredentialsTable
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
@@ -15,7 +15,6 @@ import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
-import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
 class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
@@ -45,6 +44,12 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
         credentials.value = BCrypt.hashpw(credentials.value, BCrypt.gensalt())
 
         accountCredentialsTable.insert(credentials)
+
+        val status = AccountStatus().also {
+            it.account = accountUuid
+        }
+
+        accountStatusTable.insert(status)
 
         for(role in roles) {
             roleGrantTable.insert(role, accountUuid, null)

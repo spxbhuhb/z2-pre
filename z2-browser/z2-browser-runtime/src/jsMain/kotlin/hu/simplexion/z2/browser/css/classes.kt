@@ -64,6 +64,7 @@ const val justifyContentEnd = "justify-content-end"
 
 const val justifySelfCenter = "justify-self-center"
 const val justifySelfEnd = "justify-self-end"
+const val justifySelfStart = "justify-self-start"
 
 const val m0 = "m0"
 

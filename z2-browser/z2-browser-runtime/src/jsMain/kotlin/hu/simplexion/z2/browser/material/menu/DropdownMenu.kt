@@ -1,10 +1,10 @@
 package hu.simplexion.z2.browser.material.menu
 
-import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.html.grid
-import hu.simplexion.z2.browser.html.onClick
+import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.popup.PopupBase
 import hu.simplexion.z2.browser.material.popup.popup
+import hu.simplexion.z2.browser.material.px
 
 class DropdownMenu(
     anchor: Z2,
@@ -19,7 +19,11 @@ class DropdownMenu(
         anchor.onClick { popup.toggle() }
 
         popup = anchor.popup {
-            grid("menu") {
+            grid(positionRelative, boxSizingBorderBox, displayGrid, pt8, pl0, pb8, pr0, borderRadius4, surfaceContainer, elevationLevel2) {
+                gridAutoRows = "min-content"
+                gridTemplateColumns = "1fr"
+                style.minWidth = 112.px
+                style.maxWidth = 280.px
                 builder()
             }
         }

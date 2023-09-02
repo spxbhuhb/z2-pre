@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.i18n.locales
 
+import hu.simplexion.z2.commons.i18n.numbersToStringTable
 import kotlinx.datetime.*
 
 
@@ -22,11 +23,11 @@ object EnLocalizedFormats : AbstractLocalizedFormats(
 
     override fun format(value: LocalDateTime): String {
         val year = value.year.toString()
-        val month = numbersToString_0_60[value.monthNumber]
-        val day = numbersToString_0_60[value.dayOfMonth]
-        val hour = numbersToString_0_60[value.hour]
-        val minute = numbersToString_0_60[value.minute]
-        val second = numbersToString_0_60[value.second]
+        val month = numbersToStringTable[value.monthNumber]
+        val day = numbersToStringTable[value.dayOfMonth]
+        val hour = numbersToStringTable[value.hour]
+        val minute = numbersToStringTable[value.minute]
+        val second = numbersToStringTable[value.second]
         val micros = (value.nanosecond / 1_000).toString().padStart(6, '0')
 
         return "$year/$day/$month $hour:$minute:$second.$micros"

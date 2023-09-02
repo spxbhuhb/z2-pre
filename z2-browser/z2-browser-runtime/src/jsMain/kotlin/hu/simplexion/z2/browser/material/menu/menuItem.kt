@@ -1,46 +1,26 @@
 package hu.simplexion.z2.browser.material.menu
 
-import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
-import org.w3c.dom.events.Event
 
-fun Z2.menuItem(
-    index: Int,
+fun <T> Z2.menuItem(
+    value: T,
     icon: LocalizedIcon? = null,
     label: LocalizedText,
-    trailing: (Z2.() -> Unit)? = null,
-    onClick: (event: Event) -> Unit
-) {
-    val row = index.toString()
+    leading: Z2Builder? = null,
+    trailing: Z2Builder? = null,
+    disabled: Boolean = false,
+    onSelected: (item : MenuItemBase<T>) -> Unit
+) = MenuItemBase(this, value, icon, leading, label.toString(), trailing, disabled, onSelected)
 
-    div("menu-item") {
-        gridRow = row
-        gridColumn = "1"
-        if (icon != null) icon(icon, cssClass = "menu-icon")
-        this.onClick(onClick)
-    }
-
-    div("menu-item", "label-large", "justify-self-start") {
-        gridRow = row
-        gridColumn = "2"
-        div {
-            text { label }
-        }
-        this.onClick(onClick)
-    }
-
-    div("menu-item", "menu-trailing") {
-        gridRow = row
-        gridColumn = "3"
-        if (trailing != null) trailing()
-        this.onClick(onClick)
-    }
-
-    div("menu-row") {
-        gridRow = row
-        gridColumn = "1/4"
-        this.onClick(onClick)
-    }
-}
+fun <T> Z2.menuItem(
+    value: T,
+    icon: LocalizedIcon? = null,
+    label: String,
+    leading: Z2Builder? = null,
+    trailing: Z2Builder? = null,
+    disabled: Boolean = false,
+    onSelected: (item : MenuItemBase<T>) -> Unit
+) = MenuItemBase(this, value, icon, leading, label, trailing, disabled, onSelected)

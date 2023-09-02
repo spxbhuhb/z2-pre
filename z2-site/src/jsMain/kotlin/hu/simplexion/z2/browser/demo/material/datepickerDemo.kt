@@ -8,5 +8,5 @@ import hu.simplexion.z2.browser.material.datepicker.DatePicker
 fun Z2.datepickerDemo() =
 
     div {
-        DatePicker(this)
+        DatePicker(this) {  }
     }

@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.material.radiobutton
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
 import hu.simplexion.z2.browser.html.onKeyDown
 import hu.simplexion.z2.browser.material.StateLayer
@@ -23,7 +24,7 @@ class RadioButtonBase(
 
     val stateLayer = StateLayer(this, arrayOf(w40, h40, borderRadius20), disabled)
 
-    lateinit var icon : Z2
+    val contentLayer = div { zIndex = 1 }
 
     var selected = selected
         set(value) {
@@ -43,28 +44,34 @@ class RadioButtonBase(
 
     init {
         build()
+
         onClick {
             if (!disabled) {
                 focus()
                 onSelected()
             }
         }
+
         onKeyDown { if (!disabled && it.key == " ") onSelected() }
     }
 
     fun build() {
-        if (::icon.isInitialized) remove(icon)
+        stateLayer.disabled = disabled
+
+        contentLayer.clear()
+
         tabIndex = if (disabled) -1 else 0
 
-        icon = icon(
-            if (selected) basicIcons.radioButtonChecked else basicIcons.radioButtonUnchecked,
-            size = 20
-        ).also {
-            it.zIndex = 1
-            when {
-                disabled -> it.addClass(onSurfaceText, opacity38)
-                selected -> it.addClass(primaryText)
-                else -> it.addClass(onSurfaceVariantText)
+        with(contentLayer) {
+            icon(
+                if (selected) basicIcons.radioButtonChecked else basicIcons.radioButtonUnchecked,
+                size = 20
+            ).also {
+                when {
+                    disabled -> it.addClass(onSurfaceText, opacity38)
+                    selected -> it.addClass(primaryText)
+                    else -> it.addClass(onSurfaceVariantText)
+                }
             }
         }
     }

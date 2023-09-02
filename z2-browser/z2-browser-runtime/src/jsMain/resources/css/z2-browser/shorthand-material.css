@@ -6,8 +6,12 @@
     border: 1px solid var(--md-sys-color-outline-variant);
 }
 
-.border-top-outline {
+.border-top-outline-variant {
     border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.border-bottom-outline-variant {
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .elevation-level-1 {
