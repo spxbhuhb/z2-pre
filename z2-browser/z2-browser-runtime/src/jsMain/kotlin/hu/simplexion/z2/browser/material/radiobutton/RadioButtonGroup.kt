@@ -31,6 +31,9 @@ class RadioButtonGroup<T>(
             }
         }
 
+    // FIXME proper handling of readonly in RadioButtonGroup
+    var readOnly : Boolean = false
+
     fun onSelected(entry: T) {
         value = entry
         onChange(entry)
@@ -46,7 +49,7 @@ class RadioButtonGroup<T>(
                 options += radioButton(entry == value, false) { onSelected(entry) }
                 div(pl8, cursorPointer) {
                     itemBuilder?.let { it(entry) } ?: defaultItemBuilder(entry)
-                    onClick { onSelected(entry) }
+                    onClick { if (!readOnly) onSelected(entry) }
                 }
             }
         }

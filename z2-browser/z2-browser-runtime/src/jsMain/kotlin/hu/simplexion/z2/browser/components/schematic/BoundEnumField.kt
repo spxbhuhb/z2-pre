@@ -27,11 +27,19 @@ class BoundEnumField<T : Enum<T>>(
 
     lateinit var radioButtonGroup: RadioButtonGroup<T>
 
+    override var readOnly: Boolean = false
+        set(value) {
+            field = value
+            radioButtonGroup.readOnly = value
+        }
+
     init {
         attach(schematic) {
 
             val value = field.getValue(schematic)
             radioButtonGroup.value = value
+
+            if (readOnly) return@attach
 
             val schemaResult = it.validationResult.fieldResults[field.name]
             val valid = schemaResult?.valid ?: true

@@ -27,11 +27,18 @@ class BoundTextField<T>(
 
     lateinit var textField: TextField
 
+    override var readOnly: Boolean = false
+        set(value) {
+            field = value
+            textField.readOnly = value
+        }
     init {
         attach(schematic) {
 
             val value = field.getValue(schematic)
             textField.value = value.toString()
+
+            if (readOnly) return@attach
 
             val schemaResult = it.validationResult.fieldResults[field.name]
             val valid = schemaResult?.valid ?: true

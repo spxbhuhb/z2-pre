@@ -179,6 +179,18 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         return newInstance
     }
 
+    fun copyFrom(source : ST) {
+        for (field in schematicSchema.fields) {
+            field.copy(source, this)
+        }
+    }
+
+    fun reset() {
+        for (field in schematicSchema.fields) {
+            field.reset(this)
+        }
+    }
+
     override fun toString() : String {
         return this::class.simpleName + "(" + toString("=", ",") + ")"
     }

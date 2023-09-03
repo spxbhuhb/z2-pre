@@ -31,3 +31,8 @@ infix fun <T> Search<T>.itemText(itemTextFun: (value: T) -> String): Search<T> {
     configuration.itemTextFun = itemTextFun
     return this
 }
+
+infix fun <T> Search<T>.filterChange(filterChangeFun: (value: String) -> Unit): Search<T> {
+    configuration.filterChangeFun = filterChangeFun
+    return this
+}

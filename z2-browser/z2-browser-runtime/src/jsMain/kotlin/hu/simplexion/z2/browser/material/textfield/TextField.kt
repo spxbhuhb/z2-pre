@@ -62,10 +62,19 @@ class TextField(
 
     val input = Z2(this, document.createElement("input") as HTMLInputElement, emptyArray(), {})
 
-    var value
-        get() = (input.htmlElement as HTMLInputElement).value
+    val inputElement
+        get() = (input.htmlElement as HTMLInputElement)
+
+    var readOnly
+        get() = inputElement.readOnly
         set(value) {
-            (input.htmlElement as HTMLInputElement).value = value
+            inputElement.readOnly = value
+        }
+
+    var value
+        get() = inputElement.value
+        set(value) {
+            inputElement.value = value
             if (value.isNotEmpty()) {
                 showLabel()
             }
@@ -83,7 +92,7 @@ class TextField(
             leadingIcon()
             div("align-self-center") {
                 content = this
-                if (filled) labelFilled()
+                if (filled && value.isEmpty()) labelFilled()
                 input()
             }
             trailingIcon()
@@ -108,7 +117,6 @@ class TextField(
     }
 
     fun leave() {
-        val inputElement = input.htmlElement as HTMLInputElement
         if (beforeEditValue != inputElement.value) {
             beforeEditValue = inputElement.value
             onChange(inputElement.value)
@@ -163,7 +171,6 @@ class TextField(
         val parent = if (filled) div { labelFilled() } else this
 
         parent.append(input)
-        val inputElement = input.htmlElement as HTMLInputElement
 
         input.addClass("text-field-input", "body-large")
         inputElement.value = beforeEditValue

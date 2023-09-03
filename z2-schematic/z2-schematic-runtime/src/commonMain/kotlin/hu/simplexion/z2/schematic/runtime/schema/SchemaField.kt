@@ -3,9 +3,11 @@ package hu.simplexion.z2.schematic.runtime.schema
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicChange
 import hu.simplexion.z2.schematic.runtime.placeholder
-import hu.simplexion.z2.schematic.runtime.schema.validation.*
+import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
+import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
+import hu.simplexion.z2.schematic.runtime.schema.validation.fail
+import hu.simplexion.z2.schematic.runtime.schema.validation.validationStrings
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -88,6 +90,18 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
     fun getValue(schematic: Schematic<*>) : VT {
         @Suppress("UNCHECKED_CAST") // TODO remove cast from getValue and build on field type
         return schematic.schematicValues[name] as VT
+    }
+
+    fun setValue(schematic: Schematic<*>, value : VT?) { // TODO check nullability on SchematicField.setValue
+        schematic.schematicChange(this, value)
+    }
+
+    fun copy(source: Schematic<*>, target : Schematic<*>) {
+        setValue(target, getValue(source))
+    }
+
+    fun reset(schematic: Schematic<*>) {
+        setValue(schematic, if (isNullable) definitionDefault else definitionDefault ?: naturalDefault)
     }
 
     fun toString(schematic: Schematic<*>) : String {

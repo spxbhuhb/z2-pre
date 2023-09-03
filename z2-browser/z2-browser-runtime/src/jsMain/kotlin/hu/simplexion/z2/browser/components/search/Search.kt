@@ -137,6 +137,8 @@ class Search<T>(
     }
 
     fun runQuery(value: String) {
+        configuration.filterChangeFun(value)
+
         val inputRevision = ++ revision
 
         if (value.isEmpty() || value.length < configuration.minimumFilterLength) {

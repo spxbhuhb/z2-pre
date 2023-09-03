@@ -10,4 +10,5 @@ open class SearchConfiguration<T> {
     var selectFun: (value: T) -> Unit = {  }
     var itemRenderFun : Z2.(value : T) -> Unit = { + it.toString() }
     var itemTextFun : (value : T) -> String = { it.toString() }
+    var filterChangeFun : (value : String) -> Unit = {  }
 }

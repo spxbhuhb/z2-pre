@@ -28,11 +28,19 @@ class BoundLocalDateField(
 
     lateinit var datePicker : DockedDatePicker
 
+    override var readOnly: Boolean = false
+        set(value) {
+            field = value
+            datePicker.readOnly = value
+        }
+
     init {
         attach(schematic) {
 
             val value = field.getValue(schematic)
             datePicker.value = value
+
+            if (readOnly) return@attach
 
             val schemaResult = it.validationResult.fieldResults[field.name]
             val valid = schemaResult?.valid ?: true

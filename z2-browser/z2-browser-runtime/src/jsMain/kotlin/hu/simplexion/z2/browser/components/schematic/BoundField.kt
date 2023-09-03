@@ -6,6 +6,7 @@ import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 interface BoundField<T> {
     val schematic : Schematic<*>
     val field : SchemaField<T>
+    var readOnly : Boolean
 
     var fullSuspendValidation : FullSuspendValidation<T>?
 
@@ -15,6 +16,10 @@ interface BoundField<T> {
 
     infix fun validateSuspendFull(validation : FullSuspendValidation<T>) {
         fullSuspendValidation = validation
+    }
+
+    infix fun readOnly(inReadOnly : Boolean) {
+        this.readOnly = inReadOnly
     }
 
 }
