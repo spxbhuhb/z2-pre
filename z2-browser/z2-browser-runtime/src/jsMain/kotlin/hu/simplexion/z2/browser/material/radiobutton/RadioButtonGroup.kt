@@ -1,6 +1,9 @@
 package hu.simplexion.z2.browser.material.radiobutton
 
-import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.css.alignItemsCenter
+import hu.simplexion.z2.browser.css.cursorPointer
+import hu.simplexion.z2.browser.css.displayFlex
+import hu.simplexion.z2.browser.css.pl8
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
@@ -39,7 +42,6 @@ class RadioButtonGroup<T>(
 
     fun build() {
         for (entry in entries) {
-            println("entry")
             div(displayFlex, alignItemsCenter) {
                 options += radioButton(entry == value, false) { onSelected(entry) }
                 div(pl8, cursorPointer) {
@@ -50,8 +52,12 @@ class RadioButtonGroup<T>(
         }
     }
 
-    fun Z2.defaultItemBuilder(entry : T) {
+    fun Z2.defaultItemBuilder(entry: T) {
         addClass("body-middle")
         text { entry.toString() }
+    }
+
+    fun setState(error: Boolean, errorSupportingText: String? = null) {
+        // FIXME radiobutton set state
     }
 }

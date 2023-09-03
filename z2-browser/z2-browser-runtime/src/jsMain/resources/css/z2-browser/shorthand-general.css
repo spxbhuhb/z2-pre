@@ -65,7 +65,12 @@
 
 .m0 { margin: 0; }
 
+.mb4 { margin-bottom: 4px; }
 .mb8 { margin-bottom: 8px; }
+.mb12 { margin-bottom: 12px; }
+.mb16 { margin-bottom: 16px; }
+.mb20 { margin-bottom: 20px; }
+.mb24 { margin-bottom: 24px; }
 
 .opacity-38 { opacity: 0.38; }
 

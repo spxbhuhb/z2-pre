@@ -68,7 +68,12 @@ const val justifySelfStart = "justify-self-start"
 
 const val m0 = "m0"
 
+const val mb4 = "mb4"
 const val mb8 = "mb8"
+const val mb12 = "mb12"
+const val mb16 = "mb16"
+const val mb20 = "mb20"
+const val mb24 = "mb24"
 
 const val opacity38 = "opacity-38"
 

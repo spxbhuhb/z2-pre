@@ -5,18 +5,15 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.icon.icon
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.browser.material.stateLayer
 import hu.simplexion.z2.commons.util.localLaunch
 import kotlinx.browser.document
-import kotlinx.coroutines.delay
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
 class Search<T>(
     parent: Z2,
-    val query: suspend (text: String) -> List<T>,
-    val hint : LocalizedText? = null,
-    val onSelect: (value: T) -> Unit
+    val configuration: SearchConfiguration<T>
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
@@ -54,7 +51,7 @@ class Search<T>(
 
                 input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, b0) {
                     input = this.htmlElement as HTMLInputElement
-                    hint?.let { input.placeholder = it.toString() }
+                    configuration.hint?.let { input.placeholder = it.toString() }
                     onInput {
                         runQuery(input.value)
                     }
@@ -82,7 +79,9 @@ class Search<T>(
             }
 
             itemContainer = div(wFull, boxSizingBorderBox) {
-
+                onMouseDown {
+                    it.preventDefault()
+                }
             }
 
             feedback = div(displayNone, h46, alignItemsCenter, justifyContentCenter, wFull, boxSizingBorderBox, borderTopOutlineVariant) {
@@ -117,17 +116,19 @@ class Search<T>(
         if (items.isNotEmpty()) {
             itemContainer.apply {
                 for (item in items) {
-                    div("search-item") {
-                        div {
-                            text { item }
+                    div(displayFlex, h46, boxSizingBorderBox, borderTopOutlineVariant, alignItemsCenter, positionRelative) {
+                        stateLayer()
+                        div(pl24, pr16, boxSizingBorderBox) {
+                            configuration.itemRenderFun(this, item)
                         }
                         onClick {
-                            input.value = item.toString()
+                            println(configuration.itemTextFun(item))
+                            input.value = configuration.itemTextFun(item)
                             items = emptyList()
                             running = false
                             noItems = false
                             updateView()
-                            onSelect(item)
+                            configuration.selectFun(item)
                         }
                     }
                 }
@@ -138,7 +139,7 @@ class Search<T>(
     fun runQuery(value: String) {
         val inputRevision = ++ revision
 
-        if (value.isEmpty()) {
+        if (value.isEmpty() || value.length < configuration.minimumFilterLength) {
             running = false
             noItems = false
             items = emptyList()
@@ -150,8 +151,7 @@ class Search<T>(
         updateView()
 
         localLaunch {
-            delay(300)
-            items = query(value)
+            items = configuration.queryFun(value)
             if (inputRevision == revision) {
                 running = false
                 noItems = items.isEmpty()

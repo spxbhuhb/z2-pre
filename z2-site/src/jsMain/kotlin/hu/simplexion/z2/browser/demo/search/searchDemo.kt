@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser.demo.search
 
-import hu.simplexion.z2.browser.components.search.Search
+import hu.simplexion.z2.browser.components.search.search
 import hu.simplexion.z2.browser.css.positionRelative
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
@@ -16,9 +16,8 @@ fun Z2.searchDemo() =
 
             div { text { "Items: 'aa', 'ba', 'ca'" } }
 
-            Search(this, { value -> listOf("aa", "ba", "ca").filter { value in it } }, strings.search) {  }
+            val list = listOf("aa", "ba", "ca")
 
-            Search(this, { value -> listOf("aa", "ba", "ca").filter { value in it } }, strings.search) {  }
-
+            search<String>(strings.search) query { v -> list.filter { v in it } }
         }
     }

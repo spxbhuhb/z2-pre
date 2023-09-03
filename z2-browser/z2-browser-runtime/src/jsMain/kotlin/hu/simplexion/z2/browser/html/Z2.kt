@@ -1,7 +1,10 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.event.Z2EventListener
+import hu.simplexion.z2.commons.i18n.LocalizedIcon
+import hu.simplexion.z2.commons.i18n.LocalizedText
 import kotlinx.dom.addClass
 import kotlinx.dom.appendText
 import kotlinx.dom.removeClass
@@ -101,4 +104,17 @@ open class Z2(
     inline fun text(builder: () -> Any?) {
         builder()?.let { htmlElement.appendText(it.toString()) }
     }
+
+    operator fun LocalizedText.unaryPlus() {
+        htmlElement.appendText(this.toString())
+    }
+
+    operator fun String.unaryPlus() {
+        htmlElement.appendText(this)
+    }
+
+    operator fun LocalizedIcon.unaryPlus() {
+        icon(this@unaryPlus)
+    }
+
 }
