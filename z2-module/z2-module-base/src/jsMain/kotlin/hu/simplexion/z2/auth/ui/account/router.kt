@@ -10,5 +10,5 @@ object accountsRouter : NavRouter(authStrings.accounts, authIcons.accounts) {
 
     override var useParentNav = true
 
-    override val default: Z2Builder = { list() }
+    override var default: Z2Builder = { list() }
 }

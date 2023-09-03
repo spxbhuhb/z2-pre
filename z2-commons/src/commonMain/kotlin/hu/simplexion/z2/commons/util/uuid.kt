@@ -10,7 +10,7 @@ const val variant = 0x80000000.toInt()
 
 val hexChars = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
 
-fun <T> ByteArray.toUuid(offset : Int = 0) : UUID<T> =
+fun <T> ByteArray.toUuid(offset: Int = 0): UUID<T> =
     UUID(toLong(offset), toLong(offset + 8))
 
 /**
@@ -29,8 +29,18 @@ class UUID<T> : Comparable<UUID<T>> {
     companion object {
         val mask = 0xffffffff.toULong()
         val NIL = UUID<Any>(IntArray(4) { 0 }, 0)
+
         @Suppress("UNCHECKED_CAST")
         fun <T> nil() = NIL as UUID<T>
+
+        fun <T> String.toUuidOrNull(): UUID<T>? {
+            return try {
+                UUID(this)
+            } catch (ex: NumberFormatException) {
+                null
+            }
+        }
+
     }
 
     val msbm: Int

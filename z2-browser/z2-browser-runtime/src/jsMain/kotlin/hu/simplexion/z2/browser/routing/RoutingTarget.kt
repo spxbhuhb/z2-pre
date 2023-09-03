@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.routing
 
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.util.UUID
 
 interface RoutingTarget<R> {
 
@@ -19,6 +20,10 @@ interface RoutingTarget<R> {
 
     fun open() {
         root.open(this)
+    }
+
+    fun open(uuid: UUID<*>) {
+        openWith(this, uuid)
     }
 
     fun open(receiver: R, path: List<String>)

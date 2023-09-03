@@ -13,9 +13,7 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.get
 import org.w3c.dom.set
 
-open class BrowserRouter(
-    var homePath: String = "/",
-) : Router<Z2>() {
+open class BrowserRouter: Router<Z2>() {
 
     lateinit var receiver: Z2
 
@@ -36,22 +34,18 @@ open class BrowserRouter(
 
         val path = decodeURIComponent(window.location.pathname)
 
-        open(path, window.location.search, window.location.hash)
-    }
-
-    fun home() {
-        open(homePath, "", "")
+        browserOpen(path, window.location.search, window.location.hash)
     }
 
     override fun open(target: RoutingTarget<Z2>) {
-        open(target.absolutePath.joinToString("/"))
+        browserOpen(target.absolutePath.joinToString("/"))
     }
 
     override fun openWith(target: RoutingTarget<Z2>, vararg parameters : Any) {
-        open(target.absolutePath.joinToString("/") + "/" + parameters.joinToString("/"))
+        browserOpen(target.absolutePath.joinToString("/") + "/" + parameters.joinToString("/"))
     }
 
-    fun open(pathname: String, search: String = "", hash: String = "", changeState: Boolean = true) {
+    fun browserOpen(pathname: String, search: String = "", hash: String = "", changeState: Boolean = true) {
         io {
             if (stopNavigationOnPending()) return@io
 
@@ -112,7 +106,7 @@ open class BrowserRouter(
 
             trace { "[routing]  pop-state  $path" }
 
-            open(path, window.location.search, window.location.hash, false)
+            browserOpen(path, window.location.search, window.location.hash, false)
         }
     }
 
