@@ -16,7 +16,15 @@ open class NavRouter(
     label, icon
 ) {
 
-    open var nav: Z2Builder = { navigationDrawer(if (useParentNav) this@NavRouter.parent?.targets ?: emptyList() else targets) }
+    open var nav: Z2Builder = {
+        var candidate = if (useParentNav) this@NavRouter.parent else null
+
+        while (candidate?.parent != null && candidate is NavRouter && candidate.useParentNav) {
+            candidate = candidate.parent
+        }
+
+        navigationDrawer(candidate?.targets ?: targets)
+    }
 
     override fun render(label: LocalizedText?, icon: LocalizedIcon?, renderFun: Z2Builder): RoutedRenderer<Z2> {
         return super.render(label, icon) { defaultLayout(this@NavRouter, nav, renderFun) }
@@ -24,6 +32,16 @@ open class NavRouter(
 
     override fun default(receiver: Z2, path: List<String>) {
         receiver.defaultLayout(this, nav, default)
+    }
+
+    override fun up() {
+        var candidate = if (useParentNav) parent else null
+
+        while (candidate?.parent != null && candidate is NavRouter && candidate.useParentNav) {
+            candidate = candidate.parent
+        }
+
+        if (candidate == null) super.up() else candidate.up()
     }
 
 }

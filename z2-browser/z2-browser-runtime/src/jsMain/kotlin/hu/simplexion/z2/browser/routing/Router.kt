@@ -25,7 +25,7 @@ abstract class Router<R>(
         val subPath = path.drop(1 + parameters.size)
 
         for (index in parameters.indices) {
-            if (path.size > 1 + index) parameters[index].set(path[1 + index])
+            parameters[index].set( if (path.size > 1 + index) path[1 + index] else "")
         }
 
         if (subPath.isEmpty()) {
@@ -43,7 +43,7 @@ abstract class Router<R>(
         return target.open(receiver, subPath)
     }
 
-    fun up() {
+    open fun up() {
         parent?.let {
             root.open(it)
         }
