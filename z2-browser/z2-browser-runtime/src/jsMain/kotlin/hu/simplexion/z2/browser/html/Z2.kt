@@ -5,6 +5,7 @@ import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.event.Z2EventListener
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import kotlinx.browser.document
 import kotlinx.dom.addClass
 import kotlinx.dom.appendText
 import kotlinx.dom.removeClass
@@ -12,8 +13,8 @@ import org.w3c.dom.HTMLElement
 
 open class Z2(
     val parent: Z2? = null,
-    val htmlElement: HTMLElement,
-    classes: Array<out String>,
+    val htmlElement: HTMLElement = document.createElement("div") as HTMLElement,
+    classes: Array<out String> = emptyArray(),
     val builder: (Z2.() -> Unit)? = null,
 ) {
     val style
@@ -105,12 +106,12 @@ open class Z2(
         builder()?.let { htmlElement.appendText(it.toString()) }
     }
 
-    operator fun LocalizedText.unaryPlus() {
+    operator fun LocalizedText?.unaryPlus() {
         htmlElement.appendText(this.toString())
     }
 
-    operator fun String.unaryPlus() {
-        htmlElement.appendText(this)
+    operator fun String?.unaryPlus() {
+        this?.let { htmlElement.appendText(this) }
     }
 
     operator fun LocalizedIcon.unaryPlus() {

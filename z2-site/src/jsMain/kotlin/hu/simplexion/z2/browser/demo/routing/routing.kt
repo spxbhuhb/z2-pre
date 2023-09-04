@@ -18,7 +18,7 @@ object routingRouter : NavRouter(strings.routing, icons.route) {
     val paramRoute by parameterRouter
     val paramSubRoute by parameterSubRouter
 
-    override val default: Z2Builder = {
+    override var default: Z2Builder = {
         div {
             filledButton(strings.parameter) {
                 mainRouter.openWith(paramRoute, UUID<Any>())
@@ -33,7 +33,7 @@ object routingRouter : NavRouter(strings.routing, icons.route) {
 
 object subRouter : Router<Z2>(strings.subRoute, icons.route) {
 
-    val uuid by parameter()
+    val uuid by uuid<Any>()
 
     override fun default(receiver: Z2, path: List<String>) {
         receiver.defaultLayout(routingRouter, routingRouter.nav) { div { text { "sub route" } } }
@@ -42,20 +42,20 @@ object subRouter : Router<Z2>(strings.subRoute, icons.route) {
 
 object parameterRouter : Router<Z2>(strings.parameter, icons.parameter) {
 
-    val uuid by parameter()
+    val uuid by uuid<Any>()
 
     override fun default(receiver: Z2, path: List<String>) {
         receiver.defaultLayout(routingRouter, routingRouter.nav) { div { text { uuid } } }
     }
 }
 
-object parameterSubRouter : NavRouter(strings.parameterSubRoute, icons.parameter, routingRouter.nav) {
+object parameterSubRouter : NavRouter(strings.parameterSubRoute, icons.parameter, false, routingRouter.nav) {
 
-    val uuid by parameter()
+    val uuid by uuid<Any>()
 
     val paramContent by render(strings.content, icons.content) { text { uuid } }
 
-    override val default : Z2Builder = {
+    override var default : Z2Builder = {
         div { text { parameterRouter.uuid } }
     }
 }

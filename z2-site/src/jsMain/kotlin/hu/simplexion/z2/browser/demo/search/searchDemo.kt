@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.demo.search
 
+import hu.simplexion.z2.browser.components.search.query
 import hu.simplexion.z2.browser.components.search.search
 import hu.simplexion.z2.browser.css.positionRelative
 import hu.simplexion.z2.browser.demo.strings

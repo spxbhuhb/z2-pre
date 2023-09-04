@@ -1,5 +1,7 @@
 package hu.simplexion.z2.history.ui
 
+import hu.simplexion.z2.browser.components.table.schematicColumn
+import hu.simplexion.z2.browser.components.table.table
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
 import hu.simplexion.z2.browser.css.p0
@@ -7,8 +9,6 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.container
 import hu.simplexion.z2.browser.layout.lowest
 import hu.simplexion.z2.browser.material.basicStrings
-import hu.simplexion.z2.browser.components.table.schematicColumn
-import hu.simplexion.z2.browser.components.table.table
 import hu.simplexion.z2.history.histories
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.model.HistoryFlags
@@ -27,7 +27,7 @@ internal fun Z2.list() =
                     text = historyStrings.historyOverview
                 }
 
-                rowId = { it.id }
+                rowId = { it.uuid }
                 query = { histories.list(HistoryFlags.ALL, oneDayBack, rightNow, 20).sortedByDescending { it.createdAt } }
 
                 schematicColumn { HistoryEntry().createdAt }

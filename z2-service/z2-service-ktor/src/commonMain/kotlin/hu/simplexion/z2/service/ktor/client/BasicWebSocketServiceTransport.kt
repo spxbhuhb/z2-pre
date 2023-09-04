@@ -18,7 +18,8 @@ import kotlinx.coroutines.channels.Channel
 class BasicWebSocketServiceTransport(
     val host: String,
     val port : Int,
-    val path : String = "/z2/service"
+    val path : String = "/z2/service",
+    val trace : Boolean = false
 ) : ServiceCallTransport {
 
     val callTimeout = 10_000_000
@@ -99,9 +100,10 @@ class BasicWebSocketServiceTransport(
 
     override suspend fun <T> call(serviceName: String, funName: String, payload: ByteArray, decoder: ProtoDecoder<T>): T =
         OutgoingCall(RequestEnvelope(UUID(), serviceName, funName, payload)).let {
-            println("outgoing call: $serviceName.$funName")
+            if (trace) println("outgoing call: $serviceName.$funName")
             outgoingCalls.send(it)
             val responseEnvelope = it.responseChannel.receive()
+            if (trace) println("response for $serviceName.$funName\n${responseEnvelope.dump()}")
             if (responseEnvelope.status != ServiceCallStatus.Ok) throw RuntimeException()
             decoder.decodeProto(ProtoMessage(responseEnvelope.payload))
         }

@@ -48,6 +48,9 @@ class UUID<T> : Comparable<UUID<T>> {
     val lsbm: Int
     val lsbl: Int
 
+    val isNil
+        get() = (msbm == 0 && msbl == 0 && lsbm == 0 && lsbl == 0)
+
     val msb: Long
         get() = (((msbm.toULong()) shl 32) or (msbl.toULong() and mask)).toLong()
 

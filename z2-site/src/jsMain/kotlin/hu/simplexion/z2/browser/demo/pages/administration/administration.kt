@@ -20,7 +20,7 @@ object administrationRouter : NavRouter() {
     override val label = strings.administration
     override val icon = icons.administration
 
-    override val default : Z2Builder = { administration() }
+    override var default : Z2Builder = { administration() }
 
     // @formatter:off
     val impressum        by render(strings.impressum, icons.impressum)           {  }

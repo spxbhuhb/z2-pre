@@ -5,7 +5,7 @@ import hu.simplexion.z2.schematic.runtime.Schematic
 
 class HistoryEntry : Schematic<HistoryEntry>() {
 
-    var id by uuid<HistoryEntry>()
+    var uuid by uuid<HistoryEntry>()
 
     var createdAt by instant()
     var createdBy by uuid<AccountPrivate>().nullable()

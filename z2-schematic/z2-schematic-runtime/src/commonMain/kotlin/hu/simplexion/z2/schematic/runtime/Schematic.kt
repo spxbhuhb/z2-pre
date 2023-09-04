@@ -170,6 +170,15 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
     // Utility
     // -----------------------------------------------------------------------------------
 
+    fun schematicSet(fieldName : String, value : Any?) {
+        @Suppress("UNCHECKED_CAST")
+        (schematicSchema.fields.first { it.name == fieldName } as SchemaField<Any>).setValue(this, value)
+    }
+
+    fun schematicGet(fieldName : String) : Any? {
+        return schematicSchema.fields.first { it.name == fieldName }.getValue(this)
+    }
+
     // FIXME this is a real mess, fix schematic field type handling already!
     fun copy() : ST {
         val newInstance = schematicCompanion.newInstance()

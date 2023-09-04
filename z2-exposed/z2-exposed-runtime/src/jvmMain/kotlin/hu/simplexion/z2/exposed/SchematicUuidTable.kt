@@ -5,15 +5,19 @@ import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.wrap
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.statements.UpdateStatement
 
 open class SchematicUuidTable<T : Schematic<T>>(
     name: String,
-    val template: T
+    val template: T,
+    val autoGenerateId : Boolean = true,
 ) : UUIDTable(name, columnName = "uuid") {
 
     fun newInstance() =
@@ -50,16 +54,25 @@ open class SchematicUuidTable<T : Schematic<T>>(
             }
             .first()
 
-    fun insert(schematic: T): UUID<T> =
-        checkNotNull(
+    fun insert(schematic: T): UUID<T> {
+        val uuid : UUID<T> = checkNotNull(
             insert {
-                it.fromSchematic(this, schematic)
+                it.fromSchematic(this, schematic, autoGenerateId)
             }.getOrNull(id)
         ).value.z2()
 
+        return if (autoGenerateId) {
+            schematic.schematicSet("uuid", uuid)
+            return uuid
+        } else {
+            @Suppress("UNCHECKED_CAST") // FIXME make a SchematicEntity class with a uuid field, or something
+            schematic.schematicGet("uuid") as UUID<T>
+        }
+    }
+
     fun update(uuid: UUID<T>, schematic: T) {
         update({ id eq uuid.jvm }) {
-            it.fromSchematic(this, schematic)
+            it.fromSchematic(this, schematic, true)
         }
     }
 
@@ -101,13 +114,13 @@ open class SchematicUuidTable<T : Schematic<T>>(
         return schematic
     }
 
-    fun UpdateBuilder<*>.fromSchematic(table: Table, schematic: Schematic<*>) {
+    fun UpdateBuilder<*>.fromSchematic(table: Table, schematic: Schematic<*>, skipId : Boolean) {
         val statement = this
         for (field in schematic.schematicSchema.fields) {
             // this let the SQL generate the uuid instead using the one in the schematic
             // on the long run we'll probably need a version which uses the supplied id but
             // it is OK for now.
-            if (field.name == "uuid") continue
+            if (field.name == "uuid" && skipId) continue
 
             @Suppress("UNCHECKED_CAST")
             val column = table.columns.firstOrNull { it.name == field.name } as? Column<Any?> ?: continue
@@ -119,4 +132,14 @@ open class SchematicUuidTable<T : Schematic<T>>(
             }
         }
     }
+
+    infix fun ExpressionWithColumnType<EntityID<java.util.UUID>>.eq(t: UUID<*>?): Op<Boolean> {
+        if (t == null) return isNull()
+
+        @Suppress("UNCHECKED_CAST")
+        val table = (columnType as EntityIDColumnType<*>).idColumn.table as IdTable<java.util.UUID>
+        val entityID = EntityID(t.jvm, table)
+        return EqOp(this, wrap(entityID))
+    }
+
 }

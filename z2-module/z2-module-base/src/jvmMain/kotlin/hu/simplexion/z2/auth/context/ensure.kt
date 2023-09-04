@@ -14,7 +14,7 @@ import hu.simplexion.z2.service.runtime.ServiceImpl
  *
  * @throws   AccessDenied  There is a service context.
  */
-fun <T> ServiceImpl<*>.ensureInternal(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureInternal(block: () -> T): T {
     if (serviceContext.isInternal() != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -37,7 +37,7 @@ fun ServiceImpl<*>.ensureInternal() {
  *
  * @throws   AccessDenied  There is no account in the context.
  */
-fun <T> ServiceImpl<*>.ensureLoggedIn(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureLoggedIn(block: () -> T): T {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -47,7 +47,7 @@ fun <T> ServiceImpl<*>.ensureLoggedIn(block : () -> T) : T {
  *
  * @throws   AccessDenied  The account does not have the security officer role.
  */
-fun <T> ServiceImpl<*>.ensureSecurityOfficer(block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureSecurityOfficer(block: () -> T): T {
     ensure(securityOfficerRole)
     return block()
 }
@@ -75,7 +75,7 @@ fun ServiceImpl<*>.ensureTechnicalAdmin() {
  *
  * @throws   AccessDenied  There is no account in the context.
  */
-fun ServiceImpl<*>.ensureLoggedIn()  {
+fun ServiceImpl<*>.ensureLoggedIn() {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
 }
 
@@ -95,7 +95,7 @@ fun ServiceImpl<*>.ensure(vararg roles: Role) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun <T> ServiceImpl<*>.ensure(vararg roles: Role, block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensure(vararg roles: Role, block: () -> T): T {
     if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -106,7 +106,7 @@ fun <T> ServiceImpl<*>.ensure(vararg roles: Role, block : () -> T) : T {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun <T> ServiceImpl<*>.ensureAny(vararg roles: Role, block : () -> T) : T {
+fun <T> ServiceImpl<*>.ensureAny(vararg roles: Role, block: () -> T): T {
     if (serviceContext.hasAny(*roles) != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
@@ -116,7 +116,7 @@ fun <T> ServiceImpl<*>.ensureAny(vararg roles: Role, block : () -> T) : T {
  *
  * @throws   AccessDenied  [result] is [ContextCheckResult.Deny]
  */
-fun ensure(result : ContextCheckResult) {
+fun ensure(result: ContextCheckResult) {
     if (result != ContextCheckResult.Allow) throw AccessDenied()
 }
 
@@ -125,15 +125,24 @@ fun ensure(result : ContextCheckResult) {
  *
  * @throws   AccessDenied  [result] is [ContextCheckResult.Deny]
  */
-fun <T> ensure(result : ContextCheckResult, block : () -> T) : T {
+fun <T> ensure(result: ContextCheckResult, block: () -> T): T {
     if (result != ContextCheckResult.Allow) throw AccessDenied()
     return block()
 }
 
 /**
+ * Allows the call if [block] returns with true.
+ *
+ * @throws  AccessDenied  If [block] returns with false.
+ */
+fun ensuredBy(block: () -> Boolean) {
+    if (! block()) throw AccessDenied()
+}
+
+/**
  * Allows the call without any security checks.
  */
-inline fun <T> ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String, block : () -> T) : T {
+inline fun <T> ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String, block: () -> T): T {
     return block()
 }
 
@@ -144,6 +153,6 @@ fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {
     // nothing to do here, this is just a marker
 }
 
-fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(account : UUID<AccountPrivate>) {
+fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(account: UUID<AccountPrivate>) {
     ensure(serviceContext.isAccount(account) or serviceContext.has(securityOfficerRole))
 }

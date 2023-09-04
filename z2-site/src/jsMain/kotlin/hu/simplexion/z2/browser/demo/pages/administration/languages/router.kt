@@ -10,5 +10,5 @@ object languagesRouter : NavRouter() {
 
     override var useParentNav = true
 
-    override val default: Z2Builder = { list() }
+    override var default: Z2Builder = { list() }
 }

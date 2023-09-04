@@ -1,9 +1,6 @@
 package hu.simplexion.z2.service.runtime.transport
 
-import hu.simplexion.z2.commons.protobuf.ProtoDecoder
-import hu.simplexion.z2.commons.protobuf.ProtoEncoder
-import hu.simplexion.z2.commons.protobuf.ProtoMessage
-import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.commons.protobuf.*
 import hu.simplexion.z2.commons.util.UUID
 
 /**
@@ -38,4 +35,10 @@ class ResponseEnvelope(
                 .pack()
     }
 
+    fun dump(separator : String = "\n") : String {
+        val result = mutableListOf<String>()
+        result += "callId: $callId, status: $status"
+        ProtoMessage(payload).dumpProto(result)
+        return result.joinToString(separator)
+    }
 }

@@ -24,6 +24,13 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     filledTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }
     outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }
 
+    filledTextField("test value", strings.label, state = state, error = error) { setState(it.isBlank()) }
+    outlinedTextField("test value", strings.label, state = state, error = error) { setState(it.isBlank()) }
+
+    filledTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }.also { it.value = "test value"}
+    outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }.also { it.value = "test value"}
+
+
     filledTextField("", strings.label, leadingIcon = basicIcons.search, trailingIcon = basicIcons.cancel, state = state, error = error) { setState(it.isBlank()) }
     outlinedTextField("", strings.label, leadingIcon = basicIcons.search, trailingIcon = basicIcons.cancel, state = state, error = error) { setState(it.isBlank()) }
 

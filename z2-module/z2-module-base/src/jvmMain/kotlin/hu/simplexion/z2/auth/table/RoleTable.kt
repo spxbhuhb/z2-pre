@@ -2,7 +2,6 @@ package hu.simplexion.z2.auth.table
 
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.exposed.SchematicUuidTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.select
 
 open class RoleTable : SchematicUuidTable<Role>(
@@ -22,5 +21,9 @@ open class RoleTable : SchematicUuidTable<Role>(
         select { programmaticName eq name }
             .map { it.toSchematic(this, Role()) }
             .single()
+
+    fun getByContext(name : String) : List<Role> =
+        select { contextName eq name }
+            .map { it.toSchematic(this, Role()) }
 
 }
