@@ -38,4 +38,5 @@ interface LocalizedFormats {
     fun toLocalDateTime(value: String): LocalDateTime
     fun toLocalDateTimeOrNull(value: String): LocalDateTime?
 
+    fun capitalized(value : String) : String
 }

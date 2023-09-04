@@ -33,6 +33,7 @@ object HuLocalizedFormats : AbstractLocalizedFormats(
         return "$year.$month.$day. $hour:$minute:$second.$micros"
     }
 
-
+    override fun capitalized(value : String) : String =
+        value.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
 }

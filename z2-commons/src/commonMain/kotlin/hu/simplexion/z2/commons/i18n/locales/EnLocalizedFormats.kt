@@ -32,4 +32,8 @@ object EnLocalizedFormats : AbstractLocalizedFormats(
 
         return "$year/$day/$month $hour:$minute:$second.$micros"
     }
+
+    override fun capitalized(value : String) : String =
+        value.split(" ").joinToString(" ") { it.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() } }
+
 }

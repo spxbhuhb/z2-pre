@@ -31,6 +31,12 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
     }
 }
 
+@SchematicAccessFunction
+fun <T> Z2.radioField(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARAMETER") accessor: () -> T): BoundSelectField<T> {
+    checkNotNull(context)
+    return BoundRadioField(this, context)
+}
+
 private fun <T> Z2.textField(context: SchematicAccessContext, label: LocalizedText) =
     BoundTextField<T>(this, context) {
         filledTextField("", label, label.support) {

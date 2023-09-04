@@ -8,7 +8,6 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
-import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import kotlinx.browser.document
 import kotlinx.coroutines.channels.Channel
@@ -28,13 +27,6 @@ open class ModalBase<T : Any?>(
     arrayOf(boxSizingBorderBox, onSurfaceText, surface, borderRadius12),
     builder as (Z2.() -> Unit)
 ) {
-
-    init {
-        with(htmlElement.style) {
-            minWidth = 280.px
-            maxWidth = 560.px
-        }
-    }
 
     val channel = Channel<T>(1)
 
