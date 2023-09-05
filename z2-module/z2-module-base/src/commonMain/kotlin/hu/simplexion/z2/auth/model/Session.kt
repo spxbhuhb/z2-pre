@@ -8,7 +8,7 @@ class Session : Schematic<Session>() {
     val uuid by uuid<Session>()
     val createdAt by instant()
     var account by uuid<AccountPrivate>().nullable()
-    var roles by stringList()
+    var roles by schematicList<Role>()
     var fullName by string()
 
     companion object {

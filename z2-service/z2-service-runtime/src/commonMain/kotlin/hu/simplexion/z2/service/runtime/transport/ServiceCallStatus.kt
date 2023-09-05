@@ -7,5 +7,6 @@ enum class ServiceCallStatus(
     ServiceNotFound(1),
     FunctionNotFound(2),
     Exception(3),
-    Timeout(4)
+    Timeout(4),
+    AccessDenied(5)
 }

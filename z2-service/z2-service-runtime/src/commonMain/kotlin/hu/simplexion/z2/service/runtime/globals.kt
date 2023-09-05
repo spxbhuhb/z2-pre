@@ -29,7 +29,7 @@ fun <T : Service> getService(consumer: T? = null): T {
  * @throws  ClassCastException  If the instance is not of the class [T].
  */
 inline operator fun <reified T> ServiceContext?.get(uuid: UUID<T>): T? {
-    return this?.data?.let { it[uuid] } as T
+    return this?.data?.let { it[uuid] } as? T
 }
 
 /**

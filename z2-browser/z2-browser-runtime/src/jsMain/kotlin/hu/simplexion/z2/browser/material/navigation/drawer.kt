@@ -6,6 +6,7 @@ import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.routing.RoutingTarget
+import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 
 fun Z2.navigationDrawer(vararg targets : RoutingTarget<Z2>, scrollAutoHide : Boolean = true) =
     navigationDrawer(targets.toList(), scrollAutoHide)
@@ -45,7 +46,7 @@ fun Z2.drawerItem(item: NavigationItem, onClick: (() -> Unit)? = null) =
         }
 
         div("navigation-drawer-label", labelLarge, alignSelfCenter, whiteSpaceNoWrap) {
-            text { item.label }
+            text { item.label?.localeCapitalized }
             if (item.icon == null) gridColumn = "1/span2"
         }
 

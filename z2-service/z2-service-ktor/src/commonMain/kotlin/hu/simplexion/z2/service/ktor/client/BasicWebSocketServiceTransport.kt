@@ -104,7 +104,9 @@ class BasicWebSocketServiceTransport(
             outgoingCalls.send(it)
             val responseEnvelope = it.responseChannel.receive()
             if (trace) println("response for $serviceName.$funName\n${responseEnvelope.dump()}")
-            if (responseEnvelope.status != ServiceCallStatus.Ok) throw RuntimeException()
+            if (responseEnvelope.status != ServiceCallStatus.Ok) {
+                throw RuntimeException("$serviceName  $funName  ${responseEnvelope.status}")
+            }
             decoder.decodeProto(ProtoMessage(responseEnvelope.payload))
         }
 

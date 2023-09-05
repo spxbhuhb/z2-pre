@@ -26,6 +26,9 @@ val z2_exposed_version: String by project
 val z2_service_version: String by project
 val z2_schematic_version: String by project
 
+val ktor_version: String by project
+val logback_version: String by project
+
 val javamail_version: String by project
 
 kotlin {
@@ -55,6 +58,11 @@ kotlin {
         sourceSets["jvmMain"].dependencies {
             implementation("hu.simplexion.z2:z2-exposed-runtime:${z2_exposed_version}")
             implementation("com.sun.mail:javax.mail:${javamail_version}")
+
+            implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+            implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+            implementation("io.ktor:ktor-server-websockets:$ktor_version")
+            implementation("ch.qos.logback:logback-classic:$logback_version")
         }
         sourceSets["jvmTest"].dependencies {
             implementation("com.h2database:h2:2.1.214")

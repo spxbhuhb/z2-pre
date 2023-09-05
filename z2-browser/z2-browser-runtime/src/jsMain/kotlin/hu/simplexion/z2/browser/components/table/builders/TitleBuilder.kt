@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 
 class TitleBuilder<T> {
 
@@ -36,7 +37,7 @@ class TitleBuilder<T> {
                     gridTemplateRows = "min-content"
 
                     div(alignSelfCenter, titleLarge, whiteSpaceNoWrap, *textClasses) {
-                        text { text }
+                        text { text.localeCapitalized }
                     }
                 }
 

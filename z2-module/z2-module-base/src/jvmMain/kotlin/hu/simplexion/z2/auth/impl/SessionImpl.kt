@@ -5,6 +5,7 @@ import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.CredentialType
+import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
 import hu.simplexion.z2.auth.securityOfficerRole
@@ -19,10 +20,12 @@ import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.auth.util.Unauthorized
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
+import hu.simplexion.z2.service.runtime.ServiceContext
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.service.runtime.set
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -30,6 +33,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     companion object {
         val sessionImpl = SessionImpl()
+
+        val activeSessions = ConcurrentHashMap<UUID<ServiceContext>,Session>()
     }
 
     // ----------------------------------------------------------------------------------
@@ -41,17 +46,17 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         return serviceContext.getSessionOrNull()?.account
     }
 
-    override suspend fun roles(): List<String> {
+    override suspend fun roles(): List<Role> {
         ensuredByLogic("Session owner gets its own roles.")
         return serviceContext.getSessionOrNull()?.roles ?: emptyList()
     }
 
-    override suspend fun login(name: String, password: String): Int {
+    override suspend fun login(name: String, password: String): Session {
         val account = accountPrivateTable.getByAccountNameOrNull(name)
 
         if (account == null) {
             securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, authStrings.accountNotFound)
-            return - 1
+            throw AccessDenied()
         }
 
         try {
@@ -59,16 +64,21 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         } catch (ex: Unauthorized) {
             // FIXME, is locked meaningful? if we send it to the user it is possible to find account names by N failed auth
             securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, ex.reason, ex.locked)
-            return - 1
+            throw AccessDenied()
         }
 
-        requireNotNull(serviceContext).data[SESSION_TOKEN_UUID] = Session().also {
+        val session = Session().also {
             it.account = account.uuid
             it.fullName = account.fullName
-            it.roles = roleGrantTable.rolesOf(account.uuid, null).map { it.programmaticName }
+            it.roles = roleGrantTable.rolesOf(account.uuid, null)
         }
 
-        return 0
+        requireNotNull(serviceContext).let {
+            activeSessions[it.uuid] = session
+            it.data[SESSION_TOKEN_UUID] = session
+        }
+
+        return session
     }
 
     override suspend fun logout() {
