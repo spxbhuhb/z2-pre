@@ -12,7 +12,7 @@ class RadioButtonGroup<T>(parent: Z2) : Z2(parent) {
 
     var onSelectedFun: ((value: T) -> Unit)? = null
 
-    var itemBuilderFun: Z2.(T) -> Unit = { it.toString() }
+    var itemBuilderFun: Z2.(T) -> Unit = { text { it } }
         set(value) {
             field = value
             build()
@@ -43,6 +43,7 @@ class RadioButtonGroup<T>(parent: Z2) : Z2(parent) {
     }
 
     fun build() {
+        clear()
         for (entry in options) {
             div(displayFlex, alignItemsCenter) {
                 buttons += radioButton(entry == value, false) { onSelected(entry) }
