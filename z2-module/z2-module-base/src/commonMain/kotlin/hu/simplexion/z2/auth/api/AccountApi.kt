@@ -6,21 +6,23 @@ import hu.simplexion.z2.service.runtime.Service
 
 interface AccountApi : Service {
 
-    suspend fun list() : List<AccountPrivate>
+    suspend fun list(): List<AccountPrivate>
 
-    suspend fun add(account : AccountPrivate, credentials: AccountCredentials, roles : List<UUID<Role>>) : UUID<AccountPrivate>
+    suspend fun add(account: AccountPrivate, activated: Boolean, activationKey: String?, roles: List<UUID<Role>>): UUID<AccountPrivate>
 
-    suspend fun get(uuid: UUID<AccountPrivate>) : AccountPrivate
+    suspend fun add(credentials: AccountCredentials, currentCredentials: AccountCredentials? = null)
 
-    suspend fun add(credentials: AccountCredentials)
+    suspend fun get(uuid: UUID<AccountPrivate>): AccountPrivate
 
-    suspend fun status(uuid : UUID<AccountPrivate>) : AccountStatus
+    suspend fun status(uuid: UUID<AccountPrivate>): AccountStatus
 
-    suspend fun lock(uuid: UUID<AccountPrivate>)
+    suspend fun activate(credentials: AccountCredentials, activationKey: AccountCredentials)
 
-    suspend fun unlock(uuid: UUID<AccountPrivate>)
+    suspend fun setActivated(uuid: UUID<AccountPrivate>, activated : Boolean)
 
-    suspend fun getPolicy() : SecurityPolicy
+    suspend fun setLocked(uuid: UUID<AccountPrivate>, locked : Boolean)
+
+    suspend fun getPolicy(): SecurityPolicy
 
     suspend fun changePolicy(policy: SecurityPolicy)
 

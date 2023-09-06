@@ -2,12 +2,12 @@ package hu.simplexion.z2.exposed
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
-import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.config.Configurator
-import org.apache.logging.log4j.spi.LoggerContext
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -15,6 +15,20 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
+val String.fromEnvironment
+    get() = requireNotNull(System.getenv(this)) { "$this system environment variable is missing" }
+
+fun dbFromEnvironment() {
+    val config = HikariConfig().apply {
+        jdbcUrl         = "DB_JDBC_URL".fromEnvironment
+        driverClassName = "DB_DRIVER_CLASS_NAME".fromEnvironment
+        username        = "DB_USER_NAME".fromEnvironment
+        password        = "DB_PASSWORD".fromEnvironment
+        maximumPoolSize = System.getenv("DB_MAX_POOL_SIZE")?.toIntOrNull() ?: 10
+    }
+    val dataSource = HikariDataSource(config)
+    Database.connect(dataSource)
+}
 
 fun h2Test(vararg tables: Table) {
     Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")

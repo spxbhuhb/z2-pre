@@ -22,7 +22,6 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.service.runtime.ServiceContext
 import hu.simplexion.z2.service.runtime.ServiceImpl
-import hu.simplexion.z2.service.runtime.set
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.util.concurrent.ConcurrentHashMap
@@ -55,15 +54,15 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val account = accountPrivateTable.getByAccountNameOrNull(name)
 
         if (account == null) {
-            securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, authStrings.accountNotFound)
+            securityHistory(anonymousUuid, authStrings.account, authStrings.authenticateFail, authStrings.accountNotFound)
             throw AccessDenied()
         }
 
         try {
-            authenticate(account.uuid, password)
+            authenticate(account.uuid, password, true, CredentialType.PASSWORD)
         } catch (ex: Unauthorized) {
             // FIXME, is locked meaningful? if we send it to the user it is possible to find account names by N failed auth
-            securityHistory(anonymousUuid, authStrings.account, authStrings.loginFail, ex.reason, ex.locked)
+            securityHistory(anonymousUuid, authStrings.account, authStrings.authenticateFail, ex.reason, ex.locked)
             throw AccessDenied()
         }
 
@@ -104,17 +103,21 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     private val authenticateLock = ReentrantLock()
     private val authenticateInProgress = mutableSetOf<UUID<AccountPrivate>>()
 
-    private fun authenticate(
+    fun authenticate(
         accountId: UUID<AccountPrivate>,
         password: String,
-        checkCredentials: Boolean = true
+        checkCredentials: Boolean,
+        credentialType : String,
     ) {
 
+        // FIXME check credential expiration
+
         val validCredentials = if (checkCredentials) {
-            val credential = accountCredentialsTable.readValue(accountId, CredentialType.PASSWORD) ?: throw Unauthorized("NoCredential")
+            val credential = accountCredentialsTable.readValue(accountId, credentialType) ?: throw Unauthorized("NoCredential")
             BCrypt.checkpw(password, credential)
         } else true
 
+        // this is here to prevent SQL deadlocks
         lockState(accountId)
 
         try {
@@ -122,7 +125,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
             val result = when {
                 state == null -> throw Unauthorized("NoState")
-                ! state.validated -> Unauthorized("NotValidated")
+                ! state.activated -> Unauthorized("NotValidated")
                 state.locked -> Unauthorized("Locked", true)
                 state.expired -> Unauthorized("Expired")
                 state.anonymized -> Unauthorized("Anonymized")
@@ -131,27 +134,23 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             }
 
             if (result != null) {
-                state.loginFailCount ++
-                state.lastLoginFail = Clock.System.now()
-                state.locked = state.locked || (state.loginFailCount > securityPolicy.maxFailedLogins)
+                state.authFailCount ++
+                state.lastAuthFail = Clock.System.now()
+                state.locked = state.locked || (state.authFailCount > securityPolicy.maxFailedAuths)
 
                 accountStatusTable.update(state.uuid, state)
-                securityHistory(accountId, authStrings.account, authStrings.loginFail, accountId, result.reason, result.locked)
+                securityHistory(accountId, authStrings.account, authStrings.authenticateFail, accountId, result.reason, result.locked)
 
                 TransactionManager.current().commit()
 
                 throw result
             }
 
-            state.lastLoginSuccess = Clock.System.now()
-            state.loginSuccessCount ++
-            state.loginFailCount = 0
+            state.lastAuthSuccess = Clock.System.now()
+            state.authSuccessCount ++
+            state.authFailCount = 0
 
-            serviceContext[SESSION_TOKEN_UUID] = Session().also {
-                it.account = accountId
-            }
-
-            securityHistory(accountId, authStrings.account, authStrings.loginSuccess, accountId)
+            securityHistory(accountId, authStrings.account, authStrings.authenticateSuccess, accountId)
 
             TransactionManager.current().commit()
 

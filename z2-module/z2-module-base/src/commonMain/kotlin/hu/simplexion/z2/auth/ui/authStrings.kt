@@ -21,8 +21,8 @@ object authStrings : LocalizedTextStore(UUID("3638da2e-03ec-4f8b-88bf-e5e7a66cb0
 
     val changeCredentials by "Jelszó változtatás"
 
-    val loginSuccess by "Sikeres belépés"
-    val loginFail by "Sikertelen belépés"
+    val authenticateSuccess by "Sikeres azonosítás"
+    val authenticateFail by "Sikertelen azonosítás"
 
     val accountNotFound by "Nem létező fiók"
 
@@ -30,7 +30,8 @@ object authStrings : LocalizedTextStore(UUID("3638da2e-03ec-4f8b-88bf-e5e7a66cb0
     val grantRole by "Szerepkör megadása"
     val revokeRole by "Szerepkör visszavonása"
 
-    val setLocked by "Fiók zárolás"
+    val setLocked by "Fiók zárolás beállítása"
+    val setActivated by "Fiók aktiválás beállítása"
 
     val securityPolicy by "Biztonsági házirend"
     val securityPolicySupport by securityPolicy.support("Biztonsági szabályok beállítása. Jelszóerősség, hibás bejelentkezések száma stb.")

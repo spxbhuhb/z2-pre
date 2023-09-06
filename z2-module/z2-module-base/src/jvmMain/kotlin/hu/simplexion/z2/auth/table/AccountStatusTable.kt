@@ -5,7 +5,6 @@ import hu.simplexion.z2.auth.model.AccountStatus
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.SchematicUuidTable
-import hu.simplexion.z2.exposed.jvm
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
@@ -22,23 +21,29 @@ open class AccountStatusTable(
     }
 
     val account = reference("account", accountPrivateTable).uniqueIndex()
-    val validated = bool("validated")
+    val activated = bool("activated")
     val locked = bool("locked")
     val expired = bool("expired")
     val anonymized = bool("anonymized")
-    val lastLoginSuccess = timestamp("lastLoginSuccess").nullable()
-    val loginSuccessCount = integer("loginSuccessCount")
-    val lastLoginFail = timestamp("lastLoginFail").nullable()
-    val loginFailCount = integer("loginFailCount")
+    val lastAuthSuccess = timestamp("lastAuthSuccess").nullable()
+    val authSuccessCount = integer("authSuccessCount")
+    val lastAuthFail = timestamp("lastAuthFail").nullable()
+    val authFailCount = integer("authFailCount")
 
     fun readOrNull(inAccount: UUID<AccountPrivate>): AccountStatus? =
-        select { account eq inAccount.jvm }
+        select { account eq inAccount }
             .map { it.toSchematic(this, newInstance()) }
             .firstOrNull()
 
     fun setLocked(inAccount : UUID<AccountPrivate>, inLocked : Boolean) {
-        update({ account eq inAccount.jvm }) {
+        update({ account eq inAccount }) {
             it[locked] = inLocked
+        }
+    }
+
+    fun setActivated(inAccount : UUID<AccountPrivate>, activated : Boolean) {
+        update({ account eq inAccount }) {
+            it[this.activated] = activated
         }
     }
 

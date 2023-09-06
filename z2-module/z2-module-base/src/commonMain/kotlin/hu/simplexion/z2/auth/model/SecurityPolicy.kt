@@ -13,6 +13,6 @@ class SecurityPolicy : Schematic<SecurityPolicy>() {
     val specialCharacterMinimum by int()
     val sameCharacterMaximum by int()
     val minEntropy by int()
-    val maxFailedLogins by int(default = 5)
+    val maxFailedAuths by int(default = 5)
 
 }

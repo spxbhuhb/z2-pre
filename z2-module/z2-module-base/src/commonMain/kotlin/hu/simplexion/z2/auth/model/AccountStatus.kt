@@ -8,13 +8,13 @@ class AccountStatus : Schematic<AccountStatus>() {
 
     var account by uuid<AccountPrivate>()
 
-    var validated by boolean(default = false)
-    var locked by boolean(default = true)
+    var activated by boolean(default = false)
+    var locked by boolean(default = false)
     var expired by boolean(default = false)
     var anonymized by boolean(default = false)
-    var lastLoginSuccess by instant().nullable()
-    var loginSuccessCount by int()
-    var lastLoginFail by instant().nullable()
-    var loginFailCount by int()
+    var lastAuthSuccess by instant().nullable()
+    var authSuccessCount by int()
+    var lastAuthFail by instant().nullable()
+    var authFailCount by int()
 
 }

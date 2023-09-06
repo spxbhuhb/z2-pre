@@ -105,7 +105,7 @@ internal fun getOrMakeAccount(
         accountStatusTable.insert(
             AccountStatus().also {
                 it.account = accountId
-                it.validated = true
+                it.activated = true
                 it.locked = (password == null)
             }
         )

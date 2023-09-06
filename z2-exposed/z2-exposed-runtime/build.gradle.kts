@@ -45,6 +45,8 @@ kotlin {
         api("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
         api("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
 
+        implementation("com.zaxxer:HikariCP:3.4.2")
+
         api("ch.qos.logback:logback-classic:${logback_version}")
         implementation("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
     }
