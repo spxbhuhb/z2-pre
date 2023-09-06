@@ -1,8 +1,10 @@
 package hu.simplexion.z2.auth.ui.role
 
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.roles
+import hu.simplexion.z2.auth.roleService
 import hu.simplexion.z2.auth.ui.authStrings
+import hu.simplexion.z2.browser.components.table.schematicColumn
+import hu.simplexion.z2.browser.components.table.table
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
 import hu.simplexion.z2.browser.css.p0
@@ -10,8 +12,6 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.container
 import hu.simplexion.z2.browser.layout.lowest
 import hu.simplexion.z2.browser.material.basicStrings
-import hu.simplexion.z2.browser.components.table.schematicColumn
-import hu.simplexion.z2.browser.components.table.table
 
 internal fun Z2.list() =
     lowest(borderOutline) {
@@ -25,7 +25,7 @@ internal fun Z2.list() =
                 }
 
                 rowId = { it.uuid }
-                query = { roles.list() }
+                query = { roleService.list() }
 
                 schematicColumn { Role().programmaticName }
                 schematicColumn { Role().displayName }

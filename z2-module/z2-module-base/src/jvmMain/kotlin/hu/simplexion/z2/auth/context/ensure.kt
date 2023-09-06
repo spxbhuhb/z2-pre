@@ -5,6 +5,7 @@ import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 
 /**
  * Ensures that the block runs only when there is no service context for the call.
@@ -153,6 +154,20 @@ fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {
     // nothing to do here, this is just a marker
 }
 
+/**
+ * Ensure that the service context runs in the name of the account specified or
+ * in the name of a security officer.
+ */
 fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(account: UUID<AccountPrivate>) {
     ensure(serviceContext.isAccount(account) or serviceContext.has(securityOfficerRole))
+}
+
+/**
+ * Ensure that this code runs on a test site. Calls [siteImpl] to check if the site
+ * is a test site or not.
+ *
+ * @throws  AccessDenied
+ */
+suspend fun ServiceImpl<*>.ensureTest() {
+    if (!siteImpl(serviceContext!!).isTest()) throw AccessDenied()
 }

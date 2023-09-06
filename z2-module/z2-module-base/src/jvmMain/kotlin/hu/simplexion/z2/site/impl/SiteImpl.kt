@@ -27,4 +27,10 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
         return settings.protocol + "://" + settings.host + ":" + settings.port + "/"
     }
 
+    override suspend fun isTest(): Boolean {
+        return runAsSecurityOfficer {
+            settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings()).test
+        }
+    }
+
 }

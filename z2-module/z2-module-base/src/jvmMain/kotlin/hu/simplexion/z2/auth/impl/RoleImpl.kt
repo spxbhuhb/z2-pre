@@ -10,12 +10,12 @@ import hu.simplexion.z2.auth.model.AccountPublic
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
-import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.schematic.runtime.ensureValid
 import hu.simplexion.z2.service.runtime.ServiceImpl
 
@@ -32,7 +32,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     override suspend fun add(role: Role) : UUID<Role> {
         ensure(securityOfficerRole)
-        // FIXME uuid validation validate(role)
+        ensureValid(role, true)
 
         val roleUuid = roleTable.insert(role)
 
@@ -85,6 +85,14 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     override suspend fun grantedTo(role: UUID<Role>, context : String?): List<AccountPublic> {
         ensure(securityOfficerRole)
         return roleGrantTable.grantedTo(role, context)
+    }
+
+    override suspend fun addToGroup(role: UUID<Role>, group: UUID<Role>) {
+        roleGroupTable.add(role, group)
+    }
+
+    override suspend fun removeFromGroup(role: UUID<Role>, group: UUID<Role>) {
+        roleGroupTable.remove(role, group)
     }
 
 }

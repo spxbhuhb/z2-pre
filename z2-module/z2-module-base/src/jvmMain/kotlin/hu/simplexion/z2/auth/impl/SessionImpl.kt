@@ -33,7 +33,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     companion object {
         val sessionImpl = SessionImpl()
 
-        val activeSessions = ConcurrentHashMap<UUID<ServiceContext>,Session>()
+        val activeSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
     }
 
     // ----------------------------------------------------------------------------------
@@ -80,6 +80,10 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         return session
     }
 
+    override suspend fun getSession(): Session? {
+        return serviceContext.getSessionOrNull()
+    }
+
     override suspend fun logout() {
         ensureLoggedIn()
         securityHistory(authStrings.account, authStrings.logout, serviceContext.account)
@@ -107,7 +111,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         accountId: UUID<AccountPrivate>,
         password: String,
         checkCredentials: Boolean,
-        credentialType : String,
+        credentialType: String,
     ) {
 
         // FIXME check credential expiration

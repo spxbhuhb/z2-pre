@@ -16,6 +16,7 @@ open class RoleTable : SchematicUuidTable<Role>(
     val contextName = varchar("contextName", 50).nullable()
     val programmaticName = varchar("programmaticName", 100)
     val displayName = varchar("displayName", 50)
+    val group = bool("group")
 
     fun getByName(name : String) : Role =
         select { programmaticName eq name }

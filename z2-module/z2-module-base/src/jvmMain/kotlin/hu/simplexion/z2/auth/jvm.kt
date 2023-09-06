@@ -8,6 +8,7 @@ import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCred
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
+import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
@@ -38,6 +39,7 @@ fun authJvm(initialSoPassword: String = "so") {
         accountStatusTable,
         roleTable,
         roleGrantTable,
+        roleGroupTable,
         sessionTable
     )
 

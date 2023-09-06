@@ -26,4 +26,8 @@ interface RoleApi : Service {
 
     suspend fun grantedTo(role: UUID<Role>, context : String?): List<AccountPublic>
 
+    suspend fun addToGroup(role : UUID<Role>, group : UUID<Role>)
+
+    suspend fun removeFromGroup(role : UUID<Role>, group : UUID<Role>)
+
 }

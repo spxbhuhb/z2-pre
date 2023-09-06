@@ -6,4 +6,5 @@ interface SiteApi : Service {
 
     suspend fun siteUrl() : String
 
+    suspend fun isTest() : Boolean
 }

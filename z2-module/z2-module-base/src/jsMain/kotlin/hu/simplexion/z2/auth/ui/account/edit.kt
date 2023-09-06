@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.ui.account
 
-import hu.simplexion.z2.auth.accounts
+import hu.simplexion.z2.auth.accountService
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.browser.components.schematic.field
@@ -18,7 +18,7 @@ import hu.simplexion.z2.commons.util.localLaunch
 internal fun add() =
     accountModal(AccountPrivate(), authStrings.addAccount, basicStrings.add) {
         val key =  (fourRandomInt() + fourRandomInt()).joinToString("-")
-        accounts.add(it, false, key, emptyList())
+        accountService.add(it, false, key, emptyList())
     }
 
 internal fun edit(role: AccountPrivate) =

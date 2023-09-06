@@ -10,4 +10,6 @@ class SiteSettings : Schematic<SiteSettings>() {
 
     var name by string()
 
+    var test by boolean() default true
+
 }
