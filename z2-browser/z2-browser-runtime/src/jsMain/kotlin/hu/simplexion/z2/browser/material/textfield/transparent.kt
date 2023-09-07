@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
-fun Z2.transparentTextField(
+fun Z2.filledTextField(
     value: String,
     label: LocalizedText? = null,
     supportingText: LocalizedText? = null,
@@ -23,7 +23,6 @@ fun Z2.transparentTextField(
             it.leadingIcon  = leadingIcon
             it.trailingIcon = trailingIcon
             it.onChange = onChange
-            it.transparent = true
         }
     ).also {
         it.value = value

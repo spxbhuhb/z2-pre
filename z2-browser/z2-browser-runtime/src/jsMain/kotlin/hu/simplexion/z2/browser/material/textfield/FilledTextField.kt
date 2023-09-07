@@ -43,6 +43,7 @@ class FilledTextField(
         gridTemplateRows = "56px min-content"
 
         state.update = { update() }
+        config.update = { update() }
 
         grid(
             paddingTop2,
@@ -50,8 +51,7 @@ class FilledTextField(
             paddingBottom1,
             paddingLeft0,
             borderTopLeftRadiusExtraSmall,
-            borderTopRightRadiusExtraSmall,
-            surfaceContainerHighest
+            borderTopRightRadiusExtraSmall
         ) {
             gridTemplateColumns = "min-content minmax(0, 1fr) min-content"
             gridTemplateRows = "56px"
@@ -60,7 +60,8 @@ class FilledTextField(
 
             label()
 
-            leadingIcon()
+            leading()
+
             div(alignSelfCenter) {
                 content = this
                 input()
@@ -89,13 +90,9 @@ class FilledTextField(
             text { state.label }
         }
 
-    fun Z2.leadingIcon(): Z2 =
-        div {
+    fun Z2.leading(): Z2 =
+        div(alignSelfCenter) {
             leading = this
-            config.leadingIcon?.let {
-                addClass(pl12, alignSelfCenter, onSurfaceVariant)
-                icon(it)
-            }
         }
 
     fun Z2.input() {
@@ -166,6 +163,20 @@ class FilledTextField(
 
         inputElement.placeholder = if (hasFocus) "" else state.label ?: ""
 
+        if (config.transparent) {
+            input.addClass(pt20)
+            main.removeClass(surfaceContainerHighest)
+            leading.replaceClass(pt0, pt16)
+            trailing.replaceClass(pt0, pt16)
+        } else {
+            if (value.isEmpty() && ! hasFocus) input.removeClass(pt20)
+            main.addClass(surfaceContainerHighest)
+            leading.replaceClass(pt16, pt0)
+            trailing.replaceClass(pt16, pt0)
+        }
+
+        leadingNormal()
+
         if (state.error) {
             labelOuter.replaceClass(primaryText, onSurfaceVariantText, errorText)
             animation.replaceClass(primary, error)
@@ -180,6 +191,17 @@ class FilledTextField(
             inputElement.removeClass("input-error")
             supportNormal()
             trailingNormal()
+        }
+    }
+
+    fun leadingNormal() {
+        leading.clear()
+        val li = config.leadingIcon
+        if (li == null) {
+            labelOuter.htmlElement.style.left = 0.px
+        } else {
+            labelOuter.htmlElement.style.left = 36.px
+            leading.icon(li).addClass(pl12, onSurfaceVariantText)
         }
     }
 
