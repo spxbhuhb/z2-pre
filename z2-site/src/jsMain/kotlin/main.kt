@@ -100,7 +100,7 @@ object otherRouter : NavRouter() {
 
 
 fun Z2.defaultLayout(router: Router<Z2>, nav: Z2Builder, content: Z2Builder) {
-    grid(wFull, hFull, pr16, pb16, boxSizingBorderBox) {
+    grid(wFull, heightFull, pr16, pb16, boxSizingBorderBox) {
         gridTemplateRows = "min-content 1fr"
         gridTemplateColumns = "min-content 1fr"
 

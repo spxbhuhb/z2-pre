@@ -26,7 +26,7 @@ object loginStrings : LocalizedTextStore(UUID("72c9ec55-0e66-4181-96f9-d9009b037
 }
 
 fun Z2.loginDemo() =
-    low(wFull, hFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
+    low(wFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
         grid(gridGap8) {
             gridTemplateColumns = "min-content"
             gridAutoRows = "min-content"

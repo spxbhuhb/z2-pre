@@ -113,7 +113,7 @@ class DockedDatePickerSelector(
         }
 
     fun Z2.actions() =
-        div(displayFlex, justifyContentEnd, pl12, pr12) {
+        div(displayFlex, justifyContentFlexEnd, pl12, pr12) {
             textButton(basicStrings.cancel) { onClose() }
             textButton(basicStrings.ok) { onClose() }
         }
@@ -161,7 +161,7 @@ class DockedDatePickerSelector(
 
         header(MONTH_SELECT)
 
-        div(hFull, overflowYAuto) {
+        div(heightFull, overflowYAuto) {
             for (monthNumber in 1..12) {
                 menuItem(
                     monthNumber,
@@ -197,7 +197,7 @@ class DockedDatePickerSelector(
 
         header(YEAR_SELECT)
 
-        div(hFull, overflowYAuto) {
+        div(heightFull, overflowYAuto) {
             for (year in datePickerStartYear..datePickerEndYear) {
                 menuItem(
                     year,

@@ -41,7 +41,7 @@ open class ModalBase<T : Any?>(
         }
 
     fun Z2.buttons(builder : Z2Builder) : Z2 =
-        grid(p24, gridAutoFlowColumn, gridAutoColumnsMinContent, gridGap16, justifyContentEnd) {
+        grid(p24, gridAutoFlowColumn, gridAutoColumnsMinContent, gridGap16, justifyContentFlexEnd) {
             builder()
         }
 

@@ -8,7 +8,7 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.browser.material.textfield.filledTextField
+import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.commonStrings
@@ -39,7 +39,7 @@ class DockedDatePicker(
         }
 
     // FIXME add an option to date picker to use outlined field
-    val textField = filledTextField(value.localized, label, supportingText, leadingIcon, basicIcons.calendar)
+    val textField = outlinedTextField(value.localized, label, supportingText, leadingIcon, basicIcons.calendar)
 
     var readOnly: Boolean = false
         set(value) {

@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.components.schematic
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.datepicker.datePicker
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
-import hu.simplexion.z2.browser.material.textfield.filledTextField
+import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.browser.util.label
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.commonStrings
@@ -39,7 +39,7 @@ fun <T> Z2.radioField(context: SchematicAccessContext? = null, @Suppress("UNUSED
 
 private fun <T> Z2.textField(context: SchematicAccessContext, label: LocalizedText) =
     BoundTextField<T>(this, context) {
-        filledTextField("", label, label.support) {
+        outlinedTextField("", label, label.support) {
             context.schematic.schematicChange(context.field, it)
         }
     }

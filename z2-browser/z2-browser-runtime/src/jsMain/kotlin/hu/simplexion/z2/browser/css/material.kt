@@ -7,7 +7,19 @@ const val bodySmall = "body-small"
 const val borderPrimary = "border-primary"
 const val borderOutline = "border-outline"
 const val borderTopOutlineVariant = "border-top-outline-variant"
+
+const val borderBottomError = "border-bottom-error"
+const val borderBottomOutline = "border-bottom-outline"
 const val borderBottomOutlineVariant = "border-bottom-outline-variant"
+const val borderBottomPrimary = "border-bottom-primary"
+
+const val borderTopLeftRadiusExtraSmall = "border-top-left-radius-extra-small"
+const val borderTopRightRadiusExtraSmall = "border-top-right-radius-extra-small"
+
+const val caretColorPrimary = "caret-color-primary"
+
+const val error = "error"
+const val errorText = "error-text"
 
 const val primary = "primary"
 const val primaryText = "primary-text"

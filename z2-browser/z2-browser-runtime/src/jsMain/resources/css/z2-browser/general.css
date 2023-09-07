@@ -4,3 +4,11 @@
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+
+input::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+input.input-error::placeholder {
+    color: var(--md-sys-color-error);
+}

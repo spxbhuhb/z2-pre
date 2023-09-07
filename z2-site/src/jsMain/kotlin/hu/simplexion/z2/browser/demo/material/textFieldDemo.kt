@@ -21,19 +21,21 @@ fun Z2.textFieldDemo() =
     }
 
 private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
-    filledTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }
+    filledTextField("", strings.label)
     outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }
 
-    filledTextField("test value", strings.label, state = state, error = error) { setState(it.isBlank()) }
+    filledTextField("", strings.label).also {
+        it.state.disabled = state == ComponentState.Disabled
+        it.state.error = error
+    }
     outlinedTextField("test value", strings.label, state = state, error = error) { setState(it.isBlank()) }
 
-    filledTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }.also { it.value = "test value"}
+    filledTextField("", strings.label)
     outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }.also { it.value = "test value"}
 
-
-    filledTextField("", strings.label, leadingIcon = basicIcons.search, trailingIcon = basicIcons.cancel, state = state, error = error) { setState(it.isBlank()) }
+    filledTextField("", strings.label)
     outlinedTextField("", strings.label, leadingIcon = basicIcons.search, trailingIcon = basicIcons.cancel, state = state, error = error) { setState(it.isBlank()) }
 
-    filledTextField("", strings.label, strings.supportingText, state = state, error = error) { setState(it.isBlank()) }
+    filledTextField("", strings.label)
     outlinedTextField("", strings.label, strings.supportingText, state = state, error = error) { setState(it.isBlank()) }
 }

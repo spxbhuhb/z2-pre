@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.material.textfield
 
+import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
@@ -11,20 +11,19 @@ fun Z2.filledTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    state : ComponentState = ComponentState.Enabled,
-    error : Boolean = false,
-    onChange : TextField.(value : String) -> Unit = {  }
+    onChange : (value : String) -> Unit = {  }
 ) =
-    TextField(
+    FilledTextField(
         this,
-        value,
-        label,
-        supportingText,
-        filled = true,
-        outlined = false,
-        leadingIcon,
-        trailingIcon,
-        state,
-        error,
-        onChange = onChange
-    )
+        FieldState().also {
+            it.label = label?.toString()
+            it.supportText = supportingText?.toString()
+        },
+        TextFieldConfig().also {
+            it.leadingIcon  = leadingIcon
+            it.trailingIcon = trailingIcon
+            it.onChange = onChange
+        }
+    ).also {
+        it.value = value
+    }

@@ -70,6 +70,12 @@ open class Z2(
         return this
     }
 
+    fun replaceClass(vararg classes : String): Z2 {
+        htmlElement.removeClass(*classes)
+        if (classes.isNotEmpty()) htmlElement.addClass(classes.last())
+        return this
+    }
+
     fun focus() {
         htmlElement.focus()
     }

@@ -26,3 +26,18 @@
         transform: scale(1);
     }
 }
+
+.scale-up-width {
+    width: 100%;
+    animation: scale-up-width-animation 250ms;
+}
+
+@keyframes scale-up-width-animation {
+    from {
+        left: 0;
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
