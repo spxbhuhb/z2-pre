@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.material.textfield
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
+import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
@@ -21,7 +22,7 @@ class FilledTextField(
     lateinit var input: Z2
     lateinit var leading: Z2
     lateinit var trailing: Z2
-    lateinit var labelOuter: Z2
+    lateinit var label: Z2
     lateinit var support: Z2
     lateinit var animation: Z2
 
@@ -58,22 +59,46 @@ class FilledTextField(
 
             main = this
 
-            label()
-
-            leading()
-
-            div(alignSelfCenter) {
-                content = this
-                input()
+            label = div(positionAbsolute, paddingLeft14, bodySmall) {
+                htmlElement.style.top = 8.px
+                text { state.label }
             }
-            trailing()
+
+            leading = div(alignSelfCenter) { if (config.style == FieldStyle.Transparent) addClass(pt16) }
+            content = div(alignSelfCenter) { input() }
+            trailing = div(pr12, alignSelfCenter) { if (config.style == FieldStyle.Transparent) addClass(pt16) }
+
+            when (config.style) {
+                FieldStyle.Filled -> {
+                    main.addClass(borderBottomWidth1, borderBottomSolid, borderColorOutline, surfaceContainerHighest)
+                }
+
+                FieldStyle.Transparent -> {
+                    main.addClass(borderBottomWidth1, borderBottomSolid)
+                    input.addClass(pt20)
+                }
+
+                FieldStyle.Outlined -> {
+                    main.addClass(borderWidth1, borderSolid, borderColorOutline, borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall)
+                }
+            }
         }
 
-        div(positionAbsolute) {
+        // underline animation
+        div(positionAbsolute, backgroundTransparent, boxSizingBorderBox, displayNone) {
             animation = this
             htmlElement.style.apply {
-                top = 54.px
-                height = 2.px
+                borderStyle = "solid"
+                if (config.style == FieldStyle.Outlined) {
+                    height = 56.px
+                    borderWidth = 2.px
+                    addClass(borderRadiusExtraSmall, pointerEventsNone)
+                } else {
+                    top = 46.px
+                    height = 10.px
+                    borderWidth = 0.px
+                    borderBottomWidth = 2.px
+                }
             }
             zIndex = 1
         }
@@ -82,18 +107,6 @@ class FilledTextField(
 
         update()
     }
-
-    fun Z2.label() =
-        div(positionAbsolute, paddingLeft14, bodySmall) {
-            htmlElement.style.top = 8.px
-            labelOuter = this
-            text { state.label }
-        }
-
-    fun Z2.leading(): Z2 =
-        div(alignSelfCenter) {
-            leading = this
-        }
 
     fun Z2.input() {
         input(
@@ -116,13 +129,17 @@ class FilledTextField(
             inputElement.style.lineHeight = 40.px
 
             onFocus {
+                if (!hasFocus) {
+                    animation.removeClass(displayNone)
+                    animation.addClass("scale-up-width", if (state.error) borderColorError else borderColorPrimary)
+                }
                 hasFocus = true
-                animation.addClass("scale-up-width", if (state.error) "error" else primary)
                 update()
             }
             onBlur {
                 hasFocus = false
-                animation.removeClass("scale-up-width")
+                animation.addClass(displayNone)
+                animation.removeClass("scale-up-width", borderColorError, borderColorPrimary)
                 update()
             }
             onKeyDown { event ->
@@ -133,16 +150,11 @@ class FilledTextField(
             }
             onInput {
                 if (! state.readOnly && ! state.disabled) {
-                    config.onChange?.invoke(inputElement.value)
+                    config.onChange?.invoke(this@FilledTextField, inputElement.value)
                 }
             }
         }
     }
-
-    fun Z2.trailing(): Z2 =
-        div(pr12, alignSelfCenter) {
-            trailing = this
-        }
 
     fun Z2.support() =
         div(bodySmall, h20, pt4, pr16, pb0, pl16) {
@@ -151,11 +163,11 @@ class FilledTextField(
 
     fun update() {
         if (value.isEmpty() && ! hasFocus) {
-            labelOuter.addClass(displayNone)
-            input.removeClass(pt20)
+            label.addClass(displayNone)
+            if (config.style != FieldStyle.Transparent) input.removeClass(pt20)
         } else {
-            labelOuter.removeClass(displayNone)
-            input.addClass(pt20)
+            label.removeClass(displayNone)
+            if (config.style != FieldStyle.Transparent) input.addClass(pt20)
         }
 
         if (state.disabled) inputElement.disabled = true
@@ -163,67 +175,46 @@ class FilledTextField(
 
         inputElement.placeholder = if (hasFocus) "" else state.label ?: ""
 
-        if (config.transparent) {
-            input.addClass(pt20)
-            main.removeClass(surfaceContainerHighest)
-            leading.replaceClass(pt0, pt16)
-            trailing.replaceClass(pt0, pt16)
-        } else {
-            if (value.isEmpty() && ! hasFocus) input.removeClass(pt20)
-            main.addClass(surfaceContainerHighest)
-            leading.replaceClass(pt16, pt0)
-            trailing.replaceClass(pt16, pt0)
-        }
-
-        leadingNormal()
-
-        if (state.error) {
-            labelOuter.replaceClass(primaryText, onSurfaceVariantText, errorText)
-            animation.replaceClass(primary, error)
-            main.replaceClass(borderBottomOutline, borderBottomError)
-            inputElement.addClass("input-error")
-            supportError()
-            trailingError()
-        } else {
-            labelOuter.replaceClass(errorText, primaryText, onSurfaceVariantText, if (hasFocus) primaryText else onSurfaceVariantText)
-            animation.replaceClass(error, primary)
-            main.replaceClass(borderBottomError, borderBottomOutline)
-            inputElement.removeClass("input-error")
-            supportNormal()
-            trailingNormal()
-        }
-    }
-
-    fun leadingNormal() {
         leading.clear()
+
         val li = config.leadingIcon
         if (li == null) {
-            labelOuter.htmlElement.style.left = 0.px
+            label.htmlElement.style.left = 0.px
         } else {
-            labelOuter.htmlElement.style.left = 36.px
+            label.htmlElement.style.left = 36.px
             leading.icon(li).addClass(pl12, onSurfaceVariantText)
         }
-    }
 
-    fun trailingNormal() {
+        if (config.style == FieldStyle.Filled) {
+            if (value.isEmpty() && ! hasFocus) {
+                input.removeClass(pt20)
+            } else {
+                input.addClass(pt20)
+            }
+        }
+
         trailing.clear()
-        config.trailingIcon?.let {
-            trailing.icon(it).addClass(onSurfaceVariantText)
+        support.clear()
+
+        if (state.error) {
+            label.replaceClass(primaryText, onSurfaceVariantText, errorText)
+            main.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
+            animation.replaceClass(primary, error)
+            inputElement.addClass("input-error")
+            support.span(errorText) { + (state.errorText ?: state.supportText) }
+            trailing.icon(config.errorIcon, fill = 1).addClass(errorText)
+        } else {
+            label.replaceClass(errorText, primaryText, onSurfaceVariantText, if (hasFocus) primaryText else onSurfaceVariantText)
+            if (hasFocus) {
+                main.replaceClass(borderColorError, borderColorOutline, borderColorPrimary)
+            } else {
+                main.replaceClass(borderColorError, borderColorPrimary, borderColorOutline)
+            }
+            animation.replaceClass(error, primary)
+            inputElement.removeClass("input-error")
+            support.span(onSurfaceVariantText) { + state.supportText }
+            config.trailingIcon?.let { trailing.icon(it).addClass(onSurfaceVariantText) }
         }
     }
 
-    fun trailingError() {
-        trailing.clear()
-        trailing.icon(config.errorIcon, fill = 1).addClass(errorText)
-    }
-
-    fun supportNormal() {
-        support.clear()
-        support.span(onSurfaceVariantText) { + state.supportText }
-    }
-
-    fun supportError() {
-        support.clear()
-        support.span(errorText) { + (state.errorText ?: state.supportText) }
-    }
 }

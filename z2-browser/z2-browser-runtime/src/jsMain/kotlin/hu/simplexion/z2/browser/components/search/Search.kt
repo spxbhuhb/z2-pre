@@ -49,7 +49,7 @@ class Search<T>(
 
                 icon(basicIcons.search).apply { addClass(alignSelfCenter, onSurfaceVariantText)}
 
-                input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, b0) {
+                input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, borderNone) {
                     input = this.htmlElement as HTMLInputElement
                     configuration.hint?.let { input.placeholder = it.toString() }
                     onInput {

@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.html
 import kotlinx.browser.document
 import org.w3c.dom.*
 
-fun Z2.div(vararg classes: String, builder: Z2.() -> Unit): Z2 =
+fun Z2.div(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
     Z2(this, document.createElement("div") as HTMLDivElement, classes, builder)
 
 fun Z2.grid(vararg classes: String, builder: Z2.() -> Unit): Z2 =

@@ -1,9 +1,17 @@
 package hu.simplexion.z2.browser.material.textfield
 
+import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
-class TextFieldConfig {
+class TextFieldConfig(
+    val style : FieldStyle = defaultFieldStyle
+) {
+
+    companion object {
+        var defaultFieldStyle = FieldStyle.Transparent
+    }
+
     var leadingIcon: LocalizedIcon? = null
         set(value) {
             field = value
@@ -22,7 +30,7 @@ class TextFieldConfig {
             update?.invoke()
         }
 
-    var onChange: ((value: String) -> Unit)? = null
+    var onChange: (FilledTextField.(value: String) -> Unit)? = null
         set(value) {
             field = value
             update?.invoke()
@@ -40,11 +48,6 @@ class TextFieldConfig {
             update?.invoke()
         }
 
-    var transparent = false
-        set(value) {
-            field = value
-            update?.invoke()
-        }
-
     var update : (() -> Unit)? = null
+
 }

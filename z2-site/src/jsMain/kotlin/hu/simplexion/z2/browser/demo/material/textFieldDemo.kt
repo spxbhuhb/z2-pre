@@ -7,7 +7,7 @@ import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.textfield.FilledTextField
 import hu.simplexion.z2.browser.material.textfield.filledTextField
-import hu.simplexion.z2.browser.material.textfield.outlinedTextField
+import hu.simplexion.z2.browser.material.textfield.outlinedTextField2
 import hu.simplexion.z2.browser.material.textfield.transparentTextField
 
 fun Z2.textFieldDemo() =
@@ -21,14 +21,20 @@ fun Z2.textFieldDemo() =
             div { + "transparentTextField" }
             div { + "outlinedTextField" }
 
+            div {
+                gridColumn = "1/4"
+                + "use value '12' to set field to error"
+            }
+
             textFieldDemo(ComponentState.Enabled, false)
             textFieldDemo(ComponentState.Enabled, true)
         }
     }
 
-fun FilledTextField.set(state: ComponentState, error: Boolean, value : String = "") : FilledTextField {
+fun FilledTextField.set(state: ComponentState, error: Boolean, value: String = "", onChange: FilledTextField.(String) -> Unit = { this.state.error = (it == "12") }): FilledTextField {
     this.state.disabled = state == ComponentState.Disabled
     this.state.error = error
+    this.config.onChange = onChange
     this.value = value
     return this
 }
@@ -36,15 +42,15 @@ fun FilledTextField.set(state: ComponentState, error: Boolean, value : String = 
 private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     filledTextField("", strings.label).set(state, error)
     transparentTextField("", strings.label).set(state, error)
-    outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }
+    outlinedTextField2("", strings.label).set(state, error)
 
     filledTextField("", strings.label).set(state, error, "test value")
     transparentTextField("", strings.label).set(state, error, "test value")
-    outlinedTextField("test value", strings.label, state = state, error = error) { setState(it.isBlank()) }
+    outlinedTextField2("test value", strings.label).set(state, error, "test value")
 
     filledTextField("", strings.label).set(state, error)
     transparentTextField("", strings.label).set(state, error)
-    outlinedTextField("", strings.label, state = state, error = error) { setState(it.isBlank()) }.also { it.value = "test value"}
+    outlinedTextField2("", strings.label).set(state, error)
 
     filledTextField("", strings.label).set(state, error).also {
         it.config.leadingIcon = basicIcons.search
@@ -54,7 +60,10 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
         it.config.leadingIcon = basicIcons.search
         it.config.trailingIcon = basicIcons.cancel
     }
-    outlinedTextField("", strings.label, leadingIcon = basicIcons.search, trailingIcon = basicIcons.cancel, state = state, error = error) { setState(it.isBlank()) }
+    outlinedTextField2("", strings.label).set(state, error).also {
+        it.config.leadingIcon = basicIcons.search
+        it.config.trailingIcon = basicIcons.cancel
+    }
 
     filledTextField("", strings.label).set(state, error).also {
         it.state.supportText = strings.supportingText.toString()
@@ -62,5 +71,7 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     transparentTextField("", strings.label).set(state, error).also {
         it.state.supportText = strings.supportingText.toString()
     }
-    outlinedTextField("", strings.label, strings.supportingText, state = state, error = error) { setState(it.isBlank()) }
+    outlinedTextField2("", strings.label).set(state, error).also {
+        it.state.supportText = strings.supportingText.toString()
+    }
 }

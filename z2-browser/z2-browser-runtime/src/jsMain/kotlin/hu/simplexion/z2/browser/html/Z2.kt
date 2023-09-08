@@ -42,8 +42,10 @@ open class Z2(
     val listeners = mutableListOf<Z2EventListener>()
 
     init {
+        // better do this directly here for performance
+        // as this is a new element, there shouldn't be any classes
+        htmlElement.className = classes.joinToString(" ")
         builder?.let { this.it() }
-        htmlElement.addClass(*classes)
         parent?.let {
             it.htmlElement.append(this.htmlElement)
             it.children += this
