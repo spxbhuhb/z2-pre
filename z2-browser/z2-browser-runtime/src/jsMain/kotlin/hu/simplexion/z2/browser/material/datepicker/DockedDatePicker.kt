@@ -4,52 +4,35 @@ import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.positionAbsolute
 import hu.simplexion.z2.browser.css.positionRelative
 import hu.simplexion.z2.browser.css.wFull
+import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.ComponentState
-import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.browser.material.textfield.outlinedTextField
-import hu.simplexion.z2.commons.i18n.LocalizedIcon
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.browser.material.textfield.FilledTextField
+import hu.simplexion.z2.browser.material.textfield.TextFieldConfig
 import hu.simplexion.z2.commons.i18n.locales.localized
-import kotlinx.browser.document
+import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.datetime.LocalDate
-import org.w3c.dom.HTMLElement
 
 class DockedDatePicker(
     parent: Z2? = null,
-    value: LocalDate,
-    label: LocalizedText? = null,
-    supportingText: LocalizedText? = commonStrings.localDateSupportText,
-    leadingIcon: LocalizedIcon? = null,
-    state: ComponentState = ComponentState.Enabled,
-    error: Boolean = false,
-    val onChange: (value: LocalDate) -> Unit
-) : Z2(
-    parent,
-    document.createElement("div") as HTMLElement,
-    classes = arrayOf(wFull, positionRelative)
-) {
+    val state: FieldState = FieldState(),
+    val config : DatePickerConfig = DatePickerConfig()
+) : Z2(parent) {
 
-    var value: LocalDate = value
+    var value: LocalDate = hereAndNow().date
         set(value) {
             field = value
             textField.value = value.localized
         }
 
-    // FIXME add an option to date picker to use outlined field
-    val textField = outlinedTextField(value.localized, label, supportingText, leadingIcon, basicIcons.calendar)
-
-    var readOnly: Boolean = false
-        set(value) {
-            field = value
-            textField.readOnly = value
-        }
+    val textField : FilledTextField = FilledTextField(this, state, TextFieldConfig().also {
+        it.trailingIcon = config.trailingIcon
+    })
 
     val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
     init {
+        addClass(wFull, positionRelative)
         style.width = 304.px
 
         textField.input.onFocus {
@@ -66,17 +49,13 @@ class DockedDatePicker(
         textField.input.htmlElement.blur()
     }
 
-    fun setState(error: Boolean, errorSupportingText: String? = null) {
-        textField.setState(error, errorSupportingText)
-    }
-
     fun Z2.buildContent() {
         clear()
         div(positionAbsolute) {
             DockedDatePickerSelector(this, value, { close() }) {
                 this@DockedDatePicker.value = it
                 textField.value = it.localized
-                onChange(value)
+                config.onChange?.invoke(this@DockedDatePicker, value)
             }
         }.onMouseDown {
             it.preventDefault()

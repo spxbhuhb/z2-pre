@@ -20,7 +20,7 @@
 .elevation-level-2 { box-shadow: var(--md-sys-elevation-level-2); }
 .elevation-level-3 { box-shadow: var(--md-sys-elevation-level-3); }
 .error-text { color: var(--md-sys-color-error); }
-.shape-corner-large { border-right: var(--md-sys-shape-corner-large); }
+.shape-corner-large { border-radius: var(--md-sys-shape-corner-large); }
 .state-layer-opacity-drag { opacity: 16%; }
 .state-layer-opacity-focus { opacity: 12%; }
 .state-layer-opacity-hover { opacity: 8%; }

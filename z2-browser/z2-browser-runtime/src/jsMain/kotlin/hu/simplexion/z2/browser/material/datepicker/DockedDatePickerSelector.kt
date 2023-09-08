@@ -12,12 +12,10 @@ import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.commons.i18n.monthNameTable
 import hu.simplexion.z2.commons.i18n.monthShortNameTable
 import hu.simplexion.z2.commons.util.hereAndNow
-import kotlinx.browser.document
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
-import org.w3c.dom.HTMLElement
 import kotlin.math.max
 
 class DockedDatePickerSelector(
@@ -25,11 +23,7 @@ class DockedDatePickerSelector(
     value: LocalDate = hereAndNow().date,
     val onClose: () -> Unit = { },
     val onSelected: (date: LocalDate) -> Unit,
-) : Z2(
-    parent,
-    document.createElement("div") as HTMLElement,
-    emptyArray()
-) {
+) : Z2(parent) {
 
     companion object {
         const val DAY_SELECT = 0
@@ -51,7 +45,7 @@ class DockedDatePickerSelector(
     fun build() {
         addClass(displayGrid, wMinContent, surfaceContainerHigh, elevationLevel3, shapeCornerLarge, p0, pb12, positionRelative)
         style.width = 304.px
-        style.height = 400.px
+        style.height = 384.px
         dayView()
     }
 
@@ -72,7 +66,10 @@ class DockedDatePickerSelector(
         gridTemplateColumns = "1fr"
         header(DAY_SELECT)
         div(pl12, pr12) {
-            month(value.year, value.month, markedDays = listOf(value), dense = false) { onSelected(it) }
+            month(value.year, value.month, markedDays = listOf(value), dense = false) {
+                value = it
+                onSelected(it)
+            }
         }
         actions()
     }
@@ -169,7 +166,7 @@ class DockedDatePickerSelector(
                         if (value.monthNumber == monthNumber) {
                             icon(basicIcons.check)
                         } else {
-                            div(pr24) {}
+                            div(pr24)
                         }
                     },
                     label = monthNameTable[monthNumber - 1]

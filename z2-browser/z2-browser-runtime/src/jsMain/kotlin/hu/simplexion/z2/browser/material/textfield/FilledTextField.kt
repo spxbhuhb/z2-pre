@@ -82,6 +82,10 @@ class FilledTextField(
                     main.addClass(borderWidth1, borderSolid, borderColorOutline, borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall)
                 }
             }
+
+            onClick {
+                if (!hasFocus) input.focus()
+            }
         }
 
         // underline animation
@@ -101,6 +105,9 @@ class FilledTextField(
                 }
             }
             zIndex = 1
+            onClick {
+                if (!hasFocus) input.focus()
+            }
         }
 
         support()
@@ -199,7 +206,7 @@ class FilledTextField(
         if (state.error) {
             label.replaceClass(primaryText, onSurfaceVariantText, errorText)
             main.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
-            animation.replaceClass(primary, error)
+            animation.replaceClass(borderColorPrimary, borderColorError)
             inputElement.addClass("input-error")
             support.span(errorText) { + (state.errorText ?: state.supportText) }
             trailing.icon(config.errorIcon, fill = 1).addClass(errorText)
@@ -210,7 +217,7 @@ class FilledTextField(
             } else {
                 main.replaceClass(borderColorError, borderColorPrimary, borderColorOutline)
             }
-            animation.replaceClass(error, primary)
+            animation.replaceClass(borderColorError, borderColorPrimary)
             inputElement.removeClass("input-error")
             support.span(onSurfaceVariantText) { + state.supportText }
             config.trailingIcon?.let { trailing.icon(it).addClass(onSurfaceVariantText) }

@@ -47,7 +47,7 @@ private fun <T> Z2.textField(context: SchematicAccessContext, label: LocalizedTe
 private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedText) =
     BoundLocalDateField(this, context) {
         // FIXME supporting text handling
-        datePicker(label = label, supportingText = commonStrings.localDateSupportText) {
+        datePicker(label = label, supportText = commonStrings.localDateSupportText) {
             context.schematic.schematicChange(context.field, it)
         }
     }

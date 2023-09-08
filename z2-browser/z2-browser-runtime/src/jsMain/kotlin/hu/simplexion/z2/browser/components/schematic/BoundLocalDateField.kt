@@ -31,7 +31,7 @@ class BoundLocalDateField(
     override var readOnly: Boolean = false
         set(value) {
             field = value
-            datePicker.readOnly = value
+            datePicker.state.readOnly = value
         }
 
     init {
@@ -46,7 +46,8 @@ class BoundLocalDateField(
             val valid = schemaResult?.valid ?: true
 
             if (fullSuspendValidation == null || !valid) {
-                datePicker.setState(!valid, schemaResult?.fails?.firstOrNull()?.message)
+                datePicker.state.error = !valid
+                datePicker.state.errorText = schemaResult?.fails?.firstOrNull()?.message
                 return@attach
             }
 
@@ -54,7 +55,10 @@ class BoundLocalDateField(
                 io {
                     val result = validation(schematic, field, value)
                     // checking for the value so if the user changed it since we won't set it to an old check result
-                    if (value == datePicker.value) datePicker.setState(!result.valid, result.fails.firstOrNull()?.message)
+                    if (value == datePicker.value) {
+                        datePicker.state.error = !result.valid
+                        datePicker.state.errorText = result.fails.firstOrNull()?.message
+                    }
                 }
             }
         }
