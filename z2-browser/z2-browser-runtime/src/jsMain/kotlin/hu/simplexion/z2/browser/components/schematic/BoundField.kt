@@ -1,25 +1,71 @@
 package hu.simplexion.z2.browser.components.schematic
 
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.browser.field.ValueField
+import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.util.io
+import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 
-interface BoundField<T> {
-    val schematic : Schematic<*>
-    val field : SchemaField<T>
-    var readOnly : Boolean
+@Suppress("UNCHECKED_CAST")
+open class BoundField<T>(
+    parent: Z2,
+    context: SchematicAccessContext,
+    buildFun: BoundField<T>.() -> ValueField<T>
+) : Z2(parent) {
 
-    var fullSuspendValidation : FullSuspendValidation<T>?
+    val schematic = context.schematic
+    val schemaField = context.field
 
-    infix fun validateSuspend(validation : SuspendValidation<T>)  {
-        fullSuspendValidation = { _,_,value -> validation(value) }
+    var fullSuspendValidation: FullSuspendValidation<T>? = null
+
+    val uiField = buildFun()
+
+    init {
+        attach(schematic) {
+
+            val value = schemaField.getValue(schematic) as T
+            uiField.value = value
+
+            if (uiField.state.readOnly) return@attach
+
+            val schemaResult = it.validationResult.fieldResults[schemaField.name]
+            val valid = schemaResult?.valid ?: true
+
+            if (fullSuspendValidation == null || !valid) {
+                uiField.state.error = !valid
+                uiField.state.errorText = schemaResult?.fails?.firstOrNull()?.message
+                return@attach
+            }
+
+            fullSuspendValidation?.let { validation ->
+                io {
+                    val result = validation(schematic, schemaField as SchemaField<T>, value)
+                    // checking for the value so if the user changed it since we won't set it to an old check result
+                    if (value == uiField.value) {
+                        uiField.state.error = !result.valid
+                        uiField.state.errorText = result.fails.firstOrNull()?.message
+                    }
+                }
+            }
+        }
+
+        uiField.value = schemaField.getValue(schematic) as T
     }
 
-    infix fun validateSuspendFull(validation : FullSuspendValidation<T>) {
+    infix fun validateSuspend(validation: SuspendValidation<T>) {
+        fullSuspendValidation = { _, _, value -> validation(value) }
+    }
+
+    infix fun validateSuspendFull(validation: FullSuspendValidation<T>) {
         fullSuspendValidation = validation
     }
 
-    infix fun readOnly(inReadOnly : Boolean) {
-        this.readOnly = inReadOnly
+    infix fun readOnly(readOnly: Boolean) {
+        uiField.state.readOnly = readOnly
+    }
+
+    infix fun disabled(disabled: Boolean) {
+        uiField.state.disabled = disabled
     }
 
 }

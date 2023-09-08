@@ -12,9 +12,16 @@ import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.dump
 import kotlinx.datetime.LocalDate
 
+enum class TestEnum {
+    EnumValue1,
+    EnumValue2,
+    EnumValue3
+}
+
 class TestData : Schematic<TestData>() {
     var stringField by string() blank false
     var localDateField by localDate()
+    var enumField by enum<TestEnum>()
 }
 
 fun Z2.formDemo() =
@@ -26,6 +33,7 @@ fun Z2.formDemo() =
 
         field { data.stringField }
         field { data.localDateField }
+        field { data.enumField }
 
         val dump = pre { }
 
@@ -37,5 +45,6 @@ fun Z2.formDemo() =
         textButton(strings.setProgrammatically) {
             data.stringField = "Programmatically set at ${hereAndNow()}"
             data.localDateField = LocalDate(1999, 9, 9)
+            data.enumField = TestEnum.EnumValue3
         }
     }

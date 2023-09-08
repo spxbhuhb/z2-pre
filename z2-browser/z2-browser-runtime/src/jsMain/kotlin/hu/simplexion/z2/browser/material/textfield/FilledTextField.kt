@@ -13,7 +13,7 @@ import org.w3c.dom.HTMLInputElement
 
 class FilledTextField(
     parent: Z2,
-    val state: FieldState = FieldState(),
+    override val state: FieldState = FieldState(),
     val config: TextFieldConfig = TextFieldConfig()
 ) : Z2(parent), ValueField<String> {
 

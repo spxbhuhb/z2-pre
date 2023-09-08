@@ -5,6 +5,7 @@ import hu.simplexion.z2.browser.css.positionAbsolute
 import hu.simplexion.z2.browser.css.positionRelative
 import hu.simplexion.z2.browser.css.wFull
 import hu.simplexion.z2.browser.field.FieldState
+import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.textfield.FilledTextField
@@ -15,11 +16,11 @@ import kotlinx.datetime.LocalDate
 
 class DockedDatePicker(
     parent: Z2? = null,
-    val state: FieldState = FieldState(),
+    override val state: FieldState = FieldState(),
     val config : DatePickerConfig = DatePickerConfig()
-) : Z2(parent) {
+) : Z2(parent), ValueField<LocalDate> {
 
-    var value: LocalDate = hereAndNow().date
+    override var value: LocalDate = hereAndNow().date
         set(value) {
             field = value
             textField.value = value.localized

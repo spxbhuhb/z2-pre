@@ -4,58 +4,55 @@ import hu.simplexion.z2.browser.css.alignItemsCenter
 import hu.simplexion.z2.browser.css.cursorPointer
 import hu.simplexion.z2.browser.css.displayFlex
 import hu.simplexion.z2.browser.css.pl8
+import hu.simplexion.z2.browser.field.FieldState
+import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
 
-class RadioButtonGroup<T>(parent: Z2) : Z2(parent) {
-
-    var onSelectedFun: ((value: T) -> Unit)? = null
-
-    var itemBuilderFun: Z2.(T) -> Unit = { text { it } }
-        set(value) {
-            field = value
-            build()
-        }
-
-    var options: List<T> = emptyList()
-        set(value) {
-            field = value
-            build()
-        }
+class RadioButtonGroup<T>(
+    parent: Z2,
+    override val state : FieldState,
+    val config : RadioGroupConfig<T>
+) : Z2(parent), ValueField<T> {
 
     val buttons = mutableListOf<RadioButtonBase>()
 
-    var value : T? = null
+    override var value : T
+        get() = checkNotNull(valueOrNull)
+        set(value) {
+            valueOrNull = value
+        }
+
+    var valueOrNull : T? = null
         set(value) {
             field = value
-            for (index in options.indices) {
-                buttons[index].selected = (value == options[index])
+            for (index in config.options.indices) {
+                buttons[index].selected = (value == config.options[index])
             }
         }
 
-    // FIXME proper handling of readonly in RadioButtonGroup
-    var readOnly: Boolean = false
-
-    fun onSelected(entry: T) {
-        value = entry
-        onSelectedFun?.let { it(entry) }
+    init {
+        state.update = { update() }
+        config.update = { update() }
+        update()
     }
 
-    fun build() {
+    fun onChange(entry: T) {
+        valueOrNull = entry
+        config.onChange?.invoke(this, entry)
+    }
+
+    fun update() {
         clear()
-        for (entry in options) {
+        for (entry in config.options) {
             div(displayFlex, alignItemsCenter) {
-                buttons += radioButton(entry == value, false) { onSelected(entry) }
+                buttons += radioButton(entry == valueOrNull, false) { onChange(entry) }
                 div(pl8, cursorPointer) {
-                    itemBuilderFun(entry)
-                    onClick { if (! readOnly) onSelected(entry) }
+                    config.itemBuilderFun(this, entry)
+                    onClick { if (! state.readOnly) onChange(entry) }
                 }
             }
         }
-    }
-
-    fun setState(error: Boolean, errorSupportingText: String? = null) {
-        // FIXME radiobutton set state
     }
 }
