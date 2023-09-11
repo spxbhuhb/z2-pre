@@ -80,6 +80,8 @@ tasks.create<JavaExec>("generateTests") {
     mainClass.set("hu.simplexion.z2.service.kotlin.GenerateTestsKt")
 }
 
+tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":shadowJar") } + tasks["generateTests"])
+
 fun Test.setLibraryProperty(propName: String, jarName: String) {
     val path = project.configurations
         .testRuntimeClasspath.get()

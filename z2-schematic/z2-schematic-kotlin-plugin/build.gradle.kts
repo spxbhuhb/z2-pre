@@ -73,6 +73,8 @@ tasks.withType<KotlinCompile>().configureEach {
     }
 }
 
+tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":shadowJar") })
+
 tasks.create<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass.set("hu.simplexion.z2.schematic.kotlin.GenerateTestsKt")
