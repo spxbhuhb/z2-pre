@@ -1,9 +1,8 @@
 package hu.simplexion.z2.i18n.ui
 
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 
-object i18nStrings : LocalizedTextStore(UUID("a5ce25ef-9467-4df5-841e-8945808a7cfd")) {
+object i18nStrings : LocalizedTextStore() {
 
     val languages by "Nyelvek"
     val languagesSupport by languages.support("Új nyelv hozzáadása. Címkék és ikonok fordítása.")

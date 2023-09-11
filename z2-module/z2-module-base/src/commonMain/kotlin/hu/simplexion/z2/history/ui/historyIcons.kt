@@ -1,10 +1,9 @@
 package hu.simplexion.z2.history.ui
 
 import hu.simplexion.z2.commons.i18n.LocalizedIconStore
-import hu.simplexion.z2.commons.util.UUID
 
 @Suppress("ClassName")
-object historyIcons : LocalizedIconStore(UUID("e0d52bcf-a4dc-484d-9e26-ce461b6f147f")) {
+object historyIcons : LocalizedIconStore() {
 
     val history by "history"
     val overview by "overview"

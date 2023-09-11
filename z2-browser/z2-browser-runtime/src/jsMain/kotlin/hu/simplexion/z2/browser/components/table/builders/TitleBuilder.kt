@@ -6,14 +6,14 @@ import hu.simplexion.z2.browser.css.gridGap16
 import hu.simplexion.z2.browser.css.titleLarge
 import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 
 class TitleBuilder<T> {
 
-    var text: LocalizedText = basicStrings.EMPTY
+    var text: LocalizedText = browserStrings._empty
 
     var textClasses = emptyArray<String>()
 

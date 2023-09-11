@@ -1,9 +1,8 @@
 package hu.simplexion.z2.content.ui
 
 import hu.simplexion.z2.commons.i18n.LocalizedIconStore
-import hu.simplexion.z2.commons.util.UUID
 
 @Suppress("ClassName")
-object contentIcons : LocalizedIconStore(UUID("0208b70f-ac49-4542-a4be-9a482b9ebea7")) {
+object contentIcons : LocalizedIconStore() {
     val folder by "folder"
 }

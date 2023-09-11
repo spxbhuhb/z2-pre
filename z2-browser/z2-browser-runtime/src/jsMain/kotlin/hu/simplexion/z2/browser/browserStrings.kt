@@ -1,10 +1,8 @@
-package hu.simplexion.z2.browser.material
+package hu.simplexion.z2.browser
 
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 
-@Suppress("ClassName")
-object basicStrings : LocalizedTextStore(UUID("2c9624be-efc7-499d-a5e3-6ca5b3da2ff5")){
+object browserStrings : LocalizedTextStore() {
     val actions by "műveletek"
     val add by "hozzáadás"
     val back by "vissza"
@@ -19,7 +17,7 @@ object basicStrings : LocalizedTextStore(UUID("2c9624be-efc7-499d-a5e3-6ca5b3da2
     val searchHint by "keresés"
     val settings by "beállítások"
     val yes by "igen"
-    val EMPTY by ""
+    val _empty by ""
     val createdBy by "létrehozó"
     val createdAt by "létrehozás"
     val content by "tartalom"
@@ -27,6 +25,7 @@ object basicStrings : LocalizedTextStore(UUID("2c9624be-efc7-499d-a5e3-6ca5b3da2
     val ok by "rendben"
     val previous by "előző"
     val next by "következő"
-    val searchInProgress = "...keresés..."
-    val noHits = "nincs találat"
+    val searchInProgress by "...keresés..."
+    val noHits by "nincs találat"
+    val dropFilesHere by "drop files here or click for select window"
 }

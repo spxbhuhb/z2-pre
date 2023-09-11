@@ -2,8 +2,8 @@ package hu.simplexion.z2.browser.material.datepicker
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.basicIcons
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.material.icon.icon
@@ -97,22 +97,22 @@ class DockedDatePickerSelector(
 
     fun Z2.left(mode: Int, onClick: () -> Unit) =
         if (mode == DAY_SELECT) {
-            actionIcon(basicIcons.left, basicStrings.previous, inline = true) { onClick() }
+            actionIcon(browserIcons.left, browserStrings.previous, inline = true) { onClick() }
         } else {
             div(pl24) { }
         }
 
     fun Z2.right(mode: Int, onClick: () -> Unit) =
         if (mode == DAY_SELECT) {
-            actionIcon(basicIcons.right, basicStrings.next, inline = true) { onClick() }
+            actionIcon(browserIcons.right, browserStrings.next, inline = true) { onClick() }
         } else {
             div(pl24) { }
         }
 
     fun Z2.actions() =
         div(displayFlex, justifyContentFlexEnd, pl12, pr12) {
-            textButton(basicStrings.cancel) { onClose() }
-            textButton(basicStrings.ok) { onClose() }
+            textButton(browserStrings.cancel) { onClose() }
+            textButton(browserStrings.ok) { onClose() }
         }
 
     fun Z2.monthMenu(mode: Int) =
@@ -120,7 +120,7 @@ class DockedDatePickerSelector(
             div(displayFlex, w60, justifyContentCenter) {
                 div(alignSelfCenter, overflowHidden) { text { monthShortNameTable[value.monthNumber - 1] } }
                 if (mode != YEAR_SELECT) {
-                    icon(basicIcons.down, size = 20)
+                    icon(browserIcons.down, size = 20)
                 } else {
                     div(pl20) { }
                 }
@@ -136,7 +136,7 @@ class DockedDatePickerSelector(
         div(bodySmall, displayFlex, pl8, cursorPointer) {
             div(alignSelfCenter) { text { value.year } }
             if (mode != MONTH_SELECT) {
-                icon(basicIcons.down, size = 20)
+                icon(browserIcons.down, size = 20)
             } else {
                 div(pl20) { }
             }
@@ -164,7 +164,7 @@ class DockedDatePickerSelector(
                     monthNumber,
                     leading = {
                         if (value.monthNumber == monthNumber) {
-                            icon(basicIcons.check)
+                            icon(browserIcons.check)
                         } else {
                             div(pr24)
                         }
@@ -200,7 +200,7 @@ class DockedDatePickerSelector(
                     year,
                     leading = {
                         if (value.year == year) {
-                            icon(basicIcons.check)
+                            icon(browserIcons.check)
                         } else {
                             div(pr24) {}
                         }

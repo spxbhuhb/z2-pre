@@ -4,7 +4,7 @@ import hu.simplexion.z2.browser.components.table.Table
 import hu.simplexion.z2.browser.components.table.TableColumn
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.px
 
@@ -13,7 +13,7 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
     val actions = mutableListOf<RowActionBuilder<T>>()
 
     init {
-        label = basicStrings.actions
+        label = browserStrings.actions
         exportable = false
         render = { actionRender(it, actions) }
     }

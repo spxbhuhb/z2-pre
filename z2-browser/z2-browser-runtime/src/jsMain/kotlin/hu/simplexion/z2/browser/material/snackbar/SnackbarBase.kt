@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.material.snackbar
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
-import hu.simplexion.z2.browser.material.basicIcons
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.util.io
@@ -33,7 +33,7 @@ class SnackbarBase(
         }
 
         if (icon) {
-            actionIcon(basicIcons.close) { Snackbars.onHide(this) }
+            actionIcon(browserIcons.close) { Snackbars.onHide(this) }
         }
     }
 

@@ -3,15 +3,16 @@
 package hu.simplexion.z2.commons.i18n
 
 import hu.simplexion.z2.commons.util.PublicApi
-import hu.simplexion.z2.commons.util.UUID
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+/**
+ * Stores textual information that should be translated when the UI is displayed on a
+ * different language.
+ */
 @PublicApi
-open class LocalizedTextStore(
-    @PublicApi
-    val _uuid : UUID<LocalizedTextStore>
-) {
+abstract class LocalizedTextStore {
+
     val _map = mutableMapOf<String, LocalizedText>()
     val _support = mutableMapOf<String, LocalizedTextSupport>()
 

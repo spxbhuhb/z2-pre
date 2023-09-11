@@ -4,7 +4,7 @@
 package hu.simplexion.z2.browser.routing
 
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.modal.confirm
 import hu.simplexion.z2.browser.util.decodeURIComponent
 import hu.simplexion.z2.browser.util.io
@@ -112,7 +112,7 @@ open class BrowserRouter: Router<Z2>() {
 
     suspend fun stopNavigationOnPending(): Boolean {
         if (pendingModificationsEnabled && pendingModifications) {
-            if (!confirm(basicStrings.discardChanges, basicStrings.discardChangesMessage)) {
+            if (!confirm(browserStrings.discardChanges, browserStrings.discardChangesMessage)) {
                 return true
             } else {
                 pendingModifications = false

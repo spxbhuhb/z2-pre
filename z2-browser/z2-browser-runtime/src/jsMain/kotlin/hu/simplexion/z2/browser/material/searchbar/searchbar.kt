@@ -1,22 +1,22 @@
 package hu.simplexion.z2.browser.material.searchbar
 
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.basicIcons
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import org.w3c.dom.HTMLInputElement
 
-fun Z2.searchBar(placeholder : LocalizedText = basicStrings.searchHint) =
+fun Z2.searchBar(placeholder : LocalizedText = browserStrings.searchHint) =
     div("search-bar-container") {
         val container = this
-        icon(basicIcons.search, cssClass = "search-bar-leading-icon")
+        icon(browserIcons.search, cssClass = "search-bar-leading-icon")
         input("search-bar-input", "body-large") {
             (htmlElement as HTMLInputElement).placeholder = placeholder.toString()
             onFocus { container.addClass("search-bar-active")}
             onBlur { container.removeClass("search-bar-active")}
         }
-        icon(basicIcons.filter, cssClass = "search-bar-trailing-icon")
+        icon(browserIcons.filter, cssClass = "search-bar-trailing-icon")
     }
 
 interface SearchProvider {

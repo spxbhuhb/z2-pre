@@ -11,7 +11,7 @@ import hu.simplexion.z2.browser.css.p0
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.container
 import hu.simplexion.z2.browser.layout.lowest
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 
 internal fun Z2.list() =
     lowest(borderOutline) {
@@ -33,7 +33,7 @@ internal fun Z2.list() =
 
                 actionColumn {
                     action {
-                        label = basicStrings.edit
+                        label = browserStrings.edit
                         handler = { edit(it) }
                     }
                 }

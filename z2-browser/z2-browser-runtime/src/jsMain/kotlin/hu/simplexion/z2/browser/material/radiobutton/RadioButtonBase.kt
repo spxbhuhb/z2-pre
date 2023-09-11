@@ -6,7 +6,7 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
 import hu.simplexion.z2.browser.html.onKeyDown
 import hu.simplexion.z2.browser.material.StateLayer
-import hu.simplexion.z2.browser.material.basicIcons
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.icon.icon
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -64,7 +64,7 @@ class RadioButtonBase(
 
         with(contentLayer) {
             icon(
-                if (selected) basicIcons.radioButtonChecked else basicIcons.radioButtonUnchecked,
+                if (selected) browserIcons.radioButtonChecked else browserIcons.radioButtonUnchecked,
                 size = 20
             ).also {
                 when {

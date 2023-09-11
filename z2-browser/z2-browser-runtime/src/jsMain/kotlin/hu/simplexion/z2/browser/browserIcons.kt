@@ -1,10 +1,8 @@
-package hu.simplexion.z2.browser.material
+package hu.simplexion.z2.browser
 
 import hu.simplexion.z2.commons.i18n.LocalizedIconStore
-import hu.simplexion.z2.commons.util.UUID
 
-@Suppress("ClassName")
-object basicIcons : LocalizedIconStore(UUID("3e5fb9a5-2d5f-4c86-9d26-1a760d1d1c69")) {
+object browserIcons : LocalizedIconStore() {
     val settings by "settings"
     val search by "search"
     val cancel by "cancel"

@@ -6,7 +6,7 @@ import hu.simplexion.z2.browser.css.h20
 import hu.simplexion.z2.browser.css.pt4
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.ComponentState
-import hu.simplexion.z2.browser.material.basicIcons
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
@@ -46,7 +46,7 @@ class TextField(
 
     var effectiveSupportingText: String = supportingText.toString()
 
-    var errorIcon: LocalizedIcon = basicIcons.error
+    var errorIcon: LocalizedIcon = browserIcons.error
 
     /**
      * The text to show when is there a validation error. Use [setState] to change.

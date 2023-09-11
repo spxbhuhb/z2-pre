@@ -4,7 +4,7 @@ import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
 import hu.simplexion.z2.browser.html.grid
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.browser.components.schematic.field
@@ -14,10 +14,10 @@ import hu.simplexion.z2.i18n.languages
 import hu.simplexion.z2.i18n.model.Language
 
 internal fun add() =
-    languageModal(Language(), i18nStrings.addLanguage, basicStrings.add) { languages.add(it) }
+    languageModal(Language(), i18nStrings.addLanguage, browserStrings.add) { languages.add(it) }
 
 internal fun edit(language: Language) =
-    languageModal(language, i18nStrings.editLanguage, basicStrings.edit) { languages.update(it) }
+    languageModal(language, i18nStrings.editLanguage, browserStrings.edit) { languages.update(it) }
 
 internal fun languageModal(
     language: Language,
@@ -36,7 +36,7 @@ internal fun languageModal(
             }
 
             buttons {
-                textButton(basicStrings.cancel) { closeWith(false) }
+                textButton(browserStrings.cancel) { closeWith(false) }
                 textButton(buttonLabel) {
                     localLaunch {
                         onOk(language)

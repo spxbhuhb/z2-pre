@@ -35,7 +35,7 @@ open class TableBuilder<T> : TableConfiguration<T>() {
 //                div(alignSelfCenter) {
 //                    textTitle()
 //                }
-//                if (add) outlinedIconButton(basicIcons.add, basicStrings.add) { }
+//                if (add) outlinedIconButton(browserIcons.add, browserStrings.add) { }
 //            }
 //
 //            div(positionRelative) {
@@ -45,19 +45,19 @@ open class TableBuilder<T> : TableConfiguration<T>() {
 //            }
 //
 //            div(alignSelfCenter) {
-//                if (export) outlinedIconButton(basicIcons.export, basicStrings.export) { }
+//                if (export) outlinedIconButton(browserIcons.export, browserStrings.export) { }
 //            }
 //        }
 
 //    fun Z2.searchBar() =
 //        div("table-search-bar-container") {
 //            val container = this
-//            icon(basicIcons.search, cssClass = "table-search-bar-leading-icon")
+//            icon(browserIcons.search, cssClass = "table-search-bar-leading-icon")
 //            input("table-search-bar-input", "body-medium", "text-select") {
-//                (htmlElement as HTMLInputElement).placeholder = basicStrings.searchHint.toString()
+//                (htmlElement as HTMLInputElement).placeholder = browserStrings.searchHint.toString()
 //                onFocus { container.addClass("table-search-bar-active")}
 //                onBlur { container.removeClass("table-search-bar-active")}
 //            }
-//            icon(basicIcons.filter, cssClass = "table-search-bar-trailing-icon")
+//            icon(browserIcons.filter, cssClass = "table-search-bar-trailing-icon")
 //        }
 }

@@ -8,7 +8,7 @@ import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
 import hu.simplexion.z2.browser.html.grid
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.commons.i18n.LocalizedText
@@ -16,13 +16,13 @@ import hu.simplexion.z2.commons.util.fourRandomInt
 import hu.simplexion.z2.commons.util.localLaunch
 
 internal fun add() =
-    accountModal(AccountPrivate(), authStrings.addAccount, basicStrings.add) {
+    accountModal(AccountPrivate(), authStrings.addAccount, browserStrings.add) {
         val key =  (fourRandomInt() + fourRandomInt()).joinToString("-")
         accountService.add(it, false, key, emptyList())
     }
 
 internal fun edit(role: AccountPrivate) =
-    accountModal(role, authStrings.editRole, basicStrings.add) {  }
+    accountModal(role, authStrings.editRole, browserStrings.add) {  }
 
 internal fun accountModal(
     account: AccountPrivate,
@@ -41,7 +41,7 @@ internal fun accountModal(
             }
 
             buttons {
-                textButton(basicStrings.cancel) { closeWith(false) }
+                textButton(browserStrings.cancel) { closeWith(false) }
                 textButton(buttonLabel) {
                     localLaunch {
                         account.accountName = account.email

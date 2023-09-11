@@ -4,13 +4,12 @@ import hu.simplexion.z2.commons.i18n.BasicLocalizedText
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
 import hu.simplexion.z2.commons.i18n.textStoreRegistry
-import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 
 /**
  * Text store for fields that does not have a translation.
  */
-object fieldNameFallbacks : LocalizedTextStore(UUID.nil())
+object fieldNameFallbacks : LocalizedTextStore()
 
 fun SchemaField<*>.label() : LocalizedText {
     for (store in textStoreRegistry) {

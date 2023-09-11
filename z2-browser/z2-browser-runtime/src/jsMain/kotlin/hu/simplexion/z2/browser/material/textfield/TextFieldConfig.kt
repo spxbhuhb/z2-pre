@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.material.textfield
 
 import hu.simplexion.z2.browser.field.FieldStyle
-import hu.simplexion.z2.browser.material.basicIcons
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
 class TextFieldConfig(
@@ -24,7 +24,7 @@ class TextFieldConfig(
             update?.invoke()
         }
 
-    var errorIcon: LocalizedIcon = basicIcons.error
+    var errorIcon: LocalizedIcon = browserIcons.error
         set(value) {
             field = value
             update?.invoke()

@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.material.switch
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
-import hu.simplexion.z2.browser.material.basicIcons
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.icon.icon
 
 fun Z2.switch(
@@ -24,7 +24,7 @@ fun Z2.switch(
 
         if ((selected && selectedIcon) || (! selected && unselectedIcon)) {
             div("switch-thumb-icon", statusClass) {
-                icon(if (selected) basicIcons.switchSelected else basicIcons.switchUnselected, size = 16)
+                icon(if (selected) browserIcons.switchSelected else browserIcons.switchUnselected, size = 16)
             }
         } else {
             div("switch-thumb", statusClass) {}

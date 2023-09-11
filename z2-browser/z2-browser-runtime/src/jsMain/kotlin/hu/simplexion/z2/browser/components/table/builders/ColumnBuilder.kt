@@ -2,20 +2,20 @@ package hu.simplexion.z2.browser.components.table.builders
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.components.table.Table
 import hu.simplexion.z2.browser.components.table.TableColumn
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
 open class ColumnBuilder<T> {
 
-    var label : LocalizedText = basicStrings.EMPTY
+    var label : LocalizedText = browserStrings._empty
     var labelBuilder : Z2Builder = { text { label } }
     var render: Z2.(row: T) -> Unit = { }
     var comparator: (T,T) -> Int = { _,_ -> 0 }
     var size = Double.NaN
     var exportable = true
-    var exportHeader : LocalizedText = basicStrings.EMPTY
+    var exportHeader : LocalizedText = browserStrings._empty
 
     open fun toColumn(table: Table<T>): TableColumn<T> =
         TableColumn(table, labelBuilder, render, comparator, size, exportable, exportHeader)

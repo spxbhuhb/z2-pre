@@ -2,8 +2,8 @@ package hu.simplexion.z2.browser.components.search
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.basicIcons
-import hu.simplexion.z2.browser.material.basicStrings
+import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.stateLayer
 import hu.simplexion.z2.commons.util.localLaunch
@@ -47,7 +47,7 @@ class Search<T>(
             search = div(displayGrid, h46, pt0, pb0, pl16, pr16) {
                 gridTemplateColumns = "min-content minmax(0,1fr) min-content"
 
-                icon(basicIcons.search).apply { addClass(alignSelfCenter, onSurfaceVariantText)}
+                icon(browserIcons.search).apply { addClass(alignSelfCenter, onSurfaceVariantText)}
 
                 input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, borderNone) {
                     input = this.htmlElement as HTMLInputElement
@@ -69,7 +69,7 @@ class Search<T>(
                     }
                 }
 
-                icon(basicIcons.cancel).apply {
+                icon(browserIcons.cancel).apply {
                     addClass(alignSelfCenter, onSurfaceVariantText)
                     onClick {
                         input.value = ""
@@ -97,13 +97,13 @@ class Search<T>(
                 feedback.clear()
                 feedback.removeClass(displayNone)
                 feedback.addClass(displayFlex)
-                feedback.apply { text { basicStrings.searchInProgress } }
+                feedback.apply { text { browserStrings.searchInProgress } }
             }
             noItems -> {
                 feedback.clear()
                 feedback.removeClass(displayNone)
                 feedback.addClass(displayFlex)
-                feedback.apply { text { basicStrings.noHits }}
+                feedback.apply { text { browserStrings.noHits }}
             }
             else -> {
                 feedback.addClass(displayNone)
