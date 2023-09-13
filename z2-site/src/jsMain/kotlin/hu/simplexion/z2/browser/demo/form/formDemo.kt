@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.demo.form
 
 import hu.simplexion.z2.browser.components.schematic.attach
 import hu.simplexion.z2.browser.components.schematic.field
+import hu.simplexion.z2.browser.components.schematic.radioField
 import hu.simplexion.z2.browser.css.displayGrid
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.overflowXAuto
@@ -20,10 +21,13 @@ enum class TestEnum {
     EnumValue3
 }
 
+val radioItems = listOf("Item 1", "Item 2", "Item 3")
+
 class TestData : Schematic<TestData>() {
     var stringField by string() blank false
     var localDateField by localDate()
     var enumField by enum<TestEnum>()
+    var radioSelect by string()
 }
 
 fun Z2.formDemo() =
@@ -40,6 +44,7 @@ fun Z2.formDemo() =
             field { data.stringField }
             field { data.localDateField }
             field { data.enumField }
+            radioField(radioItems) { data.radioSelect }
         }
 
         div(overflowXAuto) {
