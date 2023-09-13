@@ -10,6 +10,7 @@ class Role : Schematic<Role>() {
     var programmaticName by string(maxLength = 100)
     var displayName by string(maxLength = 50)
     var group by boolean()
+    var displayOrder by int().nullable()
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is Role) return false

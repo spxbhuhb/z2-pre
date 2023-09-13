@@ -30,6 +30,7 @@ internal fun Z2.list() =
                 schematicColumn { Role().programmaticName }
                 schematicColumn { Role().displayName }
                 schematicColumn { Role().contextName }
+                schematicColumn { Role().displayOrder }
 
                 actionColumn {
                     action {
