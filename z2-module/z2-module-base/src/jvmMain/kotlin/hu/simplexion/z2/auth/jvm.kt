@@ -31,7 +31,7 @@ const val securityOfficerRoleName = "security-officer"
 const val securityOfficerAccountName = "so"
 const val anonymousAccountName = "anonymous"
 
-fun authJvm(initialSoPassword: String = "so") {
+fun authJvm(initialSoPassword: String = System.getenv("Z2_INITIAL_SO_PASSWORD") ?: "so") {
 
     tables(
         accountPrivateTable,
