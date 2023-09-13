@@ -4,8 +4,9 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
-class TextFieldConfig(
-    val style : FieldStyle = defaultFieldStyle
+class FieldConfig<T>(
+    val style : FieldStyle = defaultFieldStyle,
+    onChange : ((field : AbstractField<T>) -> Unit)? = null
 ) {
 
     companion object {
@@ -36,7 +37,7 @@ class TextFieldConfig(
             update?.invoke()
         }
 
-    var onChange: (TextField.(value: String) -> Unit)? = null
+    var onChange = onChange
         set(value) {
             field = value
             update?.invoke()

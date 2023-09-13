@@ -1,14 +1,21 @@
 package hu.simplexion.z2.browser.field
 
-class FieldState {
+import hu.simplexion.z2.commons.i18n.LocalizedText
 
-    var label : String? = null
+class FieldState(
+    label : String? = null,
+    supportText : String? = null
+) {
+
+    constructor(label : LocalizedText) : this(label.toString(), label.support?.toString())
+
+    var label = label
         set(value) {
             field = value
             update?.invoke()
         }
 
-    var supportText : String? = null
+    var supportText = supportText
         set(value) {
             field = value
             update?.invoke()

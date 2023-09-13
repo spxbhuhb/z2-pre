@@ -111,6 +111,7 @@
 .pt24 { padding-top: 24px; }
 .pt4 { padding-top: 4px; }
 .pt8 { padding-top: 8px; }
+.text-align-end { text-align: end; }
 .text-transform-capitalize { text-transform: capitalize; }
 .text-transform-uppercase { text-transform: uppercase; }
 .vertical-align-center { vertical-align: center; }

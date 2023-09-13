@@ -5,10 +5,7 @@ import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.ComponentState
-import hu.simplexion.z2.browser.material.textfield.TextField
-import hu.simplexion.z2.browser.material.textfield.filledTextField
-import hu.simplexion.z2.browser.material.textfield.outlinedTextField
-import hu.simplexion.z2.browser.material.textfield.transparentTextField
+import hu.simplexion.z2.browser.material.textfield.*
 
 fun Z2.textFieldDemo() =
     surfaceContainerLow {
@@ -31,7 +28,7 @@ fun Z2.textFieldDemo() =
         }
     }
 
-fun TextField.set(state: ComponentState, error: Boolean, value: String = "", onChange: TextField.(String) -> Unit = { this.state.error = (it == "12") }): TextField {
+fun TextField.set(state: ComponentState, error: Boolean, value: String = "", onChange: (AbstractField<String>) -> Unit = { this.state.error = (it.value == "12") }): TextField {
     this.state.disabled = state == ComponentState.Disabled
     this.state.error = error
     this.config.onChange = onChange

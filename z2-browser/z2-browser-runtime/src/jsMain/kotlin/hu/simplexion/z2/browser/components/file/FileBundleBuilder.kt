@@ -54,7 +54,7 @@ class FileBundleBuilder<T>(
             gridTemplateColumns = "1fr"
             gridTemplateRows = "min-content min-content 1fr"
 
-            nameField = textField("", FieldStyle.Outlined, config.bundleNameLabel) { onNameChange(it) }
+            nameField = textField("", FieldStyle.Outlined, config.bundleNameLabel) { onNameChange(it.value) }
                 .also { it.config.supportEnabled = false }
 
             div(displayFlex, justifyContentFlexEnd, pt12) {

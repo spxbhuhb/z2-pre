@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.material.datepicker
 
-import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.browserIcons
-import hu.simplexion.z2.browser.material.textfield.TextFieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.browser.field.FieldStyle
+import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import kotlinx.datetime.LocalDate
 

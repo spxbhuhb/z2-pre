@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.material.textfield
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.textfield.TextFieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 import hu.simplexion.z2.commons.i18n.LocalizedText
 
@@ -13,7 +13,7 @@ fun Z2.filledTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: TextField.(value: String) -> Unit = { }
+    onChange: (value: AbstractField<String>) -> Unit = { }
 ) =
     textField(value, FieldStyle.Filled, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -24,7 +24,7 @@ fun Z2.transparentTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: TextField.(value: String) -> Unit = { }
+    onChange: (value: AbstractField<String>) -> Unit = { }
 ) =
     textField(value, FieldStyle.Transparent, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -34,7 +34,7 @@ fun Z2.outlinedTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: TextField.(value: String) -> Unit = { }
+    onChange: (value: AbstractField<String>) -> Unit = { }
 ) =
     textField(value, FieldStyle.Outlined, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -45,7 +45,7 @@ fun Z2.textField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: TextField.(value: String) -> Unit = { }
+    onChange: (value: AbstractField<String>) -> Unit = { }
 ) =
     TextField(
         this,
@@ -53,7 +53,9 @@ fun Z2.textField(
             it.label = label?.toString()
             it.supportText = supportingText?.toString()
         },
-        TextFieldConfig(style).also {
+        FieldConfig<String>(
+            style
+        ).also {
             it.leadingIcon = leadingIcon
             it.trailingIcon = trailingIcon
             it.onChange = onChange

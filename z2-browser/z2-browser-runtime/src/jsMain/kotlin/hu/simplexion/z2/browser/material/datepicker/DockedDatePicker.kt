@@ -8,8 +8,8 @@ import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.TextField
-import hu.simplexion.z2.browser.material.textfield.TextFieldConfig
 import hu.simplexion.z2.commons.i18n.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.datetime.LocalDate
@@ -26,7 +26,7 @@ class DockedDatePicker(
             textField.value = value.localized
         }
 
-    val textField : TextField = TextField(this, state, TextFieldConfig().also {
+    val textField : TextField = TextField(this, state, FieldConfig<String>().also {
         it.trailingIcon = config.trailingIcon
     })
 

@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.material.radiobutton
 
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.textfield.TextFieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 
 fun Z2.radioButton(selected: Boolean, disabled: Boolean, onSelect: () -> Unit) =
     RadioButtonBase(this, selected, disabled, onSelect)

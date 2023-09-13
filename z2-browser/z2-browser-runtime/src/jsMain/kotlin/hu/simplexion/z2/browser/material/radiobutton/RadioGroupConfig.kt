@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.material.radiobutton
 
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.material.textfield.TextFieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 
 class RadioGroupConfig<T>(
     val style: FieldStyle = defaultFieldStyle,

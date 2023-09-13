@@ -42,9 +42,9 @@ fun Z2.formDemo() =
         }
 
         div {
-//            field { data.stringField }
-//            field { data.localDateField }
-//            field { data.enumField }
+            field { data.stringField }
+            field { data.localDateField }
+            field { data.enumField }
             field { data.longField }
             radioField { data.radioSelect } options { radioItems }
         }

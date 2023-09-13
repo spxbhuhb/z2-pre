@@ -10,7 +10,7 @@ import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 open class BoundField<T>(
     parent: Z2,
     context: SchematicAccessContext,
-    buildFun: BoundField<T>.() -> ValueField<T>
+    buildFun: BoundField<T>.() -> ValueField<T>,
 ) : Z2(parent) {
 
     val schematic = context.schematic
