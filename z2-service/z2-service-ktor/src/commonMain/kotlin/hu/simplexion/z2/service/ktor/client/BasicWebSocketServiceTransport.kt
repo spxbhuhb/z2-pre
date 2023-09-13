@@ -10,14 +10,16 @@ import hu.simplexion.z2.service.runtime.transport.ServiceCallStatus
 import hu.simplexion.z2.service.runtime.transport.ServiceCallTransport
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
-import io.ktor.http.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
+import kotlin.collections.toList
 
 class BasicWebSocketServiceTransport(
-    val host: String,
-    val port : Int,
     val path : String = "/z2/service",
     val trace : Boolean = false
 ) : ServiceCallTransport {
@@ -49,7 +51,7 @@ class BasicWebSocketServiceTransport(
     suspend fun run() {
         while (scope.isActive) {
             try {
-                client.webSocket(HttpMethod.Get, host, port, path) {
+                client.webSocket(path) {
 
                     launch {
                         for (call in outgoingCalls) {

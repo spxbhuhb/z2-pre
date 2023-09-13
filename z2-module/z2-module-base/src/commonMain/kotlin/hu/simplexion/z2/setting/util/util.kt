@@ -13,7 +13,7 @@ import hu.simplexion.z2.setting.model.Setting
 fun <T : Schematic<T>> T.decodeFromSettings(basePath: String, settings: List<Setting>) {
     for (field in schematicSchema.fields) {
         if (field.name == "uuid") continue
-        val settingsValue = settings.firstOrNull { it.path.startsWith("$basePath/${field.name}") }?.value
+        val settingsValue = settings.firstOrNull { it.path == "$basePath/${field.name}" }?.value
         val actualValue = if (settingsValue != null || field.isNullable) {
             field.toTypedValue(settingsValue, mutableListOf()) // FIXME fails are ignored
         } else {

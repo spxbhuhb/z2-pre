@@ -13,9 +13,11 @@ import hu.simplexion.z2.strictId.strictIdJvm
 import hu.simplexion.z2.worker.workerJvm
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
+import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import java.io.File
 import java.time.Duration
 
 fun boot(siteConfig: Application.() -> Unit) {
@@ -50,5 +52,8 @@ fun Application.module(siteConfig: Application.() -> Unit) {
     routing {
         session()
         sessionWebsocketServiceCallTransport("/z2/services")
+        staticFiles("/", File(System.getenv("Z2_SITE_STATIC"))) {
+            this.default("index.html")
+        }
     }
 }

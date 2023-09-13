@@ -28,6 +28,7 @@ class TestData : Schematic<TestData>() {
     var localDateField by localDate()
     var enumField by enum<TestEnum>()
     var radioSelect by string()
+    var longField by long()
 }
 
 fun Z2.formDemo() =
@@ -41,10 +42,11 @@ fun Z2.formDemo() =
         }
 
         div {
-            field { data.stringField }
-            field { data.localDateField }
-            field { data.enumField }
-            radioField(radioItems) { data.radioSelect }
+//            field { data.stringField }
+//            field { data.localDateField }
+//            field { data.enumField }
+            field { data.longField }
+            radioField { data.radioSelect } options { radioItems }
         }
 
         div(overflowXAuto) {

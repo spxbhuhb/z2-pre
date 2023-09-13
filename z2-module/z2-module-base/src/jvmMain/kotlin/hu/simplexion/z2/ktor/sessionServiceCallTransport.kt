@@ -11,22 +11,10 @@ import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
 import hu.simplexion.z2.service.runtime.transport.RequestEnvelope
 import hu.simplexion.z2.service.runtime.transport.ResponseEnvelope
 import hu.simplexion.z2.service.runtime.transport.ServiceCallStatus
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlin.collections.set
-
-fun Routing.session() {
-    get("/z2/session") {
-        val sessionUuid = call.request.cookies["Z2_SESSION"] ?: UUID<Session>().toString()
-        // FIXME session cookie settings
-        call.response.cookies.append("Z2_SESSION", sessionUuid, httpOnly = true, path = "/")
-        call.respond(HttpStatusCode.OK)
-    }
-}
 
 fun Routing.sessionWebsocketServiceCallTransport(
     path: String = "/z2/service",

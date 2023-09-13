@@ -2,6 +2,7 @@ package hu.simplexion.z2.site.impl
 
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.ensureLoggedIn
+import hu.simplexion.z2.auth.context.ensureTest
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
@@ -30,6 +31,14 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
     override suspend fun isTest(): Boolean {
         return runAsSecurityOfficer {
             settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings()).test
+        }
+    }
+
+    override suspend fun testPassword(): String {
+        ensureLoggedIn()
+        ensureTest()
+        return runAsSecurityOfficer {
+            settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings()).testPassword
         }
     }
 

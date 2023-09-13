@@ -42,8 +42,11 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
 
 private fun Z2.boundTextField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
-        textField("", defaultFieldStyle, label, label.support) {
-            context.schematic.schematicChange(context.field, it)
+        val field = context.field
+        val value = field.getValue(context.schematic).toString()
+
+        textField(value, defaultFieldStyle, label, label.support) {
+            context.schematic.schematicChange(field, it)
         }
     }
 
