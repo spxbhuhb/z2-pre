@@ -47,17 +47,15 @@ class FileBundleBuilder<T>(
 
         div(overflowYAuto, heightFull, boxSizingBorderBox, pr16, borderOutline, borderRadius4) {
             div(labelMedium, pl12, pt8, pb8) { + config.typeLabel }
-            radioButtonGroup(type, config.types) { type = it }
+            radioButtonGroup(type, config.types, itemBuilderFun = config.typeRenderFun) { type = it }
         }
 
         grid(positionRelative) {
             gridTemplateColumns = "1fr"
             gridTemplateRows = "min-content min-content 1fr"
 
-            nameField = textField("", FieldStyle.Outlined, config.bundleNameLabel) {
-                name = it
-                autoName = false
-            }.also { it.config.supportEnabled = false }
+            nameField = textField("", FieldStyle.Outlined, config.bundleNameLabel) { onNameChange(it) }
+                .also { it.config.supportEnabled = false }
 
             div(displayFlex, justifyContentFlexEnd, pt12) {
                 textButton(config.dropFilesHereLabel, false) { fileSelect.openFileBrowser() }
@@ -77,6 +75,12 @@ class FileBundleBuilder<T>(
         div(pt8, justifySelfEnd) { summary = this }
 
         refresh()
+    }
+
+    fun onNameChange(value: String) {
+        name = value
+        autoName = false
+        config.nameValidationFun?.invoke(nameField) ?: false
     }
 
     fun onFileSelect(selected: List<File>) {
