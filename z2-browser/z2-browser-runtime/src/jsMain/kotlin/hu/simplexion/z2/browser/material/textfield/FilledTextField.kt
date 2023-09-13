@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
+import org.w3c.dom.HTMLInputElement
 
 class FilledTextField(
     parent: Z2,
@@ -26,6 +27,9 @@ class FilledTextField(
     lateinit var animation: Z2
 
     var hasFocus = false
+
+    val inputElement
+        get() = input.htmlElement as HTMLInputElement
 
     override var value
         get() = inputElement.value

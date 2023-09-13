@@ -28,7 +28,7 @@ fun Z2.transparentTextField(
 ) =
     textField(value, FieldStyle.Transparent, label, supportingText, leadingIcon, trailingIcon, onChange)
 
-fun Z2.outlinedTextField2(
+fun Z2.outlinedTextField(
     value: String,
     label: LocalizedText? = null,
     supportingText: LocalizedText? = null,

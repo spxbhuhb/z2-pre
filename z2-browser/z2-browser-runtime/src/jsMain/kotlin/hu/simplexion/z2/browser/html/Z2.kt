@@ -10,7 +10,6 @@ import kotlinx.dom.addClass
 import kotlinx.dom.appendText
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
 
 open class Z2(
     val parent: Z2? = null,
@@ -41,9 +40,6 @@ open class Z2(
     val children = mutableListOf<Z2>()
 
     val listeners = mutableListOf<Z2EventListener>()
-
-    val inputElement
-        get() = htmlElement as HTMLInputElement
 
     init {
         // better do this directly here for performance

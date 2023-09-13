@@ -7,6 +7,7 @@ import hu.simplexion.z2.browser.css.heightMinContent
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.high
 import org.w3c.dom.DragEvent
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
 import org.w3c.files.File
 import org.w3c.files.get
@@ -17,11 +18,15 @@ class FileSelect(
 ) : Z2(parent) {
 
     val input = input(displayNone) {
-        inputElement.type = "file"
-        inputElement.multiple = config.multiple
+        htmlElement as HTMLInputElement
+        htmlElement.type = "file"
+        htmlElement.multiple = config.multiple
         onClick { it.stopPropagation() } // so the parent won't receive the `input.inputElement.click()` event
         onChange { inputChange() }
     }
+
+    val inputElement
+        get() = input.htmlElement as HTMLInputElement
 
     init {
         if (config.renderFun == null) {
@@ -33,7 +38,7 @@ class FileSelect(
             config.renderFun.invoke(this)
         }
 
-        onClick { input.inputElement.click() }
+        onClick { inputElement.click() }
 
         onDrop { drop(it) }
 
@@ -41,7 +46,7 @@ class FileSelect(
     }
 
     fun inputChange() {
-        input.inputElement.files?.let { files ->
+        inputElement.files?.let { files ->
             val result = mutableListOf<File>()
             for (index in 0..files.length) {
                 files[index]?.let { result += it }

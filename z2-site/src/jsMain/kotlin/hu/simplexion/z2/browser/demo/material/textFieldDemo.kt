@@ -7,7 +7,7 @@ import hu.simplexion.z2.browser.layout.low
 import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.textfield.FilledTextField
 import hu.simplexion.z2.browser.material.textfield.filledTextField
-import hu.simplexion.z2.browser.material.textfield.outlinedTextField2
+import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.browser.material.textfield.transparentTextField
 
 fun Z2.textFieldDemo() =
@@ -42,15 +42,15 @@ fun FilledTextField.set(state: ComponentState, error: Boolean, value: String = "
 private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     filledTextField("", strings.label).set(state, error)
     transparentTextField("", strings.label).set(state, error)
-    outlinedTextField2("", strings.label).set(state, error)
+    outlinedTextField("", strings.label).set(state, error)
 
     filledTextField("", strings.label).set(state, error, "test value")
     transparentTextField("", strings.label).set(state, error, "test value")
-    outlinedTextField2("test value", strings.label).set(state, error, "test value")
+    outlinedTextField("test value", strings.label).set(state, error, "test value")
 
     filledTextField("", strings.label).set(state, error)
     transparentTextField("", strings.label).set(state, error)
-    outlinedTextField2("", strings.label).set(state, error)
+    outlinedTextField("", strings.label).set(state, error)
 
     filledTextField("", strings.label).set(state, error).also {
         it.config.leadingIcon = browserIcons.search
@@ -60,7 +60,7 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
         it.config.leadingIcon = browserIcons.search
         it.config.trailingIcon = browserIcons.cancel
     }
-    outlinedTextField2("", strings.label).set(state, error).also {
+    outlinedTextField("", strings.label).set(state, error).also {
         it.config.leadingIcon = browserIcons.search
         it.config.trailingIcon = browserIcons.cancel
     }
@@ -71,7 +71,7 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     transparentTextField("", strings.label).set(state, error).also {
         it.state.supportText = strings.supportingText.toString()
     }
-    outlinedTextField2("", strings.label).set(state, error).also {
+    outlinedTextField("", strings.label).set(state, error).also {
         it.state.supportText = strings.supportingText.toString()
     }
 }
