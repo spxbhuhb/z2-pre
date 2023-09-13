@@ -35,7 +35,6 @@
 .grid-gap-24 { grid-gap: 24px; }
 .grid-gap-32 { grid-gap: 32px; }
 .grid-gap-8 { grid-gap: 8px; }
-.h-full { height: 100% }
 .h20 { height: 20px; }
 .h24 { height: 24px; }
 .h32 { height: 32px; }
@@ -44,6 +43,8 @@
 .h46 { height: 46px; }
 .h56 { height: 56px; }
 .h60 { height: 60px; }
+.height-full { height: 100% }
+.height-min-content { height: min-content; }
 .justify-content-center { justify-content: center; }
 .justify-content-flex-end { justify-content: flex-end; }
 .justify-content-flex-start { justify-content: flex-start; }
@@ -62,6 +63,7 @@
 .opacity-38 { opacity: 0.38; }
 .outline-none { outline: none; }
 .overflow-hidden { overflow: hidden; }
+.overflow-x-auto { overflow-x: auto; }
 .overflow-y-auto { overflow-y: auto; }
 .p0 { padding: 0; }
 .p12 { padding: 12px; }
@@ -110,7 +112,7 @@
 .text-transform-capitalize { text-transform: capitalize; }
 .text-transform-uppercase { text-transform: uppercase; }
 .vertical-align-center { vertical-align: center; }
-.w-full { width: 100%; }
+.width-full { width: 100%; }
 .w-min-content { width: min-content; }
 .w100 { width: 100px; }
 .w20 { width: 20px; }

@@ -28,9 +28,10 @@ object HuLocalizedFormats : AbstractLocalizedFormats(
         val hour = numbersToStringTable[value.hour]
         val minute = numbersToStringTable[value.minute]
         val second = numbersToStringTable[value.second]
-        val micros = (value.nanosecond / 1_000).toString().padStart(6, '0')
+        // FIXME option for micros
+        // val micros = (value.nanosecond / 1_000).toString().padStart(6, '0')
         
-        return "$year.$month.$day. $hour:$minute:$second.$micros"
+        return "$year.$month.$day. $hour:$minute:$second"
     }
 
     override fun capitalized(value : String) : String =

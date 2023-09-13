@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.demo.material
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.low
-import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.card.filledCard
 import hu.simplexion.z2.browser.material.icon.actionIcon
@@ -32,7 +32,7 @@ fun Z2.popupDemo() =
 
             div {
                 var popup: PopupBase? = null
-                actionIcon(basicIcons.settings) {
+                actionIcon(browserIcons.settings) {
                     popup?.toggle()
                 }.apply {
                     addClass("position-relative", "popup-parent")

@@ -27,5 +27,5 @@ object browserStrings : LocalizedTextStore() {
     val next by "következő"
     val searchInProgress by "...keresés..."
     val noHits by "nincs találat"
-    val dropFilesHere by "drop files here or click for select window"
+    val dropFilesHere by "drop files here or click to select"
 }

@@ -28,7 +28,7 @@ class StateLayer(
     var hasFocus: Boolean = false
 
     init {
-        addClass(positionAbsolute, overflowHidden, primary, displayNone, heightFull, wFull)
+        addClass(positionAbsolute, overflowHidden, primary, displayNone, heightFull, widthFull)
         addEventListeners()
     }
 

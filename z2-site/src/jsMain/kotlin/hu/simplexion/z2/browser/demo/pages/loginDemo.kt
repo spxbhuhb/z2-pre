@@ -9,10 +9,9 @@ import hu.simplexion.z2.browser.material.fr
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 import org.w3c.dom.HTMLInputElement
 
-object loginStrings : LocalizedTextStore(UUID("72c9ec55-0e66-4181-96f9-d9009b03712e")) {
+object loginStrings : LocalizedTextStore() {
     val loginSupport by "Z2 Browser Components Demo"
     val login by "Sign in"
     val account by "Account"
@@ -26,7 +25,7 @@ object loginStrings : LocalizedTextStore(UUID("72c9ec55-0e66-4181-96f9-d9009b037
 }
 
 fun Z2.loginDemo() =
-    low(wFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
+    low(widthFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
         grid(gridGap8) {
             gridTemplateColumns = "min-content"
             gridAutoRows = "min-content"

@@ -1,0 +1,7 @@
+package hu.simplexion.z2.browser.components.file
+
+import hu.simplexion.z2.browser.html.Z2
+import org.w3c.files.File
+
+fun Z2.fileSelect(fileSelectedFun : (file : List<File>) -> Unit) =
+    FileSelect(this, FileSelectConfig(filesSelectedFun = fileSelectedFun))

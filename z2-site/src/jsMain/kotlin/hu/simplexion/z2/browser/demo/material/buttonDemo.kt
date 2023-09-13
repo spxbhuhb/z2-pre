@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.demo.material
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.low
-import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.button.*
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.snackbar.snackbar
@@ -24,8 +24,8 @@ fun Z2.buttonDemo() =
                 gridTemplateRows = "min-content"
                 gridTemplateColumns = "min-content min-content"
                 gridGap = 16.px
-                iconButton(basicIcons.settings, strings.settings) { snackbar(strings.settings) }
-                outlinedIconButton(basicIcons.settings, strings.settings) { snackbar(strings.settings) }
+                iconButton(browserIcons.settings, strings.settings) { snackbar(strings.settings) }
+                outlinedIconButton(browserIcons.settings, strings.settings) { snackbar(strings.settings) }
             }
 
             segmentedButton(

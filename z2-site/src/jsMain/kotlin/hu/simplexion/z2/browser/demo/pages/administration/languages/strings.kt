@@ -1,9 +1,8 @@
 package hu.simplexion.z2.browser.demo.pages.administration.languages
 
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 
-internal object strings : LocalizedTextStore(UUID("a5ce25ef-9467-4df5-841e-8945808a7cfd")) {
+internal object strings : LocalizedTextStore() {
 
     val languages by "Languages"
     val languagesSupport by languages.support("Register new languages. Translate user interface labels and icons.")

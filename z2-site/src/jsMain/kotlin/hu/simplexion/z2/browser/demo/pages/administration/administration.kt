@@ -1,10 +1,10 @@
 package hu.simplexion.z2.browser.demo.pages.administration
 
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.pages.administration.languages.languagesRouter
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.lowest
-import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.browser.material.card.outlinedCard
 import hu.simplexion.z2.browser.material.fr
@@ -64,7 +64,7 @@ fun Z2.adminCard(item: NavigationItem) {
         }
 
         div(justifySelfEnd, pt24) {
-            filledButton(basicStrings.open) { }
+            filledButton(browserStrings.open) { }
         }
     }
 }

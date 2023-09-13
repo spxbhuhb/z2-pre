@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.demo.material
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.low
-import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.fr
 import hu.simplexion.z2.browser.material.menu.menuDivider
 import hu.simplexion.z2.browser.material.menu.menuItem
@@ -22,7 +22,7 @@ fun Z2.menuDemo() =
 
             text { "Menu with 1 item, normal icon" }
             more {
-                menuItem(1, basicIcons.search, strings.menuItem1) { }
+                menuItem(1, browserIcons.search, strings.menuItem1) { }
             }
         }
 
@@ -33,9 +33,9 @@ fun Z2.menuDemo() =
 
             text { "Menu with 2 items, inline icon" }
             more(inline = true) {
-                menuItem(1, basicIcons.search, strings.menuItem1) { }
+                menuItem(1, browserIcons.search, strings.menuItem1) { }
                 menuDivider()
-                menuItem(2, basicIcons.search, strings.menuItem2) { }
+                menuItem(2, browserIcons.search, strings.menuItem2) { }
             }
         }
 

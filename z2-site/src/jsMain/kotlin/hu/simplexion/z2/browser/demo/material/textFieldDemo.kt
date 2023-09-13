@@ -1,10 +1,10 @@
 package hu.simplexion.z2.browser.demo.material
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.low
 import hu.simplexion.z2.browser.material.ComponentState
-import hu.simplexion.z2.browser.material.basicIcons
 import hu.simplexion.z2.browser.material.textfield.FilledTextField
 import hu.simplexion.z2.browser.material.textfield.filledTextField
 import hu.simplexion.z2.browser.material.textfield.outlinedTextField2
@@ -53,16 +53,16 @@ private fun Z2.textFieldDemo(state: ComponentState, error: Boolean) {
     outlinedTextField2("", strings.label).set(state, error)
 
     filledTextField("", strings.label).set(state, error).also {
-        it.config.leadingIcon = basicIcons.search
-        it.config.trailingIcon = basicIcons.cancel
+        it.config.leadingIcon = browserIcons.search
+        it.config.trailingIcon = browserIcons.cancel
     }
     transparentTextField("", strings.label).set(state, error).also {
-        it.config.leadingIcon = basicIcons.search
-        it.config.trailingIcon = basicIcons.cancel
+        it.config.leadingIcon = browserIcons.search
+        it.config.trailingIcon = browserIcons.cancel
     }
     outlinedTextField2("", strings.label).set(state, error).also {
-        it.config.leadingIcon = basicIcons.search
-        it.config.trailingIcon = basicIcons.cancel
+        it.config.leadingIcon = browserIcons.search
+        it.config.trailingIcon = browserIcons.cancel
     }
 
     filledTextField("", strings.label).set(state, error).also {

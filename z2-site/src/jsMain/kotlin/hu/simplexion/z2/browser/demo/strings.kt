@@ -1,10 +1,9 @@
 package hu.simplexion.z2.browser.demo
 
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 
 @Suppress("ClassName")
-object strings : LocalizedTextStore(UUID("c6a52ab3-7a5a-4f07-ad49-239775845386")) {
+object strings : LocalizedTextStore() {
     val components by "Components"
     val pages by "Pages"
     val button by "Button"
@@ -56,4 +55,13 @@ object strings : LocalizedTextStore(UUID("c6a52ab3-7a5a-4f07-ad49-239775845386")
     val item2 by "item 2"
     val item3 by "item 3"
     val search by "Search"
+    val file by "File"
+    val selectedFiles by "Selected Files"
+    val fileSelectDialog by "File Select Dialog"
+    val disposition by "Disposition"
+    val fileAlreadyAdded by "File with the same name already added."
+    val zeroBytes by "0 Bytes"
+    val bytes by "Bytes"
+    val filesToUpload by "File selected for upload"
+    val upload by "Upload"
 }

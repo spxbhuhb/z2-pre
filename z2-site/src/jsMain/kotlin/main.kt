@@ -2,8 +2,11 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
+import hu.simplexion.z2.browser.demo.components.file.fileDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
@@ -16,8 +19,6 @@ import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.demo.table.tableDemo
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.Content
-import hu.simplexion.z2.browser.material.basicIcons
-import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.iconButton
 import hu.simplexion.z2.browser.material.button.outlinedIconButton
 import hu.simplexion.z2.browser.material.navigation.navigationDrawer
@@ -26,14 +27,15 @@ import hu.simplexion.z2.browser.material.searchbar.searchBar
 import hu.simplexion.z2.browser.routing.BrowserRouter
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
-import hu.simplexion.z2.browser.routing.traceRouting
+import hu.simplexion.z2.commons.util.localLaunch
 
 fun main() {
-    traceRouting = true
-    customizeStyles()
-    Content.defaultLayout = { router, nav, content -> defaultLayout(router, nav, content) }
-    mainRouter.receiver = Content
-    mainRouter.start()
+    localLaunch {
+        customizeStyles()
+        Content.defaultLayout = { router, nav, content -> defaultLayout(router, nav, content) }
+        mainRouter.receiver = Content
+        mainRouter.start()
+    }
 }
 
 @Suppress("unused")
@@ -65,6 +67,7 @@ object componentRouter : NavRouter() {
     val card             by render(strings.card)             { cardDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
+    val file             by render(strings.file)             { fileDemo() }
     val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
     val modal            by render(strings.modal)            { modalDemo() }
@@ -100,9 +103,9 @@ object otherRouter : NavRouter() {
 
 
 fun Z2.defaultLayout(router: Router<Z2>, nav: Z2Builder, content: Z2Builder) {
-    grid(wFull, heightFull, pr16, pb16, boxSizingBorderBox) {
+    grid(widthFull, heightFull, pr16, pb16, boxSizingBorderBox) {
         gridTemplateRows = "min-content 1fr"
-        gridTemplateColumns = "min-content 1fr"
+        gridTemplateColumns = "240px 1fr"
 
         div(displayFlex, alignItemsCenter, h60, pl24, titleLarge) {
             text { strings.applicationTitle }
@@ -110,19 +113,21 @@ fun Z2.defaultLayout(router: Router<Z2>, nav: Z2Builder, content: Z2Builder) {
 
         header()
 
-        grid {
+        grid(positionRelative, heightFull, overflowHidden) {
             gridTemplateRows = "min-content 1fr"
             gridTemplateColumns = "1fr"
 
             div(displayFlex, alignItemsCenter, pl24) {
                 if (router != mainRouter) {
                     addClass(pt8)
-                    outlinedIconButton(basicIcons.back, basicStrings.back) { router.up() }
+                    outlinedIconButton(browserIcons.back, browserStrings.back) { router.up() }
                     div(pl8) { text { router.parent?.label } }
                 }
             }
 
-            nav()
+            div(heightFull, overflowYAuto) {
+                nav()
+            }
         }
 
         content()
@@ -140,7 +145,7 @@ fun Z2.header() =
         }
 
         div(alignSelfCenter) {
-            iconButton(basicIcons.settings, basicStrings.settings, weight = 300) { }
+            iconButton(browserIcons.settings, browserStrings.settings, weight = 300) { }
         }
 
         div(displayFlex, alignSelfCenter, borderOutline, borderRadius8, bodySmall, p4, pr8) {

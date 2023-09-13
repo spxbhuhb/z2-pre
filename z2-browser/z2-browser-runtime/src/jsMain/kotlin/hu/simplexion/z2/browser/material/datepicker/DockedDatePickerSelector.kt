@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.material.datepicker
 
-import hu.simplexion.z2.browser.css.*
-import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
+import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.material.icon.icon
@@ -50,7 +50,7 @@ class DockedDatePickerSelector(
     }
 
     fun Z2.headerContainer(vararg classes: String, builder: Z2Builder) =
-        grid(justifySelfCenter, wFull, pt20, boxSizingBorderBox, pl12, pr12, *classes) {
+        grid(justifySelfCenter, widthFull, pt20, boxSizingBorderBox, pl12, pr12, *classes) {
             gridTemplateColumns = "1fr 1fr"
             gridTemplateRows = "24px"
             builder()

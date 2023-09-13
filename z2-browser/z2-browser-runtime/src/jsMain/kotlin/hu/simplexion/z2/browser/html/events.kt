@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.html
 
+import org.w3c.dom.DragEvent
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.InputEvent
 import org.w3c.dom.events.KeyboardEvent
@@ -8,11 +9,20 @@ import org.w3c.dom.events.MouseEvent
 fun Z2.onBlur(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("blur", handler) }
 
+fun Z2.onChange(handler: (event: Event) -> Unit): Z2 =
+    this.apply { htmlElement.addEventListener("change", handler) }
+
 fun Z2.onClick(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("click", handler) }
 
 fun Z2.onDblClick(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("dblclick", handler) }
+
+fun Z2.onDragover(handler: (event: DragEvent) -> Unit): Z2 =
+    this.apply { htmlElement.addEventListener("dragover", { handler(it as DragEvent) }) }
+
+fun Z2.onDrop(handler: (event: DragEvent) -> Unit): Z2 =
+    this.apply { htmlElement.addEventListener("drop", { handler(it as DragEvent) }) }
 
 fun Z2.onFocus(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("focus", handler) }

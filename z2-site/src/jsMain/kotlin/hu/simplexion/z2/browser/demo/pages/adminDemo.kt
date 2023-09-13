@@ -1,18 +1,17 @@
 package hu.simplexion.z2.browser.demo.pages
 
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.lowest
-import hu.simplexion.z2.browser.material.basicStrings
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.browser.material.card.outlinedCard
 import hu.simplexion.z2.browser.material.fr
 import hu.simplexion.z2.browser.material.navigation.NavigationItem
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.commons.i18n.LocalizedTextStore
-import hu.simplexion.z2.commons.util.UUID
 
-object adminStrings : LocalizedTextStore(UUID("72c9ec55-0e66-4181-96f9-d9009b03712e")) {
+object adminStrings : LocalizedTextStore() {
     val administration by "Administration"
 
     val accounts by "Accounts"
@@ -67,7 +66,7 @@ fun Z2.adminCard(item: NavigationItem) {
         }
 
         div(justifySelfEnd, pt24) {
-            filledButton(basicStrings.open) { }
+            filledButton(browserStrings.open) { }
         }
     }
 }

@@ -2,11 +2,13 @@ package hu.simplexion.z2.browser.demo.form
 
 import hu.simplexion.z2.browser.components.schematic.attach
 import hu.simplexion.z2.browser.components.schematic.field
+import hu.simplexion.z2.browser.css.displayGrid
+import hu.simplexion.z2.browser.css.gridGap24
+import hu.simplexion.z2.browser.css.overflowXAuto
 import hu.simplexion.z2.browser.demo.strings
-import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.html.pre
+import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.low
-import hu.simplexion.z2.browser.material.button.textButton
+import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.commons.util.hereAndNow
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.dump
@@ -25,26 +27,33 @@ class TestData : Schematic<TestData>() {
 }
 
 fun Z2.formDemo() =
-    low {
+    low(displayGrid, gridGap24) {
+        gridTemplateColumns = "1fr 1fr"
+        gridTemplateRows = "min-content"
+
         val data = TestData().apply {
             stringField = "Hello World"
             localDateField = LocalDate(2000, 1, 1)
         }
 
-        field { data.stringField }
-        field { data.localDateField }
-        field { data.enumField }
-
-        val dump = pre { }
-
-        attach(data) {
-            dump.clear()
-            dump.htmlElement.innerText = "${hereAndNow()}\n\n" + data.dump()
+        div {
+            field { data.stringField }
+            field { data.localDateField }
+            field { data.enumField }
         }
 
-        textButton(strings.setProgrammatically) {
-            data.stringField = "Programmatically set at ${hereAndNow()}"
-            data.localDateField = LocalDate(1999, 9, 9)
-            data.enumField = TestEnum.EnumValue3
+        div(overflowXAuto) {
+            filledButton(strings.setProgrammatically) {
+                data.stringField = "Programmatically set at ${hereAndNow()}"
+                data.localDateField = LocalDate(1999, 9, 9)
+                data.enumField = TestEnum.EnumValue3
+            }
+
+            val dump = pre { }
+
+            attach(data) {
+                dump.clear()
+                dump.htmlElement.innerText = "${hereAndNow()}\n\n" + data.dump()
+            }
         }
     }
