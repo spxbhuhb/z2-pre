@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.material.textfield
 
-import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
 class TextFieldConfig(
@@ -30,7 +30,13 @@ class TextFieldConfig(
             update?.invoke()
         }
 
-    var onChange: (FilledTextField.(value: String) -> Unit)? = null
+    var supportEnabled : Boolean = true
+        set(value) {
+            field = value
+            update?.invoke()
+        }
+
+    var onChange: (TextField.(value: String) -> Unit)? = null
         set(value) {
             field = value
             update?.invoke()

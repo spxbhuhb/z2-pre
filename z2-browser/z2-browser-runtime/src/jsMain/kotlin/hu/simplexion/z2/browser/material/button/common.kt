@@ -19,8 +19,11 @@ fun Z2.filledLaunchButton(label: LocalizedText, onClickFun: suspend (event: Even
     }
 
 fun Z2.textButton(label: LocalizedText, onClick: (event: Event) -> Unit) =
+    textButton(label, true, onClick)
+
+fun Z2.textButton(label: LocalizedText, capitalize : Boolean, onClick: (event: Event) -> Unit) =
     Button(this, arrayOf("button-text", labelLarge), onClick) {
-        text { label.localeCapitalized }
+        text { if (capitalize) label.localeCapitalized else label }
     }
 
 fun Z2.textLaunchButton(label: LocalizedText, onClickFun: suspend (event: Event) -> Unit) =

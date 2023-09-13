@@ -38,11 +38,17 @@ class FileSelect(
             config.renderFun.invoke(this)
         }
 
-        onClick { inputElement.click() }
+        if (config.fileBrowserOnClick) {
+            onClick { inputElement.click() }
+        }
 
         onDrop { drop(it) }
 
         onDragover { it.preventDefault() }
+    }
+
+    fun openFileBrowser() {
+        inputElement.click()
     }
 
     fun inputChange() {

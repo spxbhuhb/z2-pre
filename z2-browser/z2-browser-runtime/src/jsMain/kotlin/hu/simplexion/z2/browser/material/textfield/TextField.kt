@@ -11,7 +11,7 @@ import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLInputElement
 
-class FilledTextField(
+class TextField(
     parent: Z2,
     override val state: FieldState = FieldState(),
     val config: TextFieldConfig = TextFieldConfig()
@@ -157,7 +157,7 @@ class FilledTextField(
             }
             onInput {
                 if (! state.readOnly && ! state.disabled) {
-                    config.onChange?.invoke(this@FilledTextField, inputElement.value)
+                    config.onChange?.invoke(this@TextField, inputElement.value)
                 }
             }
         }
@@ -202,6 +202,12 @@ class FilledTextField(
 
         trailing.clear()
         support.clear()
+
+        if (config.supportEnabled) {
+            support.removeClass(displayNone)
+        } else {
+            support.addClass(displayNone)
+        }
 
         if (state.error) {
             label.replaceClass(primaryText, onSurfaceVariantText, errorText)

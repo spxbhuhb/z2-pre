@@ -13,7 +13,7 @@ fun Z2.filledTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: FilledTextField.(value: String) -> Unit = { }
+    onChange: TextField.(value: String) -> Unit = { }
 ) =
     textField(value, FieldStyle.Filled, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -24,7 +24,7 @@ fun Z2.transparentTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: FilledTextField.(value: String) -> Unit = { }
+    onChange: TextField.(value: String) -> Unit = { }
 ) =
     textField(value, FieldStyle.Transparent, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -34,7 +34,7 @@ fun Z2.outlinedTextField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: FilledTextField.(value: String) -> Unit = { }
+    onChange: TextField.(value: String) -> Unit = { }
 ) =
     textField(value, FieldStyle.Outlined, label, supportingText, leadingIcon, trailingIcon, onChange)
 
@@ -45,9 +45,9 @@ fun Z2.textField(
     supportingText: LocalizedText? = null,
     leadingIcon: LocalizedIcon? = null,
     trailingIcon: LocalizedIcon? = null,
-    onChange: FilledTextField.(value: String) -> Unit = { }
+    onChange: TextField.(value: String) -> Unit = { }
 ) =
-    FilledTextField(
+    TextField(
         this,
         FieldState().also {
             it.label = label?.toString()

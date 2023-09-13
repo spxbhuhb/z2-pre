@@ -28,6 +28,8 @@
 .display-flex { display: flex; }
 .display-grid { display: grid; }
 .displayNone { display: none !important; }
+.flex-direction-column { flex-direction: column; }
+.flex-direction-row { flex-direction: row; }
 .grid-auto-columns-min-content { grid-auto-columns: min-content; }
 .grid-auto-flow-column { grid-auto-flow: column; }
 .grid-auto-flow-row { grid-auto-flow: row; }
