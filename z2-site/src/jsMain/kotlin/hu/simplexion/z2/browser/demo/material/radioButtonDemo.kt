@@ -3,14 +3,14 @@ package hu.simplexion.z2.browser.demo.material
 import hu.simplexion.z2.browser.css.pb12
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.low
+import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.radiobutton.radioButton
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.snackbar.snackbar
 
 fun Z2.radioButtonDemo() =
 
-    low {
+    surfaceContainerLow {
         grid {
             gridTemplateColumns = "min-content"
             gridAutoRows = "min-content"

@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.demo.pages
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.low
+import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.fr
@@ -25,7 +25,7 @@ object loginStrings : LocalizedTextStore() {
 }
 
 fun Z2.loginDemo() =
-    low(widthFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
+    surfaceContainerLow(widthFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
         grid(gridGap8) {
             gridTemplateColumns = "min-content"
             gridAutoRows = "min-content"

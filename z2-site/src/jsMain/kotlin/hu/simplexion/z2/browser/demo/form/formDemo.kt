@@ -8,7 +8,7 @@ import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.overflowXAuto
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.low
+import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.commons.util.hereAndNow
 import hu.simplexion.z2.schematic.runtime.Schematic
@@ -31,7 +31,7 @@ class TestData : Schematic<TestData>() {
 }
 
 fun Z2.formDemo() =
-    low(displayGrid, gridGap24) {
+    surfaceContainerLow(displayGrid, gridGap24) {
         gridTemplateColumns = "1fr 1fr"
         gridTemplateRows = "min-content"
 

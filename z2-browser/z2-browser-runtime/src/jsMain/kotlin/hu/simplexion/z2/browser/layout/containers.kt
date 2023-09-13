@@ -4,25 +4,30 @@ import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 
-fun Z2.lowest(vararg classes : String, scroll : Boolean = true, fullHeight: Boolean = true, builder : Z2.() -> Unit) =
+fun Z2.surfaceContainerLowest(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, "surface-container-lowest", scroll, fullHeight, builder)
 
-fun Z2.low(vararg classes : String, scroll : Boolean = true, fullHeight: Boolean = true, builder : Z2.() -> Unit) =
-    container(classes,"surface-container-low", scroll, fullHeight, builder)
+fun Z2.surfaceContainerLow(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, "surface-container-low", scroll, fullHeight, builder)
 
-fun Z2.container(vararg classes : String, scroll : Boolean = true, fullHeight: Boolean = true, builder : Z2.() -> Unit) =
-    container(classes,"surface-container", scroll, fullHeight, builder)
+fun Z2.surfaceContainer(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, "surface-container", scroll, fullHeight, builder)
 
-fun Z2.high(vararg classes : String, scroll : Boolean = true, fullHeight: Boolean = true, builder : Z2.() -> Unit) =
-    container(classes,"surface-container-high", scroll, fullHeight, builder)
+fun Z2.surfaceContainerHigh(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, "surface-container-high", scroll, fullHeight, builder)
 
-fun Z2.highest(vararg classes : String, scroll : Boolean = true, fullHeight: Boolean = true, builder : Z2.() -> Unit) =
+fun Z2.surfaceContainerHighest(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, surfaceContainerHighest, scroll, fullHeight, builder)
 
-internal fun Z2.container(classes : Array<out String>, type : String, scroll : Boolean, fullHeight: Boolean, builder : Z2.() -> Unit) =
-    div(boxSizingBorderBox, borderRadius16, p16, type) {
+fun Z2.container(classes: Array<out String>, type: String?, scroll: Boolean, fullHeight: Boolean, builder: Z2.() -> Unit) =
+    div(boxSizingBorderBox, borderRadius16, p16) {
+        if (type != null) addClass(type)
         if (classes.isNotEmpty()) addClass(*classes)
         if (scroll) addClass(overflowYAuto)
         if (fullHeight) addClass(heightFull)
         builder()
     }
+
+// TODO clean up the container mess
+fun Z2.container(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, null, scroll, fullHeight, builder)

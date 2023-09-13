@@ -10,6 +10,7 @@ import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
 import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.runtime.dump
 import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.runtime.schema.field.EnumSchemaField
 
@@ -22,13 +23,20 @@ import hu.simplexion.z2.schematic.runtime.schema.field.EnumSchemaField
 fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARAMETER") accessor: () -> T): BoundField<T> {
     checkNotNull(context)
 
-    val field = context.field
-    val label = field.label()
+    return try {
+        val field = context.field
+        val label = field.label()
 
-    return when (field.type) {
-        SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
-        SchemaFieldType.Enum -> enumField(context, label) as BoundField<T>
-        else -> boundTextField(context, label) as BoundField<T>
+        when (field.type) {
+            SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
+            SchemaFieldType.Enum -> enumField(context, label) as BoundField<T>
+            else -> boundTextField(context, label) as BoundField<T>
+        }
+    } catch (ex : Exception) {
+        println("error in field builder")
+        println("schematic: ${context.schematic.dump()}")
+        println("field: ${context.field.name}")
+        throw ex
     }
 }
 

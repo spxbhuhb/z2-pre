@@ -18,22 +18,22 @@ fun Z2.containerDemo() =
                 span(labelSmall, pl8) { text { "(16 px)" } }
             }
 
-            lowest(borderPrimary) { content { "lowest" } }
-            low(borderPrimary) { content { "low" } }
-            container(borderPrimary) { content { "container" } }
-            high(borderPrimary) { content { "high" } }
-            highest(borderPrimary) { content { "highest" } }
+            surfaceContainerLowest(borderPrimary) { content { "lowest" } }
+            surfaceContainerLow(borderPrimary) { content { "low" } }
+            surfaceContainer(borderPrimary) { content { "container" } }
+            surfaceContainerHigh(borderPrimary) { content { "high" } }
+            surfaceContainerHighest(borderPrimary) { content { "highest" } }
 
             div(titleMedium) {
                 gridColumn = "1/6"
                 text { "No Padding" }
             }
 
-            lowest(borderPrimary, p0) { content { "lowest" } }
-            low(borderPrimary, p0) { content { "low" } }
-            container(borderPrimary, p0) { content { "container" } }
-            high(borderPrimary, p0) { content { "high" } }
-            highest(borderPrimary, p0) { content { "highest" } }
+            surfaceContainerLowest(borderPrimary, p0) { content { "lowest" } }
+            surfaceContainerLow(borderPrimary, p0) { content { "low" } }
+            surfaceContainer(borderPrimary, p0) { content { "container" } }
+            surfaceContainerHigh(borderPrimary, p0) { content { "high" } }
+            surfaceContainerHighest(borderPrimary, p0) { content { "highest" } }
         }
     }
 

@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.demo.material
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.low
+import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.ComponentState
 import hu.simplexion.z2.browser.material.textfield.TextField
 import hu.simplexion.z2.browser.material.textfield.filledTextField
@@ -11,7 +11,7 @@ import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import hu.simplexion.z2.browser.material.textfield.transparentTextField
 
 fun Z2.textFieldDemo() =
-    low {
+    surfaceContainerLow {
         grid {
             gridTemplateColumns = "300px 300px 300px"
             gridAutoRows = "min-content"

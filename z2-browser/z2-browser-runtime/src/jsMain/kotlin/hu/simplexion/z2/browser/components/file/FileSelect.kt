@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.css.cursorPointer
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.heightMinContent
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.high
+import hu.simplexion.z2.browser.layout.surfaceContainerHigh
 import org.w3c.dom.DragEvent
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
@@ -31,7 +31,7 @@ class FileSelect(
     init {
         if (config.renderFun == null) {
             addClass(cursorPointer, heightMinContent)
-            high {
+            surfaceContainerHigh {
                 +browserStrings.dropFilesHere
             }
         } else {

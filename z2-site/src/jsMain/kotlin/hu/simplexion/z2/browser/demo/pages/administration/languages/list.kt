@@ -7,12 +7,12 @@ import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
 import hu.simplexion.z2.browser.css.p0
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.layout.container
-import hu.simplexion.z2.browser.layout.lowest
+import hu.simplexion.z2.browser.layout.surfaceContainer
+import hu.simplexion.z2.browser.layout.surfaceContainerLowest
 import hu.simplexion.z2.i18n.model.Language
 
 internal fun Z2.list() =
-    lowest(borderOutline) {
+    surfaceContainerLowest(borderOutline) {
 
         val data = listOf(
             Language().apply {
@@ -22,7 +22,7 @@ internal fun Z2.list() =
             }
         )
 
-        container(p0, backgroundTransparent, scroll = false) {
+        surfaceContainer(p0, backgroundTransparent, scroll = false) {
 
             table<Language> {
 

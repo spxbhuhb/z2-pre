@@ -6,7 +6,7 @@ import hu.simplexion.z2.browser.components.file.fileSelect
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.low
+import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
@@ -27,7 +27,7 @@ val dispositions = listOf(
 )
 
 fun Z2.fileDemo() =
-    low(displayGrid, gridGap24) {
+    surfaceContainerLow(displayGrid, gridGap24) {
         gridTemplateColumns = "1fr 1fr"
         gridTemplateRows = "1fr"
 

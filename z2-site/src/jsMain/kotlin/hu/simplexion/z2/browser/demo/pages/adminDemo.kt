@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.demo.pages
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.layout.lowest
+import hu.simplexion.z2.browser.layout.surfaceContainerLowest
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.browser.material.card.outlinedCard
 import hu.simplexion.z2.browser.material.fr
@@ -39,7 +39,7 @@ val adminItems = listOf(
 )
 
 fun Z2.adminDemo() =
-    lowest(borderOutline) {
+    surfaceContainerLowest(borderOutline) {
         div(titleLarge, pb24) {
             text { adminStrings.administration }
         }
