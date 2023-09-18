@@ -4,7 +4,7 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
-class FieldConfig<T>(
+open class FieldConfig<T>(
     val style : FieldStyle = defaultFieldStyle,
     onChange : ((field : AbstractField<T>) -> Unit)? = null
 ) {

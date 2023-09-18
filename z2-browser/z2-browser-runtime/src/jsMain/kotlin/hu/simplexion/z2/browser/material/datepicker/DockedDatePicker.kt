@@ -28,11 +28,11 @@ class DockedDatePicker(
 
     val textField : TextField = TextField(this, state, FieldConfig<String>().also {
         it.trailingIcon = config.trailingIcon
-    })
+    }).main()
 
     val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
-    init {
+    override fun main(): DockedDatePicker {
         addClass(widthFull, positionRelative)
         style.width = 304.px
 
@@ -44,6 +44,8 @@ class DockedDatePicker(
         textField.input.onBlur {
             selector.addClass(displayNone)
         }
+
+        return this
     }
 
     fun close() {

@@ -9,7 +9,6 @@ import kotlinx.dom.addClass
 
 class LongField(
     parent: Z2,
-    value : Long,
     state: FieldState = FieldState(),
     config: FieldConfig<Long>
 ) : AbstractField<Long>(
@@ -21,8 +20,9 @@ class LongField(
             inputElement.value = value.toString()
         }
 
-    init {
+    override fun main(): LongField {
+        super.main()
         inputElement.addClass(textAlignEnd)
-        this.value = value
+        return this
     }
 }

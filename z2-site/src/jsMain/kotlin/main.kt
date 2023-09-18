@@ -7,6 +7,7 @@ import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
 import hu.simplexion.z2.browser.demo.components.file.fileDemo
+import hu.simplexion.z2.browser.demo.components.select.selectDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
@@ -75,6 +76,7 @@ object componentRouter : NavRouter() {
     val popup            by render(strings.popup)            { popupDemo() }
     val radioButton      by render(strings.radioButton)      { radioButtonDemo() }
     val search           by render(strings.search)           { searchDemo() }
+    val select           by render(strings.select)           { selectDemo() }
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }

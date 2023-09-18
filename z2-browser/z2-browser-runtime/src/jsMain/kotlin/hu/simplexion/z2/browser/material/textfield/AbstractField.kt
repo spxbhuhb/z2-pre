@@ -14,10 +14,10 @@ import org.w3c.dom.HTMLInputElement
 abstract class AbstractField<T>(
     parent: Z2,
     final override val state: FieldState = FieldState(),
-    val config: FieldConfig<T>
+    open val config: FieldConfig<T>
 ) : Z2(parent), ValueField<T> {
 
-    lateinit var main: Z2
+    lateinit var self: Z2
     lateinit var content: Z2
     lateinit var input: Z2
     lateinit var leading: Z2
@@ -31,13 +31,10 @@ abstract class AbstractField<T>(
     val inputElement
         get() = input.htmlElement as HTMLInputElement
 
-    init {
+    override fun main() : AbstractField<T> {
         addClass(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
         gridTemplateColumns = "minmax(0,1fr)"
         gridTemplateRows = "56px min-content"
-
-        state.update = { update() }
-        config.update = { update() }
 
         grid(
             paddingTop2,
@@ -50,7 +47,7 @@ abstract class AbstractField<T>(
             gridTemplateColumns = "min-content minmax(0, 1fr) min-content"
             gridTemplateRows = "56px"
 
-            main = this
+            self = this
 
             label = div(positionAbsolute, paddingLeft14, bodySmall) {
                 htmlElement.style.top = 8.px
@@ -63,16 +60,16 @@ abstract class AbstractField<T>(
 
             when (config.style) {
                 FieldStyle.Filled -> {
-                    main.addClass(borderBottomWidth1, borderBottomSolid, borderColorOutline, surfaceContainerHighest)
+                    self.addClass(borderBottomWidth1, borderBottomSolid, borderColorOutline, surfaceContainerHighest)
                 }
 
                 FieldStyle.Transparent -> {
-                    main.addClass(borderBottomWidth1, borderBottomSolid)
+                    self.addClass(borderBottomWidth1, borderBottomSolid)
                     input.addClass(pt20)
                 }
 
                 FieldStyle.Outlined -> {
-                    main.addClass(borderWidth1, borderSolid, borderColorOutline, borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall)
+                    self.addClass(borderWidth1, borderSolid, borderColorOutline, borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall)
                 }
             }
 
@@ -105,7 +102,11 @@ abstract class AbstractField<T>(
 
         support()
 
+        state.update = { update() }
+        config.update = { update() }
         update()
+
+        return this
     }
 
     fun Z2.input() {
@@ -161,7 +162,7 @@ abstract class AbstractField<T>(
             support = this
         }
 
-    fun update() {
+    open fun update() {
         if (inputElement.value.isEmpty() && ! hasFocus) {
             label.addClass(displayNone)
             if (config.style != FieldStyle.Transparent) input.removeClass(pt20)
@@ -204,7 +205,7 @@ abstract class AbstractField<T>(
 
         if (state.error) {
             label.replaceClass(primaryText, onSurfaceVariantText, errorText)
-            main.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
+            self.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
             animation.replaceClass(borderColorPrimary, borderColorError)
             inputElement.addClass("input-error")
             support.span(errorText) { + (state.errorText ?: state.supportText) }
@@ -212,9 +213,9 @@ abstract class AbstractField<T>(
         } else {
             label.replaceClass(errorText, primaryText, onSurfaceVariantText, if (hasFocus) primaryText else onSurfaceVariantText)
             if (hasFocus) {
-                main.replaceClass(borderColorError, borderColorOutline, borderColorPrimary)
+                self.replaceClass(borderColorError, borderColorOutline, borderColorPrimary)
             } else {
-                main.replaceClass(borderColorError, borderColorPrimary, borderColorOutline)
+                self.replaceClass(borderColorError, borderColorPrimary, borderColorOutline)
             }
             animation.replaceClass(borderColorError, borderColorPrimary)
             inputElement.removeClass("input-error")

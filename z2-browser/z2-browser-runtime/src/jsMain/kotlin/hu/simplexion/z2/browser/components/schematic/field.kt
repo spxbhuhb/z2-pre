@@ -55,10 +55,11 @@ private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText)
     BoundField(this, context) {
         EmailField(
             this,
-            context.field.getValue(context.schematic) as String,
             FieldState(label),
             FieldConfig { context.schematic.schematicChange(context.field, it.value) }
-        )
+        ).main().also {
+            context.field.getValue(context.schematic) as String
+        }
     }
 
 private fun <T : Enum<T>> Z2.enumField(context: SchematicAccessContext, label: LocalizedText) =
@@ -78,20 +79,22 @@ private fun Z2.intField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
         IntField(
             this,
-            context.field.getValue(context.schematic) as Int,
             FieldState(label),
             FieldConfig { context.schematic.schematicChange(context.field, it.value) }
-        )
+        ).main().also {
+            it.value = context.field.getValue(context.schematic) as Int
+        }
     }
 
 private fun Z2.longField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
         LongField(
             this,
-            context.field.getValue(context.schematic) as Long,
             FieldState(label),
             FieldConfig { context.schematic.schematicChange(context.field, it.value) }
-        )
+        ).main().also {
+            it.value = context.field.getValue(context.schematic) as Long
+        }
     }
 
 private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedText) =
@@ -105,10 +108,11 @@ private fun Z2.phoneNumberField(context: SchematicAccessContext, label: Localize
     BoundField(this, context) {
         PhoneNumberField(
             this,
-            context.field.getValue(context.schematic) as String,
             FieldState(label),
             FieldConfig { context.schematic.schematicChange(context.field, it.value) }
-        )
+        ).main().also {
+            it.value = context.field.getValue(context.schematic) as String
+        }
     }
 
 private fun Z2.stringField(context: SchematicAccessContext, label: LocalizedText) =

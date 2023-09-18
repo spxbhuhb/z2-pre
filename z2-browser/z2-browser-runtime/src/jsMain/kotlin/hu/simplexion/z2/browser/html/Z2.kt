@@ -52,6 +52,10 @@ open class Z2(
         }
     }
 
+    open fun main() : Z2 {
+        return this
+    }
+
     fun append(child: Z2) {
         children += child
         htmlElement.appendChild(child.htmlElement)

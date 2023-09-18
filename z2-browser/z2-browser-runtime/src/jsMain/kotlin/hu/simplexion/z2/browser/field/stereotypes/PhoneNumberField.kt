@@ -7,7 +7,6 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig
 
 class PhoneNumberField(
     parent: Z2,
-    value : String,
     state: FieldState = FieldState(),
     config: FieldConfig<String>
 ) : AbstractField<String>(
@@ -19,8 +18,10 @@ class PhoneNumberField(
             inputElement.value = value
         }
 
-    init {
+    override fun main(): PhoneNumberField {
+        super.main()
         inputElement.type = "phone"
-        this.value = value
+        return this
     }
+
 }

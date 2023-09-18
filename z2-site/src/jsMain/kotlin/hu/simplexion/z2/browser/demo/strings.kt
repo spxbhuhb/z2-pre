@@ -4,6 +4,7 @@ import hu.simplexion.z2.commons.i18n.LocalizedTextStore
 
 @Suppress("ClassName")
 object strings : LocalizedTextStore() {
+    val select by "Select"
     val components by "Components"
     val pages by "Pages"
     val button by "Button"

@@ -18,7 +18,9 @@ class SecretField(
             inputElement.value = value
         }
 
-    init {
+    override fun main(): SecretField {
+        super.main()
         inputElement.type = "password"
+        return this
     }
 }

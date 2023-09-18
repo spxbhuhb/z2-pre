@@ -18,4 +18,8 @@ class TextField(
             update()
         }
 
+    override fun main(): TextField {
+        super.main()
+        return this
+    }
 }

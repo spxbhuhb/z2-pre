@@ -61,5 +61,6 @@ fun Z2.textField(
             it.onChange = onChange
         }
     ).also {
+        it.main()
         it.value = value
     }

@@ -7,7 +7,6 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig
 
 class EmailField(
     parent: Z2,
-    value : String,
     state: FieldState = FieldState(),
     config: FieldConfig<String>
 ) : AbstractField<String>(
@@ -19,8 +18,10 @@ class EmailField(
             inputElement.value = value
         }
 
-    init {
+    override fun main(): EmailField {
+        super.main()
         inputElement.type = "email"
-        this.value = value
+        return this
     }
+
 }

@@ -9,7 +9,6 @@ import kotlinx.dom.addClass
 
 class IntField(
     parent: Z2,
-    value : Int,
     state: FieldState = FieldState(),
     config: FieldConfig<Int>
 ) : AbstractField<Int>(
@@ -21,8 +20,9 @@ class IntField(
             inputElement.value = value.toString()
         }
 
-    init {
+    override fun main(): IntField {
+        super.main()
         inputElement.addClass(textAlignEnd)
-        this.value = value
+        return this
     }
 }
