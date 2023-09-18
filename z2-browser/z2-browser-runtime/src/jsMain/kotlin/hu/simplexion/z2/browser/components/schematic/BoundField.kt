@@ -3,6 +3,7 @@ package hu.simplexion.z2.browser.components.schematic
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.util.io
+import hu.simplexion.z2.schematic.runtime.SchematicFieldEvent
 import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField
 
@@ -23,15 +24,26 @@ open class BoundField<T>(
     init {
         attachListener(schematic) {
 
+            val validationResult = when (it) {
+                is Touch -> {
+                    uiField.state.touched = true
+                    it.validationResult
+                }
+                is SchematicFieldEvent -> {
+                    it.validationResult
+                }
+                else -> return@attachListener
+            }
+
             val value = schemaField.getValue(schematic) as T
             uiField.value = value
 
             if (uiField.state.readOnly) return@attachListener
 
-            val schemaResult = it.validationResult.fieldResults[schemaField.name]
+            val schemaResult = validationResult.fieldResults[schemaField.name]
             val valid = schemaResult?.valid ?: true
 
-            if (fullSuspendValidation == null || !valid) {
+            if (fullSuspendValidation == null) {
                 uiField.state.error = !valid
                 uiField.state.errorText = schemaResult?.fails?.firstOrNull()?.message
                 return@attachListener

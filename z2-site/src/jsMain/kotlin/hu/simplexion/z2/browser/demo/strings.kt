@@ -60,4 +60,5 @@ object strings : LocalizedTextStore() {
     val selectedFiles by "Selected Files"
     val fileSelectDialog by "File Select Dialog"
     val upload by "Upload"
+    val touch by "Touch"
 }
