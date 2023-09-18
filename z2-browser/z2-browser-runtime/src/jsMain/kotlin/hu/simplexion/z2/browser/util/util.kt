@@ -1,6 +1,12 @@
 package hu.simplexion.z2.browser.util
 
+import hu.simplexion.z2.browser.css.heightFull
+import hu.simplexion.z2.browser.css.opacity38
+import hu.simplexion.z2.browser.css.surface
+import hu.simplexion.z2.browser.css.widthFull
+import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.commons.util.localLaunch
+import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 import org.w3c.dom.events.Event
@@ -9,10 +15,25 @@ import org.w3c.dom.get
 var uniqueNodeId = 0
     get() = field++
 
-fun <T> T.applySuspend(func: suspend T.() -> Unit) =
+fun launchBlocking(func: suspend () -> Unit) {
+    val overlay = Z2().also {
+        it.addClass(widthFull, heightFull, surface, opacity38)
+        it.zIndex = 100
+        it.style.position = "fixed"
+        it.style.top = "0"
+        document.body!!.append(it.htmlElement)
+    }
+
+    localLaunch {
+        func()
+        overlay.htmlElement.remove()
+    }
+}
+
+fun <T> T.launchApply(func: suspend T.() -> Unit) =
     localLaunch {
         try {
-            this@applySuspend.func()
+            this@launchApply.func()
         } catch (ex: Throwable) {
             // TODO add a function to Application to channel all errors into one place, notify the user, upload the error report, etc.
             ex.printStackTrace()

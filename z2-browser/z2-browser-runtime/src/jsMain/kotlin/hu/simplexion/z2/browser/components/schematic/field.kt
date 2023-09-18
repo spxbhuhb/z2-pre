@@ -1,10 +1,7 @@
 package hu.simplexion.z2.browser.components.schematic
 
 import hu.simplexion.z2.browser.field.FieldState
-import hu.simplexion.z2.browser.field.stereotypes.EmailField
-import hu.simplexion.z2.browser.field.stereotypes.IntField
-import hu.simplexion.z2.browser.field.stereotypes.LongField
-import hu.simplexion.z2.browser.field.stereotypes.PhoneNumberField
+import hu.simplexion.z2.browser.field.stereotypes.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.datepicker.datePicker
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
@@ -40,6 +37,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
             SchemaFieldType.Long -> longField(context, label) as BoundField<T>
             SchemaFieldType.Phone -> phoneNumberField(context, label) as BoundField<T>
+            SchemaFieldType.Secret -> secretField(context, label) as BoundField<T>
             SchemaFieldType.String -> stringField(context, label) as BoundField<T>
             else -> throw NotImplementedError("field type ${field.type} is not implemented yet")
         }
@@ -107,6 +105,17 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
 private fun Z2.phoneNumberField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
         PhoneNumberField(
+            this,
+            FieldState(label),
+            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+        ).main().also {
+            it.value = context.field.getValue(context.schematic) as String
+        }
+    }
+
+private fun Z2.secretField(context: SchematicAccessContext, label: LocalizedText) =
+    BoundField(this, context) {
+        SecretField(
             this,
             FieldState(label),
             FieldConfig { context.schematic.schematicChange(context.field, it.value) }

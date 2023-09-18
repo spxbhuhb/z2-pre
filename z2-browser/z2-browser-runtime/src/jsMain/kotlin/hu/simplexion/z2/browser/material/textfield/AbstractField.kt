@@ -203,7 +203,7 @@ abstract class AbstractField<T>(
             support.addClass(displayNone)
         }
 
-        if (state.error) {
+        if (state.touched && state.error) {
             label.replaceClass(primaryText, onSurfaceVariantText, errorText)
             self.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
             animation.replaceClass(borderColorPrimary, borderColorError)

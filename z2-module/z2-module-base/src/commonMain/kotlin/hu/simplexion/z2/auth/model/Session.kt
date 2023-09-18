@@ -2,10 +2,11 @@ package hu.simplexion.z2.auth.model
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.service.runtime.ServiceContext
 
 class Session : Schematic<Session>() {
 
-    val uuid by uuid<Session>()
+    var uuid by uuid<ServiceContext>()
     val createdAt by instant()
     var account by uuid<AccountPrivate>().nullable()
     var roles by schematicList<Role>()

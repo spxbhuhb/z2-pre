@@ -4,12 +4,12 @@
 
 package hu.simplexion.z2.browser.components.table
 
+import hu.simplexion.z2.browser.components.table.builders.TableBuilder
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.components.table.builders.TableBuilder
-import hu.simplexion.z2.browser.util.applySuspend
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry
+import hu.simplexion.z2.browser.util.launchApply
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.datetime.*
@@ -171,7 +171,7 @@ class Table<T>(
         when {
             query != null && (configuration.runQueryOnResume || firstOnResume) -> {
                 setData(emptyList())
-                applySuspend {
+                launchApply {
                     setData(query()) // calls render
                 }
             }
@@ -284,7 +284,7 @@ class Table<T>(
      * @param  data  The data to set.
      */
     fun setData(data: List<T>): Table<T> {
-        applySuspend {
+        launchApply {
 //            preloads.forEach {
 //                it.job.join()
 //            }
@@ -337,7 +337,7 @@ class Table<T>(
      * @param  query  The query to execute
      */
     fun setData(query: suspend () -> List<T>) {
-        applySuspend {
+        launchApply {
             setData(query())
         }
     }

@@ -23,4 +23,5 @@ object browserIcons : LocalizedIconStore() {
     val radioButtonUnchecked by "radio_button_unchecked"
     val check by "check"
     val calendar by "calendar_today"
+    val edit by "edit"
 }

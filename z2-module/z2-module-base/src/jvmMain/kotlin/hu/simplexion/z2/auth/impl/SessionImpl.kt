@@ -67,6 +67,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         }
 
         val session = Session().also {
+            it.uuid = serviceContext!!.uuid
             it.account = account.uuid
             it.fullName = account.fullName
             it.roles = roleGrantTable.rolesOf(account.uuid, null)
@@ -154,6 +155,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             state.authSuccessCount ++
             state.authFailCount = 0
 
+            accountStatusTable.update(state.uuid, state)
             securityHistory(accountId, authStrings.account, authStrings.authenticateSuccess, accountId)
 
             TransactionManager.current().commit()

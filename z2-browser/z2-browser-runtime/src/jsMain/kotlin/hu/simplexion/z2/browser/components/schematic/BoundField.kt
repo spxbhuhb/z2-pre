@@ -21,12 +21,12 @@ open class BoundField<T>(
     val uiField = buildFun()
 
     init {
-        attach(schematic) {
+        attachListener(schematic) {
 
             val value = schemaField.getValue(schematic) as T
             uiField.value = value
 
-            if (uiField.state.readOnly) return@attach
+            if (uiField.state.readOnly) return@attachListener
 
             val schemaResult = it.validationResult.fieldResults[schemaField.name]
             val valid = schemaResult?.valid ?: true
@@ -34,7 +34,7 @@ open class BoundField<T>(
             if (fullSuspendValidation == null || !valid) {
                 uiField.state.error = !valid
                 uiField.state.errorText = schemaResult?.fails?.firstOrNull()?.message
-                return@attach
+                return@attachListener
             }
 
             fullSuspendValidation?.let { validation ->
