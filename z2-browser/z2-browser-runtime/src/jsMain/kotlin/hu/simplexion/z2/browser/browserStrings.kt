@@ -42,4 +42,6 @@ object browserStrings : LocalizedTextStore() {
     val file by "Fájl"
     val attachments by "Mellékletek"
     val folder by "Mappa"
+    val sizeOverLimit by "mérethatár felett"
+    val invalidExtension by "nem elfogadott formátum"
 }

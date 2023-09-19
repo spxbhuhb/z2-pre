@@ -65,7 +65,9 @@ fun fileSelectDialog() =
 
         title(strings.file)
 
-        val bundle = FileBundleInput(this, FileBundleInputConfiguration(folders, types)).main()
+        val config = FileBundleInputConfiguration(folders, types, listOf("docx", "heic"), 1_000_000L)
+
+        val bundle = FileBundleInput(this, config).main()
 
         grid(pr16, pb16, pt16, gridAutoFlowColumn, gridAutoColumnsMinContent, justifyContentFlexEnd) {
             textButton(commonStrings.cancel) { closeWith(emptyList()) }

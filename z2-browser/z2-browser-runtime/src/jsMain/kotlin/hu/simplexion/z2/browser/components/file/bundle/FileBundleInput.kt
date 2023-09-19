@@ -28,6 +28,7 @@ class FileBundleInput<FT, DT>(
     val config: FileBundleInputConfiguration<FT, DT>
 ) : Z2(parent) {
 
+    var touched : Boolean = false
     var folder: FT? = null
     var type: DT? = null
 
@@ -39,6 +40,7 @@ class FileBundleInput<FT, DT>(
     lateinit var mainList: Z2
     lateinit var mainBox: Z2
     lateinit var attachmentList: Z2
+    lateinit var attachmentBox: Z2
     lateinit var summary: Z2
     lateinit var folderSelect: SelectBase<FT>
     lateinit var typeSelect: RadioButtonGroup<DT>
@@ -94,6 +96,8 @@ class FileBundleInput<FT, DT>(
                     grid(gridGap16, pl8, pr8) {
                         attachmentList = this
                     }
+                }.also {
+                    attachmentBox = it
                 }
             }
         }
@@ -104,6 +108,7 @@ class FileBundleInput<FT, DT>(
     }
 
     fun validate(): Boolean {
+        touched = true
         var valid = true
 
         if (folder == null) {
@@ -121,14 +126,29 @@ class FileBundleInput<FT, DT>(
             valid = false
         }
 
-        if (mainFile.isEmpty()) {
-            errorBorder(mainBox)
-        } else {
-            normalBorder(mainBox)
-        }
+        valid = valid and mainValid()
+        valid = valid and attachmentsValid()
 
         return valid
     }
+
+    fun mainValid() : Boolean =
+        if (touched && (mainFile.isEmpty() || problems(mainFile.first()).isNotEmpty())) {
+            errorBorder(mainBox)
+            false
+        } else {
+            normalBorder(mainBox)
+            true
+        }
+
+    fun attachmentsValid() : Boolean =
+        if (attachments.any { problems(it).isNotEmpty()}) {
+            errorBorder(attachmentBox)
+            false
+        } else {
+            normalBorder(attachmentBox)
+            true
+        }
 
     fun errorBorder(node: Z2) {
         node.removeClass(borderOutline)
@@ -173,11 +193,15 @@ class FileBundleInput<FT, DT>(
         }
 
         attachmentSelect.config.dropEnabled = mainFile.isNotEmpty()
+
+        mainValid()
+        attachmentsValid()
     }
 
     fun onMainSelect(selected: List<File>) {
+        touched = true
         mainFile = selected
-        normalBorder(mainBox)
+        attachments.removeAll { it.name == mainFile.first().name }
         refresh()
     }
 
@@ -247,10 +271,14 @@ class FileBundleInput<FT, DT>(
 
             div {
                 div(mb4) { + file.name }
-                div(bodySmall, onSurfaceVariantText) {
+                div(bodySmall, onSurfaceVariantText, displayFlex, flexDirectionRow) {
                     // TODO remove the lastmodified magic
                     val lastModified = (js("file.lastModified.toString()") as String).toLongOrNull()
                     lastModified?.let { + Instant.fromEpochMilliseconds(lastModified.toLong()).here().localized }
+
+                    problems(file).let {
+                        if (it.isNotEmpty()) div(pl16, errorText) { + it.joinToString() }
+                    }
                 }
             }
 
@@ -268,4 +296,21 @@ class FileBundleInput<FT, DT>(
             }
         }
     }
+
+    fun problems(file : File) : MutableList<LocalizedText> {
+        val problems = mutableListOf<LocalizedText>()
+        if (! extensionOk(file)) problems += config.invalidExtension
+        if (! sizeOk(file)) problems += config.sizeOverLimit
+        return problems
+    }
+
+    fun extensionOk(file : File) : Boolean {
+        val extensions = config.acceptedExtensions ?: return true
+        return file.name.substringAfterLast('.').lowercase() in extensions
+    }
+
+    fun sizeOk(file : File) : Boolean {
+        return file.size.toLong() <= config.sizeLimit
+    }
+
 }

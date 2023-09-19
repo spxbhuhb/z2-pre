@@ -5,7 +5,9 @@ import hu.simplexion.z2.browser.html.Z2
 
 class FileBundleInputConfiguration<FT,DT>(
     val folders : List<FT>,
-    val types : Map<FT,List<DT>>
+    val types : Map<FT,List<DT>>,
+    val acceptedExtensions : List<String>? = null,
+    val sizeLimit : Long = Long.MAX_VALUE
 ) {
 
     var folderRenderFun: Z2.(value: FT) -> Unit = { + it.toString() }
@@ -24,4 +26,6 @@ class FileBundleInputConfiguration<FT,DT>(
     var attachments = browserStrings.attachments
     var selectMainFirst = browserStrings.selectMainFirst
     var selectFolderFirst = browserStrings.selectFolderFirst
+    var invalidExtension = browserStrings.invalidExtension
+    var sizeOverLimit = browserStrings.sizeOverLimit
 }
