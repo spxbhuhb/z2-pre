@@ -1,6 +1,7 @@
 package hu.simplexion.z2.site.util
 
 import hu.simplexion.z2.auth.authJvm
+import hu.simplexion.z2.content.contentJvm
 import hu.simplexion.z2.email.emailJvm
 import hu.simplexion.z2.exposed.dbFromEnvironment
 import hu.simplexion.z2.history.historyJvm
@@ -45,6 +46,7 @@ fun Application.module(siteConfig: Application.() -> Unit) {
     strictIdJvm()
     workerJvm()
     siteJvm()
+    contentJvm()
     emailJvm()
 
     siteConfig()

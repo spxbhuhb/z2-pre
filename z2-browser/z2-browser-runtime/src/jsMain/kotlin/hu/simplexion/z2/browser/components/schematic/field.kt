@@ -105,7 +105,7 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
     BoundField(this, context) {
         datePicker(label = label, supportText = commonStrings.localDateSupportText) {
             context.schematic.schematicChange(context.field, it)
-        }
+        }.main()
     }
 
 private fun Z2.phoneNumberField(context: SchematicAccessContext, label: LocalizedText) =

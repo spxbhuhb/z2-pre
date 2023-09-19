@@ -112,6 +112,7 @@ class FileBundleInput<FT, DT>(
         var valid = true
 
         if (folder == null) {
+            folderSelect.state.touched = true
             folderSelect.state.error = true
             valid = false
         }

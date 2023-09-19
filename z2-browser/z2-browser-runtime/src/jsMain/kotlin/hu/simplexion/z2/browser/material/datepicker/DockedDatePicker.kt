@@ -33,7 +33,7 @@ class DockedDatePicker(
             textField.value = value !!.localized
         }
 
-    val textField: TextField = TextField(this, state, FieldConfig<String>(decodeFromString = { it }).also {
+    val textField: TextField = TextField(this, state, FieldConfig(decodeFromString = { it }).also {
         it.trailingIcon = config.trailingIcon
     }).main()
 

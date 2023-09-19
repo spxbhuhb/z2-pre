@@ -40,8 +40,10 @@ abstract class AbstractField<T>(
     override var valueOrNull: T? = null
         set(value) {
             field = value
-            inputElement.value = value?.let { config.encodeToString(it) } ?: ""
-            update()
+            val encoded = value?.let { config.encodeToString(it) } ?: ""
+            if (inputElement.value != encoded) {
+                inputElement.value = encoded
+            }
         }
 
     override fun main() : AbstractField<T> {
@@ -164,6 +166,7 @@ abstract class AbstractField<T>(
             }
             onInput {
                 if (! state.readOnly && ! state.disabled) {
+                    valueOrNull = config.decodeFromString(inputElement.value)
                     config.onChange?.invoke(this@AbstractField)
                 }
             }
