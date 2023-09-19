@@ -14,12 +14,6 @@ class LongField(
 ) : AbstractField<Long>(
     parent, state, config
 ) {
-    override var value: Long
-        get() = inputElement.value.toLongOrNull() ?: 0
-        set(value) {
-            inputElement.value = value.toString()
-        }
-
     override fun main(): LongField {
         super.main()
         inputElement.addClass(textAlignEnd)

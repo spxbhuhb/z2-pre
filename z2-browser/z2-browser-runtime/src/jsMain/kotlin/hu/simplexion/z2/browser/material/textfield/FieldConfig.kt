@@ -6,6 +6,7 @@ import hu.simplexion.z2.commons.i18n.LocalizedIcon
 
 open class FieldConfig<T>(
     val style : FieldStyle = defaultFieldStyle,
+    var decodeFromString : (value : String) -> T?,
     onChange : ((field : AbstractField<T>) -> Unit)? = null
 ) {
 
@@ -54,6 +55,8 @@ open class FieldConfig<T>(
             field = value
             update?.invoke()
         }
+
+    var encodeToString : (value : T) -> String = { it.toString() }
 
     var update : (() -> Unit)? = null
 

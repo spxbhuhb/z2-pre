@@ -31,6 +31,19 @@ abstract class AbstractField<T>(
     val inputElement
         get() = input.htmlElement as HTMLInputElement
 
+    override var value: T
+        get() = checkNotNull(valueOrNull)
+        set(value) {
+            valueOrNull = value
+        }
+
+    override var valueOrNull: T? = null
+        set(value) {
+            field = value
+            inputElement.value = value?.let { config.encodeToString(it) } ?: ""
+            update()
+        }
+
     override fun main() : AbstractField<T> {
         addClass(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
         gridTemplateColumns = "minmax(0,1fr)"

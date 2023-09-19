@@ -17,16 +17,23 @@ import kotlinx.datetime.LocalDate
 class DockedDatePicker(
     parent: Z2? = null,
     override val state: FieldState = FieldState(),
-    val config : DatePickerConfig = DatePickerConfig()
+    val config: DatePickerConfig = DatePickerConfig()
 ) : Z2(parent), ValueField<LocalDate> {
 
-    override var value: LocalDate = hereAndNow().date
+    override var value: LocalDate
+        get() = checkNotNull(valueOrNull)
         set(value) {
-            field = value
+            valueOrNull = value
             textField.value = value.localized
         }
 
-    val textField : TextField = TextField(this, state, FieldConfig<String>().also {
+    override var valueOrNull: LocalDate? = hereAndNow().date
+        set(value) {
+            field = value
+            textField.value = value !!.localized
+        }
+
+    val textField: TextField = TextField(this, state, FieldConfig<String>(decodeFromString = { it }).also {
         it.trailingIcon = config.trailingIcon
     }).main()
 

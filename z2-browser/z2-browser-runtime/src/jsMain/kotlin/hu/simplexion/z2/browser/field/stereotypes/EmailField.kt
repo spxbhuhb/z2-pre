@@ -12,11 +12,6 @@ class EmailField(
 ) : AbstractField<String>(
     parent, state, config
 ) {
-    override var value
-        get() = inputElement.value
-        set(value) {
-            inputElement.value = value
-        }
 
     override fun main(): EmailField {
         super.main()

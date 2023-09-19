@@ -12,16 +12,9 @@ class PhoneNumberField(
 ) : AbstractField<String>(
     parent, state, config
 ) {
-    override var value
-        get() = inputElement.value
-        set(value) {
-            inputElement.value = value
-        }
-
     override fun main(): PhoneNumberField {
         super.main()
         inputElement.type = "phone"
         return this
     }
-
 }

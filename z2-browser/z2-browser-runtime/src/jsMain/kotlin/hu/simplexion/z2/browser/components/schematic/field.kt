@@ -54,7 +54,9 @@ private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText)
         EmailField(
             this,
             FieldState(label),
-            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+            FieldConfig(
+                decodeFromString = { it }
+            ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
             context.field.getValue(context.schematic) as String
         }
@@ -78,7 +80,9 @@ private fun Z2.intField(context: SchematicAccessContext, label: LocalizedText) =
         IntField(
             this,
             FieldState(label),
-            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+            FieldConfig(
+                decodeFromString = { it.toIntOrNull() }
+            ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
             it.value = context.field.getValue(context.schematic) as Int
         }
@@ -89,9 +93,11 @@ private fun Z2.longField(context: SchematicAccessContext, label: LocalizedText) 
         LongField(
             this,
             FieldState(label),
-            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+            FieldConfig(
+                decodeFromString = { it.toLongOrNull() }
+            ) { it.valueOrNull?.let { context.schematic.schematicChange(context.field, it) } }
         ).main().also {
-            it.value = context.field.getValue(context.schematic) as Long
+            it.valueOrNull = context.field.getValue(context.schematic) as Long?
         }
     }
 
@@ -107,7 +113,9 @@ private fun Z2.phoneNumberField(context: SchematicAccessContext, label: Localize
         PhoneNumberField(
             this,
             FieldState(label),
-            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+            FieldConfig(
+                decodeFromString = { it }
+            ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
             it.value = context.field.getValue(context.schematic) as String
         }
@@ -118,7 +126,9 @@ private fun Z2.secretField(context: SchematicAccessContext, label: LocalizedText
         SecretField(
             this,
             FieldState(label),
-            FieldConfig { context.schematic.schematicChange(context.field, it.value) }
+            FieldConfig(
+                decodeFromString = { it }
+            ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
             it.value = context.field.getValue(context.schematic) as String
         }

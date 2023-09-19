@@ -9,7 +9,9 @@ fun Z2.longField(value : Long, label : LocalizedText, changeFun : (Long) -> Unit
     LongField(
         this,
         FieldState(label),
-        FieldConfig { changeFun(it.value) }
+        FieldConfig(
+            decodeFromString = { it.toLongOrNull() }
+        ) { changeFun(it.value) }
     ).also {
         it.main()
         it.value = value

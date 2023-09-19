@@ -11,13 +11,6 @@ class TextField(
     parent, state, config
 ) {
 
-    override var value: String
-        get() = inputElement.value
-        set(value) {
-            inputElement.value = value
-            update()
-        }
-
     override fun main(): TextField {
         super.main()
         return this

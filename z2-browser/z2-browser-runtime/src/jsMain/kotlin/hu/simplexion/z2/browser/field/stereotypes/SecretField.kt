@@ -12,12 +12,6 @@ class SecretField(
 ) : AbstractField<String>(
     parent, state, config
 ) {
-    override var value: String
-        get() = inputElement.value
-        set(value) {
-            inputElement.value = value
-        }
-
     override fun main(): SecretField {
         super.main()
         inputElement.type = "password"

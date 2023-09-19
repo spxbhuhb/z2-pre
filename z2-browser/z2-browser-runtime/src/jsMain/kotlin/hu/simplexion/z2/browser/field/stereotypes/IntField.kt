@@ -14,12 +14,6 @@ class IntField(
 ) : AbstractField<Int>(
     parent, state, config
 ) {
-    override var value: Int
-        get() = inputElement.value.toIntOrNull() ?: 0
-        set(value) {
-            inputElement.value = value.toString()
-        }
-
     override fun main(): IntField {
         super.main()
         inputElement.addClass(textAlignEnd)

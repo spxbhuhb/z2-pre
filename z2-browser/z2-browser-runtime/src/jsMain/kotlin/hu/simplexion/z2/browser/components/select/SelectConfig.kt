@@ -10,7 +10,7 @@ class SelectConfig<T>(
     options: List<T> = emptyList(),
     onSelectedFun: ((field: AbstractField<T>) -> Unit)? = null,
     itemBuilderFun: SelectItemBuilderFun<T>? = null
-) : FieldConfig<T>(style, onSelectedFun) {
+) : FieldConfig<T>(style, { throw IllegalStateException() }, onSelectedFun) {
 
     var itemTextFun : (value : T) -> String = { it.toString() }
 

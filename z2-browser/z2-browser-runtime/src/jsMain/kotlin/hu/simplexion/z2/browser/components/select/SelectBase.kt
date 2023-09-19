@@ -24,7 +24,7 @@ class SelectBase<T>(
             valueOrNull = value
         }
 
-    var valueOrNull: T? = null
+    override var valueOrNull: T? = null
         set(value) {
             field = value
             for (index in config.options.indices) {

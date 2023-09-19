@@ -53,8 +53,9 @@ fun Z2.textField(
             it.label = label?.toString()
             it.supportText = supportingText?.toString()
         },
-        FieldConfig<String>(
-            style
+        FieldConfig(
+            style,
+            { it }
         ).also {
             it.leadingIcon = leadingIcon
             it.trailingIcon = trailingIcon

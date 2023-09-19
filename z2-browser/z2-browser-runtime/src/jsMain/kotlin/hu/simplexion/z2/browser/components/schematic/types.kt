@@ -10,6 +10,6 @@ typealias DecodeFromString<T> = (value : String) -> T
 
 typealias StringSupport<T> = Pair<EncodeToString<T>, DecodeFromString<T>>
 
-typealias SuspendValidation<T> = suspend (value: T) -> FieldValidationResult
+typealias SuspendValidation<T> = suspend (value: T?) -> FieldValidationResult
 
-typealias FullSuspendValidation<T> = suspend (schematic: Schematic<*>, field: SchemaField<T>, value: T) -> FieldValidationResult
+typealias FullSuspendValidation<T> = suspend (schematic: Schematic<*>, field: SchemaField<T>, value: T?) -> FieldValidationResult

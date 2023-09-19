@@ -35,8 +35,8 @@ open class BoundField<T>(
                 else -> return@attachListener
             }
 
-            val value = schemaField.getValue(schematic) as T
-            uiField.value = value
+            val value = schemaField.getValue(schematic) as T?
+            uiField.valueOrNull = value
 
             if (uiField.state.readOnly) return@attachListener
 
@@ -61,7 +61,7 @@ open class BoundField<T>(
             }
         }
 
-        uiField.value = schemaField.getValue(schematic) as T
+        uiField.valueOrNull = schemaField.getValue(schematic) as T?
     }
 
     infix fun validateSuspend(validation: SuspendValidation<T>) {
