@@ -11,7 +11,7 @@ class RadioGroupConfig<T>(
     onChange : (RadioButtonGroup<T>.(value: T) -> Unit)? = null
 ) {
 
-    var itemBuilderFun: Z2.(T) -> Unit = itemBuilderFun ?: { text { it } }
+    var itemBuilderFun: Z2.(T) -> Unit = itemBuilderFun ?: { + it.toString() }
         set(value) {
             field = value
             update?.invoke()

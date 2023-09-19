@@ -8,6 +8,7 @@ fun Z2.fileSelect(fileSelectedFun: (file: List<File>) -> Unit) =
 
 fun Z2.fileSelect(
     multiple: Boolean = true,
+    dropEnabled: Boolean = true,
     fileBrowserOnClick: Boolean = true,
     fileSelectedFun: (file: List<File>) -> Unit,
     rendererFun: (FileSelect.() -> Unit)? = null
@@ -16,6 +17,7 @@ fun Z2.fileSelect(
         this,
         FileSelectConfig(
             multiple,
+            dropEnabled,
             fileBrowserOnClick,
             fileSelectedFun,
             rendererFun

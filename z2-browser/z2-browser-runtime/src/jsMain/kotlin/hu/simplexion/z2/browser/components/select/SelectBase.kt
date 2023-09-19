@@ -27,9 +27,6 @@ class SelectBase<T>(
     override var valueOrNull: T? = null
         set(value) {
             field = value
-            for (index in config.options.indices) {
-                items[index].update()
-            }
             inputElement.value = if (value != null) config.itemTextFun(value) else ""
             update()
         }

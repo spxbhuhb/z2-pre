@@ -8,7 +8,7 @@ fun Z2.radioButton(selected: Boolean, disabled: Boolean, onSelect: () -> Unit) =
     RadioButtonBase(this, selected, disabled, onSelect)
 
 fun <T> Z2.radioButtonGroup(
-    value: T,
+    value: T?,
     options: List<T>,
     itemBuilderFun: (Z2.(item: T) -> Unit)? = null,
     onChange: RadioButtonGroup<T>.(value: T) -> Unit
@@ -23,5 +23,5 @@ fun <T> Z2.radioButtonGroup(
             onChange
         )
     ).also {
-        it.value = value
+        it.valueOrNull = value
     }

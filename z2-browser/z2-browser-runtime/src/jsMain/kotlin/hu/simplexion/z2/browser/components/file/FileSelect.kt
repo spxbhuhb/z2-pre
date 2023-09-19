@@ -21,28 +21,31 @@ class FileSelect(
         htmlElement as HTMLInputElement
         htmlElement.type = "file"
         htmlElement.multiple = config.multiple
-        onClick { it.stopPropagation() } // so the parent won't receive the `input.inputElement.click()` event
+        onClick {
+            htmlElement.value = ""
+            it.stopPropagation()  // so the parent won't receive the `input.inputElement.click()` event
+        }
         onChange { inputChange() }
     }
 
-    val inputElement
+    val inputElement: HTMLInputElement
         get() = input.htmlElement as HTMLInputElement
 
     init {
         if (config.renderFun == null) {
             addClass(cursorPointer, heightMinContent)
             surfaceContainerHigh {
-                +browserStrings.dropFilesHere
+                + browserStrings.dropAttachmentHere
             }
         } else {
             config.renderFun.invoke(this)
         }
 
         if (config.fileBrowserOnClick) {
-            onClick { inputElement.click() }
+            onClick { openFileBrowser() }
         }
 
-        onDrop { drop(it) }
+        onDrop { if (config.dropEnabled) drop(it) }
 
         onDragover { it.preventDefault() }
     }
@@ -52,6 +55,7 @@ class FileSelect(
     }
 
     fun inputChange() {
+        console.log("inputChange", inputElement.files)
         inputElement.files?.let { files ->
             val result = mutableListOf<File>()
             for (index in 0..files.length) {
@@ -72,6 +76,7 @@ class FileSelect(
             dataTransfer.items[index]?.let { item ->
                 if (item.kind == "file") item.getAsFile()?.let { files += it }
             }
+            if (!config.multiple) break
         }
 
         if (files.isNotEmpty()) config.filesSelectedFun(files)

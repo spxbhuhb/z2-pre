@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo.components.file
 
-import hu.simplexion.z2.browser.components.file.FileBundleBuilder
-import hu.simplexion.z2.browser.components.file.FileBundleBuilderConfiguration
+import hu.simplexion.z2.browser.components.file.FileBundleInput
+import hu.simplexion.z2.browser.components.file.FileBundleInputConfiguration
 import hu.simplexion.z2.browser.components.file.fileSelect
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.strings
@@ -16,7 +16,18 @@ import hu.simplexion.z2.commons.i18n.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
 import org.w3c.files.File
 
-val dispositions = listOf(
+val folders = listOf(
+    "folder-1",
+    "folder-2",
+    "folder-3",
+    "folder-4",
+    "folder-5",
+    "folder-6",
+    "folder-7",
+)
+
+
+val types = listOf(
     "disposition-1",
     "disposition-2",
     "disposition-3",
@@ -60,10 +71,10 @@ fun fileSelectDialog() =
 
         title(strings.file)
 
-        val builder = FileBundleBuilder(this, FileBundleBuilderConfiguration(dispositions))
+        val builder = FileBundleInput(this, FileBundleInputConfiguration(folders, types)).main()
 
-        grid(pr16, pb16, gridAutoFlowColumn, gridAutoColumnsMinContent, justifyContentFlexEnd) {
+        grid(pr16, pb16, pt16, gridAutoFlowColumn, gridAutoColumnsMinContent, justifyContentFlexEnd) {
             textButton(commonStrings.cancel) { closeWith(emptyList()) }
-            textButton(commonStrings.add) { closeWith(builder.files) }
+            textButton(commonStrings.add) { closeWith(builder.attachments + builder.mainFile) }
         }
     }
