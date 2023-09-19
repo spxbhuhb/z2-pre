@@ -10,8 +10,8 @@ class FileBundleInputConfiguration<FT,DT>(
     val sizeLimit : Long = Long.MAX_VALUE
 ) {
 
-    var folderRenderFun: Z2.(value: FT) -> Unit = { + it.toString() }
-    var typeRenderFun: Z2.(value: DT) -> Unit = { + it.toString() }
+    var folderTextFun: (value : FT) -> String = { it.toString() }
+    var typeRenderFun: Z2.(value: DT) -> Unit ={ it.toString() }
 
     var folderLabel = browserStrings.folder
     var typeLabel = browserStrings.type

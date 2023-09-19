@@ -49,7 +49,7 @@ class FileBundleInput<FT, DT>(
 
     override fun main(): FileBundleInput<FT, DT> {
         addClass(overflowHidden, displayGrid, pl24, pr24, positionRelative, boxSizingBorderBox, gridGap16)
-        gridTemplateColumns = "max-content minmax(600px,1fr)"
+        gridTemplateColumns = "minmax(300px,max-content) minmax(600px,1fr)"
         gridTemplateRows = "min-content minmax(300px, 1fr)"
 
         div(displayGrid) {
@@ -57,10 +57,12 @@ class FileBundleInput<FT, DT>(
             gridColumn = "1/3"
             select(config.folders, folder, label = config.folderLabel, style = FieldStyle.Outlined) {
                 folder = it.value
+                type = null
                 folderSelect.state.error = false
                 refresh()
             }.also {
                 folderSelect = it
+                it.config.itemTextFun = config.folderTextFun
                 it.config.supportEnabled = false
             }
             div(justifySelfEnd, alignSelfEnd, pl24) { summary = this }

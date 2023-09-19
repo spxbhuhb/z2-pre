@@ -40,7 +40,7 @@ class SelectItem<T>(
             }
 
             div(alignSelfCenter) {
-                + value.toString()
+                + selectBase.config.itemTextFun(value)
             }
 
             onMouseDown {
