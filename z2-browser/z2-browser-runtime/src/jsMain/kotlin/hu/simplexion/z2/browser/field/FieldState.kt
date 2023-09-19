@@ -42,13 +42,13 @@ class FieldState(
     var error = false
         set(value) {
             field = value
-            update?.invoke()
+            touched = true
         }
 
     var errorText : String? = null
         set(value) {
             field = value
-            update?.invoke()
+            touched = true
         }
 
     var update : (() -> Unit)? = null

@@ -1,11 +1,11 @@
-package hu.simplexion.z2.browser.components.file
+package hu.simplexion.z2.browser.components.file.bundle
 
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.html.Z2
 
 class FileBundleInputConfiguration<FT,DT>(
     val folders : List<FT>,
-    val types : List<DT>
+    val types : Map<FT,List<DT>>
 ) {
 
     var folderRenderFun: Z2.(value: FT) -> Unit = { + it.toString() }
@@ -23,4 +23,5 @@ class FileBundleInputConfiguration<FT,DT>(
     var file = browserStrings.file
     var attachments = browserStrings.attachments
     var selectMainFirst = browserStrings.selectMainFirst
+    var selectFolderFirst = browserStrings.selectFolderFirst
 }

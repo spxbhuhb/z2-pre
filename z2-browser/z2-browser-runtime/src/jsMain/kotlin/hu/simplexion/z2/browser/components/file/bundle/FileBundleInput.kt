@@ -1,7 +1,10 @@
-package hu.simplexion.z2.browser.components.file
+package hu.simplexion.z2.browser.components.file.bundle
 
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
+import hu.simplexion.z2.browser.components.file.FileSelect
+import hu.simplexion.z2.browser.components.file.fileSelect
+import hu.simplexion.z2.browser.components.select.SelectBase
 import hu.simplexion.z2.browser.components.select.select
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldStyle
@@ -9,6 +12,7 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.scrolledBoxWithLabel
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.browser.material.radiobutton.RadioButtonGroup
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.snackbar.snackbar
 import hu.simplexion.z2.browser.material.stateLayer
@@ -19,32 +23,42 @@ import hu.simplexion.z2.commons.util.here
 import kotlinx.datetime.Instant
 import org.w3c.files.File
 
-class FileBundleInput<FT,DT>(
+class FileBundleInput<FT, DT>(
     parent: Z2,
-    val config: FileBundleInputConfiguration<FT,DT>
+    val config: FileBundleInputConfiguration<FT, DT>
 ) : Z2(parent) {
 
-    var folder : FT = config.folders.first()
+    var folder: FT? = null
     var type: DT? = null
 
     var mainFile = emptyList<File>()
     val attachments = mutableListOf<File>()
 
+    lateinit var typeBox: Z2
+    lateinit var typeList: Z2
     lateinit var mainList: Z2
+    lateinit var mainBox: Z2
     lateinit var attachmentList: Z2
     lateinit var summary: Z2
+    lateinit var folderSelect: SelectBase<FT>
+    lateinit var typeSelect: RadioButtonGroup<DT>
     lateinit var mainSelect: FileSelect
     lateinit var attachmentSelect: FileSelect
 
-    override fun main(): FileBundleInput<FT,DT> {
+    override fun main(): FileBundleInput<FT, DT> {
         addClass(overflowHidden, displayGrid, pl24, pr24, positionRelative, boxSizingBorderBox, gridGap16)
         gridTemplateColumns = "max-content minmax(600px,1fr)"
-        gridTemplateRows = "min content minmax(200px, 1fr)"
+        gridTemplateRows = "min-content minmax(300px, 1fr)"
 
         div(displayGrid) {
             gridTemplateColumns = "1fr max-content"
             gridColumn = "1/3"
-            select(config.folders, folder, label = config.folderLabel, style = FieldStyle.Outlined).also {
+            select(config.folders, folder, label = config.folderLabel, style = FieldStyle.Outlined) {
+                folder = it.value
+                folderSelect.state.error = false
+                refresh()
+            }.also {
+                folderSelect = it
                 it.config.supportEnabled = false
             }
             div(justifySelfEnd, alignSelfEnd, pl24) { summary = this }
@@ -52,7 +66,9 @@ class FileBundleInput<FT,DT>(
 
         scrolledBoxWithLabel(config.typeLabel) {
             addClass(pr16)
-            radioButtonGroup(type, config.types, itemBuilderFun = config.typeRenderFun) { type = it }
+            typeList = this
+        }.also {
+            typeBox = it
         }
 
         grid(positionRelative, gridGap16, overflowHidden) {
@@ -65,6 +81,8 @@ class FileBundleInput<FT,DT>(
                     grid(gridGap16, pl8, pr8) {
                         mainList = this
                     }
+                }.also {
+                    mainBox = it
                 }
             }
 
@@ -85,8 +103,61 @@ class FileBundleInput<FT,DT>(
         return this
     }
 
+    fun validate(): Boolean {
+        var valid = true
+
+        if (folder == null) {
+            folderSelect.state.error = true
+            valid = false
+        }
+
+        if (::typeSelect.isInitialized) {
+            if (typeSelect.valueOrNull == null) {
+                valid = false
+                errorBorder(typeBox)
+            }
+        } else {
+            errorBorder(typeBox)
+            valid = false
+        }
+
+        if (mainFile.isEmpty()) {
+            errorBorder(mainBox)
+        } else {
+            normalBorder(mainBox)
+        }
+
+        return valid
+    }
+
+    fun errorBorder(node: Z2) {
+        node.removeClass(borderOutline)
+        node.addClass(borderError)
+    }
+
+    fun normalBorder(node: Z2) {
+        node.removeClass(borderError)
+        node.addClass(borderOutline)
+    }
+
     fun refresh() {
         summary.summary()
+
+        with(typeList) {
+            clear()
+            if (folder != null) {
+                radioButtonGroup(type, config.types[folder] ?: emptyList(), itemBuilderFun = config.typeRenderFun) {
+                    type = it
+                    typeBox.removeClass(borderError)
+                    typeBox.addClass(borderOutline)
+                }.also {
+                    typeSelect = it
+                }
+            } else {
+                div(p16, bodyMedium, onSurfaceVariantText) { + config.selectFolderFirst }
+            }
+        }
+
         mainList.fileList(config.dropFileHereLabel, active = true, false, mainFile, mainSelect) {
             mainFile = emptyList()
         }
@@ -106,6 +177,7 @@ class FileBundleInput<FT,DT>(
 
     fun onMainSelect(selected: List<File>) {
         mainFile = selected
+        normalBorder(mainBox)
         refresh()
     }
 
@@ -142,7 +214,7 @@ class FileBundleInput<FT,DT>(
 
     fun Z2.fileList(
         label: LocalizedText,
-        active : Boolean,
+        active: Boolean,
         multiple: Boolean,
         files: List<File>,
         select: FileSelect,

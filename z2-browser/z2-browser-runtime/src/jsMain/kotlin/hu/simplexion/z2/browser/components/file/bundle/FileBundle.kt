@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.components.file
+package hu.simplexion.z2.browser.components.file.bundle
 
 import org.w3c.files.File
 

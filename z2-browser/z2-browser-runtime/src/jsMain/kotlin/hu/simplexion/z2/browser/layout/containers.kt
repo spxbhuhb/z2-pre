@@ -35,7 +35,7 @@ fun Z2.container(classes: Array<out String>, type: String?, scroll: Boolean, ful
 fun Z2.container(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, null, scroll, fullHeight, builder)
 
-fun Z2.scrolledBoxWithLabel(label: LocalizedText, builder: Z2Builder) {
+fun Z2.scrolledBoxWithLabel(label: LocalizedText, builder: Z2Builder) =
     div(displayGrid, heightFull, boxSizingBorderBox, borderOutline, borderRadius4, positionRelative) {
         gridTemplateRows = "min-content 1fr"
         div(labelMedium, pl12, pt8, pb4) { + label }
@@ -43,4 +43,3 @@ fun Z2.scrolledBoxWithLabel(label: LocalizedText, builder: Z2Builder) {
             builder()
         }
     }
-}

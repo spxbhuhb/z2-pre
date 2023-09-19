@@ -31,6 +31,7 @@ object browserStrings : LocalizedTextStore() {
     val dropAttachmentHere by "dobja ide a mellékleteket vagy klikkeljen a kiválasztáshoz"
     val fileAlreadyAdded by "Ilyen nevű fájl már hozzá van adva."
     val selectMainFirst by "A mellékletek kiválasztása előtt a fájl ki kell választani."
+    val selectFolderFirst by "Válasszon mappát!"
     val zeroBytes by "0 bájt"
     val bytes by "bájt"
     val noFilesSelected by "nincs fájl kiválasztva"

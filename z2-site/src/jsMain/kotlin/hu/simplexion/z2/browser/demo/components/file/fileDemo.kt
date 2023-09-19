@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo.components.file
 
-import hu.simplexion.z2.browser.components.file.FileBundleInput
-import hu.simplexion.z2.browser.components.file.FileBundleInputConfiguration
+import hu.simplexion.z2.browser.components.file.bundle.FileBundleInput
+import hu.simplexion.z2.browser.components.file.bundle.FileBundleInputConfiguration
 import hu.simplexion.z2.browser.components.file.fileSelect
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.strings
@@ -16,6 +16,9 @@ import hu.simplexion.z2.commons.i18n.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
 import org.w3c.files.File
 
+fun types(index : Int) : List<String> =
+    (0..index).map { "document type $index.$it" }
+
 val folders = listOf(
     "folder-1",
     "folder-2",
@@ -26,16 +29,7 @@ val folders = listOf(
     "folder-7",
 )
 
-
-val types = listOf(
-    "disposition-1",
-    "disposition-2",
-    "disposition-3",
-    "disposition-4",
-    "disposition-5",
-    "disposition-6",
-    "disposition-7",
-)
+val types = folders.mapIndexed { i, f -> f to types(i) }.toMap()
 
 fun Z2.fileDemo() =
     surfaceContainerLow(displayGrid, gridGap24) {
@@ -71,10 +65,13 @@ fun fileSelectDialog() =
 
         title(strings.file)
 
-        val builder = FileBundleInput(this, FileBundleInputConfiguration(folders, types)).main()
+        val bundle = FileBundleInput(this, FileBundleInputConfiguration(folders, types)).main()
 
         grid(pr16, pb16, pt16, gridAutoFlowColumn, gridAutoColumnsMinContent, justifyContentFlexEnd) {
             textButton(commonStrings.cancel) { closeWith(emptyList()) }
-            textButton(commonStrings.add) { closeWith(builder.attachments + builder.mainFile) }
+            textButton(commonStrings.add) {
+                if (!bundle.validate()) return@textButton
+                closeWith(bundle.attachments + bundle.mainFile)
+            }
         }
     }
