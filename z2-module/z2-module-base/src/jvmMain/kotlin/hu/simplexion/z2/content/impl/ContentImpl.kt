@@ -1,8 +1,6 @@
 package hu.simplexion.z2.content.impl
 
 import hu.simplexion.z2.auth.context.ensureInternal
-import hu.simplexion.z2.auth.context.ensureLoggedIn
-import hu.simplexion.z2.auth.context.ensureSecurityOfficer
 import hu.simplexion.z2.auth.context.ensuredByLogic
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.api.ContentApi
@@ -11,10 +9,7 @@ import hu.simplexion.z2.content.impl.upload.Upload
 import hu.simplexion.z2.content.impl.upload.UploadAbortException
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
-import hu.simplexion.z2.content.model.ContentType
 import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
-import hu.simplexion.z2.content.table.ContentTypeTable.Companion.contentTypeTable
-import hu.simplexion.z2.schematic.runtime.ensureValid
 import hu.simplexion.z2.service.runtime.ServiceImpl
 import hu.simplexion.z2.service.runtime.get
 import java.nio.file.Paths
@@ -94,20 +89,4 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun types(): List<ContentType> {
-        ensureLoggedIn()
-        return contentTypeTable.list()
-    }
-
-    override suspend fun add(contentType: ContentType) {
-        ensureSecurityOfficer()
-        ensureValid(contentType)
-        contentTypeTable.insert(contentType)
-    }
-
-    override suspend fun update(contentType: ContentType) {
-        ensureSecurityOfficer()
-        ensureValid(contentType)
-        contentTypeTable.update(contentType.uuid, contentType)
-    }
 }

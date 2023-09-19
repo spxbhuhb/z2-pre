@@ -55,7 +55,7 @@ class FileBundleInput<FT, DT>(
         div(displayGrid) {
             gridTemplateColumns = "1fr max-content"
             gridColumn = "1/3"
-            select(config.folders, folder, label = config.folderLabel, style = FieldStyle.Outlined) {
+            select(config.folders, label = config.folderLabel, style = FieldStyle.Outlined) {
                 folder = it.value
                 type = null
                 folderSelect.state.error = false
@@ -64,6 +64,7 @@ class FileBundleInput<FT, DT>(
                 folderSelect = it
                 it.config.itemTextFun = config.folderTextFun
                 it.config.supportEnabled = false
+                folder?.apply { it.value = this } // FIXME convert select config into a select builder
             }
             div(justifySelfEnd, alignSelfEnd, pl24) { summary = this }
         }

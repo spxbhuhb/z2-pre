@@ -2,7 +2,6 @@ package hu.simplexion.z2.content.api
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.Content
-import hu.simplexion.z2.content.model.ContentType
 import hu.simplexion.z2.service.runtime.Service
 
 interface ContentApi : Service {
@@ -12,8 +11,4 @@ interface ContentApi : Service {
     suspend fun rename(uuid : UUID<Content>, name : String)
     suspend fun delete(uuid : UUID<Content>)
     suspend fun getDownloadLink(uuid: UUID<Content>) : String
-
-    suspend fun types() : List<ContentType>
-    suspend fun add(contentType: ContentType)
-    suspend fun update(contentType: ContentType)
 }
