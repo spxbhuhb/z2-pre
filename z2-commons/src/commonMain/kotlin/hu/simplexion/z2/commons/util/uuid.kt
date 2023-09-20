@@ -153,6 +153,9 @@ class UUID<T> : Comparable<UUID<T>> {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T> cast() = this as UUID<T>
+
     override fun compareTo(other: UUID<T>): Int {
         var r = msbm.compareTo(other.msbm)
         if (r != 0) return r

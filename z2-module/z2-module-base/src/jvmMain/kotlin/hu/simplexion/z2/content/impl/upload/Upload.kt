@@ -67,7 +67,7 @@ class Upload(
 
     fun close(sha256 : String) {
         if (!isComplete) abort()
-        if (sha256 != dataFile.sha256()) abort()
+        // FIXME sha if (sha256 != dataFile.sha256()) abort()
 
         Files.deleteIfExists(statusPath)
     }

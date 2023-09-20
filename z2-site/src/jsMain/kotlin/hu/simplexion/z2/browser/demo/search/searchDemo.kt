@@ -1,11 +1,11 @@
 package hu.simplexion.z2.browser.demo.search
 
-import hu.simplexion.z2.browser.components.search.query
-import hu.simplexion.z2.browser.components.search.search
 import hu.simplexion.z2.browser.css.positionRelative
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
+import hu.simplexion.z2.browser.nonmaterial.search.query
+import hu.simplexion.z2.browser.nonmaterial.search.search
 
 fun Z2.searchDemo() =
 

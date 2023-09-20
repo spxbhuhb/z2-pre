@@ -1,6 +1,5 @@
 package hu.simplexion.z2.browser.demo.components.select
 
-import hu.simplexion.z2.browser.components.select.select
 import hu.simplexion.z2.browser.css.displayGrid
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.w400
@@ -10,6 +9,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.pre
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
+import hu.simplexion.z2.browser.nonmaterial.select.select
 
 fun Z2.selectDemo() =
     surfaceContainerLow(displayGrid, gridGap24) {

@@ -17,20 +17,17 @@ import java.nio.file.Paths
 open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
 
     companion object {
-        var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(Paths.get("."))
+        // TODO content placement strategy settings
+        var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(Paths.get(System.getenv("Z2_CONTENT_PATH")))
         val contentImpl = ContentImpl()
     }
 
     val placementStrategy: ContentPlacementStrategy
         get() = globalContentPlacementStrategy
 
-    @Suppress("UNCHECKED_CAST")
-    val UUID<Content>.upload
-        get() = this as UUID<Upload>
-
     fun ensureUpload(uuid: UUID<Content>, block: Upload.() -> Unit) {
         ensuredByLogic("the service context contains the upload only when this context started it")
-        serviceContext[uuid.upload]?.apply { block() } ?: throw UploadAbortException()
+        serviceContext[uuid.cast<Upload>()]?.apply { block() } ?: throw UploadAbortException()
     }
 
     /**
@@ -46,7 +43,7 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         content.uuid = contentTable.insert(content)
 
         val upload = Upload(
-            content.uuid.upload,
+            content.uuid.cast(),
             content.size,
             placementStrategy.dataPathOf(content),
             placementStrategy.statusPathOf(content)
