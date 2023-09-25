@@ -65,7 +65,9 @@ fun fileSelectDialog() =
 
         title(strings.file)
 
-        val config = FileBundleInputConfiguration(folders, types, listOf("docx", "heic"), 1_000_000L)
+        val config = FileBundleInputConfiguration(folders, types, listOf("docx", "heic"), 1_000_000L).also {
+            it.showFolderAndTypeSelect = false
+        }
 
         val bundle = FileBundleInput(this, config).main()
 

@@ -10,6 +10,8 @@ class FileBundleInputConfiguration<FT,DT>(
     val sizeLimit : Long = Long.MAX_VALUE
 ) {
 
+    var showFolderAndTypeSelect : Boolean = true
+
     var folderTextFun: (value : FT) -> String = { it.toString() }
     var typeRenderFun: Z2.(value: DT) -> Unit ={ it.toString() }
 

@@ -23,12 +23,12 @@ import hu.simplexion.z2.commons.util.here
 import kotlinx.datetime.Instant
 import org.w3c.files.File
 
-class FileBundleInput<FT, DT>(
+open class FileBundleInput<FT, DT>(
     parent: Z2,
     val config: FileBundleInputConfiguration<FT, DT>
 ) : Z2(parent) {
 
-    var touched : Boolean = false
+    var touched: Boolean = false
     var folder: FT? = null
     var type: DT? = null
 
@@ -49,24 +49,65 @@ class FileBundleInput<FT, DT>(
 
     override fun main(): FileBundleInput<FT, DT> {
         addClass(overflowHidden, displayGrid, pl24, pr24, positionRelative, boxSizingBorderBox, gridGap16)
-        gridTemplateColumns = "minmax(300px,max-content) minmax(600px,1fr)"
+        gridTemplateColumns = if (config.showFolderAndTypeSelect) {
+            "minmax(300px,max-content) minmax(600px,1fr)"
+        } else {
+            "minmax(600px,1fr)"
+        }
         gridTemplateRows = "min-content minmax(300px, 1fr)"
 
+        folderSelectAndSummary()
+        typeSelect()
+
+        grid(positionRelative, gridGap16, overflowHidden) {
+            gridTemplateColumns = "1fr"
+            gridTemplateRows = "min-content 1fr"
+
+            mainFileSelect()
+            attachmentFileSelect()
+        }
+
+        refresh()
+
+        return this
+    }
+
+    fun Z2.folderSelectAndSummary() {
         div(displayGrid) {
             gridTemplateColumns = "1fr max-content"
-            gridColumn = "1/3"
-            select(config.folders, label = config.folderLabel, style = FieldStyle.Outlined) {
-                folder = it.value
-                type = null
-                folderSelect.state.error = false
-                refresh()
-            }.also {
-                folderSelect = it
-                it.config.itemTextFun = config.folderTextFun
-                it.config.supportEnabled = false
-                folder?.apply { it.value = this } // FIXME convert select config into a select builder
-            }
-            div(justifySelfEnd, alignSelfEnd, pl24) { summary = this }
+            gridColumn = if (config.showFolderAndTypeSelect) "1/3" else "1/2"
+
+            folderSelectBuild()
+            summaryBuild()
+        }
+    }
+
+    fun Z2.folderSelectBuild() {
+        if (! config.showFolderAndTypeSelect) {
+            div()
+            return
+        }
+
+        select(config.folders, label = config.folderLabel, style = FieldStyle.Outlined) {
+            folder = it.value
+            type = null
+            folderSelect.state.error = false
+            refresh()
+        }.also {
+            folderSelect = it
+            it.config.itemTextFun = config.folderTextFun
+            it.config.supportEnabled = false
+            folder?.apply { it.value = this } // FIXME convert select config into a select builder
+        }
+    }
+
+    fun Z2.summaryBuild() {
+        div(justifySelfEnd, alignSelfEnd, pl24) { summary = this }
+    }
+
+    fun Z2.typeSelect() {
+        if (!config.showFolderAndTypeSelect) {
+            return
         }
 
         scrolledBoxWithLabel(config.typeLabel) {
@@ -75,52 +116,47 @@ class FileBundleInput<FT, DT>(
         }.also {
             typeBox = it
         }
+    }
 
-        grid(positionRelative, gridGap16, overflowHidden) {
-            gridTemplateColumns = "1fr"
-            gridTemplateRows = "min-content 1fr"
-
-            fileSelect(fileBrowserOnClick = false, fileSelectedFun = ::onMainSelect, multiple = false) {
-                mainSelect = this
-                scrolledBoxWithLabel(this@FileBundleInput.config.file) {
-                    grid(gridGap16, pl8, pr8) {
-                        mainList = this
-                    }
-                }.also {
-                    mainBox = it
+    fun Z2.mainFileSelect() {
+        fileSelect(fileBrowserOnClick = false, fileSelectedFun = ::onMainSelect, multiple = false) {
+            mainSelect = this
+            scrolledBoxWithLabel(this@FileBundleInput.config.file) {
+                grid(gridGap16, pl8, pr8) {
+                    mainList = this
                 }
-            }
-
-            fileSelect(fileBrowserOnClick = false, fileSelectedFun = ::onAttachmentSelect) {
-                config.dropEnabled = false
-                attachmentSelect = this
-                addClass(positionRelative, heightFull, overflowHidden)
-                scrolledBoxWithLabel(this@FileBundleInput.config.attachments) {
-                    grid(gridGap16, pl8, pr8) {
-                        attachmentList = this
-                    }
-                }.also {
-                    attachmentBox = it
-                }
+            }.also {
+                mainBox = it
             }
         }
+    }
 
-        refresh()
-
-        return this
+    fun Z2.attachmentFileSelect() {
+        fileSelect(fileBrowserOnClick = false, fileSelectedFun = ::onAttachmentSelect) {
+            config.dropEnabled = false
+            attachmentSelect = this
+            addClass(positionRelative, heightFull, overflowHidden)
+            scrolledBoxWithLabel(this@FileBundleInput.config.attachments) {
+                grid(gridGap16, pl8, pr8) {
+                    attachmentList = this
+                }
+            }.also {
+                attachmentBox = it
+            }
+        }
     }
 
     fun validate(): Boolean {
         touched = true
         var valid = true
 
-        if (folder == null) {
+        if (config.showFolderAndTypeSelect && folder == null) {
             folderSelect.state.touched = true
             folderSelect.state.error = true
             valid = false
         }
 
-        if (::typeSelect.isInitialized) {
+        if (config.showFolderAndTypeSelect && ::typeSelect.isInitialized) {
             if (typeSelect.valueOrNull == null) {
                 valid = false
                 errorBorder(typeBox)
@@ -136,7 +172,7 @@ class FileBundleInput<FT, DT>(
         return valid
     }
 
-    fun mainValid() : Boolean =
+    fun mainValid(): Boolean =
         if (touched && (mainFile.isEmpty() || problems(mainFile.first()).isNotEmpty())) {
             errorBorder(mainBox)
             false
@@ -145,8 +181,8 @@ class FileBundleInput<FT, DT>(
             true
         }
 
-    fun attachmentsValid() : Boolean =
-        if (attachments.any { problems(it).isNotEmpty()}) {
+    fun attachmentsValid(): Boolean =
+        if (attachments.any { problems(it).isNotEmpty() }) {
             errorBorder(attachmentBox)
             false
         } else {
@@ -167,18 +203,20 @@ class FileBundleInput<FT, DT>(
     fun refresh() {
         summary.summary()
 
-        with(typeList) {
-            clear()
-            if (folder != null) {
-                radioButtonGroup(type, config.types[folder] ?: emptyList(), itemBuilderFun = config.typeRenderFun) {
-                    type = it
-                    typeBox.removeClass(borderError)
-                    typeBox.addClass(borderOutline)
-                }.also {
-                    typeSelect = it
+        if (config.showFolderAndTypeSelect) {
+            with(typeList) {
+                clear()
+                if (folder != null) {
+                    radioButtonGroup(type, config.types[folder] ?: emptyList(), itemBuilderFun = config.typeRenderFun) {
+                        type = it
+                        typeBox.removeClass(borderError)
+                        typeBox.addClass(borderOutline)
+                    }.also {
+                        typeSelect = it
+                    }
+                } else {
+                    div(p16, bodyMedium, onSurfaceVariantText) { + config.selectFolderFirst }
                 }
-            } else {
-                div(p16, bodyMedium, onSurfaceVariantText) { + config.selectFolderFirst }
             }
         }
 
@@ -301,19 +339,19 @@ class FileBundleInput<FT, DT>(
         }
     }
 
-    fun problems(file : File) : MutableList<LocalizedText> {
+    fun problems(file: File): MutableList<LocalizedText> {
         val problems = mutableListOf<LocalizedText>()
         if (! extensionOk(file)) problems += config.invalidExtension
         if (! sizeOk(file)) problems += config.sizeOverLimit
         return problems
     }
 
-    fun extensionOk(file : File) : Boolean {
+    fun extensionOk(file: File): Boolean {
         val extensions = config.acceptedExtensions ?: return true
         return file.name.substringAfterLast('.').lowercase() in extensions
     }
 
-    fun sizeOk(file : File) : Boolean {
+    fun sizeOk(file: File): Boolean {
         return file.size.toLong() <= config.sizeLimit
     }
 
