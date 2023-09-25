@@ -19,6 +19,9 @@ fun Z2.input(vararg classes: String, builder: Z2.() -> Unit): Z2 =
 fun Z2.span(vararg classes: String, builder: Z2.() -> Unit): Z2 =
     Z2(this, document.createElement("span") as HTMLSpanElement, classes, builder)
 
+fun Z2.form(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
+    Z2(this, document.createElement("form") as HTMLFormElement, classes, builder)
+
 /**
  * A plain HTML table tag. Decided to use a different name because I use this
  * tag very rarely and mostly inside library components.

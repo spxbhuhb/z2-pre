@@ -31,10 +31,20 @@ fun Z2.onFocusOut(handler: (event: Event) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("focusout", handler) }
 
 fun Z2.onInput(handler: (event: InputEvent) -> Unit): Z2 =
-    this.apply { htmlElement.addEventListener("input", { handler(it as InputEvent) }) }
+    this.apply {
+        // FIXME what to do with non-input event input callbacks, happens with Chrome autofill
+        htmlElement.addEventListener("input", {
+            if (it is InputEvent) handler(it) else console.log(it)
+        })
+    }
 
 fun Z2.onKeyDown(handler: (event: KeyboardEvent) -> Unit): Z2 =
-    this.apply { htmlElement.addEventListener("keydown", { handler(it as KeyboardEvent) }) }
+    this.apply {
+        // FIXME what to do with non-keyboard event keydown callbacks, happens with Chrome autofill
+        htmlElement.addEventListener("keydown", {
+            if (it is KeyboardEvent) handler(it) else console.log(it)
+        })
+    }
 
 fun Z2.onMouseDown(handler: (event: MouseEvent) -> Unit): Z2 =
     this.apply { htmlElement.addEventListener("mousedown", { handler(it as MouseEvent) }) }

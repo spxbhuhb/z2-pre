@@ -36,4 +36,6 @@ open class TableConfiguration<T> {
     open var titleBuilder: TitleBuilder<T>? = null
 
     open var searchBar: (Z2.() -> Unit)? = null
+
+    open var doubleClickFun : ((T) -> Unit)? = null
 }

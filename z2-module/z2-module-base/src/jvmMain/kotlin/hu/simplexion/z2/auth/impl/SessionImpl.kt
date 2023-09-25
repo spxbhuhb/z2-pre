@@ -88,6 +88,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     override suspend fun logout() {
         ensureLoggedIn()
         securityHistory(authStrings.account, authStrings.logout, serviceContext.account)
+        activeSessions.remove(serviceContext!!.uuid)
         serviceContext?.data?.remove(SESSION_TOKEN_UUID)
     }
 

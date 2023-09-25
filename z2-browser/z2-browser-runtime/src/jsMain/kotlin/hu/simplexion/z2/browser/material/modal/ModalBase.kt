@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 import kotlinx.browser.document
 import kotlinx.coroutines.channels.Channel
 import org.w3c.dom.HTMLElement
@@ -32,7 +33,7 @@ open class ModalBase<T : Any?>(
 
     fun Z2.title(title : LocalizedText) =
         div(p24, pb16, displayFlex, alignItemsCenter, headlineSmall) {
-            text { title }
+            text { title.localeCapitalized }
         }
 
     fun Z2.supportingText(builder : () -> String) : Z2 =

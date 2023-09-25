@@ -121,7 +121,7 @@ class Table<T>(
     var searchText: String? = null
 
     init {
-        TableBuilder<T>().also { build ->
+        TableBuilder(this).also { build ->
             build.builder()
             configuration = build
             columns = build.columns.map { it.toColumn(this) }
@@ -697,7 +697,7 @@ class Table<T>(
      * Get the data of a given row by row ID.
      */
     fun getRowData(id: String): T =
-        fullData.first { getRowId(it.data) == id }.data
+        fullData.first { getRowId(it.data).toString() == id }.data
 
     /**
      * Set the data of a given row by row ID. Does not update the UI,
@@ -725,7 +725,7 @@ class Table<T>(
      * @param  id  Id of the row as given by [getRowId].
      */
     fun onDblClick(id: String) {
-
+        configuration.doubleClickFun?.invoke(getRowData(id))
     }
 
     /**

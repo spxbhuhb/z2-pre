@@ -1,8 +1,11 @@
 package hu.simplexion.z2.browser.nonmaterial.table.builders
 
+import hu.simplexion.z2.browser.nonmaterial.table.Table
 import hu.simplexion.z2.browser.nonmaterial.table.TableConfiguration
 
-open class TableBuilder<T> : TableConfiguration<T>() {
+open class TableBuilder<T>(
+    val table : Table<T>
+) : TableConfiguration<T>() {
 
     val columns = mutableListOf<ColumnBuilder<T>>()
 

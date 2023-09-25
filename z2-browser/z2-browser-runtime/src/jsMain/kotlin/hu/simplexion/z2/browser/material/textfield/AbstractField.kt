@@ -38,6 +38,13 @@ abstract class AbstractField<T>(
         }
 
     override var valueOrNull: T? = null
+        get() {
+            // this is here for Chrome autofill bug
+            if (inputElement.value != "" && inputElement.value != field) {
+                field = config.decodeFromString(inputElement.value)
+            }
+            return field
+        }
         set(value) {
             field = value
             val encoded = value?.let { config.encodeToString(it) } ?: ""

@@ -3,6 +3,7 @@ package hu.simplexion.z2.browser.material.card
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 
 fun Z2.elevatedCard(
     headline: LocalizedText? = null,
@@ -45,7 +46,7 @@ fun Z2.cardHeadline(
     div("card-headline", "title-large") {
 
         div("align-self-center") {
-            text { headline }
+            text { headline?.localeCapitalized }
         }
 
         actions?.let { it() }
