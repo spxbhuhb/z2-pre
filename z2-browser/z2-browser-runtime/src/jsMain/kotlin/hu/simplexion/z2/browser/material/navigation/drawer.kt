@@ -27,7 +27,7 @@ fun Z2.navigationDrawer(scrollAutoHide : Boolean = true, builder: Z2.() -> Unit)
     }
 
 fun Z2.drawerItem(target : RoutingTarget<Z2>) {
-    drawerItem(NavigationItem(target.icon, target.label) { target.open(target) })
+    drawerItem(NavigationItem(target.icon, target.label) { target.open() })
 }
 
 fun Z2.drawerItem(item: NavigationItem, onClick: (() -> Unit)? = null) =

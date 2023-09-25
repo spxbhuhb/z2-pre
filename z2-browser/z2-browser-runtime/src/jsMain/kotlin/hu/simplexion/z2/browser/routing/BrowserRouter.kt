@@ -3,8 +3,8 @@
  */
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.browserStrings
+import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.modal.confirm
 import hu.simplexion.z2.browser.util.decodeURIComponent
 import hu.simplexion.z2.browser.util.io
@@ -38,11 +38,11 @@ open class BrowserRouter: Router<Z2>() {
     }
 
     override fun open(target: RoutingTarget<Z2>) {
-        browserOpen(target.absolutePath.joinToString("/"))
+        browserOpen(target.absolutePath().joinToString("/"))
     }
 
     override fun openWith(target: RoutingTarget<Z2>, vararg parameters : Any) {
-        browserOpen(target.absolutePath.joinToString("/") + "/" + parameters.joinToString("/"))
+        browserOpen((target.absolutePath(false) + parameters).joinToString("/"))
     }
 
     fun browserOpen(pathname: String, search: String = "", hash: String = "", changeState: Boolean = true) {

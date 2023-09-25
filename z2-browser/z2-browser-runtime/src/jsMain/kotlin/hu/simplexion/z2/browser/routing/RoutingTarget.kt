@@ -8,13 +8,16 @@ interface RoutingTarget<R> {
 
     var parent: Router<R>?
 
-    var relativePath : String
+    var relativePath: String
 
-    val label : LocalizedText?
+    val label: LocalizedText?
 
-    val icon : LocalizedIcon?
+    val icon: LocalizedIcon?
 
-    fun accepts(path : List<String>) : Boolean {
+    val parameters: MutableList<RouterParameter<*>>
+        get() = mutableListOf()
+
+    fun accepts(path: List<String>): Boolean {
         return path.first() == relativePath
     }
 
@@ -32,26 +35,22 @@ interface RoutingTarget<R> {
         root.open(target)
     }
 
-    fun openWith(target: RoutingTarget<R>, vararg parameters : Any) {
+    fun openWith(target: RoutingTarget<R>, vararg parameters: Any) {
         root.openWith(target, *parameters)
     }
 
-    val absolutePath : List<String>
-        get() {
-            val path = mutableListOf(relativePath)
-            var current = this
-            while (current.parent != null) {
-                current = current.parent!!
-                path += current.relativePath
-            }
-            return path.reversed()
-        }
+    fun absolutePath(withParameters: Boolean = true): MutableList<String> {
+        val path = parent?.absolutePath() ?: mutableListOf()
+        path += relativePath
+        if (withParameters) path += parameters.map { it.valueOrNull?.toString() ?: "" }
+        return path
+    }
 
     val root: RoutingTarget<R>
         get() {
             var current = this
             while (current.parent != null) {
-                current = current.parent!!
+                current = current.parent !!
             }
             return current
         }
