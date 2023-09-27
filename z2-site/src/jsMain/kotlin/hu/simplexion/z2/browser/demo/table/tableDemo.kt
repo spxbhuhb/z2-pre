@@ -6,6 +6,7 @@ import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.surfaceContainer
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
+import hu.simplexion.z2.browser.material.em
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.nonmaterial.table.table
 
@@ -39,6 +40,7 @@ fun Z2.tableDemo() =
                     label = strings.headerA
                     render = { text { it.v1 } }
                     comparator = { a, b -> a.v2.compareTo(b.v2) }
+                    initialSize = 10.em
                 }
 
                 column {

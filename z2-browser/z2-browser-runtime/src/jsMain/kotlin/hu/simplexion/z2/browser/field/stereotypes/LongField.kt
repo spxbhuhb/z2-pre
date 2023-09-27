@@ -17,6 +17,7 @@ class LongField(
     override fun main(): LongField {
         super.main()
         inputElement.addClass(textAlignEnd)
+        inputElement.type = "number"
         return this
     }
 }

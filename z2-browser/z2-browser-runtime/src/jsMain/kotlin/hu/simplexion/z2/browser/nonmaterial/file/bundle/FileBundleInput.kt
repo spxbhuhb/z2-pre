@@ -106,7 +106,7 @@ open class FileBundleInput<FT, DT>(
     }
 
     fun Z2.typeSelect() {
-        if (!config.showFolderAndTypeSelect) {
+        if (! config.showFolderAndTypeSelect) {
             return
         }
 
@@ -150,20 +150,25 @@ open class FileBundleInput<FT, DT>(
         touched = true
         var valid = true
 
-        if (config.showFolderAndTypeSelect && folder == null) {
-            folderSelect.state.touched = true
-            folderSelect.state.error = true
-            valid = false
-        }
-
-        if (config.showFolderAndTypeSelect && ::typeSelect.isInitialized) {
-            if (typeSelect.valueOrNull == null) {
+        if (config.showFolderAndTypeSelect) {
+            if (folder == null) {
+                folderSelect.state.touched = true
+                folderSelect.state.error = true
                 valid = false
+            }
+
+            if (::typeSelect.isInitialized) {
+                if (typeSelect.valueOrNull == null) {
+                    valid = false
+                    errorBorder(typeBox)
+                }
+            } else {
                 errorBorder(typeBox)
+                valid = false
             }
         } else {
-            errorBorder(typeBox)
-            valid = false
+            check(folder != null) { "folder is null while select is hidden" }
+            check(type != null) { "type is null while select is hidden" }
         }
 
         valid = valid and mainValid()

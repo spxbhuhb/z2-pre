@@ -50,8 +50,8 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
             HistoryEntry().apply {
                 this.createdBy = createdBy
                 this.flags = flags
-                this.topic = topic.toString()
-                this.verb = verb.toString()
+                this.topic = topic.key
+                this.verb = verb.key
                 @Suppress("UNCHECKED_CAST")
                 this.subject = subject as? UUID<Any>
                 this.contentType = contentType

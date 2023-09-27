@@ -13,11 +13,11 @@ open class ColumnBuilder<T> {
     var labelBuilder : Z2Builder = { text { label } }
     var render: Z2.(row: T) -> Unit = { }
     var comparator: (T,T) -> Int = { _,_ -> 0 }
-    var size = Double.NaN
+    var initialSize = "1fr"
     var exportable = true
     var exportHeader : LocalizedText = browserStrings._empty
 
     open fun toColumn(table: Table<T>): TableColumn<T> =
-        TableColumn(table, labelBuilder, render, comparator, size, exportable, exportHeader)
+        TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader)
 
 }

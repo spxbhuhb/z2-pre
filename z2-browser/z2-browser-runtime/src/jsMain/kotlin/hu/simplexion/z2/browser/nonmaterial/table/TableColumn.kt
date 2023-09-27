@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.browser.nonmaterial.table
 
+import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.labelMedium
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
@@ -22,17 +23,18 @@ open class TableColumn<T>(
     val table: Table<T>,
     val labelBuilder: Z2Builder,
     val renderer: Z2.(row: T) -> Unit,
-    val comparator : (T,T) -> Int,
-    var size : Double = Double.NaN,
-    val exportable : Boolean = true,
-    val exportHeader : LocalizedText
-    ) {
+    val comparator: (T, T) -> Int,
+    var initialSize: String = "1fr",
+    val exportable: Boolean = true,
+    val exportHeader: LocalizedText
+) {
     val id = uniqueNodeId
 
-    lateinit var element : HTMLElement
+    lateinit var element: HTMLElement
 
     open val min = 24.0
-    open var max = "1fr"
+
+    var size: Double = Double.NaN
 
     lateinit var sortSign: Z2
     var sortAscending = true
@@ -66,7 +68,7 @@ open class TableColumn<T>(
     }
 
     fun gridTemplate(): String {
-        return "minmax(${min}px, $max)"
+        return "minmax(${min}px, $initialSize)"
     }
 
     open fun render(cell: Z2, index: Int, row: T) {
@@ -79,14 +81,14 @@ open class TableColumn<T>(
             return
         }
 
-        sortAscending = !sortAscending
+        sortAscending = ! sortAscending
 
-        if (!table.isInitialized) return
+        if (! table.isInitialized) return
 
         sort()
 
         table.columns.forEach {
-            it.sortSign.addClass("hidden")
+            it.sortSign.addClass(displayNone)
         }
 
         sortSign.removeClass("ascending", "descending")
@@ -97,7 +99,7 @@ open class TableColumn<T>(
             sortSign.addClass("descending")
         }
 
-        sortSign.removeClass("hidden")
+        sortSign.removeClass(displayNone)
 
         table.filter()
         table.render()
@@ -151,14 +153,14 @@ open class TableColumn<T>(
         event.preventDefault() // prevents text select during column resize
 
         window.requestAnimationFrame {
-            if (!beingResized) return@requestAnimationFrame
+            if (! beingResized) return@requestAnimationFrame
 
             val distance = event.clientX - lastX
             lastX = event.clientX
 
             size = max(min, if (size.isNaN()) element.clientWidth.toDouble() else size + distance)
 
-            trace { "======  column resize  ======"}
+            trace { "======  column resize  ======" }
             trace { "[resize]  id=$id  clientX=${event.clientX}  distance=$distance  size=$size" }
 
             val tableWidth = table.tableElement.clientWidth
@@ -190,7 +192,7 @@ open class TableColumn<T>(
         }
     }
 
-    fun trace(block : () -> String) {
+    fun trace(block: () -> String) {
         if (table.traceColumnResize) println(block())
     }
 
