@@ -3,12 +3,12 @@ package hu.simplexion.z2.browser.demo.form
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.browser.immaterial.schematic.attachListener
+import hu.simplexion.z2.browser.immaterial.schematic.field
+import hu.simplexion.z2.browser.immaterial.schematic.radioField
+import hu.simplexion.z2.browser.immaterial.schematic.touch
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledButton
-import hu.simplexion.z2.browser.nonmaterial.schematic.attachListener
-import hu.simplexion.z2.browser.nonmaterial.schematic.field
-import hu.simplexion.z2.browser.nonmaterial.schematic.radioField
-import hu.simplexion.z2.browser.nonmaterial.schematic.touch
 import hu.simplexion.z2.commons.util.hereAndNow
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.schematic.runtime.dump

@@ -4,11 +4,11 @@ package hu.simplexion.z2.browser.demo.table
 import hu.simplexion.z2.browser.css.p0
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.immaterial.table.table
 import hu.simplexion.z2.browser.layout.surfaceContainer
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.em
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.browser.nonmaterial.table.table
 
 fun Z2.tableDemo() =
     surfaceContainerLow(p0) {

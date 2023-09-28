@@ -8,10 +8,10 @@ import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
 import hu.simplexion.z2.browser.css.p0
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.immaterial.table.schematicColumn
+import hu.simplexion.z2.browser.immaterial.table.table
 import hu.simplexion.z2.browser.layout.surfaceContainer
 import hu.simplexion.z2.browser.layout.surfaceContainerLowest
-import hu.simplexion.z2.browser.nonmaterial.table.schematicColumn
-import hu.simplexion.z2.browser.nonmaterial.table.table
 
 internal fun Z2.list() =
     surfaceContainerLowest(borderOutline) {

@@ -55,19 +55,17 @@ abstract class AbstractField<T>(
 
     override fun main() : AbstractField<T> {
         addClass(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
+
+        val baseHeight = if (config.style == FieldStyle.Chip) 32.px else 56.px
+
         gridTemplateColumns = "minmax(0,1fr)"
-        gridTemplateRows = "56px min-content"
+        gridTemplateRows = "$baseHeight min-content"
 
         grid(
-            paddingTop2,
-            paddingRight2,
-            paddingBottom1,
-            paddingLeft0,
-            borderTopLeftRadiusExtraSmall,
-            borderTopRightRadiusExtraSmall
+            paddingLeft0
         ) {
             gridTemplateColumns = "min-content minmax(0, 1fr) min-content"
-            gridTemplateRows = "56px"
+            gridTemplateRows = baseHeight
 
             self = this
 
@@ -82,16 +80,44 @@ abstract class AbstractField<T>(
 
             when (config.style) {
                 FieldStyle.Filled -> {
-                    self.addClass(borderBottomWidth1, borderBottomSolid, borderColorOutline, surfaceContainerHighest)
+                    self.addClass(
+                        borderBottomWidth1, borderBottomSolid,
+                        borderColorOutline,
+                        surfaceContainerHighest,
+                        borderTopLeftRadiusExtraSmall,
+                        borderTopRightRadiusExtraSmall,
+                        paddingTop2,
+                        paddingRight2,
+                        paddingBottom1,
+                    )
                 }
 
                 FieldStyle.Transparent -> {
-                    self.addClass(borderBottomWidth1, borderBottomSolid)
+                    self.addClass(
+                        paddingTop2,
+                        paddingRight2,
+                        paddingBottom1,
+                        borderBottomWidth1, borderBottomSolid)
                     input.addClass(pt20)
                 }
 
                 FieldStyle.Outlined -> {
-                    self.addClass(borderWidth1, borderSolid, borderColorOutline, borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall)
+                    self.addClass(
+                        paddingTop2,
+                        paddingRight2,
+                        paddingBottom1,
+                        borderWidth1, borderSolid, borderColorOutline,
+                        borderRadiusExtraSmall
+                    )
+                }
+
+                FieldStyle.Chip -> {
+                    self.addClass(
+                        borderWidth1, borderSolid, borderColorOutline,
+                        borderRadius8,
+                        labelLarge
+                    )
+                    label.addClass(displayNone)
                 }
             }
 
@@ -100,20 +126,28 @@ abstract class AbstractField<T>(
             }
         }
 
-        // underline animation
+        // focus animation
         div(positionAbsolute, backgroundTransparent, boxSizingBorderBox, displayNone) {
             animation = this
             htmlElement.style.apply {
                 borderStyle = "solid"
-                if (config.style == FieldStyle.Outlined) {
-                    height = 56.px
-                    borderWidth = 2.px
-                    addClass(borderRadiusExtraSmall, pointerEventsNone)
-                } else {
-                    top = 46.px
-                    height = 10.px
-                    borderWidth = 0.px
-                    borderBottomWidth = 2.px
+                when (config.style) {
+                    FieldStyle.Outlined -> {
+                        height = baseHeight
+                        borderWidth = 2.px
+                        addClass(borderRadiusExtraSmall, pointerEventsNone)
+                    }
+                    FieldStyle.Chip -> {
+                        height = baseHeight
+                        borderWidth = 2.px
+                        addClass(borderRadiusExtraSmall, pointerEventsNone)
+                    }
+                    else -> {
+                        top = 46.px
+                        height = 10.px
+                        borderWidth = 0.px
+                        borderBottomWidth = 2.px
+                    }
                 }
             }
             zIndex = 1
@@ -144,12 +178,17 @@ abstract class AbstractField<T>(
             justifyContentFlexStart,
             backgroundTransparent,
             onSurfaceText,
-            caretColorPrimary,
-            bodyLarge
+            caretColorPrimary
         ) {
             input = this
 
-            inputElement.style.lineHeight = 40.px
+            if (config.style == FieldStyle.Chip) {
+                addClass(labelLarge)
+                inputElement.style.lineHeight = 24.px
+            } else {
+                addClass(bodyLarge)
+                inputElement.style.lineHeight = 40.px
+            }
 
             onFocus {
                 if (!hasFocus) {
@@ -190,8 +229,10 @@ abstract class AbstractField<T>(
             label.addClass(displayNone)
             if (config.style != FieldStyle.Transparent) input.removeClass(pt20)
         } else {
-            label.removeClass(displayNone)
-            if (config.style != FieldStyle.Transparent) input.addClass(pt20)
+            if (config.style != FieldStyle.Chip) {
+                label.removeClass(displayNone)
+                if (config.style != FieldStyle.Transparent) input.addClass(pt20)
+            }
         }
 
         if (state.disabled) inputElement.disabled = true

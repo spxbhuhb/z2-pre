@@ -5,6 +5,7 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.StateLayer
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.i18n.LocalizedIcon
+import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
@@ -34,8 +35,8 @@ class MenuItemBase<T>(
             if (leading != null) div(pr12) { leading() }
         }
 
-        div(labelLarge, justifySelfStart, whiteSpaceNoWrap, alignSelfCenter, textTransformCapitalize) {
-            text { label }
+        div(labelLarge, justifySelfStart, whiteSpaceNoWrap, alignSelfCenter) {
+            text { label.localeCapitalized }
         }
 
         div(alignSelfCenter) {

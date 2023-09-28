@@ -3,14 +3,14 @@ package hu.simplexion.z2.browser.demo.components.file
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.browser.immaterial.file.bundle.FileBundleInput
+import hu.simplexion.z2.browser.immaterial.file.bundle.FileBundleInputConfiguration
+import hu.simplexion.z2.browser.immaterial.file.fileSelect
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.browser.material.vh
-import hu.simplexion.z2.browser.nonmaterial.file.bundle.FileBundleInput
-import hu.simplexion.z2.browser.nonmaterial.file.bundle.FileBundleInputConfiguration
-import hu.simplexion.z2.browser.nonmaterial.file.fileSelect
 import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.i18n.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
@@ -66,7 +66,7 @@ fun fileSelectDialog() =
         title(strings.file)
 
         val config = FileBundleInputConfiguration(folders, types, listOf("docx", "heic"), 1_000_000L).also {
-            it.showFolderAndTypeSelect = false
+            //it.showFolderAndTypeSelect = false
         }
 
         val bundle = FileBundleInput(this, config).main()

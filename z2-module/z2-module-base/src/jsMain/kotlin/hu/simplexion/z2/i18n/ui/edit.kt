@@ -5,9 +5,9 @@ import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.css.p24
 import hu.simplexion.z2.browser.css.w400
 import hu.simplexion.z2.browser.html.grid
+import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
-import hu.simplexion.z2.browser.nonmaterial.schematic.field
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.i18n.languages

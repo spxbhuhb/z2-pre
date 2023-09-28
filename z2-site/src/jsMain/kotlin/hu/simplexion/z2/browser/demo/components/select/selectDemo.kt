@@ -8,8 +8,9 @@ import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.pre
+import hu.simplexion.z2.browser.immaterial.select.select
+import hu.simplexion.z2.browser.immaterial.select.singleChipSelect
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
-import hu.simplexion.z2.browser.nonmaterial.select.select
 
 fun Z2.selectDemo() =
     surfaceContainerLow(displayGrid, gridGap24) {
@@ -38,6 +39,19 @@ fun Z2.selectDemo() =
                 label = strings.label,
                 style = FieldStyle.Outlined,
                 onChange = { feedback.apply { + "select 3 change: ${it.value}\n" }}
+            )
+
+            select(
+                items,
+                label = strings.label,
+                style = FieldStyle.Chip,
+                onChange = { feedback.apply { + "select 4 change: ${it.value}\n" }}
+            )
+
+            singleChipSelect(
+                items,
+                label = strings.label,
+                onChange = { feedback.apply { + "select 5 change: ${it.valueOrNull}\n" }}
             )
 
             // move feedback to the end

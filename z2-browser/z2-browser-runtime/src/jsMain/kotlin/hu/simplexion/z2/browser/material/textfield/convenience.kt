@@ -38,6 +38,16 @@ fun Z2.outlinedTextField(
 ) =
     textField(value, FieldStyle.Outlined, label, supportingText, leadingIcon, trailingIcon, onChange)
 
+fun Z2.chipTextField(
+    value: String,
+    label: LocalizedText? = null,
+    supportingText: LocalizedText? = null,
+    leadingIcon: LocalizedIcon? = null,
+    trailingIcon: LocalizedIcon? = null,
+    onChange: (value: AbstractField<String>) -> Unit = { }
+) =
+    textField(value, FieldStyle.Chip, label, supportingText, leadingIcon, trailingIcon, onChange)
+
 fun Z2.textField(
     value: String,
     style: FieldStyle = defaultFieldStyle,

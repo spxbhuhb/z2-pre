@@ -23,7 +23,6 @@ class DropdownMenu(
                 gridAutoRows = "min-content"
                 gridTemplateColumns = "1fr"
                 style.minWidth = 112.px
-                style.maxWidth = 280.px
                 builder()
             }
         }
