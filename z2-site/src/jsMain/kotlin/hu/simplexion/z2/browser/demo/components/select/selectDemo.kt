@@ -14,26 +14,27 @@ import hu.simplexion.z2.browser.nonmaterial.select.select
 fun Z2.selectDemo() =
     surfaceContainerLow(displayGrid, gridGap24) {
         div(w400) {
+            val items = (1..50).map { "item $it" }
             val feedback = pre {
 
             }
 
             select(
-                listOf(strings.item1, strings.item2, strings.item3),
+                items,
                 label = strings.label,
                 style = FieldStyle.Filled,
                 onChange = { feedback.apply { + "select 1 change: ${it.value}\n" }}
             )
 
             select(
-                listOf(strings.item1, strings.item2, strings.item3),
+                items,
                 label = strings.label,
                 style = FieldStyle.Transparent,
                 onChange = { feedback.apply { + "select 2 change: ${it.value}\n" }}
             )
 
             select(
-                listOf(strings.item1, strings.item2, strings.item3),
+                items,
                 label = strings.label,
                 style = FieldStyle.Outlined,
                 onChange = { feedback.apply { + "select 3 change: ${it.value}\n" }}

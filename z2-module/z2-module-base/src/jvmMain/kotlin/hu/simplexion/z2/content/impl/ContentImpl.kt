@@ -86,4 +86,7 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         TODO("Not yet implemented")
     }
 
+    fun getPath(uuid: UUID<Content>) =
+        placementStrategy.dataPathOf(Content().also { it.uuid = uuid })
+
 }
