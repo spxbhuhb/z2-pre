@@ -44,7 +44,7 @@ internal fun accountModal(
                 textButton(browserStrings.cancel) { closeWith(false) }
                 textButton(buttonLabel) {
                     localLaunch {
-                        account.accountName = account.email
+                        account.accountName = account.email ?: account.uuid.toShort()
                         onOk(account)
                         closeWith(true)
                     }

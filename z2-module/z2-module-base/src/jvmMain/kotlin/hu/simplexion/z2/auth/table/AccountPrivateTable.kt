@@ -15,7 +15,7 @@ open class AccountPrivateTable : SchematicUuidTable<AccountPrivate>(
 
     val accountName = varchar("accountName", 50).uniqueIndex()
     val fullName = varchar("fullName", 100)
-    val email = varchar("email", 264)
+    val email = varchar("email", 264).nullable()
     val phone = varchar("phone", 25).nullable()
 
     fun getByAccountNameOrNull(inAccountName : String) : AccountPrivate? =

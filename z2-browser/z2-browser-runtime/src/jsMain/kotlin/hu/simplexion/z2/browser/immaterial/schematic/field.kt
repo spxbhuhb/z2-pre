@@ -58,7 +58,7 @@ private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText)
                 decodeFromString = { it }
             ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
-            context.field.getValue(context.schematic) as String
+           it.valueOrNull = context.field.getValue(context.schematic) as? String
         }
     }
 
