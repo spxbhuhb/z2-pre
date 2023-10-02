@@ -35,6 +35,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             SchemaFieldType.Enum -> enumField(context, label) as BoundField<T>
             SchemaFieldType.Int -> intField(context, label) as BoundField<T>
             SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
+            //SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
             SchemaFieldType.Long -> longField(context, label) as BoundField<T>
             SchemaFieldType.Phone -> phoneNumberField(context, label) as BoundField<T>
             SchemaFieldType.Secret -> secretField(context, label) as BoundField<T>
@@ -107,6 +108,13 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
             context.schematic.schematicChange(context.field, it)
         }.main()
     }
+
+//private fun Z2.localDateTimeField(context: SchematicAccessContext, label: LocalizedText) =
+//    BoundField(this, context) {
+//        dateTimePicker(label = label, supportText = commonStrings.localDateSupportText) {
+//            context.schematic.schematicChange(context.field, it)
+//        }.main()
+//    }
 
 private fun Z2.phoneNumberField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {

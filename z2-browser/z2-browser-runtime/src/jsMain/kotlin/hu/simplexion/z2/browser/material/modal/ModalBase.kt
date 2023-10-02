@@ -10,6 +10,7 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
+import hu.simplexion.z2.commons.util.localLaunch
 import kotlinx.browser.document
 import kotlinx.coroutines.channels.Channel
 import org.w3c.dom.HTMLElement
@@ -45,6 +46,10 @@ open class ModalBase<T : Any?>(
         grid(p24, gridAutoFlowColumn, gridAutoColumnsMinContent, gridGap16, justifyContentFlexEnd) {
             builder()
         }
+
+    fun launchShow() {
+        localLaunch { show() }
+    }
 
     open suspend fun show(): T {
         //

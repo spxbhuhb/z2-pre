@@ -79,8 +79,9 @@ object componentRouter : NavRouter() {
     val select           by render(strings.select)           { selectDemo() }
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
-    val textField        by render(strings.textField)        { textFieldDemo() }
     val table            by render(strings.table)            { tableDemo() }
+    val timepicker       by render(strings.timepicker)       { timepickerDemo() }
+    val textField        by render(strings.textField)        { textFieldDemo() }
     // @formatter:on
 }
 
