@@ -108,6 +108,10 @@ interface SchemaField<VT> : ReadWriteProperty<Any, VT> {
         return getValue(schematic).toString()
     }
 
+    fun encodeToString(schematic: Schematic<*>) : String {
+        return toString(schematic)
+    }
+
     fun copy(value : Any?) : VT? {
         return toTypedValue(value, mutableListOf())
     }

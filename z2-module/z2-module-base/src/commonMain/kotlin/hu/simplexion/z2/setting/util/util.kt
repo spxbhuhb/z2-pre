@@ -43,7 +43,7 @@ fun <T : Schematic<T>> T.encodeToSettings(basePath: String): List<Setting> {
         if (field.definitionDefault == value) continue
         result += Setting().also {
             it.path = "$basePath/${field.name}"
-            it.value = value.toString() // FIXME change this to field.encodeToString
+            it.value = field.encodeToString(this)
         }
     }
     return result

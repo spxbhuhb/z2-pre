@@ -66,6 +66,11 @@ open class EnumSchemaField<E : Enum<E>>(
     fun nullable(): NullableEnumSchemaField<E> {
         return NullableEnumSchemaField(entries, definitionDefault)
     }
+
+    override fun encodeToString(schematic: Schematic<*>): String {
+        return getValue(schematic).name
+    }
+
 }
 
 open class NullableEnumSchemaField<E : Enum<E>>(
@@ -101,6 +106,10 @@ open class NullableEnumSchemaField<E : Enum<E>>(
 
     fun nullable(): NullableEnumSchemaField<E> {
         return this
+    }
+
+    override fun encodeToString(schematic: Schematic<*>): String {
+        return requireNotNull(getValue(schematic)).name
     }
 
 }

@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.material.switch
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
-import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.icon.icon
 
 fun Z2.switch(

@@ -22,6 +22,10 @@ open class SecretSchemaField(
     override fun toString(schematic: Schematic<*>) : String {
         return "********"
     }
+
+    override fun encodeToString(schematic: Schematic<*>): String {
+        return getValue(schematic)
+    }
 }
 
 open class NullableSecretSchemaField(
@@ -40,5 +44,9 @@ open class NullableSecretSchemaField(
 
     override fun toString(schematic: Schematic<*>) : String {
         return "********"
+    }
+
+    override fun encodeToString(schematic: Schematic<*>): String {
+        return requireNotNull(getValue(schematic))
     }
 }

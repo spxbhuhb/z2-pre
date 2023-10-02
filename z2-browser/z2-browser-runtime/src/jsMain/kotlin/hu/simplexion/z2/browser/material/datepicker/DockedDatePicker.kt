@@ -3,11 +3,10 @@ package hu.simplexion.z2.browser.material.datepicker
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.positionAbsolute
 import hu.simplexion.z2.browser.css.positionRelative
-import hu.simplexion.z2.browser.css.widthFull
+import hu.simplexion.z2.browser.css.w304
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.TextField
 import hu.simplexion.z2.commons.i18n.locales.localized
@@ -40,8 +39,7 @@ class DockedDatePicker(
     val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
     override fun main(): DockedDatePicker {
-        addClass(widthFull, positionRelative)
-        style.width = 304.px
+        addClass(w304, positionRelative)
 
         textField.input.onFocus {
             selector.buildContent()
