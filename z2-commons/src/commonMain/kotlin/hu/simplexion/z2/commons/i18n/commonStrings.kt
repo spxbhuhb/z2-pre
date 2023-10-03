@@ -48,5 +48,7 @@ object commonStrings : LocalizedTextStore() {
     val novemberShort by "nov"
     val decemberShort by "dec"
 
-    val localDateSupportText by "YYYY/MM/DD"
+    val localDateSupportText by "ÉÉÉÉ.HH.NN"
+    val localTimeSupportText by "ÓÓ:PP"
+
 }

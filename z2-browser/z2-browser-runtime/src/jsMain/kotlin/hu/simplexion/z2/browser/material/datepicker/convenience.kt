@@ -26,7 +26,7 @@ fun Z2.datePicker(
         }
     ).also {
         it.value = value
-    }
+    }.main()
 
 fun Z2.month(
     year : Int,

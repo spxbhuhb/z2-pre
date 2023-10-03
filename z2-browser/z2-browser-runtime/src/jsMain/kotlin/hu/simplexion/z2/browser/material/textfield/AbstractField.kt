@@ -50,6 +50,7 @@ abstract class AbstractField<T>(
             val encoded = value?.let { config.encodeToString(it) } ?: ""
             if (inputElement.value != encoded) {
                 inputElement.value = encoded
+                update()
             }
         }
 

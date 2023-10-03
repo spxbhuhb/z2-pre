@@ -10,7 +10,7 @@ import kotlinx.datetime.LocalTime
 fun Z2.timePicker(
     value : LocalTime = hereAndNow().time,
     label : LocalizedText? = null,
-    supportText: LocalizedText? = commonStrings.localDateSupportText,
+    supportText: LocalizedText? = commonStrings.localTimeSupportText,
     onChange: TimePickerConfig.(value: LocalTime) -> Unit
 ) =
     DockedTimePicker(
@@ -24,4 +24,4 @@ fun Z2.timePicker(
         }
     ).also {
         it.value = value
-    }
+    }.main()

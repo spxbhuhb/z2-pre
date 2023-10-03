@@ -41,6 +41,8 @@ class DockedDatePicker(
     override fun main(): DockedDatePicker {
         addClass(w304, positionRelative)
 
+        textField.input.addClass(w304)
+
         textField.input.onFocus {
             selector.buildContent()
             selector.removeClass(displayNone)

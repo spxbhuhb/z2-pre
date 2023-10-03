@@ -24,4 +24,5 @@ object browserIcons : LocalizedIconStore() {
     val check by "check"
     val calendar by "calendar_today"
     val edit by "edit"
+    val schedule by "schedule"
 }
