@@ -10,13 +10,13 @@ class TimePickerConfig(
     val style : FieldStyle = defaultFieldStyle
 ) {
 
-    var leadingIcon: LocalizedIcon? = browserIcons.schedule
+    var leadingIcon: LocalizedIcon? = null
         set(value) {
             field = value
             update?.invoke()
         }
 
-    var trailingIcon: LocalizedIcon? = null
+    var trailingIcon: LocalizedIcon? = browserIcons.schedule
         set(value) {
             field = value
             update?.invoke()

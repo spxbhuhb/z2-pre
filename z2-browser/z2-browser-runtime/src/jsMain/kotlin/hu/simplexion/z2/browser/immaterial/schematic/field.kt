@@ -8,9 +8,9 @@ import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.browser.material.textfield.textField
+import hu.simplexion.z2.browser.material.timepicker.timePicker
 import hu.simplexion.z2.browser.util.label
 import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
 import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.runtime.dump
@@ -36,6 +36,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             SchemaFieldType.Int -> intField(context, label) as BoundField<T>
             SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
             //SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
+            SchemaFieldType.LocalTime -> localTimeField(context, label) as BoundField<T>
             SchemaFieldType.Long -> longField(context, label) as BoundField<T>
             SchemaFieldType.Phone -> phoneNumberField(context, label) as BoundField<T>
             SchemaFieldType.Secret -> secretField(context, label) as BoundField<T>
@@ -104,7 +105,7 @@ private fun Z2.longField(context: SchematicAccessContext, label: LocalizedText) 
 
 private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
-        datePicker(label = label, supportText = commonStrings.localDateSupportText) {
+        datePicker(label = label) {
             context.schematic.schematicChange(context.field, it)
         }.main()
     }
@@ -115,6 +116,13 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
 //            context.schematic.schematicChange(context.field, it)
 //        }.main()
 //    }
+
+private fun Z2.localTimeField(context: SchematicAccessContext, label: LocalizedText) =
+    BoundField(this, context) {
+        timePicker (label = label) {
+            context.schematic.schematicChange(context.field, it)
+        }.main()
+    }
 
 private fun Z2.phoneNumberField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {

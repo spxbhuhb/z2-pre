@@ -26,6 +26,7 @@ class TestData : Schematic<TestData>() {
     var stringField by string() blank false
     var stringField2 by string() blank false
     var localDateField by localDate()
+    var localTimeField by localTime()
     var enumField by enum<TestEnum>()
     var radioSelect by string()
     var longField by long()
@@ -42,10 +43,14 @@ fun Z2.formDemo() =
             localDateField = LocalDate(2000, 1, 1)
         }
 
-        div {
+        grid(gridGap16) {
+            gridTemplateColumns = "1fr"
+            gridAutoRows = "min-content"
+
             field { data.stringField }
             field { data.stringField2 }
             field { data.localDateField }
+            field { data.localTimeField }
             field { data.enumField }
             field { data.longField }
             field { data.optLongField }

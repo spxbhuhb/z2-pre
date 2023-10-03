@@ -3,6 +3,7 @@ package hu.simplexion.z2.commons.protobuf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
 
@@ -80,6 +81,20 @@ object ProtoLocalDateTime : ProtoDecoder<LocalDateTime>, ProtoEncoder<LocalDateT
             .int(5, value.minute)
             .int(6, value.second)
             .int(7, value.nanosecond)
+            .pack()
+
+}
+
+object ProtoLocalTime : ProtoDecoder<LocalTime>, ProtoEncoder<LocalTime> {
+
+    override fun decodeProto(message: ProtoMessage?): LocalTime {
+        if (message == null) return LocalTime.fromSecondOfDay(0)
+        return LocalTime.fromNanosecondOfDay(message.long(1))
+    }
+
+    override fun encodeProto(value: LocalTime): ByteArray =
+        ProtoMessageBuilder()
+            .long(1, value.toNanosecondOfDay())
             .pack()
 
 }

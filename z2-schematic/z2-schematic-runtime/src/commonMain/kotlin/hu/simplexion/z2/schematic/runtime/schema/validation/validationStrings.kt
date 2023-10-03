@@ -18,6 +18,7 @@ object validationStrings : LocalizedTextStore() {
     val durationFail by "Duration value required"
     val instantFail by "Instant value required"
     val localDateFail by "Date value required"
+    val localTimeFail by "Time value required"
     val localDateTimeFail by "Date and time value required"
     val schematicFail by "Value required"
     val enumFail by "Value from the pre-defined set required"

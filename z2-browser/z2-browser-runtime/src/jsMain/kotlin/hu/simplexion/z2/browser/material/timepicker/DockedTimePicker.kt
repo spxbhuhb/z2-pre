@@ -2,7 +2,6 @@ package hu.simplexion.z2.browser.material.timepicker
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
-import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
@@ -32,7 +31,7 @@ class DockedTimePicker(
             }
         }
 
-    val textField: TextField = TextField(this, state, FieldConfig(FieldStyle.Filled, decodeFromString = { it }).also {
+    val textField: TextField = TextField(this, state, FieldConfig(decodeFromString = { it }).also {
         it.leadingIcon = config.leadingIcon
         it.trailingIcon = config.trailingIcon
     }).main()

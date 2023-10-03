@@ -14,6 +14,7 @@ import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlin.time.Duration
 
 abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
@@ -119,6 +120,8 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         fun int(default: Int? = null, min: Int? = null, max: Int? = null) = IntSchemaField(default, min, max)
 
         fun localDate(default: LocalDate? = null) = LocalDateSchemaField(default)
+
+        fun localTime(default: LocalTime? = null) = LocalTimeSchemaField(default)
 
         fun localDateTime(default: LocalDateTime? = null) = LocalDateTimeSchemaField(default)
 

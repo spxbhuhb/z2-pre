@@ -10,6 +10,7 @@ enum class SchemaFieldType {
     List,
     LocalDate,
     LocalDateTime,
+    LocalTime,
     Long,
     Phone,
     Schematic,
