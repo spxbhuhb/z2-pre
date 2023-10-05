@@ -6,7 +6,10 @@ data class SchematicValidationResult(
     val valid : Boolean,
     val validForCreate : Boolean,
     val fieldResults : Map<String, FieldValidationResult>
-)
+) {
+    fun failedFields(forCreate : Boolean) : List<String> =
+        fieldResults.values.filter { ! if (forCreate) it.validForCreate else it.valid }.map { it.path }
+}
 
 data class FieldValidationResult(
     val path : String,

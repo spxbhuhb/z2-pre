@@ -157,7 +157,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         ) = StringListSchemaField(default, minLength, maxLength, blank, pattern)
 
         fun <UT> uuid(
-            validForCreate : Boolean = false,
+            validForCreate: Boolean = false,
             default: UUID<UT>? = null,
             nil: Boolean? = null,
         ) = UuidSchemaField(default, nil, validForCreate)
@@ -173,17 +173,17 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
     // Utility
     // -----------------------------------------------------------------------------------
 
-    fun schematicSet(fieldName : String, value : Any?) {
+    fun schematicSet(fieldName: String, value: Any?) {
         @Suppress("UNCHECKED_CAST")
         (schematicSchema.fields.first { it.name == fieldName } as SchemaField<Any>).setValue(this, value)
     }
 
-    fun schematicGet(fieldName : String) : Any? {
+    fun schematicGet(fieldName: String): Any? {
         return schematicSchema.fields.first { it.name == fieldName }.getValue(this)
     }
 
     // FIXME this is a real mess, fix schematic field type handling already!
-    fun copy() : ST {
+    fun copy(): ST {
         val newInstance = schematicCompanion.newInstance()
         for (field in schematicSchema.fields) {
             newInstance.schematicValues[field.name] = field.copy(this.schematicValues[field.name])
@@ -191,7 +191,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         return newInstance
     }
 
-    fun copyFrom(source : ST) {
+    fun copyFrom(source: ST) {
         for (field in schematicSchema.fields) {
             field.copy(source, this)
         }
@@ -203,11 +203,16 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         }
     }
 
-    override fun toString() : String {
+    fun validate(forCreate: Boolean = false) =
+        schematicSchema.validate(this).also {
+            if (forCreate) it.validForCreate else it.valid
+        }
+
+    override fun toString(): String {
         return this::class.simpleName + "(" + toString("=", ",") + ")"
     }
 
-    fun toString(valueSeparator : String = "=", fieldSeparator : String = ", ") : String {
+    fun toString(valueSeparator: String = "=", fieldSeparator: String = ", "): String {
         val fields = mutableListOf<String>()
         for (field in schematicSchema.fields) {
             fields += field.name + valueSeparator + field.toString(this)
