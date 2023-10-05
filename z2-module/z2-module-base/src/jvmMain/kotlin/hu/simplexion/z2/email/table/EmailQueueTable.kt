@@ -6,7 +6,6 @@ import hu.simplexion.z2.email.model.EmailQueueEntry
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.exposed.z2
-import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.deleteWhere

@@ -18,7 +18,9 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
 
     companion object {
         // TODO content placement strategy settings
-        var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(Paths.get(System.getenv("Z2_CONTENT_PATH")))
+        var globalContentPlacementStrategy: ContentPlacementStrategy =
+            BasicPlacementStrategy(Paths.get(System.getenv("Z2_CONTENT_PATH") ?: "./var/tmp" ))
+
         val contentImpl = ContentImpl()
     }
 

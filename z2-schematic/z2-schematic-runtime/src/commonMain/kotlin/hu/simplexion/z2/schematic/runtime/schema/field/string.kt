@@ -2,9 +2,7 @@ package hu.simplexion.z2.schematic.runtime.schema.field
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicCompanion
 import hu.simplexion.z2.schematic.runtime.SchematicList
 import hu.simplexion.z2.schematic.runtime.schema.ListSchemaField
 import hu.simplexion.z2.schematic.runtime.schema.SchemaField

@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-includeBuild("../../z2-commons")
+includeBuild("../../z2-commons/z2-commons-runtime")

@@ -3,7 +3,6 @@ package hu.simplexion.z2.service.runtime.transport
 import hu.simplexion.z2.commons.protobuf.ProtoDecoder
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.service.runtime.BasicServiceContext
 import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
 
 /**

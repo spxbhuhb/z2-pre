@@ -2,7 +2,6 @@ package hu.simplexion.z2.setting.api
 
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.commons.util.variant
 import hu.simplexion.z2.schematic.runtime.Schematic
 import hu.simplexion.z2.service.runtime.Service
 import hu.simplexion.z2.setting.model.Setting

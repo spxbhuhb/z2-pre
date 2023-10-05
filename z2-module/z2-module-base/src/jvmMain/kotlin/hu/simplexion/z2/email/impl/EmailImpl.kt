@@ -1,8 +1,6 @@
 package hu.simplexion.z2.email.impl
 
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
-import hu.simplexion.z2.commons.event.EventCentral
-import hu.simplexion.z2.commons.event.Z2Event
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.email.api.EmailApi
@@ -14,8 +12,6 @@ import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.email.worker.EmailQueued
 import hu.simplexion.z2.service.runtime.ServiceImpl
-import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
-import org.jetbrains.exposed.sql.insert
 
 class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
 

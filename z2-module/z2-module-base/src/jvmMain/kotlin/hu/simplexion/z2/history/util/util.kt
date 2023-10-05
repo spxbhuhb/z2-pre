@@ -3,7 +3,6 @@ package hu.simplexion.z2.history.util
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.accountOrNull
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.commons.i18n.LocalizedText
 import hu.simplexion.z2.commons.i18n.format
 import hu.simplexion.z2.commons.util.UUID

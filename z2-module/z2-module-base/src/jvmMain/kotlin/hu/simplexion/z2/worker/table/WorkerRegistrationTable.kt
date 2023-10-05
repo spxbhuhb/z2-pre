@@ -6,7 +6,6 @@ import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.model.WorkerStartMode
 import hu.simplexion.z2.worker.model.WorkerStatus
-import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.kotlin.datetime.duration
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.update

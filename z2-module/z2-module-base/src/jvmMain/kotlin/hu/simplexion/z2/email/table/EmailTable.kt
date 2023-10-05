@@ -8,14 +8,9 @@ import hu.simplexion.z2.email.model.EmailQuery
 import hu.simplexion.z2.email.model.EmailStatus
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
-import hu.simplexion.z2.history.model.HistoryEntry
 import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 
 open class EmailTable(

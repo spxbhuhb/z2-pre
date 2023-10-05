@@ -1,19 +1,5 @@
 package hu.simplexion.z2.worker
 
-import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.testing.integratedWithSo
-import hu.simplexion.z2.worker.impl.WorkerImpl
-import hu.simplexion.z2.worker.impl.WorkerImpl.Companion.workerImpl
-import hu.simplexion.z2.worker.model.WorkerRegistration
-import hu.simplexion.z2.worker.model.WorkerStatus
-import hu.simplexion.z2.worker.runtime.WorkerRuntime
-import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-
 class WorkerImplTest {
 //
 //    @Test

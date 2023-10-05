@@ -12,6 +12,6 @@ pluginManagement {
     }
 }
 
-includeBuild("../../z2-commons")
+includeBuild("../../z2-commons/z2-commons-runtime")
 includeBuild("../../z2-service/z2-service-runtime")
 includeBuild("../../z2-schematic/z2-schematic-runtime")

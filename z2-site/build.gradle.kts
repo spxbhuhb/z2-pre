@@ -2,7 +2,7 @@
  * Copyright © 2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 plugins {
-    kotlin("multiplatform") version "1.9.0"
+    kotlin("multiplatform") version "1.9.10"
     id("hu.simplexion.z2.schematic") version "2023.8.30-SNAPSHOT"
     id("hu.simplexion.z2.service") version "2023.8.30-SNAPSHOT"
 

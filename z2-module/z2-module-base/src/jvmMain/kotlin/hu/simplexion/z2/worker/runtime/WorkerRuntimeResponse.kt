@@ -2,7 +2,6 @@ package hu.simplexion.z2.worker.runtime
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.worker.model.WorkerRegistration
-import kotlinx.coroutines.channels.Channel
 
 class WorkerRuntimeResponse(
     val registration : WorkerRegistration? = null,

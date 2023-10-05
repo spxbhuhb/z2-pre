@@ -11,13 +11,13 @@ Status: **initial development**
 
 ## Modules
 
-| Library                   | Purpose                                                               |
-|---------------------------|-----------------------------------------------------------------------|
-| [Commons](z2-commons)     | Very basic common functions and data structures, interfaces for I18N. |
-| [Service](z2-service)     | Client-Server communication with simple function calls.               |
+| Library                   | Purpose                                                                 |
+|---------------------------|-------------------------------------------------------------------------|
+| [Commons](z2-commons)     | Common functions and data structures. Localization.                     |
+| [Service](z2-service)     | Client-Server communication with simple function calls.                 |
 | [Schematic](z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
-| [Browser](z2-browser)     | Material 3 components for web browsers.                               |
-| [Module](z2-module)       | Fully functional application modules (UI + Backend, SQL with Exposed) |
+| [Browser](z2-browser)     | Material 3 and other components for web browsers.                       |
+| [Module](z2-module)       | Fully functional application modules (UI + Backend, SQL with Exposed)   |
 
 ## Gradle Dependency
 
@@ -38,7 +38,7 @@ pluginManagement {
 
 ```kotlin
 plugins {
-    kotlin("multiplatform") version "1.9.0"
+    kotlin("multiplatform") version "1.9.10"
     id("hu.simplexion.z2.schematic") version "<schematic-plugin-version>"
     id("hu.simplexion.z2.service") version "<service-plugin-version>"
 }

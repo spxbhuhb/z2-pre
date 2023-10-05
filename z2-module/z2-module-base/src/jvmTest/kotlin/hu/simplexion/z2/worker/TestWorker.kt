@@ -3,8 +3,9 @@ package hu.simplexion.z2.worker
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.util.concurrent.ConcurrentHashMap
 
 class TestWorker(
