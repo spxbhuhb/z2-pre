@@ -144,7 +144,7 @@ If you have to switch locales (as in the e-mail generation example above) progra
 
 The compiler plugin:
 
-* turns all calls such as `static("your text")` into `static(this, "property-name", "your-text")` calls
+* turns all calls such as `static("default text")` into `static(this, "property-name", "default-text")` calls
 * collects all localization keys used in your code and saves them into a file
     * this gives you a complete list of texts you have to translate
 

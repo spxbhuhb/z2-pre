@@ -3,6 +3,8 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    java
     signing
     `maven-publish`
 }
@@ -25,6 +27,7 @@ repositories {
 kotlin {
     jvm {
         jvmToolchain(11)
+        withJava()
     }
     js(IR) {
         browser()
@@ -45,6 +48,10 @@ kotlin {
             }
         }
     }
+}
+
+// this is here for the compiler plugin box tests
+tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
 }
 
 // ----------------------------------------------------------------
