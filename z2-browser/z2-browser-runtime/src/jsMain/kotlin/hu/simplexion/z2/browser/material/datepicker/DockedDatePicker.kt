@@ -9,7 +9,7 @@ import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.TextField
-import hu.simplexion.z2.commons.i18n.locales.localized
+import hu.simplexion.z2.commons.localization.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.datetime.LocalDate
 

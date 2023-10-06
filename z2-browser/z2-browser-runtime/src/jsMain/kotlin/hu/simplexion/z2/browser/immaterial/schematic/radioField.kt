@@ -17,7 +17,7 @@ fun <T> Z2.radioField(context: SchematicAccessContext? = null, @Suppress("UNUSED
     checkNotNull(context)
 
     val field = context.field
-    val label = field.label()
+    val label = field.label(context.schematic)
 
     return try {
 

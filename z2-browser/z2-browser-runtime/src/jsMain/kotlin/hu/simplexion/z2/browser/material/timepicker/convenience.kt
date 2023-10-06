@@ -2,15 +2,15 @@ package hu.simplexion.z2.browser.material.timepicker
 
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.commons.localization.text.dateTimeStrings
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.datetime.LocalTime
 
 fun Z2.timePicker(
     value : LocalTime = hereAndNow().time,
     label : LocalizedText? = null,
-    supportText: LocalizedText? = commonStrings.localTimeSupportText,
+    supportText: LocalizedText? = dateTimeStrings.localTimeSupportText,
     onChange: TimePickerConfig.(value: LocalTime) -> Unit
 ) =
     DockedTimePicker(

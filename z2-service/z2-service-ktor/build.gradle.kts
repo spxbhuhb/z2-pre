@@ -44,7 +44,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation("io.ktor:ktor-client-websockets:$ktor_version")
-                implementation("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+                implementation("hu.simplexion.z2:z2-commons-runtime:${z2_commons_version}")
                 implementation("hu.simplexion.z2:z2-service-runtime:${z2_service_version}")
             }
         }

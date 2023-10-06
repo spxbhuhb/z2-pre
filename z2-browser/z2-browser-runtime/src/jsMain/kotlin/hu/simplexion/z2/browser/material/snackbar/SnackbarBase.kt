@@ -1,12 +1,12 @@
 package hu.simplexion.z2.browser.material.snackbar
 
+import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
-import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.util.io
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import kotlinx.browser.document
 import kotlinx.coroutines.delay
 import org.w3c.dom.HTMLElement

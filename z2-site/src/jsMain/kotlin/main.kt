@@ -13,7 +13,6 @@ import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
 import hu.simplexion.z2.browser.demo.pages.administration.administrationRouter
 import hu.simplexion.z2.browser.demo.pages.loginDemo
-import hu.simplexion.z2.browser.demo.pages.loginStrings
 import hu.simplexion.z2.browser.demo.routing.routingRouter
 import hu.simplexion.z2.browser.demo.search.searchDemo
 import hu.simplexion.z2.browser.demo.strings
@@ -90,7 +89,7 @@ object pagesRouter : NavRouter() {
     override val label = strings.pages
 
     // @formatter:off
-    val login          by render(loginStrings.login)          { loginDemo() }
+    val login          by render(strings.login)          { loginDemo() }
     val administration by administrationRouter
     // @formatter:on
 }

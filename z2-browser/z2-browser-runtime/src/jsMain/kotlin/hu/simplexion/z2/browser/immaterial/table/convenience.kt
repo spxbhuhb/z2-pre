@@ -23,7 +23,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(context: SchematicAccessC
     val field = context.field
 
     column {
-        label = field.label()
+        label = field.label(context.schematic)
         render = { schematic -> text { schematic.schematicValues[field.name] } }
         // FIXME schematicColum comparator and field getter
     }

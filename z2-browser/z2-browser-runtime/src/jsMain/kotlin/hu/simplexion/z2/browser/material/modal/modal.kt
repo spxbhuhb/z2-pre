@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.material.modal
 
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 
 fun <T : Any?> modal(vararg classes: String, builder: ModalBase<T>.() -> Unit): ModalBase<T> =

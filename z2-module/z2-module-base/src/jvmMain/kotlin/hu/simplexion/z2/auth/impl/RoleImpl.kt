@@ -13,7 +13,7 @@ import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.ui.authStrings
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.runtime.ensureValid

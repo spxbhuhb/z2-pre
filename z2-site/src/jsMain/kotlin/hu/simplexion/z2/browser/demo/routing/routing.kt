@@ -1,6 +1,8 @@
 package hu.simplexion.z2.browser.demo.routing
 
 import defaultLayout
+import hu.simplexion.z2.browser.demo.icons
+import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div

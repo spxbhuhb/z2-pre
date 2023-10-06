@@ -3,7 +3,7 @@ package hu.simplexion.z2.i18n.table
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
-import hu.simplexion.z2.i18n.model.Language
+import hu.simplexion.z2.localization.model.Language
 import org.jetbrains.exposed.sql.update
 
 open class LanguageTable : SchematicUuidTable<Language>(

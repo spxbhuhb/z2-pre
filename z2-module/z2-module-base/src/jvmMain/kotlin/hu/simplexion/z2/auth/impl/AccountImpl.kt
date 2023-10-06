@@ -12,7 +12,6 @@ import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTab
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
-import hu.simplexion.z2.commons.i18n.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.service.runtime.ServiceImpl
@@ -40,7 +39,7 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
 
         val accountUuid = accountPrivateTable.insert(account)
 
-        securityHistory(authStrings.account, commonStrings.add, accountUuid, account, roles.joinToString("\n"))
+        securityHistory(authStrings.account, authStrings.add, accountUuid, account, roles.joinToString("\n"))
 
         if (activationKey != null) {
             val credentials = AccountCredentials()

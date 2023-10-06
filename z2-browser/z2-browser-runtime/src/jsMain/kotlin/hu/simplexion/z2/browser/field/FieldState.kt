@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser.field
 
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 class FieldState(
     label : String? = null,

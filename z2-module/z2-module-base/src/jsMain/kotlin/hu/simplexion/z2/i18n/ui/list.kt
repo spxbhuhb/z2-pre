@@ -10,7 +10,8 @@ import hu.simplexion.z2.browser.immaterial.table.table
 import hu.simplexion.z2.browser.layout.surfaceContainer
 import hu.simplexion.z2.browser.layout.surfaceContainerLowest
 import hu.simplexion.z2.i18n.languages
-import hu.simplexion.z2.i18n.model.Language
+import hu.simplexion.z2.localization.model.Language
+import hu.simplexion.z2.localization.ui.localizationStrings
 
 internal fun Z2.list() =
     surfaceContainerLowest(borderOutline) {
@@ -19,8 +20,8 @@ internal fun Z2.list() =
             table<Language> {
 
                 title {
-                    text = i18nStrings.languages
-                    action(i18nStrings.addLanguage) { add() }
+                    text = localizationStrings.languages
+                    action(localizationStrings.addLanguage) { add() }
                 }
 
                 rowId = { it.id }

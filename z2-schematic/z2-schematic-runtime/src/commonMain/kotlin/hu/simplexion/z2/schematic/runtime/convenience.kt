@@ -1,6 +1,6 @@
 package hu.simplexion.z2.schematic.runtime
 
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.PublicApi
 import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
 import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo

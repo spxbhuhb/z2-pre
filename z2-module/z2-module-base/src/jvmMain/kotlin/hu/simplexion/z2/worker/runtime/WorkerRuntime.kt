@@ -3,7 +3,7 @@ package hu.simplexion.z2.worker.runtime
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.util.runBlockingAsSecurityOfficer
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.systemHistory
 import hu.simplexion.z2.history.util.technicalHistory

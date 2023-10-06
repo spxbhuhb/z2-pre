@@ -2,7 +2,7 @@ package hu.simplexion.z2.setting.impl
 
 import hu.simplexion.z2.auth.context.ensureSelfOrSecurityOfficer
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.settingHistory
 import hu.simplexion.z2.service.runtime.ServiceImpl

@@ -3,8 +3,8 @@ package hu.simplexion.z2.history.util
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.accountOrNull
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.format
+import hu.simplexion.z2.commons.localization.format
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.impl.HistoryImpl.Companion.historyImpl
 import hu.simplexion.z2.history.model.HistoryFlags

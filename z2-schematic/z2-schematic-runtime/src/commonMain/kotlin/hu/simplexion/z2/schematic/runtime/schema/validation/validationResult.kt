@@ -1,6 +1,6 @@
 package hu.simplexion.z2.schematic.runtime.schema.validation
 
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 data class SchematicValidationResult(
     val valid : Boolean,
@@ -26,7 +26,7 @@ open class ValidationFailInfo(
     }
 }
 
-fun fail(template :LocalizedText, vararg parameters : Any) : ValidationFailInfo {
+fun fail(template : LocalizedText, vararg parameters : Any) : ValidationFailInfo {
     return ValidationFailInfo(
         template.toString() // TODO convert the template into a text
     )

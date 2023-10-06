@@ -15,7 +15,7 @@ fun Z2.switchField(context: SchematicAccessContext? = null, @Suppress("UNUSED_PA
     checkNotNull(context)
 
     val field = context.field
-    val label = field.label()
+    val label = field.label(context.schematic)
 
     return try {
         BoundField(this, context) {

@@ -8,16 +8,17 @@ import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.i18n.languages
-import hu.simplexion.z2.i18n.model.Language
+import hu.simplexion.z2.localization.model.Language
+import hu.simplexion.z2.localization.ui.localizationStrings
 
 internal fun add() =
-    languageModal(Language(), i18nStrings.addLanguage, browserStrings.add) { languages.add(it) }
+    languageModal(Language(), localizationStrings.addLanguage, browserStrings.add) { languages.add(it) }
 
 internal fun edit(language: Language) =
-    languageModal(language, i18nStrings.editLanguage, browserStrings.edit) { languages.update(it) }
+    languageModal(language, localizationStrings.editLanguage, browserStrings.edit) { languages.update(it) }
 
 internal fun languageModal(
     language: Language,

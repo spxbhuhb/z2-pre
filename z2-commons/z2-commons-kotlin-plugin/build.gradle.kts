@@ -52,7 +52,7 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.junit.platform:junit-platform-suite-api")
-    testImplementation("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+    testImplementation("hu.simplexion.z2:z2-commons-runtime:${z2_commons_version}")
 }
 
 tasks.test {

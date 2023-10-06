@@ -1,6 +1,7 @@
 package hu.simplexion.z2.browser.demo.pages
 
 import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledButton
@@ -8,21 +9,7 @@ import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.fr
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.textfield.outlinedTextField
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
 import org.w3c.dom.HTMLInputElement
-
-object loginStrings : LocalizedTextStore() {
-    val loginSupport by "Z2 Browser Components Demo"
-    val login by "Sign in"
-    val account by "Account"
-    val password by "Password"
-    val forgottenPassword by "Forgot password?"
-    val help by "Help"
-    val privacy by "Privacy"
-    val term by "Terms"
-    val english by "English"
-    val registration by "Create account"
-}
 
 fun Z2.loginDemo() =
     surfaceContainerLow(widthFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
@@ -38,19 +25,19 @@ fun Z2.loginDemo() =
                     gridAutoRows = "min-content"
 
                     div(titleSmall, justifySelfCenter) {
-                        text { loginStrings.loginSupport }
+                        text { strings.loginSupport }
                     }
 
                     div(titleLarge, justifySelfCenter) {
-                        text { loginStrings.login }
+                        text { strings.login }
                     }
 
                     grid(gridGap24) {
                         gridTemplateColumns = 1.fr
                         gridTemplateRows = "min-content min-content"
 
-                        outlinedTextField("", loginStrings.account)
-                        outlinedTextField("", loginStrings.password)
+                        outlinedTextField("", strings.account)
+                        outlinedTextField("", strings.password)
                             .apply { (input.htmlElement as HTMLInputElement).type = "password" }
                     }
 
@@ -60,9 +47,9 @@ fun Z2.loginDemo() =
 
                         style.left = "-8px"
 
-                        textButton(loginStrings.forgottenPassword) { }
-                        textButton(loginStrings.registration) { }
-                        filledButton(loginStrings.login) { }
+                        textButton(strings.forgottenPassword) { }
+                        textButton(strings.registration) { }
+                        filledButton(strings.login) { }
                     }
                 }
             }
@@ -72,10 +59,10 @@ fun Z2.loginDemo() =
                 gridTemplateRows = "min-content"
                 gridGap = 16.px
 
-                textButton(loginStrings.english) { }
-                textButton(loginStrings.help) { }
-                textButton(loginStrings.privacy) { }
-                textButton(loginStrings.term) { }
+                textButton(strings.english) { }
+                textButton(strings.help) { }
+                textButton(strings.privacy) { }
+                textButton(strings.term) { }
             }
         }
     }

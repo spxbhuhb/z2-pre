@@ -42,7 +42,7 @@ kotlin {
     }
 
     sourceSets["commonMain"].dependencies {
-        api("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+        api("hu.simplexion.z2:z2-commons-runtime:${z2_commons_version}")
     }
 
     sourceSets["commonTest"].dependencies {

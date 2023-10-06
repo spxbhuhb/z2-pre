@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.gridTemplateRows
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 fun Z2.surfaceContainerLowest(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, "surface-container-lowest", scroll, fullHeight, builder)

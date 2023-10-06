@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.material.datepicker
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
-import hu.simplexion.z2.commons.i18n.LocalizedIcon
+import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
 import kotlinx.datetime.LocalDate
 
 class DatePickerConfig(

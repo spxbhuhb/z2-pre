@@ -1,8 +1,9 @@
 package hu.simplexion.z2.content.ui
 
-import hu.simplexion.z2.commons.i18n.LocalizedIconStore
+import hu.simplexion.z2.commons.localization.icon.LocalizedIconProvider
 
-@Suppress("ClassName")
-object contentIcons : LocalizedIconStore() {
-    val folder by "folder"
+object contentIcons : ContentIcons
+
+interface ContentIcons : LocalizedIconProvider {
+    val folder get() = static("folder")
 }

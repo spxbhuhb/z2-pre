@@ -3,8 +3,8 @@ package hu.simplexion.z2.browser.material.datepicker
 import hu.simplexion.z2.browser.css.pb16
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.commons.localization.text.dateTimeStrings
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
@@ -12,7 +12,7 @@ import kotlinx.datetime.Month
 fun Z2.datePicker(
     value : LocalDate = hereAndNow().date,
     label : LocalizedText? = null,
-    supportText: LocalizedText? = commonStrings.localDateSupportText,
+    supportText: LocalizedText? = dateTimeStrings.localDateSupportText,
     onChange: DockedDatePicker.(value: LocalDate) -> Unit
 ) =
     DockedDatePicker(

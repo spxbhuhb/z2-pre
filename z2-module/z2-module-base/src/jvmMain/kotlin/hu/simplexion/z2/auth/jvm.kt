@@ -14,7 +14,7 @@ import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
-import hu.simplexion.z2.commons.i18n.commonStrings
+import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables

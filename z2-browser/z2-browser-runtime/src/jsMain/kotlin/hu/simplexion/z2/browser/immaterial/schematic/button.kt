@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.immaterial.schematic
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.runtime.Schematic
 import org.w3c.dom.events.Event
 

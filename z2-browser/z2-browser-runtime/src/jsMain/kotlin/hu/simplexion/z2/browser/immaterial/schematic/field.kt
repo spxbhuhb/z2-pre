@@ -10,7 +10,7 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.default
 import hu.simplexion.z2.browser.material.textfield.textField
 import hu.simplexion.z2.browser.material.timepicker.timePicker
 import hu.simplexion.z2.browser.util.label
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
 import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.runtime.dump
@@ -28,7 +28,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
 
     return try {
         val field = context.field
-        val label = field.label()
+        val label = field.label(context.schematic)
 
         when (field.type) {
             SchemaFieldType.Email -> emailField(context, label) as BoundField<T>

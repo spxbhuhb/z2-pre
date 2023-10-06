@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.immaterial.table.TableColumn
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 open class ColumnBuilder<T> {
 

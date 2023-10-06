@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
 import hu.simplexion.z2.browser.browserStrings
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 class TableActionBuilder<T>{
 

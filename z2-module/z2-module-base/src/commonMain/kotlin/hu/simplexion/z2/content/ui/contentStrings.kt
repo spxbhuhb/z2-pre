@@ -1,8 +1,8 @@
 package hu.simplexion.z2.content.ui
 
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
+import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
 
-internal object contentStrings : LocalizedTextStore() {
-    val upload by "feltöltés"
-    val download by "letöltés"
+interface ContentStrings : LocalizedTextProvider {
+    val upload get() = static("feltöltés")
+    val download get() = static("letöltés")
 }

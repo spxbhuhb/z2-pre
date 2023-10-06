@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo.material
 
+import hu.simplexion.z2.browser.demo.icons
 import hu.simplexion.z2.browser.demo.strings
-import hu.simplexion.z2.browser.demo.table.icons
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.layout.surfaceContainerHigh
 import hu.simplexion.z2.browser.material.navigation.NavigationItem

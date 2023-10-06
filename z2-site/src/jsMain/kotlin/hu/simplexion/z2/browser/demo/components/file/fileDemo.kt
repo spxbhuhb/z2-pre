@@ -11,8 +11,8 @@ import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.browser.material.vh
-import hu.simplexion.z2.commons.i18n.commonStrings
-import hu.simplexion.z2.commons.i18n.locales.localized
+import hu.simplexion.z2.commons.localization.locales.localized
+import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.hereAndNow
 import org.w3c.files.File
 

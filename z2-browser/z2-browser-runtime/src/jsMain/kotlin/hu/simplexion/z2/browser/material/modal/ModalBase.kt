@@ -8,8 +8,8 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import kotlinx.browser.document
 import kotlinx.coroutines.channels.Channel

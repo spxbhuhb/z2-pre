@@ -1,8 +1,8 @@
 package hu.simplexion.z2.logging.util
 
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.format
-import hu.simplexion.z2.commons.i18n.locales.localized
+import hu.simplexion.z2.commons.localization.format
+import hu.simplexion.z2.commons.localization.locales.localized
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.hereAndNow
 
 fun info(topic : LocalizedText, message : LocalizedText) {

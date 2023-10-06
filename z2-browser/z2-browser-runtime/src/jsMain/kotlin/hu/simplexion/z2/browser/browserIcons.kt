@@ -1,28 +1,30 @@
 package hu.simplexion.z2.browser
 
-import hu.simplexion.z2.commons.i18n.LocalizedIconStore
+import hu.simplexion.z2.commons.localization.icon.LocalizedIconProvider
 
-object browserIcons : LocalizedIconStore() {
-    val settings by "settings"
-    val search by "search"
-    val cancel by "cancel"
-    val error by "error"
-    val more by "more_vert"
-    val close by "close"
-    val switchSelected by "check"
-    val switchUnselected by "close"
-    val filter by "tune"
-    val add by "add"
-    val export by "download"
-    val back by "arrow_back"
-    val administration by "local_police"
-    val left by "chevron_left"
-    val right by "chevron_right"
-    val down by "arrow_drop_down"
-    val radioButtonChecked by "radio_button_checked"
-    val radioButtonUnchecked by "radio_button_unchecked"
-    val check by "check"
-    val calendar by "calendar_today"
-    val edit by "edit"
-    val schedule by "schedule"
+object browserIcons : BrowserIcons
+
+interface BrowserIcons : LocalizedIconProvider {
+    val settings get() = static("settings")
+    val search get() = static("search")
+    val cancel get() = static("cancel")
+    val error get() = static("error")
+    val more get() = static("more_vert")
+    val close get() = static("close")
+    val switchSelected get() = static("check")
+    val switchUnselected get() = static("close")
+    val filter get() = static("tune")
+    val add get() = static("add")
+    val export get() = static("download")
+    val back get() = static("arrow_back")
+    val administration get() = static("local_police")
+    val left get() = static("chevron_left")
+    val right get() = static("chevron_right")
+    val down get() = static("arrow_drop_down")
+    val radioButtonChecked get() = static("radio_button_checked")
+    val radioButtonUnchecked get() = static("radio_button_unchecked")
+    val check get() = static("check")
+    val calendar get() = static("calendar_today")
+    val edit get() = static("edit")
+    val schedule get() = static("schedule")
 }

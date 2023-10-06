@@ -3,8 +3,8 @@ package hu.simplexion.z2.browser.material.button
 import hu.simplexion.z2.browser.css.labelLarge
 import hu.simplexion.z2.browser.css.labelSmall
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import org.w3c.dom.events.Event
 

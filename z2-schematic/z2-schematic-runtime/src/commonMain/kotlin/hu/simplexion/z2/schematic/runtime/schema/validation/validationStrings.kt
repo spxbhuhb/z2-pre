@@ -1,26 +1,27 @@
 package hu.simplexion.z2.schematic.runtime.schema.validation
 
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
+import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
 
-@Suppress("ClassName")
-object validationStrings : LocalizedTextStore() {
-    val nullFail by "Value required"
-    val integerFail by "Integer value required"
-    val minValueFail by "Value is less than %N"
-    val maxValueFail by "Value is greater than %N"
-    val minLengthFail by "At least %N characters required"
-    val maxLengthFail by "Maximum %N characters allowed"
-    val blankFail by "Blank value is not allowed"
-    val booleanFail by "Boolean value required"
-    val patternFail by "Invalid value"
-    val uuidFail by "UUID value required"
-    val nilFail by "Non-NUL UUID value required"
-    val durationFail by "Duration value required"
-    val instantFail by "Instant value required"
-    val localDateFail by "Date value required"
-    val localTimeFail by "Time value required"
-    val localDateTimeFail by "Date and time value required"
-    val schematicFail by "Value required"
-    val enumFail by "Value from the pre-defined set required"
-    val listFail by "Value is not a list"
+object validationStrings : ValidationStrings
+
+interface ValidationStrings : LocalizedTextProvider {
+    val nullFail get() = static("Value required")
+    val integerFail get() = static("Integer value required")
+    val minValueFail get() = static("Value is less than %N")
+    val maxValueFail get() = static("Value is greater than %N")
+    val minLengthFail get() = static("At least %N characters required")
+    val maxLengthFail get() = static("Maximum %N characters allowed")
+    val blankFail get() = static("Blank value is not allowed")
+    val booleanFail get() = static("Boolean value required")
+    val patternFail get() = static("Invalid value")
+    val uuidFail get() = static("UUID value required")
+    val nilFail get() = static("Non-NUL UUID value required")
+    val durationFail get() = static("Duration value required")
+    val instantFail get() = static("Instant value required")
+    val localDateFail get() = static("Date value required")
+    val localTimeFail get() = static("Time value required")
+    val localDateTimeFail get() = static("Date and time value required")
+    val schematicFail get() = static("Value required")
+    val enumFail get() = static("Value from the pre-defined set required")
+    val listFail get() = static("Value is not a list")
 }

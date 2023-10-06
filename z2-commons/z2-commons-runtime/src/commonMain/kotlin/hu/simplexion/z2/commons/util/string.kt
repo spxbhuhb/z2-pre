@@ -2,6 +2,21 @@ package hu.simplexion.z2.commons.util
 
 import kotlin.math.min
 
+fun String.toCamelCaseWords() : String {
+    val out = mutableListOf<Char>()
+    for (char in toCharArray()) {
+        when {
+            out.isEmpty() -> out += char.uppercaseChar()
+            char.isUpperCase() -> {
+                out += ' '
+                out += char
+            }
+            else -> out += char
+        }
+    }
+    return out.toCharArray().concatToString()
+}
+
 /**
  * Convert a [ByteArray] into a string, replacing all non-printable and non-ASCII
  * characters with a dot.

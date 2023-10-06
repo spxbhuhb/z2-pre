@@ -1,47 +1,49 @@
 package hu.simplexion.z2.browser
 
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
+import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
 
-object browserStrings : LocalizedTextStore() {
-    val actions by "műveletek"
-    val add by "hozzáadás"
-    val back by "vissza"
-    val cancel by "mégse"
-    val discardChanges by "Discard changes?"
-    val discardChangesMessage by "To save the changes click on cancel and save the changes before leaving the page."
-    val edit by "szerkesztés"
-    val export by "export"
-    val name by "név"
-    val no by "nem"
-    val open by "megnyitás"
-    val searchHint by "keresés"
-    val settings by "beállítások"
-    val yes by "igen"
-    val _empty by ""
-    val createdBy by "létrehozó"
-    val createdAt by "létrehozás"
-    val content by "tartalom"
-    val details by "részletek"
-    val ok by "rendben"
-    val previous by "előző"
-    val next by "következő"
-    val searchInProgress by "...keresés..."
-    val noHits by "nincs találat"
-    val dropFileHere by "dobja ide a fájlt vagy klikkeljen a kiválasztáshoz"
-    val dropAttachmentHere by "dobja ide a mellékleteket vagy klikkeljen a kiválasztáshoz"
-    val fileAlreadyAdded by "Ilyen nevű fájl már hozzá van adva."
-    val selectMainFirst by "A mellékletek kiválasztása előtt a fájl ki kell választani."
-    val selectFolderFirst by "Válasszon mappát!"
-    val zeroBytes by "0 bájt"
-    val bytes by "bájt"
-    val noFilesSelected by "nincs fájl kiválasztva"
-    val filesSelected by "fájl"
-    val type by "Típus"
-    val bundleNameSupport by "a dokumentum címe"
-    val title by "Cím"
-    val file by "Fájl"
-    val attachments by "Mellékletek"
-    val folder by "Mappa"
-    val sizeOverLimit by "mérethatár felett"
-    val invalidExtension by "nem elfogadott formátum"
+object browserStrings : IBrowserStrings
+
+interface IBrowserStrings : LocalizedTextProvider {
+    val actions get() = static("műveletek")
+    val add get() = static("hozzáadás")
+    val back get() = static("vissza")
+    val cancel get() = static("mégse")
+    val discardChanges get() = static("Változások eldobása?")
+    val discardChangesMessage get() = static("A mentéshez klikk a Mégse gombra és utána mentés.")
+    val edit get() = static("szerkesztés")
+    val export get() = static("export")
+    val name get() = static("név")
+    val no get() = static("nem")
+    val open get() = static("megnyitás")
+    val searchHint get() = static("keresés")
+    val settings get() = static("beállítások")
+    val yes get() = static("igen")
+    val _empty get() = static("")
+    val createdBy get() = static("létrehozó")
+    val createdAt get() = static("létrehozás")
+    val content get() = static("tartalom")
+    val details get() = static("részletek")
+    val ok get() = static("rendben")
+    val previous get() = static("előző")
+    val next get() = static("következő")
+    val searchInProgress get() = static("...keresés...")
+    val noHits get() = static("nincs találat")
+    val dropFileHere get() = static("dobja ide a fájlt vagy klikkeljen a kiválasztáshoz")
+    val dropAttachmentHere get() = static("dobja ide a mellékleteket vagy klikkeljen a kiválasztáshoz")
+    val fileAlreadyAdded get() = static("Ilyen nevű fájl már hozzá van adva.")
+    val selectMainFirst get() = static("A mellékletek kiválasztása előtt a fájl ki kell választani.")
+    val selectFolderFirst get() = static("Válasszon mappát!")
+    val zeroBytes get() = static("0 bájt")
+    val bytes get() = static("bájt")
+    val noFilesSelected get() = static("nincs fájl kiválasztva")
+    val filesSelected get() = static("fájl")
+    val type get() = static("Típus")
+    val bundleNameSupport get() = static("a dokumentum címe")
+    val title get() = static("Cím")
+    val file get() = static("Fájl")
+    val attachments get() = static("Mellékletek")
+    val folder get() = static("Mappa")
+    val sizeOverLimit get() = static("mérethatár felett")
+    val invalidExtension get() = static("nem elfogadott formátum")
 }

@@ -8,8 +8,8 @@ import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 class TitleBuilder<T> {
 

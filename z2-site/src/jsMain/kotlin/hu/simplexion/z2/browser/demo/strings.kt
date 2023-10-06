@@ -1,65 +1,98 @@
 package hu.simplexion.z2.browser.demo
 
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
+import hu.simplexion.z2.auth.ui.IAuthStrings
+import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.ui.ILocalizationStrings
 
-@Suppress("ClassName")
-object strings : LocalizedTextStore() {
-    val select by "Select"
-    val components by "Components"
-    val pages by "Pages"
-    val button by "Button"
-    val filledButton by "Filled Button"
-    val calendar by "Calendar"
-    val textButton by "Text Button"
-    val smallDenseTextButton by "Small Dense Text Button"
-    val settings by "Settings"
-    val segment1 by "Segment 1"
-    val segment2 by "Segment 2"
-    val segment3 by "Segment 3"
-    val textField by "Text Field"
-    val label by "Label"
-    val supportingText by "Supporting Text"
-    val modal by "Modal"
-    val confirmDialog by "Confirm Dialog"
-    val confirmMessage by "Nothing happens, whichever button you click."
-    val card by "Card"
-    val loremShort by "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-    val lorem by "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    val headline by "Headline"
-    val popup by "Popup"
-    val radioButton by "Radio Button"
-    val menu by "Menu"
-    val menuItem1 by "Menu Item 1"
-    val menuItem2 by "Menu Item 2"
-    val snackbar by "Snackbar"
-    val click by "Click"
-    val switch by "Switch"
-    val table by "Table"
-    val container by "Container"
-    val datepicker by "Date Picker"
-    val navigationDrawer by "Navigation Drawer"
-    val inbox by "Inbox"
-    val outbox by "Outbox"
-    val favourites by "Favourites"
-    val trash by "Trash"
-    val applicationTitle by "Z2 Browser Demo"
-    val main by "Main Page"
-    val pageNotFound by "Page not found."
-    val tableTitle by "Table Title"
-    val headerA by "Header A"
-    val headerB by "Header B"
-    val other by "Other"
-    val form by "Form"
-    val dump by "Dump"
-    val setProgrammatically by "Set Programmatically"
-    val item1 by "item 1"
-    val item2 by "item 2"
-    val item3 by "item 3"
-    val search by "Search"
-    val file by "File"
-    val selectedFiles by "Selected Files"
-    val fileSelectDialog by "File Select Dialog"
-    val upload by "Upload"
-    val touch by "Touch"
-    val timepicker by "Time Picker"
+object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
+    val select = static("Select")
+    val components = static("Components")
+    val pages = static("Pages")
+    val button = static("Button")
+    val filledButton = static("Filled Button")
+    val calendar = static("Calendar")
+    val textButton = static("Text Button")
+    val smallDenseTextButton = static("Small Dense Text Button")
+    val settings = static("Settings")
+    val segment1 = static("Segment 1")
+    val segment2 = static("Segment 2")
+    val segment3 = static("Segment 3")
+    val textField = static("Text Field")
+    val label = static("Label")
+    val supportingText = static("Supporting Text")
+    val modal = static("Modal")
+    val confirmDialog = static("Confirm Dialog")
+    val confirmMessage = static("Nothing happens, whichever button you click.")
+    val card = static("Card")
+    val loremShort = static("Lorem ipsum dolor sit amet, consectetur adipiscing elit")
+    val lorem =
+        static("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+    val headline = static("Headline")
+    val popup = static("Popup")
+    val radioButton = static("Radio Button")
+    val menu = static("Menu")
+    val menuItem1 = static("Menu Item 1")
+    val menuItem2 = static("Menu Item 2")
+    val snackbar = static("Snackbar")
+    val click = static("Click")
+    val switch = static("Switch")
+    val table = static("Table")
+    val container = static("Container")
+    val datepicker = static("Date Picker")
+    val navigationDrawer = static("Navigation Drawer")
+    val inbox = static("Inbox")
+    val outbox = static("Outbox")
+    val favourites = static("Favourites")
+    val trash = static("Trash")
+    val applicationTitle = static("Z2 Browser Demo")
+    val main = static("Main Page")
+    val pageNotFound = static("Page not found.")
+    val tableTitle = static("Table Title")
+    val headerA = static("Header A")
+    val headerB = static("Header B")
+    val other = static("Other")
+    val form = static("Form")
+    val dump = static("Dump")
+    val setProgrammatically = static("Set Programmatically")
+    val item1 = static("item 1")
+    val item2 = static("item 2")
+    val item3 = static("item 3")
+    val search = static("Search")
+    val file = static("File")
+    val selectedFiles = static("Selected Files")
+    val fileSelectDialog = static("File Select Dialog")
+    val upload = static("Upload")
+    val touch = static("Touch")
+    val timepicker = static("Time Picker")
+    val administration = static("Administration")
+
+    val interfaces = static("Interfaces")
+    val interfacesSupport = support(interfaces, "Manage connections to other systems, such as e-mail or database servers.")
+
+    val connection = static("Connections")
+    val connectionSupport = support(connection, "Manage connections to other systems, such as e-mail or database servers.")
+
+    val impressum = static("Impressum")
+    val impressumSupport = support(impressum, "Privacy, terms, etc.")
+
+    val template = static("Templates")
+    val templateSupport = support(template, "Templates for outgoing e-mails, generated documents.")
+
+    val history = static("Histories")
+    val historySupport = support(history, "Security, technical and business level event histories.")
+
+    val routing = static("Routing")
+    val content = static("Content")
+    val subRoute = static("Sub-Route")
+    val parameter = static("Parameter")
+    val parameterSubRoute = static("Parameter Sub-Route")
+
+    val loginSupport = static("Z2 Browser Components Demo")
+    val password = static("Password")
+    val forgottenPassword = static("Forgot password?")
+    val help = static("Help")
+    val privacy = static("Privacy")
+    val term = static("Terms")
+    val english = static("English")
+    val registration = static("Create account")
 }

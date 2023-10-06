@@ -4,7 +4,7 @@
 
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2.schematic") version "2023.8.30-SNAPSHOT"
+    id("hu.simplexion.z2.schematic") version "2023.10.6-SNAPSHOT"
     signing
     `maven-publish`
 }
@@ -37,7 +37,7 @@ kotlin {
     }
 
     sourceSets["jvmMain"].dependencies {
-        implementation("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+        implementation("hu.simplexion.z2:z2-commons-runtime:${z2_commons_version}")
         implementation("hu.simplexion.z2:z2-service-runtime:${z2_service_version}")
         implementation("hu.simplexion.z2:z2-schematic-runtime:${z2_schematic_version}")
 

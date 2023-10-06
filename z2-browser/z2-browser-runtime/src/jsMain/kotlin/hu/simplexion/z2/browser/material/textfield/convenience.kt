@@ -4,8 +4,8 @@ import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
-import hu.simplexion.z2.commons.i18n.LocalizedIcon
-import hu.simplexion.z2.commons.i18n.LocalizedText
+import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 fun Z2.filledTextField(
     value: String,

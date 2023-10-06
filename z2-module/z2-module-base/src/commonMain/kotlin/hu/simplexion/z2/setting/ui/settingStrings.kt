@@ -1,9 +1,11 @@
 package hu.simplexion.z2.setting.ui
 
-import hu.simplexion.z2.commons.i18n.LocalizedTextStore
+import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
 
-object settingStrings : LocalizedTextStore() {
+object settingStrings : ISettingStrings
 
-    val settings by "Settings"
+interface ISettingStrings : LocalizedTextProvider {
+
+    val settings get() = static("Settings")
 
 }

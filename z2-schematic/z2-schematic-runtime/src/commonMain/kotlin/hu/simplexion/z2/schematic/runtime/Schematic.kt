@@ -39,6 +39,12 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
         get() = placeholder()
 
     /**
+     * The fully qualified name of this schematic.
+     */
+    open val schematicFqName: String
+        get() = this::class.simpleName.toString()
+
+    /**
      * Get the companion object of this schematic.
      */
     open val schematicCompanion: SchematicCompanion<ST>

@@ -6,9 +6,9 @@ import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
-import hu.simplexion.z2.commons.i18n.LocalizedIcon
-import hu.simplexion.z2.commons.i18n.LocalizedText
-import hu.simplexion.z2.commons.i18n.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
+import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.commons.localization.text.LocalizedText
 
 fun <T> Z2.select(
     options: List<T>,
