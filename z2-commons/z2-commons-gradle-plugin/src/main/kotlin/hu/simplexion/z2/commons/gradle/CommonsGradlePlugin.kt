@@ -27,7 +27,7 @@ class CommonsGradlePlugin : KotlinCompilerPluginSupportPlugin {
     companion object {
         @JvmStatic
         fun getOutputDir(project: Project, sourceSetName: String, target: String) =
-            File(project.project.buildDir, "generated/ksp/$target/$sourceSetName")
+            File(project.project.buildDir, "generated/$target/$sourceSetName")
 
         @JvmStatic
         fun getResourceOutputDir(project: Project, sourceSetName: String, target: String) =

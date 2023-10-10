@@ -34,7 +34,7 @@ gradlePlugin {
             id = "hu.simplexion.z2.commons"
             displayName = pomName
             description = pluginDescription
-            implementationClass = "hu.simplexion.z2.commons.gradle.commonsGradlePlugin"
+            implementationClass = "hu.simplexion.z2.commons.gradle.CommonsGradlePlugin"
             tags.set(listOf("kotlin"))
         }
     }

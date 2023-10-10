@@ -67,19 +67,19 @@ object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
     val administration = static("Administration")
 
     val interfaces = static("Interfaces")
-    val interfacesSupport = support(interfaces, "Manage connections to other systems, such as e-mail or database servers.")
+    val interfacesSupport = static("...") // support(interfaces, "Manage connections to other systems, such as e-mail or database servers.")
 
     val connection = static("Connections")
-    val connectionSupport = support(connection, "Manage connections to other systems, such as e-mail or database servers.")
+    val connectionSupport = static("...") // support(connection, "Manage connections to other systems, such as e-mail or database servers.")
 
     val impressum = static("Impressum")
-    val impressumSupport = support(impressum, "Privacy, terms, etc.")
+    val impressumSupport = static("...") // support(impressum, "Privacy, terms, etc.")
 
     val template = static("Templates")
-    val templateSupport = support(template, "Templates for outgoing e-mails, generated documents.")
+    val templateSupport = static("...") // support(template, "Templates for outgoing e-mails, generated documents.")
 
     val history = static("Histories")
-    val historySupport = support(history, "Security, technical and business level event histories.")
+    val historySupport = static("...") // support(history, "Security, technical and business level event histories.")
 
     val routing = static("Routing")
     val content = static("Content")

@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.commons.kotlin.ir.plugin
 
+import hu.simplexion.z2.commons.kotlin.ir.plugin.CommonsOptions.Companion.OPTION_RESOURCE_DIR
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOptionProcessingException
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
@@ -15,11 +16,13 @@ class CommonsCommandLineProcessor : CommandLineProcessor {
 
     override val pluginId = "z2-commons"
 
-    override val pluginOptions: Collection<AbstractCliOption> = emptyList()
+    override val pluginOptions = listOf(
+        OPTION_RESOURCE_DIR
+    )
 
     override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) {
         when (option) {
-            CommonsOptions.OPTION_RESOURCE_DIR -> configuration.put(CommonsOptions.CONFIG_KEY_RESOURCE_DIR, File(value))
+            OPTION_RESOURCE_DIR -> configuration.put(CommonsOptions.CONFIG_KEY_RESOURCE_DIR, File(value))
             else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
         }
     }

@@ -11,7 +11,12 @@ class ExportResources(
     val pluginContext: CommonsPluginContext
 ) {
     fun export() {
-        val path = pluginContext.options.resourceOutputDir.toPath().resolve("localization." + moduleFragment.safeName + ".txt")
-        Files.write(path, pluginContext.resources.joinToString("\n").encodeToByteArray(), StandardOpenOption.TRUNCATE_EXISTING)
+        val path = pluginContext.options.resourceOutputDir.toPath()
+        Files.createDirectories(path)
+        Files.write(
+            path.resolve("localization." + moduleFragment.safeName + ".txt"),
+            pluginContext.resources.joinToString("\n").encodeToByteArray(),
+            StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING
+        )
     }
 }
