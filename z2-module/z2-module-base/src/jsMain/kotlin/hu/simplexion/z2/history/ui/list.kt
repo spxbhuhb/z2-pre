@@ -1,5 +1,6 @@
 package hu.simplexion.z2.history.ui
 
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
@@ -24,7 +25,7 @@ internal fun Z2.list() =
             table<HistoryEntry> {
 
                 title {
-                    text = historyStrings.historyOverview
+                    text = baseStrings.historyOverview
                 }
 
                 rowId = { it.uuid }

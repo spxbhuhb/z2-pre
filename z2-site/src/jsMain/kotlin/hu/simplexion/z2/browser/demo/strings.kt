@@ -1,10 +1,9 @@
 package hu.simplexion.z2.browser.demo
 
-import hu.simplexion.z2.auth.ui.IAuthStrings
+import hu.simplexion.z2.IBaseStrings
 import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
-import hu.simplexion.z2.localization.ui.ILocalizationStrings
 
-object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
+object strings : LocalizedTextProvider, IBaseStrings {
     val select = static("Select")
     val components = static("Components")
     val pages = static("Pages")
@@ -13,7 +12,6 @@ object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
     val calendar = static("Calendar")
     val textButton = static("Text Button")
     val smallDenseTextButton = static("Small Dense Text Button")
-    val settings = static("Settings")
     val segment1 = static("Segment 1")
     val segment2 = static("Segment 2")
     val segment3 = static("Segment 3")
@@ -61,7 +59,6 @@ object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
     val file = static("File")
     val selectedFiles = static("Selected Files")
     val fileSelectDialog = static("File Select Dialog")
-    val upload = static("Upload")
     val touch = static("Touch")
     val timepicker = static("Time Picker")
     val administration = static("Administration")

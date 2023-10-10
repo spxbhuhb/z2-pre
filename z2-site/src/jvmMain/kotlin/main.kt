@@ -1,5 +1,5 @@
-import hu.simplexion.z2.site.util.boot
+import hu.simplexion.z2.site.boot.bootJvm
 
 fun main() {
-    boot {  }
+    bootJvm {  }
 }

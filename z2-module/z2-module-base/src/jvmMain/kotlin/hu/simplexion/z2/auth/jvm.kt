@@ -12,8 +12,8 @@ import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
-import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.implementations
@@ -112,7 +112,7 @@ internal fun getOrMakeAccount(
             }
         )
 
-        securityHistory(accountId, authStrings.account, commonStrings.add, accountId, name)
+        securityHistory(accountId, baseStrings.account, commonStrings.add, accountId, name)
 
         return@transaction accountId
     }
@@ -122,6 +122,6 @@ private fun grantRole(role: Role, account: UUID<AccountPrivate>) {
     transaction {
         if (role.uuid in roleGrantTable.rolesOf(account, null).map { it.uuid }) return@transaction
         roleGrantTable.insert(role.uuid, account, null)
-        securityHistory(securityOfficerUuid, authStrings.role, authStrings.grantRole, securityOfficerUuid, account, role.uuid, role.programmaticName, role.displayName)
+        securityHistory(securityOfficerUuid, baseStrings.role, baseStrings.grantRole, securityOfficerUuid, account, role.uuid, role.programmaticName, role.displayName)
     }
 }

@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.demo.pages.administration
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.icons
-import hu.simplexion.z2.browser.demo.pages.administration.languages.LanguagesList
+import hu.simplexion.z2.browser.demo.pages.administration.locale.LanguagesList
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.surfaceContainerLowest

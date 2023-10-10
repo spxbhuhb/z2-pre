@@ -5,6 +5,7 @@ import java.net.URI
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
+    id("hu.simplexion.z2.commons") version "2023.10.6-SNAPSHOT"
     signing
     `maven-publish`
 }

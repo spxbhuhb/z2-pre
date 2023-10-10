@@ -10,8 +10,8 @@ import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCred
 import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
 import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
-import hu.simplexion.z2.auth.ui.authStrings
 import hu.simplexion.z2.auth.util.BCrypt
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.service.runtime.ServiceImpl
@@ -39,7 +39,7 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
 
         val accountUuid = accountPrivateTable.insert(account)
 
-        securityHistory(authStrings.account, authStrings.add, accountUuid, account, roles.joinToString("\n"))
+        securityHistory(baseStrings.account, baseStrings.add, accountUuid, account, roles.joinToString("\n"))
 
         if (activationKey != null) {
             val credentials = AccountCredentials()
@@ -65,7 +65,7 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
 
     override suspend fun add(credentials: AccountCredentials, currentCredentials: AccountCredentials?) {
         ensureSelfOrSecurityOfficer(credentials.account)
-        securityHistory(authStrings.account, authStrings.changeCredentials, credentials.account, credentials.type)
+        securityHistory(baseStrings.account, baseStrings.changeCredentials, credentials.account, credentials.type)
 
         if (!isSecurityOfficer || credentials.account == serviceContext.account) {
             requireNotNull(currentCredentials)
@@ -96,14 +96,14 @@ class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {
 
     override suspend fun setActivated(uuid: UUID<AccountPrivate>, activated : Boolean) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.account, authStrings.setActivated, uuid, true)
+        securityHistory(baseStrings.account, baseStrings.setActivated, uuid, true)
 
         accountStatusTable.setActivated(uuid, true)
     }
 
     override suspend fun setLocked(uuid: UUID<AccountPrivate>, locked: Boolean) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.account, authStrings.setLocked, uuid, locked)
+        securityHistory(baseStrings.account, baseStrings.setLocked, uuid, locked)
 
         accountStatusTable.setLocked(uuid, locked)
     }

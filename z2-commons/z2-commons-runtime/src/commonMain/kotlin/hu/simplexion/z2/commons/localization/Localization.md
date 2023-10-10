@@ -1,6 +1,6 @@
 # Localization
 
-Z2 uses localization to provide language and region specific interfaces and functions for the users.
+Z2 uses localization to provide locale and region specific interfaces and functions for the users.
 
 ### Quick Start
 
@@ -29,7 +29,7 @@ You can use one big object or scope specific smaller ones, it doesn't matter.
 
 ## Turning Localization On
 
-When you want to switch your application to multi-language:
+When you want to switch your application to multi-locale:
 
 * add the `z2-commons` compiler plugin to your project
 * add the `localization` module to your backend (this is part of `boot`, so it might be already added)

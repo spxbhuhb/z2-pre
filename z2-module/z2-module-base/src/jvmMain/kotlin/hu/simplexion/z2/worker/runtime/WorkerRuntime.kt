@@ -3,6 +3,7 @@ package hu.simplexion.z2.worker.runtime
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.util.runBlockingAsSecurityOfficer
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.systemHistory
@@ -13,7 +14,6 @@ import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.model.WorkerStartMode
 import hu.simplexion.z2.worker.model.WorkerStatus
 import hu.simplexion.z2.worker.table.WorkerRegistrationTable.Companion.workerRegistrationTable
-import hu.simplexion.z2.worker.ui.workerStrings
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Mutex
@@ -70,13 +70,13 @@ open class WorkerRuntime {
     }
 
     open fun start() {
-        info(workerStrings.worker, workerStrings.startRuntime)
+        info(baseStrings.worker, baseStrings.startRuntime)
         scope.launch { main() }
     }
 
     open fun stop(wait: Boolean = true) {
         runBlocking {
-            info(workerStrings.workers, workerStrings.stopRuntime)
+            info(baseStrings.workers, baseStrings.stopRuntime)
             messages.close()
             scope.cancel()
             while (wait && scope.isActive) {
@@ -90,7 +90,7 @@ open class WorkerRuntime {
             for (registration in workerRegistrationTable.list()) {
                 workerRegistrations[registration.uuid] = registration
                 if (registration.status != WorkerStatus.Stopped) {
-                    registration.uuid.setStatus(WorkerStatus.Stopped, workerStrings.setStoppedDuringStart.toString())
+                    registration.uuid.setStatus(WorkerStatus.Stopped, baseStrings.setStoppedDuringStart.toString())
                 }
                 if (registration.provider in workerProviders && registration.enabled && registration.startMode == WorkerStartMode.Automatic) {
                     start(registration)
@@ -143,7 +143,7 @@ open class WorkerRuntime {
         }
         workerProviders[provider.uuid] = provider
 
-        info(workerStrings.worker, workerStrings.addProvider, workerStrings.provider to provider.uuid)
+        info(baseStrings.worker, baseStrings.addProvider, baseStrings.provider to provider.uuid)
 
         for (registration in workerRegistrations.values) {
             if (registration.provider == provider.uuid && registration.status == WorkerStatus.Stopped && registration.startMode != WorkerStartMode.Manual) {
@@ -160,7 +160,7 @@ open class WorkerRuntime {
         val uuid = workerRegistrationTable.insert(registration)
         val internal = registration.copy().also { it.uuid = uuid }
 
-        technicalHistory(message.executor, workerStrings.worker, commonStrings.add, registration.uuid)
+        technicalHistory(message.executor, baseStrings.worker, commonStrings.add, registration.uuid)
 
         workerRegistrations[uuid] = internal
 
@@ -181,7 +181,7 @@ open class WorkerRuntime {
             stopWorker(internal.uuid)
         }
 
-        technicalHistory(message.executor, workerStrings.worker, commonStrings.update, internal.uuid)
+        technicalHistory(message.executor, baseStrings.worker, commonStrings.update, internal.uuid)
 
         message.responseChannel?.trySend(WorkerRuntimeResponse())
     }
@@ -189,7 +189,7 @@ open class WorkerRuntime {
     protected suspend fun removeRegistration(message: WorkerRuntimeRequest) {
         val uuid = requireNotNull(message.registrationUuid)
 
-        technicalHistory(message.executor, workerStrings.worker, commonStrings.remove, uuid)
+        technicalHistory(message.executor, baseStrings.worker, commonStrings.remove, uuid)
 
         workerRegistrations[uuid]?.also {
             stopWorker(uuid)
@@ -216,7 +216,7 @@ open class WorkerRuntime {
             }
         }
 
-        technicalHistory(message.executor, workerStrings.worker, commonStrings.update, uuid, commonStrings.enabled to enabled)
+        technicalHistory(message.executor, baseStrings.worker, commonStrings.update, uuid, commonStrings.enabled to enabled)
 
         message.responseChannel?.trySend(WorkerRuntimeResponse(registrationUuid = uuid))
     }
@@ -235,7 +235,7 @@ open class WorkerRuntime {
 
     protected fun start(registration: WorkerRegistration): Boolean {
         val provider = workerProviders[registration.provider]
-        check(provider != null) { workerStrings.missingProvider }
+        check(provider != null) { baseStrings.missingProvider }
 
         val instance = WorkerInstance(provider.newBackgroundWorker(registration))
 
@@ -278,7 +278,7 @@ open class WorkerRuntime {
             uuid.setStatus(WorkerStatus.Stopped)
         } catch (ex: Exception) {
             uuid.setStatus(WorkerStatus.Fault, ex.stackTraceToString()).also {
-                // fIXME alarmImpl.alarm(it.uuid, workerStrings.unexpectedError, ex)
+                // fIXME alarmImpl.alarm(it.uuid, baseStrings.unexpectedError, ex)
                 ex.printStackTrace()
             }
         } finally {
@@ -297,7 +297,7 @@ open class WorkerRuntime {
             transaction {
                 workerRegistrationTable.setStatus(it)
                 systemHistory(
-                    workerStrings.worker,
+                    baseStrings.worker,
                     commonStrings.update,
                     it.uuid,
                     commonStrings.name to it.name,

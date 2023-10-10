@@ -12,7 +12,7 @@ import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
-import hu.simplexion.z2.auth.ui.authStrings
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
@@ -36,7 +36,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
         val roleUuid = roleTable.insert(role)
 
-        securityHistory(authStrings.role, commonStrings.add, roleUuid, role)
+        securityHistory(baseStrings.role, commonStrings.add, roleUuid, role)
 
         return roleUuid
     }
@@ -45,14 +45,14 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
         ensure(securityOfficerRole)
         ensureValid(role)
 
-        securityHistory(authStrings.role, commonStrings.update, role.uuid, role)
+        securityHistory(baseStrings.role, commonStrings.update, role.uuid, role)
 
         roleTable.update(role.uuid, role)
     }
 
     override suspend fun remove(uuid: UUID<Role>) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.role, commonStrings.remove, uuid)
+        securityHistory(baseStrings.role, commonStrings.remove, uuid)
 
         roleGrantTable.remove(uuid)
         roleTable.remove(uuid)
@@ -65,14 +65,14 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     override suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.role, authStrings.grantRole, account, role, context)
+        securityHistory(baseStrings.role, baseStrings.grantRole, account, role, context)
 
         roleGrantTable.insert(role, account, context)
     }
 
     override suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(authStrings.role, authStrings.revokeRole, account, role, context)
+        securityHistory(baseStrings.role, baseStrings.revokeRole, account, role, context)
 
         roleGrantTable.remove(role, account, context)
     }

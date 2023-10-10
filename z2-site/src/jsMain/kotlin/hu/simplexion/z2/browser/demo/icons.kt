@@ -1,16 +1,12 @@
 package hu.simplexion.z2.browser.demo
 
+import hu.simplexion.z2.IBaseIcons
 import hu.simplexion.z2.commons.localization.icon.LocalizedIconProvider
-import hu.simplexion.z2.localization.ui.ILocalizationIcons
 
-internal object icons : LocalizedIconProvider, ILocalizationIcons {
+internal object icons : LocalizedIconProvider, IBaseIcons {
     val administration = static("local_police")
-    val accounts = static("manage_accounts")
-    val roles = static("recent_actors")
     val interfaces = static("conversion_path")
-    val securityPolicy = static("security")
     val impressum = static("breaking_news")
-    val history = static("history")
     val template = static("dynamic_feed")
     val inbox = static("mail")
     val outbox = static("send")

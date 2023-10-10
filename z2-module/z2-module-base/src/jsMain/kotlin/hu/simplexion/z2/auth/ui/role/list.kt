@@ -2,7 +2,7 @@ package hu.simplexion.z2.auth.ui.role
 
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.roleService
-import hu.simplexion.z2.auth.ui.authStrings
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
 import hu.simplexion.z2.browser.css.borderOutline
@@ -20,8 +20,8 @@ internal fun Z2.list() =
             table<Role> {
 
                 title {
-                    text = authStrings.roles
-                    action(authStrings.addRole) { add() }
+                    text = baseStrings.roles
+                    action(baseStrings.addRole) { add() }
                 }
 
                 rowId = { it.uuid }

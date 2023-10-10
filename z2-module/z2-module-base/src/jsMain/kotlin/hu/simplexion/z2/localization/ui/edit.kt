@@ -1,7 +1,5 @@
-package hu.simplexion.z2.auth.ui.role
+package hu.simplexion.z2.localization.ui
 
-import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.roleService
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.gridGap24
@@ -13,35 +11,36 @@ import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
+import hu.simplexion.z2.localization.localeService
+import hu.simplexion.z2.localization.model.Locale
 
 internal fun add() =
-    roleModal(Role(), baseStrings.addRole, browserStrings.add) { roleService.add(it) }
+    languageModal(Locale(), baseStrings.addLocale, browserStrings.add) { localeService.add(it) }
 
-internal fun edit(role: Role) =
-    roleModal(role, baseStrings.editRole, browserStrings.edit) { roleService.update(it) }
+internal fun edit(locale: Locale) =
+    languageModal(locale, baseStrings.editLanguage, browserStrings.edit) { localeService.update(it) }
 
-internal fun roleModal(
-    role: Role,
+internal fun languageModal(
+    locale: Locale,
     modalTitle: LocalizedText,
     buttonLabel: LocalizedText,
-    onOk: suspend (role: Role) -> Unit
+    onOk: suspend (locale: Locale) -> Unit
 ) {
     localLaunch {
         modal(w400) {
             title(modalTitle)
 
             grid(p24, gridGap24) {
-                field { role.programmaticName }
-                field { role.displayName }
-                field { role.contextName }
-                field { role.displayOrder }
+                field { locale.isoCode }
+                field { locale.countryCode }
+                field { locale.nativeName }
             }
 
             buttons {
                 textButton(browserStrings.cancel) { closeWith(false) }
                 textButton(buttonLabel) {
                     localLaunch {
-                        onOk(role)
+                        onOk(locale)
                         closeWith(true)
                     }
                 }

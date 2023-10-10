@@ -4,6 +4,7 @@
 rootProject.name = "z2-browser-runtime"
 
 pluginManagement {
+    includeBuild("../../z2-commons/z2-commons-gradle-plugin")
     includeBuild("../../z2-schematic/z2-schematic-gradle-plugin")
     repositories {
         mavenCentral()

@@ -2,9 +2,9 @@ package hu.simplexion.z2.schematic.runtime.schema.validation
 
 import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
 
-object validationStrings : ValidationStrings
+object validationStrings : IValidationStrings
 
-interface ValidationStrings : LocalizedTextProvider {
+interface IValidationStrings : LocalizedTextProvider {
     val nullFail get() = static("Value required")
     val integerFail get() = static("Integer value required")
     val minValueFail get() = static("Value is less than %N")
