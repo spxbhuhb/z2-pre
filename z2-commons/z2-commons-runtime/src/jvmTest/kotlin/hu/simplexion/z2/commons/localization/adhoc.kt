@@ -7,7 +7,7 @@ object test1 : LocalizedTextProvider {
 }
 
 object test2 : LocalizedTextProvider {
-    override val namespace = "test-2"
+    override val localizationNamespace = "test-2"
     val value2 = static("test-value-2")
 }
 

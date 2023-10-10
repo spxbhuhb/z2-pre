@@ -7,6 +7,6 @@ interface LocalizationProvider {
      * global namespace. The keys in the global namespace start with "/". Local keys start with
      * the namespace.
      */
-    val namespace : String get() = ""
+    val localizationNamespace : String get() = ""
 
 }

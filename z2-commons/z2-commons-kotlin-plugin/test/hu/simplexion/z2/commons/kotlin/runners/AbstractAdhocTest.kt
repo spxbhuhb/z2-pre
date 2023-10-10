@@ -41,7 +41,7 @@ open class AbstractAdhocTest : BaseTestRunner(), RunnerWithTargetBackendForTestG
             dependencyKind = DependencyKind.Binary
         }
 
-        val dumps = true
+        val dumps = false
 
         useCustomRuntimeClasspathProviders(AbstractAdhocTest::commonsRuntimeClassPathProvider)
 

@@ -15,4 +15,7 @@ interface LocalizedText {
 
     val support
         get() = localizedTextStore["$key/support"]
+
+    val help
+        get() = localizedTextStore["$key/help"]
 }

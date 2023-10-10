@@ -6,6 +6,9 @@ package hu.simplexion.z2.commons.kotlin.ir
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.util.isEnumClass
+import org.jetbrains.kotlin.ir.util.isInterface
+import org.jetbrains.kotlin.ir.util.isObject
 import org.jetbrains.kotlin.ir.util.isSubclassOf
 
 class CommonsModuleTransform(
@@ -14,8 +17,15 @@ class CommonsModuleTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
 
-        if (declaration.isSubclassOf(pluginContext.localizationProvider)) {
-            declaration.accept(LocalizationProviderTransform(pluginContext), null)
+        if (! declaration.isSubclassOf(pluginContext.localizationProvider)) {
+            return declaration
+        }
+
+        when {
+            declaration.isEnumClass -> declaration.accept(EnumTransform(pluginContext), null)
+            declaration.isObject -> declaration.accept(ObjectTransform(pluginContext), null)
+            declaration.isInterface -> declaration.accept(InterfaceTransform(pluginContext), null)
+            else -> declaration.accept(ClassTransform(pluginContext), null)
         }
 
         return declaration

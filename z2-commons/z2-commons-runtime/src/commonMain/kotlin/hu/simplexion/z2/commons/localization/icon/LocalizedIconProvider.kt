@@ -11,7 +11,7 @@ interface LocalizedIconProvider  : LocalizationProvider {
     fun static(value : String, key : String = "") = StaticIcon(key, value)
 
     fun localized(container : LocalizedIconProvider, name : String, default : String) : LocalizedIcon {
-        val key = "direct/" + container.namespace + "/" + name
+        val key = "direct/" + container.localizationNamespace + "/" + name
         return localizedIconStore[key] ?: StaticIcon(key, default)
     }
 

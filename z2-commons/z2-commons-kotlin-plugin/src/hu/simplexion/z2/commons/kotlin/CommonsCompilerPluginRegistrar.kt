@@ -3,7 +3,8 @@
  */
 package hu.simplexion.z2.commons.kotlin
 
-import hu.simplexion.z2.commons.kotlin.ir.CommonsGenerationExtension
+import hu.simplexion.z2.commons.kotlin.ir.plugin.CommonsGenerationExtension
+import hu.simplexion.z2.commons.kotlin.ir.plugin.CommonsOptions
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
@@ -13,12 +14,15 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
  * Registers the extensions into the compiler.
  */
 @OptIn(ExperimentalCompilerApi::class)
-class CommonsCompilerPluginRegistrar: CompilerPluginRegistrar() {
+class CommonsCompilerPluginRegistrar : CompilerPluginRegistrar() {
 
     override val supportsK2 = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
-        IrGenerationExtension.registerExtension(CommonsGenerationExtension())
+        val options = CommonsOptions(
+            resourceOutputDir = configuration.get(CommonsOptions.CONFIG_KEY_RESOURCE_DIR)!!
+        )
+        IrGenerationExtension.registerExtension(CommonsGenerationExtension(options))
     }
 
 }
