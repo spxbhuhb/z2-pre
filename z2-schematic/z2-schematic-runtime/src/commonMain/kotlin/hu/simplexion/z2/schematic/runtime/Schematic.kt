@@ -1,6 +1,7 @@
 package hu.simplexion.z2.schematic.runtime
 
 import hu.simplexion.z2.commons.event.EventCentral
+import hu.simplexion.z2.commons.localization.LocalizationProvider
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.commons.util.nextHandle
 import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
@@ -17,7 +18,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlin.time.Duration
 
-abstract class Schematic<ST : Schematic<ST>> : SchematicNode {
+abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvider {
 
     override var schematicParent: SchematicNode? = null
 

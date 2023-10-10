@@ -8,15 +8,13 @@ interface IAuthStrings : ICommonStrings {
     val login get() = static("Belépés")
 
     val role get() = static("Szerepkör")
-    val roles get() = static("Szerepkörök")
-    val rolesSupport get() = support(roles, "Szerepkörök listája, hozzáadás, szerepkörrel rendelkező felhasználók.")
+    val roles get() = static("Szerepkörök", "Szerepkörök listája, hozzáadás, szerepkörrel rendelkező felhasználók.")
     val addRole get() = static("Szerepkör hozzáadása")
     val editRole get() = static("Szerepkör szerkesztése")
     val removeRole get() = static("Szerepkör törlése")
 
     val account get() = static("Fiók")
-    val accounts get() = static("Fiókok")
-    val accountsSupport get() = support(accounts, "Felhasználói fiókok kezelése. Hozzáadás, szerkesztés, jelszó beállítás.")
+    val accounts get() = static("Fiókok", "Felhasználói fiókok kezelése. Hozzáadás, szerkesztés, jelszó beállítás.")
     val addAccount get() = static("Fiók hozzáadása")
     val editAccount get() = static("Fiók szerkesztése")
 
@@ -34,7 +32,6 @@ interface IAuthStrings : ICommonStrings {
     val setLocked get() = static("Fiók zárolás beállítása")
     val setActivated get() = static("Fiók aktiválás beállítása")
 
-    val securityPolicy get() = static("Biztonsági házirend")
-    val securityPolicySupport get() = support(securityPolicy, "Biztonsági szabályok beállítása. Jelszóerősség, hibás bejelentkezések száma stb.")
+    val securityPolicy get() = static("Biztonsági házirend", "Biztonsági szabályok beállítása. Jelszóerősség, hibás bejelentkezések száma stb.")
 
 }

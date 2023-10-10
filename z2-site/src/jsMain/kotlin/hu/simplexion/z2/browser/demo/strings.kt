@@ -66,20 +66,11 @@ object strings : LocalizedTextProvider, IAuthStrings, ILocalizationStrings {
     val timepicker = static("Time Picker")
     val administration = static("Administration")
 
-    val interfaces = static("Interfaces")
-    val interfacesSupport = static("...") // support(interfaces, "Manage connections to other systems, such as e-mail or database servers.")
-
-    val connection = static("Connections")
-    val connectionSupport = static("...") // support(connection, "Manage connections to other systems, such as e-mail or database servers.")
-
-    val impressum = static("Impressum")
-    val impressumSupport = static("...") // support(impressum, "Privacy, terms, etc.")
-
-    val template = static("Templates")
-    val templateSupport = static("...") // support(template, "Templates for outgoing e-mails, generated documents.")
-
-    val history = static("Histories")
-    val historySupport = static("...") // support(history, "Security, technical and business level event histories.")
+    val interfaces = static("Interfaces", "Manage connections to other systems, such as e-mail or database servers.")
+    val connection = static("Connections", "Manage connections to other systems, such as e-mail or database servers.")
+    val impressum = static("Impressum", "Privacy, terms, etc.")
+    val template = static("Templates", "Templates for outgoing e-mails, generated documents.")
+    val history = static("Histories", "Security, technical and business level event histories.")
 
     val routing = static("Routing")
     val content = static("Content")

@@ -6,8 +6,7 @@ object historyStrings : HistoryStrings
 
 interface HistoryStrings : LocalizedTextProvider {
 
-    val histories get() = static("Naplók")
-    val historiesSupport get() = support(histories, "Biztonsági, technikai, hiba és üzleti szintű naplók.")
+    val histories get() = static("Naplók", "Biztonsági, technikai, hiba és üzleti szintű naplók.")
 
     val overview get() = static("Áttekintés")
     val security get() = static("Biztonsági")

@@ -8,7 +8,7 @@ interface LocalizedIconProvider  : LocalizationProvider {
     /**
      * Declare a static localized text.
      */
-    fun static(value : String, key : String = "") = StaticIcon(key, value)
+    fun static(value : String, hint : String? = null, key : String = "") = StaticIcon(key, value)
 
     fun localized(container : LocalizedIconProvider, name : String, default : String) : LocalizedIcon {
         val key = "direct/" + container.localizationNamespace + "/" + name

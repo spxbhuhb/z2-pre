@@ -12,11 +12,11 @@ import hu.simplexion.z2.browser.material.navigation.NavigationItem
 import hu.simplexion.z2.browser.material.px
 
 val adminItems = listOf(
-    NavigationItem(null, strings.accounts, strings.accountsSupport),
-    NavigationItem(null, strings.roles, strings.rolesSupport),
-    NavigationItem(null, strings.languages, strings.languagesSupport),
-    NavigationItem(null, strings.interfaces, strings.interfacesSupport),
-    NavigationItem(null, strings.securityPolicy, strings.securityPolicySupport)
+    NavigationItem(null, strings.accounts, strings.accounts.support),
+    NavigationItem(null, strings.roles, strings.accounts.support),
+    NavigationItem(null, strings.languages, strings.accounts.support),
+    NavigationItem(null, strings.interfaces, strings.accounts.support),
+    NavigationItem(null, strings.securityPolicy, strings.accounts.support)
 )
 
 fun Z2.adminDemo() =

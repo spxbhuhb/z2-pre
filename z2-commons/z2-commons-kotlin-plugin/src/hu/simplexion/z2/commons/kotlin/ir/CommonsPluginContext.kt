@@ -15,6 +15,7 @@ class CommonsPluginContext(
 ) {
 
     companion object {
+        const val PROPERTY_NAME_INDEX = 2
         const val ICON_PACKAGE = "hu.simplexion.z2.commons.localization.icon"
         const val LOCALIZATION_PACKAGE = "hu.simplexion.z2.commons.localization"
         const val TEXT_PACKAGE = "hu.simplexion.z2.commons.localization.text"

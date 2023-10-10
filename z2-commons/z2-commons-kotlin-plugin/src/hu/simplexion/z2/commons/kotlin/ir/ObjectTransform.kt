@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.commons.kotlin.ir
 
+import hu.simplexion.z2.commons.kotlin.ir.CommonsPluginContext.Companion.PROPERTY_NAME_INDEX
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsManglerIr.fqnString
@@ -31,7 +32,7 @@ class ObjectTransform(
         val call = initializer.expression
         require(call is IrCall && call.symbol.owner.name.identifier == "static") { declaration.message("must be a call to 'static'") }
 
-        call.putValueArgument(1, backingField.name.identifier.toIrConst(irBuiltIns.stringType))
+        call.putValueArgument(PROPERTY_NAME_INDEX, backingField.name.identifier.toIrConst(irBuiltIns.stringType))
 
         pluginContext.resources += "direct//${declaration.name.identifier}"
 

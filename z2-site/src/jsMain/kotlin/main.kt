@@ -27,6 +27,7 @@ import hu.simplexion.z2.browser.material.searchbar.searchBar
 import hu.simplexion.z2.browser.routing.BrowserRouter
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
+import hu.simplexion.z2.commons.localization.localizedTextStore
 import hu.simplexion.z2.commons.util.localLaunch
 
 fun main() {
@@ -35,6 +36,7 @@ fun main() {
         Content.defaultLayout = { router, nav, content -> defaultLayout(router, nav, content) }
         mainRouter.receiver = Content
         mainRouter.start()
+        println(localizedTextStore)
     }
 }
 
