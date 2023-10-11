@@ -18,6 +18,7 @@ open class LocaleTable : SchematicUuidTable<Locale>(
     val isoCode = char("isoCode", 2)
     val countryCode = char("countryCode", 2)
     val nativeName = varchar("nativeName", 30)
+    val priority = integer("priority")
     val visible = bool("visible")
 
     fun setVisible(inLocale : UUID<Locale>, inVisible : Boolean) {

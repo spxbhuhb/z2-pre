@@ -1,10 +1,10 @@
 package hu.simplexion.z2
 
-import hu.simplexion.z2.localization.text.ICommonStrings
+import hu.simplexion.z2.browser.IBrowserStrings
 
 object baseStrings : IBaseStrings
 
-interface IBaseStrings : ICommonStrings {
+interface IBaseStrings : IBrowserStrings {
     val login get() = static("Belépés")
 
     val role get() = static("Szerepkör")
@@ -54,12 +54,10 @@ interface IBaseStrings : ICommonStrings {
     val languages get() = static("Nyelvek", "Új nyelv hozzáadása. Címkék és ikonok fordítása.")
     val addLocale get() = static("Nyelv hozzáadása")
     val editLanguage get() = static("Nyelv szerkesztése")
-    val isoCode get() = static("ISO kód", "A nyelv ISO 639 kódja")
+    val isoCode get() = static("ISO kód", "A nyelv ISO 639 Apha-2 kódja.")
     val countryCode get() = static("Ország kód", "Az ország ISO 3166 Alpha-2 kódja")
     val nativeName get() = static("Natív név", "A nyelv neve az adott nyelven.")
 
-
-    val settings get() = static("Settings")
     val removeWorker get() = static("Remove Worker")
     val workers get() = static("Workers")
     val worker get() = static("Worker")

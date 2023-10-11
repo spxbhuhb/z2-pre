@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.demo
 
 import hu.simplexion.z2.IBaseStrings
-import hu.simplexion.z2.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.text.IDateTimeStrings
 
-object strings : LocalizedTextProvider, IBaseStrings {
+object strings : IBaseStrings, IDateTimeStrings {
     val select = static("Select")
     val components = static("Components")
     val pages = static("Pages")
@@ -56,7 +56,6 @@ object strings : LocalizedTextProvider, IBaseStrings {
     val item2 = static("item 2")
     val item3 = static("item 3")
     val search = static("Search")
-    val file = static("File")
     val selectedFiles = static("Selected Files")
     val fileSelectDialog = static("File Select Dialog")
     val touch = static("Touch")
@@ -70,7 +69,6 @@ object strings : LocalizedTextProvider, IBaseStrings {
     val history = static("Histories", "Security, technical and business level event histories.")
 
     val routing = static("Routing")
-    val content = static("Content")
     val subRoute = static("Sub-Route")
     val parameter = static("Parameter")
     val parameterSubRoute = static("Parameter Sub-Route")

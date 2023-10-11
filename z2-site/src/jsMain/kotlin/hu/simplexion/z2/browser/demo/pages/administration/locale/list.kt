@@ -24,7 +24,7 @@ internal fun Z2.list() =
                     action(strings.addLocale) { add() }
                 }
 
-                rowId = { it.id }
+                rowId = { it.uuid }
                 query = { localeService.list() }
 
                 schematicColumn { Locale().isoCode }

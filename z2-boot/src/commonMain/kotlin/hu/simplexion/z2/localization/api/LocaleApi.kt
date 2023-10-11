@@ -18,4 +18,8 @@ interface LocaleApi : Service {
 
     suspend fun hide(uuid : UUID<Locale>)
 
+    suspend fun load(uuid : UUID<Locale>, table : ByteArray)
+
+    suspend fun getLocale(preferred : String) : Locale
+    
 }

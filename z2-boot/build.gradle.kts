@@ -45,9 +45,11 @@ kotlin {
         commonMain {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("hu.simplexion.z2:z2-commons:${z2_commons_version}")
                 api("io.ktor:ktor-client-websockets:$ktor_version")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
+
+                api("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+                api("hu.simplexion.z2:z2-browser:${z2_browser_version}")
             }
         }
 
@@ -55,10 +57,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
-        }
-
-        sourceSets["jsMain"].dependencies {
-            api("hu.simplexion.z2:z2-browser:${z2_browser_version}")
         }
 
         sourceSets["jvmMain"].dependencies {

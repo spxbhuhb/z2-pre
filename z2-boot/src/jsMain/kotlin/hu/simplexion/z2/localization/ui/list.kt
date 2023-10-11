@@ -24,7 +24,7 @@ internal fun Z2.list() =
                     action(baseStrings.addLocale) { add() }
                 }
 
-                rowId = { it.id }
+                rowId = { it.uuid }
                 query = { localeService.list().map {
                    // println(it.dump())
                     it

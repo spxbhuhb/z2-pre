@@ -9,7 +9,7 @@ interface LocalizedTextProvider : LocalizationProvider {
      * Declare a static localized text.
      */
     fun static(value : String, support : String? = null,  name : String = "") : StaticText {
-        val key = "direct/" + this.localizationNamespace + "/" + name
+        val key = this.localizationNamespace + "/" + name
 
         val existing =  localizedTextStore[key]
 
@@ -27,7 +27,7 @@ interface LocalizedTextProvider : LocalizationProvider {
     }
 
     fun localized(provider : LocalizedTextProvider, name : String, default : String) : LocalizedText {
-        val key = "direct/" + provider.localizationNamespace + "/" + name
+        val key = provider.localizationNamespace + "/" + name
         return localizedTextStore[key] ?: StaticText(key, default)
     }
 

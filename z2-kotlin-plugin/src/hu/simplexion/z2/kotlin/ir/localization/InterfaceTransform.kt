@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.ir.localization
 
-import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext.Companion.PROPERTY_NAME_INDEX
+import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext.Companion.STATIC_NAME_ARG_INDEX
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsManglerIr.fqnString
@@ -25,7 +25,7 @@ class InterfaceTransform(
      * Set the last argument of the 'static' call to the name of the property.
      */
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
-        if (declaration.name.identifier == LocalizationPluginContext.LOCALIZATION_NAMESPACE) return declaration
+        if (transformNamespace(declaration, pluginContext)) return declaration
         if (declaration.isFakeOverride) return declaration
 
         val getter = declaration.getter
@@ -37,9 +37,9 @@ class InterfaceTransform(
         val call = ret.value
         require(call is IrCall && call.symbol.owner.name.identifier == "static") { declaration.message("must be a call to 'static'") }
 
-        call.putValueArgument(PROPERTY_NAME_INDEX, declaration.name.identifier.toIrConst(irBuiltIns.stringType))
+        call.putValueArgument(STATIC_NAME_ARG_INDEX, declaration.name.identifier.toIrConst(irBuiltIns.stringType))
 
-        pluginContext.resources += "direct//${declaration.name.identifier}"
+        pluginContext.register(declaration, declaration.name, call)
 
         return declaration
     }

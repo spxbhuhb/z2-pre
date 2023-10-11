@@ -15,7 +15,9 @@ class LocalizationPluginContext(
 ) {
 
     companion object {
-        const val PROPERTY_NAME_INDEX = 2
+        const val STATIC_VALUE_ARG_INDEX = 0
+        const val STATIC_SUPPORT_ARG_INDEX = 1
+        const val STATIC_NAME_ARG_INDEX = 2
         const val ICON_PACKAGE = "hu.simplexion.z2.localization.icon"
         const val LOCALIZATION_PACKAGE = "hu.simplexion.z2.localization"
         const val TEXT_PACKAGE = "hu.simplexion.z2.localization.text"

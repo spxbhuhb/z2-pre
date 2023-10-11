@@ -1,0 +1,100 @@
+hu.simplexion.z2.browser.demo.form.TestData/stringField	stringField
+hu.simplexion.z2.browser.demo.form.TestData/stringField2	stringField2
+hu.simplexion.z2.browser.demo.form.TestData/localDateField	localDateField
+hu.simplexion.z2.browser.demo.form.TestData/localTimeField	localTimeField
+hu.simplexion.z2.browser.demo.form.TestData/enumField	enumField
+hu.simplexion.z2.browser.demo.form.TestData/radioSelect	radioSelect
+hu.simplexion.z2.browser.demo.form.TestData/longField	longField
+hu.simplexion.z2.browser.demo.form.TestData/optLongField	optLongField
+hu.simplexion.z2.browser.demo.icons/administration	local_police
+hu.simplexion.z2.browser.demo.icons/interfaces	conversion_path
+hu.simplexion.z2.browser.demo.icons/impressum	breaking_news
+hu.simplexion.z2.browser.demo.icons/template	dynamic_feed
+hu.simplexion.z2.browser.demo.icons/inbox	mail
+hu.simplexion.z2.browser.demo.icons/outbox	send
+hu.simplexion.z2.browser.demo.icons/favourites	favorite
+hu.simplexion.z2.browser.demo.icons/trash	delete
+hu.simplexion.z2.browser.demo.icons/content	content_copy
+hu.simplexion.z2.browser.demo.icons/route	route
+hu.simplexion.z2.browser.demo.icons/parameter	data_object
+hu.simplexion.z2.browser.demo.material.SwitchSchematic/booleanValue	booleanValue
+hu.simplexion.z2.browser.demo.strings/select	Select
+hu.simplexion.z2.browser.demo.strings/components	Components
+hu.simplexion.z2.browser.demo.strings/pages	Pages
+hu.simplexion.z2.browser.demo.strings/button	Button
+hu.simplexion.z2.browser.demo.strings/filledButton	Filled Button
+hu.simplexion.z2.browser.demo.strings/calendar	Calendar
+hu.simplexion.z2.browser.demo.strings/textButton	Text Button
+hu.simplexion.z2.browser.demo.strings/smallDenseTextButton	Small Dense Text Button
+hu.simplexion.z2.browser.demo.strings/segment1	Segment 1
+hu.simplexion.z2.browser.demo.strings/segment2	Segment 2
+hu.simplexion.z2.browser.demo.strings/segment3	Segment 3
+hu.simplexion.z2.browser.demo.strings/textField	Text Field
+hu.simplexion.z2.browser.demo.strings/label	Label
+hu.simplexion.z2.browser.demo.strings/supportingText	Supporting Text
+hu.simplexion.z2.browser.demo.strings/modal	Modal
+hu.simplexion.z2.browser.demo.strings/confirmDialog	Confirm Dialog
+hu.simplexion.z2.browser.demo.strings/confirmMessage	Nothing happens, whichever button you click.
+hu.simplexion.z2.browser.demo.strings/card	Card
+hu.simplexion.z2.browser.demo.strings/loremShort	Lorem ipsum dolor sit amet, consectetur adipiscing elit
+hu.simplexion.z2.browser.demo.strings/lorem	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+hu.simplexion.z2.browser.demo.strings/headline	Headline
+hu.simplexion.z2.browser.demo.strings/popup	Popup
+hu.simplexion.z2.browser.demo.strings/radioButton	Radio Button
+hu.simplexion.z2.browser.demo.strings/menu	Menu
+hu.simplexion.z2.browser.demo.strings/menuItem1	Menu Item 1
+hu.simplexion.z2.browser.demo.strings/menuItem2	Menu Item 2
+hu.simplexion.z2.browser.demo.strings/snackbar	Snackbar
+hu.simplexion.z2.browser.demo.strings/click	Click
+hu.simplexion.z2.browser.demo.strings/switch	Switch
+hu.simplexion.z2.browser.demo.strings/table	Table
+hu.simplexion.z2.browser.demo.strings/container	Container
+hu.simplexion.z2.browser.demo.strings/datepicker	Date Picker
+hu.simplexion.z2.browser.demo.strings/navigationDrawer	Navigation Drawer
+hu.simplexion.z2.browser.demo.strings/inbox	Inbox
+hu.simplexion.z2.browser.demo.strings/outbox	Outbox
+hu.simplexion.z2.browser.demo.strings/favourites	Favourites
+hu.simplexion.z2.browser.demo.strings/trash	Trash
+hu.simplexion.z2.browser.demo.strings/applicationTitle	Z2 Browser Demo
+hu.simplexion.z2.browser.demo.strings/main	Main Page
+hu.simplexion.z2.browser.demo.strings/pageNotFound	Page not found.
+hu.simplexion.z2.browser.demo.strings/tableTitle	Table Title
+hu.simplexion.z2.browser.demo.strings/headerA	Header A
+hu.simplexion.z2.browser.demo.strings/headerB	Header B
+hu.simplexion.z2.browser.demo.strings/other	Other
+hu.simplexion.z2.browser.demo.strings/form	Form
+hu.simplexion.z2.browser.demo.strings/dump	Dump
+hu.simplexion.z2.browser.demo.strings/setProgrammatically	Set Programmatically
+hu.simplexion.z2.browser.demo.strings/item1	item 1
+hu.simplexion.z2.browser.demo.strings/item2	item 2
+hu.simplexion.z2.browser.demo.strings/item3	item 3
+hu.simplexion.z2.browser.demo.strings/search	Search
+hu.simplexion.z2.browser.demo.strings/file	File
+hu.simplexion.z2.browser.demo.strings/selectedFiles	Selected Files
+hu.simplexion.z2.browser.demo.strings/fileSelectDialog	File Select Dialog
+hu.simplexion.z2.browser.demo.strings/touch	Touch
+hu.simplexion.z2.browser.demo.strings/timepicker	Time Picker
+hu.simplexion.z2.browser.demo.strings/administration	Administration
+hu.simplexion.z2.browser.demo.strings/interfaces	Interfaces
+hu.simplexion.z2.browser.demo.strings/interfaces/support	Manage connections to other systems, such as e-mail or database servers.
+hu.simplexion.z2.browser.demo.strings/connection	Connections
+hu.simplexion.z2.browser.demo.strings/connection/support	Manage connections to other systems, such as e-mail or database servers.
+hu.simplexion.z2.browser.demo.strings/impressum	Impressum
+hu.simplexion.z2.browser.demo.strings/impressum/support	Privacy, terms, etc.
+hu.simplexion.z2.browser.demo.strings/template	Templates
+hu.simplexion.z2.browser.demo.strings/template/support	Templates for outgoing e-mails, generated documents.
+hu.simplexion.z2.browser.demo.strings/history	Histories
+hu.simplexion.z2.browser.demo.strings/history/support	Security, technical and business level event histories.
+hu.simplexion.z2.browser.demo.strings/routing	Routing
+hu.simplexion.z2.browser.demo.strings/content	Content
+hu.simplexion.z2.browser.demo.strings/subRoute	Sub-Route
+hu.simplexion.z2.browser.demo.strings/parameter	Parameter
+hu.simplexion.z2.browser.demo.strings/parameterSubRoute	Parameter Sub-Route
+hu.simplexion.z2.browser.demo.strings/loginSupport	Z2 Browser Components Demo
+hu.simplexion.z2.browser.demo.strings/password	Password
+hu.simplexion.z2.browser.demo.strings/forgottenPassword	Forgot password?
+hu.simplexion.z2.browser.demo.strings/help	Help
+hu.simplexion.z2.browser.demo.strings/privacy	Privacy
+hu.simplexion.z2.browser.demo.strings/term	Terms
+hu.simplexion.z2.browser.demo.strings/english	English
+hu.simplexion.z2.browser.demo.strings/registration	Create account

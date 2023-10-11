@@ -1,19 +1,16 @@
 package hu.simplexion.z2.browser
 
-import hu.simplexion.z2.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.text.ICommonStrings
 
 object browserStrings : IBrowserStrings
 
-interface IBrowserStrings : LocalizedTextProvider {
+interface IBrowserStrings : ICommonStrings {
     val actions get() = static("műveletek")
-    val add get() = static("hozzáadás")
     val back get() = static("vissza")
-    val cancel get() = static("mégse")
     val discardChanges get() = static("Változások eldobása?")
     val discardChangesMessage get() = static("A mentéshez klikk a Mégse gombra és utána mentés.")
     val edit get() = static("szerkesztés")
     val export get() = static("export")
-    val name get() = static("név")
     val no get() = static("nem")
     val open get() = static("megnyitás")
     val searchHint get() = static("keresés")

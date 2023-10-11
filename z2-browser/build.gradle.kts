@@ -30,6 +30,11 @@ repositories {
 }
 
 kotlin {
+    jvm {
+        jvmToolchain(11)
+        withJava()
+    }
+    
     js(IR) {
         browser()
         binaries.library()

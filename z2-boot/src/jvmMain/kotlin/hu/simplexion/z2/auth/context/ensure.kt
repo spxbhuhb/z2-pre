@@ -155,6 +155,13 @@ fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {
 }
 
 /**
+ * Marks the following as publicly accessible.
+ */
+fun publicAccess() {
+    // nothing to do here, this is just a marker
+}
+
+/**
  * Ensure that the service context runs in the name of the account specified or
  * in the name of a security officer.
  */

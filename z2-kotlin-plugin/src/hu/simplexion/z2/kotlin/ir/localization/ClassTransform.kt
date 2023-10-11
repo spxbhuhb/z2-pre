@@ -18,14 +18,11 @@ class ClassTransform(
     fun IrProperty.message(message : String) = "localization class property $message ${fqnString(true)}"
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
-        if (declaration.name.identifier == LocalizationPluginContext.LOCALIZATION_NAMESPACE) return declaration
+        if (transformNamespace(declaration, pluginContext)) return declaration
         if (declaration.isFakeOverride) return declaration
+        if (declaration.hasAnnotation(pluginContext.nonLocalizedAnnotation)) return declaration
 
-        if (declaration.hasAnnotation(pluginContext.nonLocalizedAnnotation)) {
-            return declaration
-        }
-
-        pluginContext.resources += "class/${declaration.parentAsClass.fqNameWhenAvailable}/${declaration.name.identifier}"
+        pluginContext.resources += "${declaration.parentAsClass.fqNameWhenAvailable}/${declaration.name.identifier}\t${declaration.name}"
 
         return declaration
     }

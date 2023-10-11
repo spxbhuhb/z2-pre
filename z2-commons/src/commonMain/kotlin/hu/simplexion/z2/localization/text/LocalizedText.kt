@@ -11,7 +11,7 @@ import hu.simplexion.z2.localization.localizedTextStore
 @PublicApi
 interface LocalizedText {
     val key: String
-    val value: String
+    var value: String
 
     val support
         get() = localizedTextStore["$key/support"]
