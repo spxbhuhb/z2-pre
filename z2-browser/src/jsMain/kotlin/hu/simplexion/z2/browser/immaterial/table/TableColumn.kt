@@ -9,7 +9,7 @@ import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.util.uniqueNodeId
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.LocalizedText
 import kotlinx.browser.window
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass

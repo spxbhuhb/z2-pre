@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.material.navigation
 
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.text.LocalizedText
 
 open class NavigationItem(
     val icon: LocalizedIcon? = null,

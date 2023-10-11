@@ -50,7 +50,7 @@ class ServicePluginContext(
 
     val listClass = LIST.runtimeClass(KOTLIN_COLLECTIONS)
 
-    val noTransformAnnotation = FqName("hu.simplexion.z2.service.runtime.NoServiceTransform")
+    val noTransformAnnotation = FqName("hu.simplexion.z2.service.NoServiceTransform")
 
     val serviceFunctionCache = ServiceFunctionCache()
     val protoCache = ProtoCache(this)
@@ -59,7 +59,7 @@ class ServicePluginContext(
 
     fun String.runtimeClass(pkg: String = RUNTIME_PACKAGE) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-service-runtime\" is missing."
+            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons\" is missing."
         }
 
     @Suppress("UNUSED_PARAMETER")

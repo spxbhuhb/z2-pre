@@ -16,9 +16,9 @@ class LocalizationPluginContext(
 
     companion object {
         const val PROPERTY_NAME_INDEX = 2
-        const val ICON_PACKAGE = "hu.simplexion.z2.commons.localization.icon"
-        const val LOCALIZATION_PACKAGE = "hu.simplexion.z2.commons.localization"
-        const val TEXT_PACKAGE = "hu.simplexion.z2.commons.localization.text"
+        const val ICON_PACKAGE = "hu.simplexion.z2.localization.icon"
+        const val LOCALIZATION_PACKAGE = "hu.simplexion.z2.localization"
+        const val TEXT_PACKAGE = "hu.simplexion.z2.localization.text"
         const val LOCALIZATION_NAMESPACE = "localizationNamespace"
     }
 
@@ -30,10 +30,11 @@ class LocalizationPluginContext(
     val localizedText = "LocalizedText".runtimeClass(TEXT_PACKAGE)
     val localizedIcon = "LocalizedIcon".runtimeClass(ICON_PACKAGE)
 
+    val nonLocalizedAnnotation = FqName("hu.simplexion.z2.localization.NonLocalized")
 
     fun String.runtimeClass(pkg: String) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons-runtime\" is missing."
+            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons\" is missing."
         }
 
     // ----------------------------------------------------------------------------------

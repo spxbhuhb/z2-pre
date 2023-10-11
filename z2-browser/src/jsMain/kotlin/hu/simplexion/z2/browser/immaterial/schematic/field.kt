@@ -10,12 +10,12 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.default
 import hu.simplexion.z2.browser.material.textfield.textField
 import hu.simplexion.z2.browser.material.timepicker.timePicker
 import hu.simplexion.z2.browser.util.label
-import hu.simplexion.z2.commons.localization.text.LocalizedText
-import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
-import hu.simplexion.z2.schematic.runtime.dump
-import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
-import hu.simplexion.z2.schematic.runtime.schema.field.EnumSchemaField
+import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.schematic.SchematicAccessFunction
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.dump
+import hu.simplexion.z2.schematic.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.schema.field.EnumSchemaField
 
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on

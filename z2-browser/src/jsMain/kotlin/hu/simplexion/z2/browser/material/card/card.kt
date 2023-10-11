@@ -2,8 +2,8 @@ package hu.simplexion.z2.browser.material.card
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
-import hu.simplexion.z2.commons.localization.locales.localeCapitalized
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.locales.localeCapitalized
+import hu.simplexion.z2.localization.text.LocalizedText
 
 fun Z2.elevatedCard(
     headline: LocalizedText? = null,

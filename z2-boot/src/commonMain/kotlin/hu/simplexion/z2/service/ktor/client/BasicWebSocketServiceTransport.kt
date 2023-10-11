@@ -4,10 +4,10 @@ import hu.simplexion.z2.commons.protobuf.ProtoDecoder
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.commons.util.vmNowMicro
-import hu.simplexion.z2.service.runtime.transport.RequestEnvelope
-import hu.simplexion.z2.service.runtime.transport.ResponseEnvelope
-import hu.simplexion.z2.service.runtime.transport.ServiceCallStatus
-import hu.simplexion.z2.service.runtime.transport.ServiceCallTransport
+import hu.simplexion.z2.service.transport.RequestEnvelope
+import hu.simplexion.z2.service.transport.ResponseEnvelope
+import hu.simplexion.z2.service.transport.ServiceCallStatus
+import hu.simplexion.z2.service.transport.ServiceCallTransport
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*

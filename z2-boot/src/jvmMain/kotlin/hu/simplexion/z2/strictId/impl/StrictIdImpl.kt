@@ -2,7 +2,7 @@ package hu.simplexion.z2.strictId.impl
 
 import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.use
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.strictId.api.StrictIdApi
 import hu.simplexion.z2.strictId.table.StrictIdTable.Companion.strictIdTable
 

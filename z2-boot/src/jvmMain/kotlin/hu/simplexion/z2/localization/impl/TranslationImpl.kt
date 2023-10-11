@@ -8,7 +8,7 @@ import hu.simplexion.z2.localization.api.TranslationApi
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.model.Translation
 import hu.simplexion.z2.localization.table.TranslationTable.Companion.translationTable
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 
 class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
 

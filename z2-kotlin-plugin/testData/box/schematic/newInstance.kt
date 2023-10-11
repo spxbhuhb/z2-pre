@@ -1,7 +1,7 @@
 package foo.bar
 
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicCompanion
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicCompanion
 
 class Test : Schematic<Test>() {
 

@@ -1,10 +1,10 @@
 package foo.bar
 
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessor
-import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicAccessFunction
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.access.SchematicAccessor
+import hu.simplexion.z2.schematic.schema.SchemaFieldType
 
 class Test : Schematic<Test>() {
     var intField by int(default = 5)

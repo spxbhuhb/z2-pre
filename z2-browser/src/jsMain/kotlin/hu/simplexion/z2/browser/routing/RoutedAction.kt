@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.text.LocalizedText
 
 class RoutedAction<R>(
     override val label: LocalizedText? = null,

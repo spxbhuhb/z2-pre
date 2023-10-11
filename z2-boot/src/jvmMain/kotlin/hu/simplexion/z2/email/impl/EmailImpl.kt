@@ -11,7 +11,7 @@ import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.email.worker.EmailQueued
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 
 class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
 

@@ -3,8 +3,8 @@ package hu.simplexion.z2.worker.impl
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.schematic.runtime.ensureValid
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.schematic.ensureValid
+import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.worker.api.WorkerApi
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.runtime.WorkerRuntime.Companion.workerRuntime

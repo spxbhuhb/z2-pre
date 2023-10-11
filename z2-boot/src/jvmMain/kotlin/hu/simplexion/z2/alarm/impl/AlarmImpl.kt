@@ -1,7 +1,7 @@
 package hu.simplexion.z2.alarm.impl
 
 import hu.simplexion.z2.alarm.api.AlarmApi
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 
 class AlarmImpl : AlarmApi, ServiceImpl<AlarmImpl> {
 

@@ -1,7 +1,7 @@
 package hu.simplexion.z2.commons.util
 
-import hu.simplexion.z2.commons.localization.locales.localizedFormats
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.locales.localizedFormats
+import hu.simplexion.z2.localization.text.LocalizedText
 import kotlin.math.floor
 import kotlin.math.log
 import kotlin.math.pow

@@ -64,7 +64,7 @@ class SchematicPluginContext(
 
     fun String.runtimeClass(pkg: String = RUNTIME_PACKAGE) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing runtime class: $pkg.$this. Maybe the gradle dependency on \"hu.simplexion.z2:z2-schematic-runtime\" is missing."
+            "Missing runtime class: $pkg.$this. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons\" is missing."
         }
 
     fun IrClassSymbol.propertySymbol(name : String) =

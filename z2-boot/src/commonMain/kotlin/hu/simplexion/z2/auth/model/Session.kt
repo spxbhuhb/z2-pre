@@ -1,8 +1,8 @@
 package hu.simplexion.z2.auth.model
 
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.service.runtime.ServiceContext
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.service.ServiceContext
 
 class Session : Schematic<Session>() {
 

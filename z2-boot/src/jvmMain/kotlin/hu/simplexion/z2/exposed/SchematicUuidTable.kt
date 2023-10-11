@@ -1,9 +1,9 @@
 package hu.simplexion.z2.exposed
 
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
-import hu.simplexion.z2.schematic.runtime.schema.validation.ValidationFailInfo
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable

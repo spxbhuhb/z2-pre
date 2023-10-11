@@ -5,8 +5,8 @@ import ch.qos.logback.classic.Logger
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.ServiceImpl
-import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
+import hu.simplexion.z2.service.ServiceImpl
+import hu.simplexion.z2.service.defaultServiceImplFactory
 import org.apache.logging.log4j.core.config.Configurator
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database

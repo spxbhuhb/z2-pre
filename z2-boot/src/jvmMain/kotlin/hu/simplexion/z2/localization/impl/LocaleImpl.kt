@@ -8,7 +8,7 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.localization.api.LocaleApi
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.table.LocaleTable.Companion.localeTable
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 
 class LocaleImpl : LocaleApi, ServiceImpl<LocaleImpl> {
 

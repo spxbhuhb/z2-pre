@@ -1,6 +1,6 @@
 package hu.simplexion.z2
 
-import hu.simplexion.z2.commons.localization.icon.LocalizedIconProvider
+import hu.simplexion.z2.localization.icon.LocalizedIconProvider
 
 object baseIcons : IBaseIcons
 

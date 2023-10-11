@@ -1,6 +1,6 @@
 package hu.simplexion.z2.exposed
 
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class TestSchematic : Schematic<TestSchematic>() {
 

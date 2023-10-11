@@ -1,9 +1,9 @@
 package foo.bar
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicCompanion
-import hu.simplexion.z2.schematic.runtime.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicCompanion
+import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import kotlin.time.Duration
 
 class Language : Schematic<Language>() {

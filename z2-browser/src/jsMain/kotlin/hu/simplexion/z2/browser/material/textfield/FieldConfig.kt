@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser.material.textfield
 
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.field.FieldStyle
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.icon.LocalizedIcon
 
 open class FieldConfig<T>(
     val style : FieldStyle = defaultFieldStyle,

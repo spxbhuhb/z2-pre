@@ -1,6 +1,6 @@
 package hu.simplexion.z2.commons.localization
 
-import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.text.LocalizedTextProvider
 
 object test1 : LocalizedTextProvider {
     val value1 = static("test-value-1")

@@ -3,8 +3,8 @@ package hu.simplexion.z2.browser.html
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.event.Z2EventListener
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.text.LocalizedText
 import kotlinx.browser.document
 import kotlinx.dom.addClass
 import kotlinx.dom.appendText

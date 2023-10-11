@@ -10,10 +10,10 @@ import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.immaterial.schematic.schematicTextButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
-import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.localeService
 import hu.simplexion.z2.localization.model.Locale
+import hu.simplexion.z2.localization.text.LocalizedText
 
 internal fun add() {
     localLaunch {

@@ -8,7 +8,7 @@ import hu.simplexion.z2.browser.css.pt8
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.icon.actionIcon
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.icon.LocalizedIcon
 
 fun Z2.dropdownMenu(builder: Z2.() -> Unit) =
     DropdownMenu(this, false, builder)

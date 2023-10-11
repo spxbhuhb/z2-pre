@@ -3,7 +3,7 @@ package hu.simplexion.z2.service.runtime.test.box
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.commons.protobuf.ProtoOneString
-import hu.simplexion.z2.service.runtime.*
+import hu.simplexion.z2.service.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.test.assertEquals

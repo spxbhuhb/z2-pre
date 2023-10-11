@@ -1,7 +1,7 @@
 package hu.simplexion.z2.worker.api
 
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 import hu.simplexion.z2.worker.model.WorkerProvider
 import hu.simplexion.z2.worker.model.WorkerRegistration
 

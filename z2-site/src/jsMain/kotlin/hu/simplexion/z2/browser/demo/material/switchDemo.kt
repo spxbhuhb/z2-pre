@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.immaterial.schematic.switchField
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.switch.switch
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class SwitchSchematic : Schematic<SwitchSchematic>() {
     var booleanValue by boolean(true)

@@ -1,8 +1,8 @@
 package foo.bar
 
-import hu.simplexion.z2.schematic.runtime.schema.Schema
-import hu.simplexion.z2.schematic.runtime.schema.field.IntSchemaField
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.schema.Schema
+import hu.simplexion.z2.schematic.schema.field.IntSchemaField
+import hu.simplexion.z2.schematic.Schematic
 
 class Test : Schematic<Test>() {
     var intField by int(min = 5)

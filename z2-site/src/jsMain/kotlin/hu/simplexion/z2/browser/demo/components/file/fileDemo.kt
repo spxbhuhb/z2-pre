@@ -11,9 +11,9 @@ import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
 import hu.simplexion.z2.browser.material.vh
-import hu.simplexion.z2.commons.localization.locales.localized
-import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.hereAndNow
+import hu.simplexion.z2.localization.locales.localized
+import hu.simplexion.z2.localization.text.commonStrings
 import org.w3c.files.File
 
 fun types(index : Int) : List<String> =

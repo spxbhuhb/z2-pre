@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo
 
 import hu.simplexion.z2.IBaseIcons
-import hu.simplexion.z2.commons.localization.icon.LocalizedIconProvider
+import hu.simplexion.z2.localization.icon.LocalizedIconProvider
 
 internal object icons : LocalizedIconProvider, IBaseIcons {
     val administration = static("local_police")

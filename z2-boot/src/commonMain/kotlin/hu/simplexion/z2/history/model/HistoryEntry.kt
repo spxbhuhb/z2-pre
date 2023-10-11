@@ -1,7 +1,7 @@
 package hu.simplexion.z2.history.model
 
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class HistoryEntry : Schematic<HistoryEntry>() {
 

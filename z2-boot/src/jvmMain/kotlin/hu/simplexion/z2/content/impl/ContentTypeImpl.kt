@@ -6,8 +6,8 @@ import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.api.ContentTypeApi
 import hu.simplexion.z2.content.model.ContentType
 import hu.simplexion.z2.content.table.ContentTypeTable.Companion.contentTypeTable
-import hu.simplexion.z2.schematic.runtime.ensureValid
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.schematic.ensureValid
+import hu.simplexion.z2.service.ServiceImpl
 
 open class ContentTypeImpl : ContentTypeApi, ServiceImpl<ContentTypeImpl> {
 

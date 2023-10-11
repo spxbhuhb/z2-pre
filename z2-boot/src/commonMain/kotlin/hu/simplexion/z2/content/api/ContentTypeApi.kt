@@ -2,7 +2,7 @@ package hu.simplexion.z2.content.api
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.ContentType
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface ContentTypeApi : Service {
     suspend fun list() : List<ContentType>

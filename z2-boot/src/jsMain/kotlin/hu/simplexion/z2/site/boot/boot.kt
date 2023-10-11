@@ -5,8 +5,8 @@ import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.sessionService
 import hu.simplexion.z2.history.historyJs
 import hu.simplexion.z2.localization.localeJs
+import hu.simplexion.z2.service.defaultServiceCallTransport
 import hu.simplexion.z2.service.ktor.client.BasicWebSocketServiceTransport
-import hu.simplexion.z2.service.runtime.defaultServiceCallTransport
 import io.ktor.client.fetch.*
 import kotlinx.browser.window
 import kotlinx.coroutines.await

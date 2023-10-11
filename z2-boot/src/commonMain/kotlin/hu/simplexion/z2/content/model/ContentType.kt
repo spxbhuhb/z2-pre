@@ -1,6 +1,6 @@
 package hu.simplexion.z2.content.model
 
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class ContentType : Schematic<ContentType>() {
     var uuid by uuid<ContentType>(true)

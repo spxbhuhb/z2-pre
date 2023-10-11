@@ -4,7 +4,7 @@ import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface SessionApi : Service {
 

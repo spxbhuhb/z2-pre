@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
-import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.text.LocalizedText
 
 interface RoutingTarget<R> {
 

@@ -3,9 +3,9 @@ package hu.simplexion.z2.browser.immaterial.schematic
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.util.label
-import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
-import hu.simplexion.z2.schematic.runtime.dump
+import hu.simplexion.z2.schematic.SchematicAccessFunction
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.dump
 
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on

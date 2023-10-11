@@ -3,7 +3,7 @@ package hu.simplexion.z2.setting.util
 import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
 
 object CommonSettings {

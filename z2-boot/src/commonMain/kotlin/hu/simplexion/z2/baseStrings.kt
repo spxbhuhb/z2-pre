@@ -1,6 +1,6 @@
 package hu.simplexion.z2
 
-import hu.simplexion.z2.commons.localization.text.ICommonStrings
+import hu.simplexion.z2.localization.text.ICommonStrings
 
 object baseStrings : IBaseStrings
 

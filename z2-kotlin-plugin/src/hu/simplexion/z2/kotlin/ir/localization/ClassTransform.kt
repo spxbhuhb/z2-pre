@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.backend.js.lower.serialization.ir.JsManglerIr.fqnString
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class ClassTransform(
@@ -19,6 +20,10 @@ class ClassTransform(
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         if (declaration.name.identifier == LocalizationPluginContext.LOCALIZATION_NAMESPACE) return declaration
         if (declaration.isFakeOverride) return declaration
+
+        if (declaration.hasAnnotation(pluginContext.nonLocalizedAnnotation)) {
+            return declaration
+        }
 
         pluginContext.resources += "class/${declaration.parentAsClass.fqNameWhenAvailable}/${declaration.name.identifier}"
 

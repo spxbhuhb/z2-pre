@@ -2,12 +2,12 @@ package hu.simplexion.z2.service.ktor.server
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.service.runtime.BasicServiceContext
-import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
-import hu.simplexion.z2.service.runtime.transport.RequestEnvelope
-import hu.simplexion.z2.service.runtime.transport.ResponseEnvelope
-import hu.simplexion.z2.service.runtime.transport.ServiceCallStatus
+import hu.simplexion.z2.service.BasicServiceContext
+import hu.simplexion.z2.service.ServiceContext
+import hu.simplexion.z2.service.defaultServiceImplFactory
+import hu.simplexion.z2.service.transport.RequestEnvelope
+import hu.simplexion.z2.service.transport.ResponseEnvelope
+import hu.simplexion.z2.service.transport.ServiceCallStatus
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*

@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.ir.schematic
 
-const val RUNTIME_PACKAGE = "hu.simplexion.z2.schematic.runtime"
+const val RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
 const val SCHEMATIC_CLASS = "Schematic"
 
 const val FIELD_DEFINITION_FUNCTION_CLASS = "FieldDefinitionFunction"
@@ -37,19 +37,19 @@ const val FIELD_CONSTRUCTOR_NAME_INDEX = 0
 const val FIELD_CONSTRUCTOR_NULLABLE_INDEX = 1
 const val FIELD_CONSTRUCTOR_VARARG_INDEX = 2
 
-const val RUNTIME_SCHEMA_PACKAGE = "hu.simplexion.z2.schematic.runtime.schema"
+const val RUNTIME_SCHEMA_PACKAGE = "hu.simplexion.z2.schematic.schema"
 const val SCHEMA_CLASS = "Schema"
 const val SCHEMA_FIELD_CLASS = "SchemaField"
 const val SCHEMA_FIELD_SET_FIELD_NAME = "setFieldName"
 
-const val RUNTIME_SCHEMA_FIELD_PACKAGE = "hu.simplexion.z2.schematic.runtime.schema.field"
+const val RUNTIME_SCHEMA_FIELD_PACKAGE = "hu.simplexion.z2.schematic.schema.field"
 
 const val NULLABLE_SCHEMATIC_SCHEMA_FIELD_CLASS = "NullableSchematicSchemaField"
 const val SCHEMATIC_LIST_SCHEMA_FIELD_CLASS = "SchematicListSchemaField"
 
 const val SET_COMPANION = "setCompanion"
 
-const val RUNTIME_CONTEXT_PACKAGE = "hu.simplexion.z2.schematic.runtime.access"
+const val RUNTIME_CONTEXT_PACKAGE = "hu.simplexion.z2.schematic.access"
 const val SCHEMATIC_ACCESS_CONTEXT = "SchematicAccessContext"
 
 const val PROTO_PACKAGE = "hu.simplexion.z2.commons.protobuf"

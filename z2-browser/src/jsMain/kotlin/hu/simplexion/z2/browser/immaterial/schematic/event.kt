@@ -2,9 +2,9 @@ package hu.simplexion.z2.browser.immaterial.schematic
 
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.util.Z2Handle
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicEvent
-import hu.simplexion.z2.schematic.runtime.schema.validation.SchematicValidationResult
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicEvent
+import hu.simplexion.z2.schematic.schema.validation.SchematicValidationResult
 
 /**
  * Sent to the bus of the schematic when the schematic is "touched". This typically

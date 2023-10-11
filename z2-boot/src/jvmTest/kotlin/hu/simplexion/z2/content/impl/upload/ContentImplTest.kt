@@ -8,8 +8,8 @@ import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
 import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
 import hu.simplexion.z2.exposed.h2Test
-import hu.simplexion.z2.service.runtime.BasicServiceContext
-import hu.simplexion.z2.service.runtime.set
+import hu.simplexion.z2.service.BasicServiceContext
+import hu.simplexion.z2.service.set
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.BeforeClass

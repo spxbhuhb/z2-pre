@@ -16,10 +16,10 @@ import hu.simplexion.z2.browser.material.radiobutton.RadioButtonGroup
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.snackbar.snackbar
 import hu.simplexion.z2.browser.material.stateLayer
-import hu.simplexion.z2.commons.localization.locales.localized
-import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.formatByteLength
 import hu.simplexion.z2.commons.util.here
+import hu.simplexion.z2.localization.locales.localized
+import hu.simplexion.z2.localization.text.LocalizedText
 import kotlinx.datetime.Instant
 import org.w3c.files.File
 

@@ -3,9 +3,9 @@ package hu.simplexion.z2.browser.material.datepicker
 import hu.simplexion.z2.browser.css.pb16
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.localization.text.LocalizedText
-import hu.simplexion.z2.commons.localization.text.dateTimeStrings
 import hu.simplexion.z2.commons.util.hereAndNow
+import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.dateTimeStrings
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 

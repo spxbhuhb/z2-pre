@@ -3,9 +3,9 @@ package hu.simplexion.z2.browser.immaterial.schematic
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.util.io
-import hu.simplexion.z2.schematic.runtime.SchematicFieldEvent
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
-import hu.simplexion.z2.schematic.runtime.schema.SchemaField
+import hu.simplexion.z2.schematic.SchematicFieldEvent
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.schema.SchemaField
 
 @Suppress("UNCHECKED_CAST")
 open class BoundField<T>(

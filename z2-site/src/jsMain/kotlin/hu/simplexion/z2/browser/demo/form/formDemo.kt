@@ -10,8 +10,8 @@ import hu.simplexion.z2.browser.immaterial.schematic.touch
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.commons.util.hereAndNow
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.dump
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.dump
 import kotlinx.datetime.LocalDate
 
 enum class TestEnum {

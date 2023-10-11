@@ -4,8 +4,8 @@ import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.securityOfficerAccountName
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.securityOfficerUuid
-import hu.simplexion.z2.service.runtime.BasicServiceContext
-import hu.simplexion.z2.service.runtime.ServiceContext
+import hu.simplexion.z2.service.BasicServiceContext
+import hu.simplexion.z2.service.ServiceContext
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 

@@ -1,7 +1,7 @@
 package hu.simplexion.z2.email.model
 
 import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class Email : Schematic<Email>() {
     var uuid by uuid<Email>()

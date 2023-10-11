@@ -5,7 +5,7 @@ package hu.simplexion.z2.browser.immaterial.table
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.immaterial.table.builders.TitleBuilder
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.icon.LocalizedIcon
 
 /**
  * @property  add             When true a plus icon is added to the title bar. Click on the icon calls [onAddRow].

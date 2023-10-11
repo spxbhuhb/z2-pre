@@ -3,7 +3,7 @@ package hu.simplexion.z2.localization.api
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.model.Translation
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface TranslationApi : Service {
 

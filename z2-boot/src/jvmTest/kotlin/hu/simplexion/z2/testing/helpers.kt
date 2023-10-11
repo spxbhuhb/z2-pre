@@ -7,8 +7,8 @@ import hu.simplexion.z2.email.emailJvm
 import hu.simplexion.z2.exposed.debugExposed
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.history.historyJvm
-import hu.simplexion.z2.service.runtime.BasicServiceContext
-import hu.simplexion.z2.service.runtime.ServiceContext
+import hu.simplexion.z2.service.BasicServiceContext
+import hu.simplexion.z2.service.ServiceContext
 import hu.simplexion.z2.setting.settingJvm
 import hu.simplexion.z2.worker.workerJvm
 import kotlinx.coroutines.runBlocking

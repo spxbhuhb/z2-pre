@@ -11,9 +11,9 @@ import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
-import hu.simplexion.z2.commons.localization.text.LocalizedText
 import hu.simplexion.z2.commons.util.fourRandomInt
 import hu.simplexion.z2.commons.util.localLaunch
+import hu.simplexion.z2.localization.text.LocalizedText
 
 internal fun add() =
     accountModal(AccountPrivate(), baseStrings.addAccount, browserStrings.add) {

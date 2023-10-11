@@ -9,8 +9,8 @@ import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.TextField
-import hu.simplexion.z2.commons.localization.locales.localized
 import hu.simplexion.z2.commons.util.hereAndNow
+import hu.simplexion.z2.localization.locales.localized
 import kotlinx.datetime.LocalDate
 
 class DockedDatePicker(

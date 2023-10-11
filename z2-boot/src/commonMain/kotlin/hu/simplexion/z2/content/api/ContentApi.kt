@@ -2,7 +2,7 @@ package hu.simplexion.z2.content.api
 
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.Content
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface ContentApi : Service {
     suspend fun uploadChunk(uuid: UUID<Content>, position : Long, bytes : ByteArray)

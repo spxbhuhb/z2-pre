@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.immaterial.schematic
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.radiobutton.RadioButtonGroup
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
 
 class BoundSelectField<T>(
     parent: Z2,

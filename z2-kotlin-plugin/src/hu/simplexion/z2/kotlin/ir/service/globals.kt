@@ -5,7 +5,7 @@ package hu.simplexion.z2.kotlin.ir.service
 
 import org.jetbrains.kotlin.name.FqName
 
-const val RUNTIME_PACKAGE = "hu.simplexion.z2.service.runtime"
+const val RUNTIME_PACKAGE = "hu.simplexion.z2.service"
 
 const val SERVICE_CLASS = "Service"
 const val SERVICE_NAME_PROPERTY = "serviceName"

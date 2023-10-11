@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.field.stereotypes
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.LocalizedText
 
 fun Z2.longField(value : Long, label : LocalizedText, changeFun : (Long) -> Unit) =
     LongField(

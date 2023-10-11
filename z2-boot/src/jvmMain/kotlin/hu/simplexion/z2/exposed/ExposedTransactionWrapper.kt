@@ -2,9 +2,9 @@ package hu.simplexion.z2.exposed
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.service.runtime.NoServiceTransform
-import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.NoServiceTransform
+import hu.simplexion.z2.service.ServiceContext
+import hu.simplexion.z2.service.ServiceImpl
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
 

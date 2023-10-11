@@ -1,6 +1,6 @@
 package hu.simplexion.z2.localization.model
 
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class Locale : Schematic<Locale>() {
     var id by uuid<Locale>()

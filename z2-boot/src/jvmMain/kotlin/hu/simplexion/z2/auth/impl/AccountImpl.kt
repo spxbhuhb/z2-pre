@@ -14,7 +14,7 @@ import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 import kotlinx.datetime.Clock.System.now
 
 class AccountImpl: AccountApi, ServiceImpl<AccountImpl> {

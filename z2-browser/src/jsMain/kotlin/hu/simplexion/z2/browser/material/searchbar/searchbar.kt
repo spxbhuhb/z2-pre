@@ -4,7 +4,7 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.LocalizedText
 import org.w3c.dom.HTMLInputElement
 
 fun Z2.searchBar(placeholder : LocalizedText = browserStrings.searchHint) =

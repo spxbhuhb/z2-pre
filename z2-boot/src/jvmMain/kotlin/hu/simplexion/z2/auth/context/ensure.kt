@@ -4,7 +4,7 @@ import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 
 /**

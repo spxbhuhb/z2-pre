@@ -3,10 +3,10 @@ package hu.simplexion.z2.setting.impl
 import hu.simplexion.z2.auth.context.ensureSelfOrSecurityOfficer
 import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.settingHistory
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.localization.text.commonStrings
+import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.setting.api.SettingApi
 import hu.simplexion.z2.setting.model.Setting
 import hu.simplexion.z2.setting.table.SettingTable.Companion.settingTable

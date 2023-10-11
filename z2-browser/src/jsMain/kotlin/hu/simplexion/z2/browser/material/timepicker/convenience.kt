@@ -2,9 +2,9 @@ package hu.simplexion.z2.browser.material.timepicker
 
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.localization.text.LocalizedText
-import hu.simplexion.z2.commons.localization.text.dateTimeStrings
 import hu.simplexion.z2.commons.util.hereAndNow
+import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.dateTimeStrings
 import kotlinx.datetime.LocalTime
 
 fun Z2.timePicker(

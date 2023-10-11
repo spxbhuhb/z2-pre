@@ -3,9 +3,9 @@ package hu.simplexion.z2.browser.immaterial.table
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.label
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.SchematicAccessFunction
-import hu.simplexion.z2.schematic.runtime.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicAccessFunction
+import hu.simplexion.z2.schematic.access.SchematicAccessContext
 
 fun <T> Z2.table(
     builder: TableBuilder<T>.() -> Unit

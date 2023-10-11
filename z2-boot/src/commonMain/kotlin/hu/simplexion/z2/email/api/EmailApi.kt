@@ -6,7 +6,7 @@ import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQuery
 import hu.simplexion.z2.email.model.EmailQueueEntry
 import hu.simplexion.z2.email.model.EmailSettings
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface EmailApi : Service {
 

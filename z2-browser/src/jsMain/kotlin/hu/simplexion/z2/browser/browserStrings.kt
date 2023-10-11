@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser
 
-import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.text.LocalizedTextProvider
 
 object browserStrings : IBrowserStrings
 

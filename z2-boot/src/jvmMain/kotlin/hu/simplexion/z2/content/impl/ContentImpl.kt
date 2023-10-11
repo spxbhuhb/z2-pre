@@ -10,8 +10,8 @@ import hu.simplexion.z2.content.impl.upload.UploadAbortException
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.content.model.ContentStatus
 import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
-import hu.simplexion.z2.service.runtime.ServiceImpl
-import hu.simplexion.z2.service.runtime.get
+import hu.simplexion.z2.service.ServiceImpl
+import hu.simplexion.z2.service.get
 import java.nio.file.Paths
 
 open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {

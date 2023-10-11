@@ -38,7 +38,7 @@ The first two is quite straightforward, while the third is a bit tricky, but ver
 Schematic data classes store the data the application handles:
 
 ```kotlin
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class Author : Schematic<Author>() {
     var name by string() minLength 5 maxLength 5 blank false
@@ -54,7 +54,7 @@ class Book : Schematic<Book>() {
 If you don't like the infix notation, you can use parameters directly:
 
 ```kotlin
-import hu.simplexion.z2.schematic.runtime.Schematic
+import hu.simplexion.z2.schematic.Schematic
 
 class Author : Schematic<Author>() {
     var name by string(minLength = 5, maxLength = 5, blank = false)

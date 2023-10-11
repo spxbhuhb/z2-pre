@@ -6,7 +6,7 @@ import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.routing.RoutingTarget
-import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.localization.locales.localeCapitalized
 
 fun Z2.navigationDrawer(vararg targets : RoutingTarget<Z2>, scrollAutoHide : Boolean = true) =
     navigationDrawer(targets.toList(), scrollAutoHide)

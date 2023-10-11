@@ -1,7 +1,7 @@
 package hu.simplexion.z2.service.runtime.test.box.context
 
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.*
+import hu.simplexion.z2.service.*
 import kotlinx.coroutines.runBlocking
 
 interface TestService : Service {

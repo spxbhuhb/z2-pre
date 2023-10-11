@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.immaterial.search
 
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.LocalizedText
 
 open class SearchConfiguration<T> {
     var minimumFilterLength = 3

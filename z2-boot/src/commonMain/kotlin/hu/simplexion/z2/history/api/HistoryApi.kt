@@ -1,7 +1,7 @@
 package hu.simplexion.z2.history.api
 
 import hu.simplexion.z2.history.model.HistoryEntry
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 import kotlinx.datetime.Instant
 
 interface HistoryApi : Service {

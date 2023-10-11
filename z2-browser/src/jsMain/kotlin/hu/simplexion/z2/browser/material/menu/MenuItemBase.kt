@@ -4,8 +4,8 @@ import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.StateLayer
 import hu.simplexion.z2.browser.material.icon.icon
-import hu.simplexion.z2.commons.localization.icon.LocalizedIcon
-import hu.simplexion.z2.commons.localization.locales.localeCapitalized
+import hu.simplexion.z2.localization.icon.LocalizedIcon
+import hu.simplexion.z2.localization.locales.localeCapitalized
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 

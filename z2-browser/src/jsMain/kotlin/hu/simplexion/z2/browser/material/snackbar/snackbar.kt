@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser.material.snackbar
 
-import hu.simplexion.z2.commons.localization.text.LocalizedText
+import hu.simplexion.z2.localization.text.LocalizedText
 import org.w3c.dom.events.Event
 
 fun snackbar(

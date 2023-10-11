@@ -1,6 +1,6 @@
 package hu.simplexion.z2.strictId.api
 
-import hu.simplexion.z2.service.runtime.Service
+import hu.simplexion.z2.service.Service
 
 interface StrictIdApi : Service {
 

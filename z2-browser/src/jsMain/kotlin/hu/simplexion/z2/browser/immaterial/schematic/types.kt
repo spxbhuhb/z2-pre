@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
-import hu.simplexion.z2.schematic.runtime.Schematic
-import hu.simplexion.z2.schematic.runtime.schema.SchemaField
-import hu.simplexion.z2.schematic.runtime.schema.validation.FieldValidationResult
+import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.schema.SchemaField
+import hu.simplexion.z2.schematic.schema.validation.FieldValidationResult
 
 typealias EncodeToString<T> = (value : T) -> String
 

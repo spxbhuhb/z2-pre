@@ -1,5 +1,5 @@
-import hu.simplexion.z2.commons.localization.LocalizationProvider
-import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.LocalizationProvider
+import hu.simplexion.z2.localization.text.LocalizedTextProvider
 
 object test1 : ITest2 {
     val value1 = static("test-value-1")

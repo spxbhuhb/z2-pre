@@ -14,11 +14,11 @@ import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.commons.localization.text.commonStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.history.util.securityHistory
+import hu.simplexion.z2.localization.text.commonStrings
 import org.jetbrains.exposed.sql.transactions.transaction
 
 internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB

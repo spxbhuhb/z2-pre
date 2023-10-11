@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo
 
 import hu.simplexion.z2.IBaseStrings
-import hu.simplexion.z2.commons.localization.text.LocalizedTextProvider
+import hu.simplexion.z2.localization.text.LocalizedTextProvider
 
 object strings : LocalizedTextProvider, IBaseStrings {
     val select = static("Select")
