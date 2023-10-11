@@ -60,20 +60,20 @@ kotlin {
         }
 
         sourceSets["jvmMain"].dependencies {
-            implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-            implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-            implementation("io.ktor:ktor-server-websockets:$ktor_version")
+            api("io.ktor:ktor-server-core-jvm:$ktor_version")
+            api("io.ktor:ktor-server-netty-jvm:$ktor_version")
+            api("io.ktor:ktor-server-websockets:$ktor_version")
 
-            implementation("org.jetbrains.exposed:exposed-core:${exposed_version}")
-            implementation("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
-            implementation("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
+            api("org.jetbrains.exposed:exposed-core:${exposed_version}")
+            api("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
+            api("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
 
-            implementation("com.zaxxer:HikariCP:3.4.2")
+            api("com.zaxxer:HikariCP:3.4.2")
 
-            implementation("ch.qos.logback:logback-classic:${logback_version}")
-            implementation("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
+            api("ch.qos.logback:logback-classic:${logback_version}")
+            api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
 
-            implementation("com.sun.mail:javax.mail:${javamail_version}")
+            api("com.sun.mail:javax.mail:${javamail_version}")
         }
 
         sourceSets["jvmTest"].dependencies {

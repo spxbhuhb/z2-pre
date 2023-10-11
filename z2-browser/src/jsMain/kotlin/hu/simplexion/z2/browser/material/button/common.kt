@@ -3,7 +3,6 @@ package hu.simplexion.z2.browser.material.button
 import hu.simplexion.z2.browser.css.labelLarge
 import hu.simplexion.z2.browser.css.labelSmall
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
 import org.w3c.dom.events.Event
@@ -14,7 +13,7 @@ fun Z2.filledButton(label: LocalizedText, onClick: (event: Event) -> Unit) =
     }
 
 fun Z2.filledLaunchButton(label: LocalizedText, onClickFun: suspend (event: Event) -> Unit) =
-    Button(this, arrayOf("button-filled", labelLarge), { localLaunch { onClickFun(it) } }) {
+    LaunchButton(this, arrayOf("button-filled", labelLarge), { onClickFun(it) }) {
         text { label.localeCapitalized }
     }
 
@@ -27,7 +26,7 @@ fun Z2.textButton(label: LocalizedText, capitalize : Boolean, onClick: (event: E
     }
 
 fun Z2.textLaunchButton(label: LocalizedText, onClickFun: suspend (event: Event) -> Unit) =
-    Button(this, arrayOf("button-text", labelLarge), { localLaunch { onClickFun(it) } }) {
+    LaunchButton(this, arrayOf("button-text", labelLarge), { onClickFun(it) }) {
         text { label.localeCapitalized }
     }
 
@@ -37,6 +36,6 @@ fun Z2.smallDenseTextButton(label: LocalizedText, onClick: (event: Event) -> Uni
     }
 
 fun Z2.smallDenseTextLaunchButton(label: LocalizedText, onClickFun: suspend (event: Event) -> Unit) =
-    Button(this, arrayOf("button-text", "dense", labelSmall), { localLaunch { onClickFun(it) } }) {
+    LaunchButton(this, arrayOf("button-text", "dense", labelSmall), { onClickFun(it) }) {
         text { label.localeCapitalized }
     }
