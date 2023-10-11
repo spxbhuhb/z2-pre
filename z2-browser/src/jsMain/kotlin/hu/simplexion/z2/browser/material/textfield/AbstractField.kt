@@ -141,7 +141,7 @@ abstract class AbstractField<T>(
                     FieldStyle.Chip -> {
                         height = baseHeight
                         borderWidth = 2.px
-                        addClass(borderRadiusExtraSmall, pointerEventsNone)
+                        addClass(borderRadius8, pointerEventsNone)
                     }
                     else -> {
                         top = 46.px
