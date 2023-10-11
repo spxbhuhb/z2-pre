@@ -3,9 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2.schematic") version "2023.10.6-SNAPSHOT"
-    id("hu.simplexion.z2.service") version "2023.10.6-SNAPSHOT"
-    id("hu.simplexion.z2.commons") version "2023.10.6-SNAPSHOT"
+    id("hu.simplexion.z2") version "2023.10.11-SNAPSHOT"
 
     java
     application
@@ -63,10 +61,12 @@ kotlin {
     }
 
     sourceSets["commonMain"].dependencies {
+        implementation("hu.simplexion.z2:z2-commons:$z2_boot_version")
         implementation("hu.simplexion.z2:z2-boot:$z2_boot_version")
     }
     sourceSets["jsMain"].dependencies {
         implementation("io.ktor:ktor-client-websockets:$ktor_version")
+        implementation("hu.simplexion.z2:z2-browser:$z2_boot_version")
     }
     sourceSets["jvmMain"].dependencies {
         implementation("io.ktor:ktor-server-core-jvm:$ktor_version")

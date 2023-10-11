@@ -4,14 +4,9 @@
 rootProject.name = "z2-site"
 
 pluginManagement {
-    includeBuild("../z2-schematic/z2-schematic-gradle-plugin")
-    includeBuild("../z2-service/z2-service-gradle-plugin")
-    includeBuild("../z2-commons/z2-commons-gradle-plugin")
+    includeBuild("../z2-gradle-plugin")
 }
 
-includeBuild("../z2-commons/z2-commons-runtime")
-includeBuild("../z2-service/z2-service-runtime")
-includeBuild("../z2-schematic/z2-schematic-runtime")
-includeBuild("../z2-exposed/z2-exposed-runtime")
-includeBuild("../z2-browser/z2-browser-runtime")
-includeBuild("../z2-module/z2-module-base")
+includeBuild("../z2-boot")
+includeBuild("../z2-browser")
+includeBuild("../z2-commons")

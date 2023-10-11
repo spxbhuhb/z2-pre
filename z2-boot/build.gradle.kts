@@ -3,6 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
+    id("hu.simplexion.z2") version "2023.10.11-SNAPSHOT"
     java
     signing
     `maven-publish`
@@ -19,41 +20,68 @@ repositories {
     google()
 }
 
-val z2_browser_version: String by project
 val z2_commons_version: String by project
-val z2_module_base_version: String by project
-val z2_exposed_version: String by project
-val z2_service_version: String by project
-val z2_schematic_version: String by project
+val z2_browser_version: String by project
+
+val coroutines_version: String by project
+val datetime_version: String by project
+
+val ktor_version: String by project
+val logback_version: String by project
+val exposed_version: String by project
+val javamail_version: String by project
 
 kotlin {
     jvm {
         jvmToolchain(11)
+        withJava()
     }
     js(IR) {
         browser()
         binaries.library()
     }
     sourceSets {
+
         commonMain {
             dependencies {
-                api("hu.simplexion.z2:z2-commons-runtime:${z2_commons_version}")
-                api("hu.simplexion.z2:z2-module-base:${z2_module_base_version}")
-                api("hu.simplexion.z2:z2-service-runtime:${z2_service_version}")
-                api("hu.simplexion.z2:z2-schematic-runtime:${z2_schematic_version}")
-                api("hu.simplexion.z2:z2-service-ktor:${z2_service_version}")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+                api("hu.simplexion.z2:z2-commons:${z2_commons_version}")
+                api("io.ktor:ktor-client-websockets:$ktor_version")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
             }
         }
+
         commonTest {
             dependencies {
-                api(kotlin("test"))
+                implementation(kotlin("test"))
             }
         }
+
         sourceSets["jsMain"].dependencies {
-            api("hu.simplexion.z2:z2-browser-runtime:${z2_browser_version}")
+            api("hu.simplexion.z2:z2-browser:${z2_browser_version}")
         }
+
         sourceSets["jvmMain"].dependencies {
-            api("hu.simplexion.z2:z2-exposed-runtime:${z2_exposed_version}")
+            implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+            implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+            implementation("io.ktor:ktor-server-websockets:$ktor_version")
+
+            implementation("org.jetbrains.exposed:exposed-core:${exposed_version}")
+            implementation("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
+            implementation("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
+
+            implementation("com.zaxxer:HikariCP:3.4.2")
+
+            implementation("ch.qos.logback:logback-classic:${logback_version}")
+            implementation("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
+
+            implementation("com.sun.mail:javax.mail:${javamail_version}")
+        }
+
+        sourceSets["jvmTest"].dependencies {
+            implementation(kotlin("test"))
+            implementation("com.h2database:h2:2.1.214")
+            implementation("org.subethamail:subethasmtp:3.1.7")
         }
     }
 }

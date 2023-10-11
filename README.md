@@ -11,13 +11,11 @@ Status: **initial development**
 
 ## Modules
 
-| Library                   | Purpose                                                                 |
-|---------------------------|-------------------------------------------------------------------------|
-| [Commons](z2-commons)     | Common functions and data structures. Localization.                     |
-| [Service](z2-service)     | Client-Server communication with simple function calls.                 |
-| [Schematic](z2-schematic) | Data schemas for UI building, validation, communication, user feedback. |
-| [Browser](z2-browser)     | Material 3 and other components for web browsers.                       |
-| [Module](z2-module)       | Fully functional application modules (UI + Backend, SQL with Exposed)   |
+| Library | Purpose                                                               |
+|---------|-----------------------------------------------------------------------|
+| Commons | All basic functions: localization, schematic, service.                |
+| Browser | Material 3 and other components for web browsers.                     |
+| Boot    | Fully functional application modules (UI + Backend, SQL with Exposed) |
 
 ## Gradle Dependency
 
@@ -29,8 +27,7 @@ That said, the easiest way is to depend on `z2-boot` which contains everything.
 
 ```kotlin
 pluginManagement {
-    includeBuild("../z2-schematic/z2-schematic-gradle-plugin")
-    includeBuild("../z2-service/z2-service-gradle-plugin")
+    includeBuild("../z2-gradle-plugin")
 }
 ```
 
@@ -39,8 +36,7 @@ pluginManagement {
 ```kotlin
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2.schematic") version "<schematic-plugin-version>"
-    id("hu.simplexion.z2.service") version "<service-plugin-version>"
+    id("hu.simplexion.z2") version "<z2-plugin-version>"
 }
 ```
 
