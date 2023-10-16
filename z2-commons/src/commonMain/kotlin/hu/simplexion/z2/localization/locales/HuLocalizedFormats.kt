@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.localization.locales
 
-import hu.simplexion.z2.localization.text.dateTimeStrings
+import hu.simplexion.z2.localization.text.numbersToStringTable
 import kotlinx.datetime.*
 
 object HuLocalizedFormats : AbstractLocalizedFormats(
@@ -23,11 +23,11 @@ object HuLocalizedFormats : AbstractLocalizedFormats(
 
     override fun format(value: LocalDateTime): String {
         val year = value.year.toString()
-        val month = dateTimeStrings.numbersToStringTable[value.monthNumber]
-        val day = dateTimeStrings.numbersToStringTable[value.dayOfMonth]
-        val hour = dateTimeStrings.numbersToStringTable[value.hour]
-        val minute = dateTimeStrings.numbersToStringTable[value.minute]
-        val second = dateTimeStrings.numbersToStringTable[value.second]
+        val month = numbersToStringTable[value.monthNumber]
+        val day = numbersToStringTable[value.dayOfMonth]
+        val hour = numbersToStringTable[value.hour]
+        val minute = numbersToStringTable[value.minute]
+        val second = numbersToStringTable[value.second]
         // FIXME option for micros
         // val micros = (value.nanosecond / 1_000).toString().padStart(6, '0')
 

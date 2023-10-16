@@ -22,6 +22,7 @@ class LocalizationPluginContext(
         const val LOCALIZATION_PACKAGE = "hu.simplexion.z2.localization"
         const val TEXT_PACKAGE = "hu.simplexion.z2.localization.text"
         const val LOCALIZATION_NAMESPACE = "localizationNamespace"
+        const val SCHEMATIC_FQ_NAME = "schematicFqName"
     }
 
     // ----------------------------------------------------------------------------------

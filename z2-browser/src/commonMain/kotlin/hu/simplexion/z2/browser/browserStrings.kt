@@ -2,7 +2,7 @@ package hu.simplexion.z2.browser
 
 import hu.simplexion.z2.localization.text.ICommonStrings
 
-object browserStrings : IBrowserStrings
+lateinit var browserStrings : IBrowserStrings
 
 interface IBrowserStrings : ICommonStrings {
     val actions get() = static("műveletek")

@@ -10,7 +10,8 @@ import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.menu.menuItem
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.commons.util.hereAndNow
-import hu.simplexion.z2.localization.text.dateTimeStrings
+import hu.simplexion.z2.localization.text.monthNameTable
+import hu.simplexion.z2.localization.text.monthShortNameTable
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
@@ -117,7 +118,7 @@ class DockedDatePickerSelector(
     fun Z2.monthMenu(mode: Int) =
         div(bodySmall, textTransformCapitalize, displayFlex, pl8, cursorPointer) {
             div(displayFlex, w60, justifyContentCenter) {
-                div(alignSelfCenter, overflowHidden) { text { dateTimeStrings.monthShortNameTable[value.monthNumber - 1] } }
+                div(alignSelfCenter, overflowHidden) { text { monthShortNameTable[value.monthNumber - 1] } }
                 if (mode != YEAR_SELECT) {
                     icon(browserIcons.down, size = 20)
                 } else {
@@ -168,7 +169,7 @@ class DockedDatePickerSelector(
                             div(pr24)
                         }
                     },
-                    label = dateTimeStrings.monthNameTable[monthNumber - 1]
+                    label = monthNameTable[monthNumber - 1]
                 ) { monthSelected(monthNumber) }
             }
         }.also {

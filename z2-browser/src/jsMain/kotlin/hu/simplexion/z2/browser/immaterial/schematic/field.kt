@@ -9,7 +9,7 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.browser.material.textfield.textField
 import hu.simplexion.z2.browser.material.timepicker.timePicker
-import hu.simplexion.z2.browser.util.label
+import hu.simplexion.z2.localization.localized
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.SchematicAccessFunction
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
@@ -72,7 +72,7 @@ private fun <T : Enum<T>> Z2.enumField(context: SchematicAccessContext, label: L
         val value = field.getValue(context.schematic)
 
         // FIXME supporting text handling
-        radioButtonGroup(value, field.entries.toList()) {
+        radioButtonGroup(value, field.entries.toList(), { + it.localized }) {
             context.schematic.schematicChange(context.field, it)
         }
     }

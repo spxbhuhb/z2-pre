@@ -1,6 +1,7 @@
 package hu.simplexion.z2.localization.text
 
 import hu.simplexion.z2.localization.LocalizationProvider
+import hu.simplexion.z2.localization.localizationFor
 import hu.simplexion.z2.localization.localizedTextStore
 
 interface LocalizedTextProvider : LocalizationProvider {
@@ -26,9 +27,7 @@ interface LocalizedTextProvider : LocalizationProvider {
         return StaticText(key, value).also { localizedTextStore[key] = it }
     }
 
-    fun localized(provider : LocalizedTextProvider, name : String, default : String) : LocalizedText {
-        val key = provider.localizationNamespace + "/" + name
-        return localizedTextStore[key] ?: StaticText(key, default)
-    }
+    fun localized(provider : LocalizedTextProvider, name : String, default : String) : LocalizedText =
+        localizationFor(provider.localizationNamespace + "/" + name, default)
 
 }

@@ -4,7 +4,7 @@ import hu.simplexion.z2.browser.css.p8
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.datepicker.month
-import hu.simplexion.z2.localization.text.dateTimeStrings
+import hu.simplexion.z2.localization.text.monthNameTable
 import kotlinx.datetime.Month
 
 fun Z2.year(year: Int) =
@@ -13,7 +13,7 @@ fun Z2.year(year: Int) =
             div("year-month") {
 
                 div("month-name", "title-small") {
-                    text { dateTimeStrings.monthNameTable[month.ordinal] }
+                    text { monthNameTable[month.ordinal] }
                 }
 
                 month(year, month, dayLetterPadding = p8) {  }
