@@ -2,7 +2,7 @@ package hu.simplexion.z2
 
 import hu.simplexion.z2.browser.IBrowserStrings
 
-object baseStrings : IBaseStrings
+lateinit var baseStrings : IBaseStrings
 
 interface IBaseStrings : IBrowserStrings {
     val login get() = static("Belépés")

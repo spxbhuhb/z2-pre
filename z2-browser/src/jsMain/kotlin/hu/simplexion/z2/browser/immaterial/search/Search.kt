@@ -122,7 +122,6 @@ class Search<T>(
                             configuration.itemRenderFun(this, item)
                         }
                         onClick {
-                            println(configuration.itemTextFun(item))
                             input.value = configuration.itemTextFun(item)
                             items = emptyList()
                             running = false

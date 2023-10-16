@@ -2,6 +2,7 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
@@ -28,11 +29,18 @@ import hu.simplexion.z2.browser.routing.BrowserRouter
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
 import hu.simplexion.z2.commons.util.localLaunch
+import hu.simplexion.z2.localization.text.commonStrings
+import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.site.boot.bootJs
 
 fun main() {
     localLaunch {
         bootJs()
+
+        commonStrings = strings
+        dateTimeStrings = strings
+        browserStrings = strings
+        baseStrings = strings
 
         customizeStyles()
         Content.defaultLayout = { router, nav, content -> defaultLayout(router, nav, content) }

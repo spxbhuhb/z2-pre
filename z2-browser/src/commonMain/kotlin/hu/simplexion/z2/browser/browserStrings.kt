@@ -43,4 +43,5 @@ interface IBrowserStrings : ICommonStrings {
     val folder get() = static("Mappa")
     val sizeOverLimit get() = static("mérethatár felett")
     val invalidExtension get() = static("nem elfogadott formátum")
+    val typeMinimumCharacters get() = static("legalább 3 karaktert be kell gépelni")
 }

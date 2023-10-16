@@ -212,11 +212,15 @@ abstract class AbstractField<T>(
                 }
             }
             onInput {
-                if (! state.readOnly && ! state.disabled) {
-                    valueOrNull = config.decodeFromString(inputElement.value)
-                    config.onChange?.invoke(this@AbstractField)
-                }
+               this@AbstractField.onInput()
             }
+        }
+    }
+
+    open fun onInput() {
+        if (! state.readOnly && ! state.disabled) {
+            valueOrNull = config.decodeFromString(inputElement.value)
+            config.onChange?.invoke(this@AbstractField)
         }
     }
 
