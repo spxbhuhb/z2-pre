@@ -2,6 +2,7 @@ package hu.simplexion.z2.localization
 
 import hu.simplexion.z2.localization.api.LocaleApi
 import hu.simplexion.z2.localization.api.TranslationApi
+import hu.simplexion.z2.localization.locales.setLocalizedFormats
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.text.StaticText
 import hu.simplexion.z2.service.getService
@@ -26,5 +27,5 @@ suspend fun localeJs() {
         }
     }
 
-    localizedTextStore
+    setLocalizedFormats(effectiveLocale.isoCode)
 }
