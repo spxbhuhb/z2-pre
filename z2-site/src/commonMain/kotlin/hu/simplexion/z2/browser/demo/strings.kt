@@ -2,8 +2,9 @@ package hu.simplexion.z2.browser.demo
 
 import hu.simplexion.z2.IBaseStrings
 import hu.simplexion.z2.localization.text.IDateTimeStrings
+import hu.simplexion.z2.schematic.schema.validation.IValidationStrings
 
-object strings : IBaseStrings, IDateTimeStrings {
+object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val select = static("Select")
     val components = static("Components")
     val pages = static("Pages")

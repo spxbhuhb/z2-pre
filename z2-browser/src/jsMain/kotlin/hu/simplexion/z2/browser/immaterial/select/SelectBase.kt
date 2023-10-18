@@ -169,17 +169,18 @@ class SelectBase<T>(
             return
         }
 
-        running = true
-        update()
+        if (! running) {
+            running = true
+            update()
+        }
 
         localLaunch {
             queryFun.invoke(value).let {
+                if (inputRevision != revision) return@localLaunch
                 config.options = it
-                if (inputRevision == revision) {
-                    running = false
-                    noItems = config.options.isEmpty()
-                    update()
-                }
+                noItems = it.isEmpty()
+                running = false
+                update()
             }
         }
     }

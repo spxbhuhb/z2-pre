@@ -65,6 +65,7 @@ open class ModalBase<T : Any?>(
         Modals += this
         val value = channel.receive()
         Modals -= this
+        dispose() // TODO think about modal dispose and reuse (probably shouldn't allow reuse)
 
         return value
     }

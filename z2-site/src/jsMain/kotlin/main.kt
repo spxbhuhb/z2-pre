@@ -31,6 +31,7 @@ import hu.simplexion.z2.browser.routing.Router
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.localization.text.dateTimeStrings
+import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.site.boot.bootJs
 
 fun main() {
@@ -41,6 +42,7 @@ fun main() {
         dateTimeStrings = strings
         browserStrings = strings
         baseStrings = strings
+        validationStrings = strings
 
         customizeStyles()
         Content.defaultLayout = { router, nav, content -> defaultLayout(router, nav, content) }

@@ -8,3 +8,5 @@ package hu.simplexion.z2.commons.util
  * On JVM it uses `System.nanoTime`.
  */
 expect fun vmNowMicro(): Long
+
+expect fun vmNowSecond() : Long
