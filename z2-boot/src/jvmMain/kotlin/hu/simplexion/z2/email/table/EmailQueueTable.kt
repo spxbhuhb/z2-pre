@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.selectAll
 open class EmailQueueTable(
     emailTable: EmailTable
 ) : Table(
-    "email_queue",
+    "z2_email_queue",
 ) {
 
     companion object {

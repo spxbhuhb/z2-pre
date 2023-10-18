@@ -1,7 +1,7 @@
 package hu.simplexion.z2.worker.runtime
 
-import hu.simplexion.z2.auth.context.account
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.context.principal
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.util.runBlockingAsSecurityOfficer
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
@@ -41,7 +41,7 @@ open class WorkerRuntime {
     val messages = Channel<WorkerRuntimeRequest>(100)
 
     suspend fun sendAndWait(
-        executor: UUID<AccountPrivate>,
+        executor: UUID<Principal>,
         type: WorkerRuntimeMessageType,
         registration: WorkerRegistration? = null,
         registrationUuid: UUID<WorkerRegistration>? = null,
@@ -65,7 +65,7 @@ open class WorkerRuntime {
 
     operator fun plusAssign(provider: WorkerProvider) {
         runBlockingAsSecurityOfficer { context ->
-            sendAndWait(context.account, WorkerRuntimeMessageType.AddProvider, null, null, provider)
+            sendAndWait(context.principal, WorkerRuntimeMessageType.AddProvider, null, null, provider)
         }
     }
 

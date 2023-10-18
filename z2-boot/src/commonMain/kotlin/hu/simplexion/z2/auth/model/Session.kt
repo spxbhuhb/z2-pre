@@ -8,9 +8,8 @@ class Session : Schematic<Session>() {
 
     var uuid by uuid<ServiceContext>()
     val createdAt by instant()
-    var account by uuid<AccountPrivate>().nullable()
+    var principal by uuid<Principal>().nullable()
     var roles by schematicList<Role>()
-    var fullName by string()
 
     companion object {
         val SESSION_TOKEN_UUID = UUID<Session>("7fdd494f-e542-4d5b-870b-7cab83dc3197")

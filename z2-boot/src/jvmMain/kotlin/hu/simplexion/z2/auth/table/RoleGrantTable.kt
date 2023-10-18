@@ -1,9 +1,9 @@
 package hu.simplexion.z2.auth.table
 
-import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.model.AccountPublic
+import hu.simplexion.z2.auth.model.Grant
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.jvm
@@ -12,44 +12,44 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 open class RoleGrantTable(
-    accountPrivateTable: AccountPrivateTable,
+    principalTable: PrincipalTable,
     roleTable: RoleTable
 ) : Table(
-    "auth_role_grant"
+    "z2_auth_role_grant"
 ) {
 
     companion object {
-        val roleGrantTable = RoleGrantTable(accountPrivateTable, roleTable)
+        val roleGrantTable = RoleGrantTable(principalTable, roleTable)
     }
 
-    val account = reference("account", accountPrivateTable).index()
+    val principal = reference("principal", principalTable).index()
     val role = reference("role", roleTable)
     val context = varchar("context", 50).index().nullable()
 
-    fun insert(inRole : UUID<Role>, inAccount: UUID<AccountPrivate>, inContext : String?) {
+    fun insert(inRole: UUID<Role>, inPrincipal: UUID<Principal>, inContext: String?) {
         insert {
             it[role] = inRole.jvm
-            it[account] = inAccount.jvm
+            it[principal] = inPrincipal.jvm
             it[context] = inContext
         }
     }
 
-    fun remove(inRole : UUID<Role>) {
+    fun remove(inRole: UUID<Role>) {
         deleteWhere { role eq inRole.jvm }
     }
 
-    fun remove(inRole: UUID<Role>, inAccount: UUID<AccountPrivate>, inContext: String?) {
+    fun remove(inRole: UUID<Role>, inPrincipal: UUID<Principal>, inContext: String?) {
         deleteWhere {
-            (role eq inRole.jvm) and (account eq inAccount.jvm) and (context eq inContext)
+            (role eq inRole.jvm) and (principal eq inPrincipal.jvm) and (context eq inContext)
         }
     }
 
-    fun rolesOf(inAccount: UUID<AccountPrivate>, inContext : String?) : List<Role> {
+    fun rolesOf(inPrincipal: UUID<Principal>, inContext: String?): List<Role> {
 
         val condition = if (inContext == null) {
-            Op.build { account eq inAccount.jvm}
+            Op.build { principal eq inPrincipal.jvm }
         } else {
-            Op.build { (account eq inAccount.jvm) and (context eq inContext)}
+            Op.build { (principal eq inPrincipal.jvm) and (context eq inContext) }
         }
 
         return this
@@ -71,30 +71,30 @@ open class RoleGrantTable(
             }
     }
 
-    fun grantedTo(inRole: UUID<Role>, inContext: String?) : List<AccountPublic> {
+    fun grantedTo(inRole: UUID<Role>, inContext: String?): List<Grant> {
         val condition = if (inContext == null) {
-            Op.build { role eq inRole.jvm}
+            Op.build { role eq inRole.jvm }
         } else {
-            Op.build { (role eq inRole.jvm) and (context eq inContext)}
+            Op.build { (role eq inRole.jvm) and (context eq inContext) }
         }
 
         return this
             .join(
-                accountPrivateTable,
+                principalTable,
                 JoinType.INNER,
-                additionalConstraint = { roleGrantTable.account eq accountPrivateTable.id }
+                additionalConstraint = { roleGrantTable.principal eq principalTable.id }
             )
             .slice(
-                roleGrantTable.account,
-                accountPrivateTable.fullName
+                roleGrantTable.principal,
+                principalTable.name
             )
             .select(condition)
-            .map {
-                AccountPublic().apply {
-                    uuid = it[roleGrantTable.account].value.z2()
-                    fullName = it[accountPrivateTable.fullName]
+            .map { row ->
+                Grant().also {
+                    it.role = inRole
+                    it.principal = row[roleGrantTable.principal].value.z2()
+                    it.principalName = row[principalTable.name]
                 }
             }
     }
-
 }

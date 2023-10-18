@@ -1,7 +1,7 @@
 package hu.simplexion.z2.history.table
 
-import hu.simplexion.z2.auth.table.AccountPrivateTable
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.table.PrincipalTable
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.history.model.HistoryEntry
 import kotlinx.datetime.Instant
@@ -10,18 +10,18 @@ import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
 
 open class HistoryEntryTable(
-    accountPrivateTable: AccountPrivateTable
+    principalTable: PrincipalTable
 ) : SchematicUuidTable<HistoryEntry>(
-    "history_entry",
+    "z2_history_entry",
     HistoryEntry()
 ) {
 
     companion object {
-        val historyEntryTable = HistoryEntryTable(accountPrivateTable)
+        val historyEntryTable = HistoryEntryTable(principalTable)
     }
 
     val createdAt = timestamp("createdAt")
-    val createdBy = reference("createdBy", accountPrivateTable).nullable()
+    val createdBy = reference("createdBy", principalTable).nullable()
     val flags = integer("flags")
     val topic = varchar("topic", 120)
     val verb = varchar("verb", 120)

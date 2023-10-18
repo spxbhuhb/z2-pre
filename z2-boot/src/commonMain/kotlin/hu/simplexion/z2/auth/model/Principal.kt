@@ -2,12 +2,11 @@ package hu.simplexion.z2.auth.model
 
 import hu.simplexion.z2.schematic.Schematic
 
-class AccountStatus : Schematic<AccountStatus>() {
+class Principal : Schematic<Principal>() {
 
-    val uuid by uuid<AccountStatus>()
+    var uuid by uuid<Principal>(true)
 
-    var account by uuid<AccountPrivate>()
-
+    var name by string(blank = false)
     var activated by boolean(default = false)
     var locked by boolean(default = false)
     var expired by boolean(default = false)

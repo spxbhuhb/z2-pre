@@ -84,5 +84,5 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val privacy = static("Privacy")
     val term = static("Terms")
     val english = static("English")
-    val registration = static("Create account")
+    val registration = static("Create principal")
 }

@@ -1,10 +1,10 @@
 package hu.simplexion.z2.email.model
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.schematic.Schematic
 
 class EmailQuery : Schematic<EmailQuery>() {
-    var sender by uuid<AccountPrivate>().nullable()
+    var sender by uuid<Principal>().nullable()
     var recipient by string().nullable()
     var after by instant().nullable()
     var before by instant().nullable()

@@ -50,7 +50,7 @@ interface EmailApi : Service {
     /**
      * Stop the given e-mail if it hasn't been sent already.
      *
-     * Requires technical administrator role or the account has to be the same
+     * Requires technical administrator role or the principal has to be the same
      * as the `createdBy` of the e-mail.
      */
     suspend fun cancel(email : UUID<Email>)

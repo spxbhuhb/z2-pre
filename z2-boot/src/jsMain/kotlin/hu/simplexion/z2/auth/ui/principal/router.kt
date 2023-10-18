@@ -1,4 +1,4 @@
-package hu.simplexion.z2.auth.ui.account
+package hu.simplexion.z2.auth.ui.principal
 
 import hu.simplexion.z2.baseIcons
 import hu.simplexion.z2.baseStrings

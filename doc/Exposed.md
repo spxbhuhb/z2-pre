@@ -33,7 +33,7 @@ class TestTable : SchematicUuidTable<TestSchematic>(
 ) {
 
     companion object {
-        val accountCredentialsTable = AccountCredentialsTable(accountPrivateTable)
+        val accountCredentialsTable = AccountCredentialsTable(principalTable)
     }
 
     val booleanField = bool("booleanField")

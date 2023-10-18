@@ -63,12 +63,12 @@ For text localization define objects that extend `LocalizedTextStore`:
 
 ```kotlin
 object loginStrings : LocalizedTextStore(UUID("7f56e8dd-8bf0-49e7-a567-eb81adc501ed")) {
-    val account by "Account"
+    val principal by "Account"
 }
 
 fun Z2.loginForm() =
     div {
-        textField(label = loginStrings.account)
+        textField(label = loginStrings.principal)
     }
 ```
 

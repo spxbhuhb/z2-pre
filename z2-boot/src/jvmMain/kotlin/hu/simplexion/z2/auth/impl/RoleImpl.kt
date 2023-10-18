@@ -4,9 +4,9 @@ import hu.simplexion.z2.auth.api.RoleApi
 import hu.simplexion.z2.auth.context.ensure
 import hu.simplexion.z2.auth.context.ensureLoggedIn
 import hu.simplexion.z2.auth.context.has
-import hu.simplexion.z2.auth.context.isAccount
-import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.model.AccountPublic
+import hu.simplexion.z2.auth.context.isPrincipal
+import hu.simplexion.z2.auth.model.Grant
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -63,26 +63,26 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
         return roleTable.getByName(name)
     }
 
-    override suspend fun grant(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
+    override suspend fun grant(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(baseStrings.role, baseStrings.grantRole, account, role, context)
+        securityHistory(baseStrings.role, baseStrings.grantRole, principal, role, context)
 
-        roleGrantTable.insert(role, account, context)
+        roleGrantTable.insert(role, principal, context)
     }
 
-    override suspend fun revoke(role: UUID<Role>, account: UUID<AccountPrivate>, context : String?) {
+    override suspend fun revoke(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
         ensure(securityOfficerRole)
-        securityHistory(baseStrings.role, baseStrings.revokeRole, account, role, context)
+        securityHistory(baseStrings.role, baseStrings.revokeRole, principal, role, context)
 
-        roleGrantTable.remove(role, account, context)
+        roleGrantTable.remove(role, principal, context)
     }
 
-    override suspend fun rolesOf(account: UUID<AccountPrivate>, context: String?): List<Role> {
-        ensure(serviceContext.has(securityOfficerRole) or serviceContext.isAccount(account))
-        return roleGrantTable.rolesOf(account, context)
+    override suspend fun rolesOf(principal: UUID<Principal>, context: String?): List<Role> {
+        ensure(serviceContext.has(securityOfficerRole) or serviceContext.isPrincipal(principal))
+        return roleGrantTable.rolesOf(principal, context)
     }
 
-    override suspend fun grantedTo(role: UUID<Role>, context : String?): List<AccountPublic> {
+    override suspend fun grantedTo(role: UUID<Role>, context : String?): List<Grant> {
         ensure(securityOfficerRole)
         return roleGrantTable.grantedTo(role, context)
     }

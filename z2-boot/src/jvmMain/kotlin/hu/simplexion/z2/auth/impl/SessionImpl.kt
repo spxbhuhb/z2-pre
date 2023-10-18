@@ -3,16 +3,15 @@ package hu.simplexion.z2.auth.impl
 import hu.simplexion.z2.auth.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
-import hu.simplexion.z2.auth.model.AccountPrivate
 import hu.simplexion.z2.auth.model.CredentialType
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.securityPolicy
-import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCredentialsTable
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
-import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
+import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.BCrypt
@@ -40,9 +39,9 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     // API functions
     // ----------------------------------------------------------------------------------
 
-    override suspend fun owner(): UUID<AccountPrivate>? {
-        ensuredByLogic("Session owner gets its own account.")
-        return serviceContext.getSessionOrNull()?.account
+    override suspend fun owner(): UUID<Principal>? {
+        ensuredByLogic("Session owner gets its own principal.")
+        return serviceContext.getSessionOrNull()?.principal
     }
 
     override suspend fun roles(): List<Role> {
@@ -51,26 +50,25 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     }
 
     override suspend fun login(name: String, password: String): Session {
-        val account = accountPrivateTable.getByAccountNameOrNull(name)
+        val principal = principalTable.getByNameOrNull(name)
 
-        if (account == null) {
+        if (principal == null) {
             securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
             throw AccessDenied()
         }
 
         try {
-            authenticate(account.uuid, password, true, CredentialType.PASSWORD)
+            authenticate(principal.uuid, password, true, CredentialType.PASSWORD)
         } catch (ex: Unauthorized) {
-            // FIXME, is locked meaningful? if we send it to the user it is possible to find account names by N failed auth
+            // FIXME, is locked meaningful? if we send it to the user it is possible to find principal names by N failed auth
             securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
             throw AccessDenied()
         }
 
         val session = Session().also {
             it.uuid = serviceContext!!.uuid
-            it.account = account.uuid
-            it.fullName = account.fullName
-            it.roles = roleGrantTable.rolesOf(account.uuid, null)
+            it.principal = principal.uuid
+            it.roles = roleGrantTable.rolesOf(principal.uuid, null)
         }
 
         requireNotNull(serviceContext).let {
@@ -87,7 +85,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     override suspend fun logout() {
         ensureLoggedIn()
-        securityHistory(baseStrings.account, baseStrings.logout, serviceContext.account)
+        securityHistory(baseStrings.account, baseStrings.logout, serviceContext.principal)
         activeSessions.remove(serviceContext!!.uuid)
         serviceContext?.data?.remove(SESSION_TOKEN_UUID)
     }
@@ -107,10 +105,10 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     // ----------------------------------------------------------------------------------
 
     private val authenticateLock = ReentrantLock()
-    private val authenticateInProgress = mutableSetOf<UUID<AccountPrivate>>()
+    private val authenticateInProgress = mutableSetOf<UUID<Principal>>()
 
     fun authenticate(
-        accountId: UUID<AccountPrivate>,
+        principalId: UUID<Principal>,
         password: String,
         checkCredentials: Boolean,
         credentialType: String,
@@ -119,73 +117,72 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         // FIXME check credential expiration
 
         val validCredentials = if (checkCredentials) {
-            val credential = accountCredentialsTable.readValue(accountId, credentialType) ?: throw Unauthorized("NoCredential")
+            val credential = credentialsTable.readValue(principalId, credentialType) ?: throw Unauthorized("NoCredential")
             BCrypt.checkpw(password, credential)
         } else true
 
         // this is here to prevent SQL deadlocks
-        lockState(accountId)
+        lockState(principalId)
 
         try {
-            val state = accountStatusTable.readOrNull(accountId)
+            val principal = principalTable.get(principalId)
 
             val result = when {
-                state == null -> throw Unauthorized("NoState")
-                ! state.activated -> Unauthorized("NotValidated")
-                state.locked -> Unauthorized("Locked", true)
-                state.expired -> Unauthorized("Expired")
-                state.anonymized -> Unauthorized("Anonymized")
+                ! principal.activated -> Unauthorized("NotValidated")
+                principal.locked -> Unauthorized("Locked", true)
+                principal.expired -> Unauthorized("Expired")
+                principal.anonymized -> Unauthorized("Anonymized")
                 ! validCredentials -> Unauthorized("InvalidCredentials")
                 else -> null
             }
 
             if (result != null) {
-                state.authFailCount ++
-                state.lastAuthFail = Clock.System.now()
-                state.locked = state.locked || (state.authFailCount > securityPolicy.maxFailedAuths)
+                principal.authFailCount ++
+                principal.lastAuthFail = Clock.System.now()
+                principal.locked = principal.locked || (principal.authFailCount > securityPolicy.maxFailedAuths)
 
-                accountStatusTable.update(state.uuid, state)
-                securityHistory(accountId, baseStrings.account, baseStrings.authenticateFail, accountId, result.reason, result.locked)
+                principalTable.update(principal.uuid, principal)
+                securityHistory(principalId, baseStrings.account, baseStrings.authenticateFail, principalId, result.reason, result.locked)
 
                 TransactionManager.current().commit()
 
                 throw result
             }
 
-            state.lastAuthSuccess = Clock.System.now()
-            state.authSuccessCount ++
-            state.authFailCount = 0
+            principal.lastAuthSuccess = Clock.System.now()
+            principal.authSuccessCount ++
+            principal.authFailCount = 0
 
-            accountStatusTable.update(state.uuid, state)
-            securityHistory(accountId, baseStrings.account, baseStrings.authenticateSuccess, accountId)
+            principalTable.update(principal.uuid, principal)
+            securityHistory(principalId, baseStrings.account, baseStrings.authenticateSuccess, principalId)
 
             TransactionManager.current().commit()
 
         } finally {
-            releaseState(accountId)
+            releaseState(principalId)
         }
     }
 
-    private fun lockState(accountId: UUID<AccountPrivate>) {
+    private fun lockState(principalId: UUID<Principal>) {
         var success = false
         for (tryNumber in 1..5) {
             success = authenticateLock.withLock {
-                if (accountId in authenticateInProgress) {
+                if (principalId in authenticateInProgress) {
                     Thread.sleep(100)
                     false
                 } else {
-                    authenticateInProgress += accountId
+                    authenticateInProgress += principalId
                     true
                 }
             }
             if (success) break
         }
-        if (! success) throw RuntimeException("couldn't lock account state in 5 tries")
+        if (! success) throw RuntimeException("couldn't lock principal state in 5 tries")
     }
 
-    private fun releaseState(accountId: UUID<AccountPrivate>) {
+    private fun releaseState(principalId: UUID<Principal>) {
         authenticateLock.withLock {
-            authenticateInProgress -= accountId
+            authenticateInProgress -= principalId
         }
     }
 }

@@ -4,7 +4,7 @@ Store (owner, path, value) triples in the `setting` SQL table.
 
 API: [SettingApi](../src/commonMain/kotlin/hu/simplexion/z2/setting/api/SettingApi.kt)
 
-* The owner of the setting is an account.
+* The owner of the setting is an principal.
 * Each owner may get and change his/her own settings only, except security officers.
 * Security officers may get and change any settings.
 * If a non security officer owner tries to get or set a setting of another owner, the service throws an `AccessDenied` exception.

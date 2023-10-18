@@ -1,7 +1,7 @@
-package hu.simplexion.z2.auth.ui.account
+package hu.simplexion.z2.auth.ui.principal
 
-import hu.simplexion.z2.auth.accountService
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
+import hu.simplexion.z2.auth.principalService
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.gridGap24
@@ -11,41 +11,46 @@ import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.modal
-import hu.simplexion.z2.commons.util.fourRandomInt
 import hu.simplexion.z2.commons.util.localLaunch
+import hu.simplexion.z2.commons.util.randomBase64String256Bit
 import hu.simplexion.z2.localization.text.LocalizedText
 
 internal fun add() =
-    accountModal(AccountPrivate(), baseStrings.addAccount, browserStrings.add) {
-        val key =  (fourRandomInt() + fourRandomInt()).joinToString("-")
-        accountService.add(it, false, key, emptyList())
+    accountModal(Principal(), baseStrings.addAccount, browserStrings.add) {
+        principalService.add(it, false, randomBase64String256Bit(), emptyList())
     }
 
-internal fun edit(role: AccountPrivate) =
+internal fun edit(role: Principal) =
     accountModal(role, baseStrings.editRole, browserStrings.add) {  }
 
 internal fun accountModal(
-    account: AccountPrivate,
+    principal: Principal,
     modalTitle: LocalizedText,
     buttonLabel: LocalizedText,
-    onOk: suspend (role: AccountPrivate) -> Unit
+    onOk: suspend (role: Principal) -> Unit
 ) {
     localLaunch {
         modal(w400) {
             title(modalTitle)
 
             grid(p24, gridGap24) {
-                field { account.email }
-                field { account.fullName }
-                field { account.phone }
+                with(Principal()) {
+                    field { name }
+                    field { locked }
+                    field { activated }
+                    field { expired }
+                    field { anonymized }
+                    field { lastAuthSuccess }
+                    field { lastAuthFail }
+                    field { authFailCount }
+                }
             }
 
             buttons {
                 textButton(browserStrings.cancel) { closeWith(false) }
                 textButton(buttonLabel) {
                     localLaunch {
-                        account.accountName = account.email ?: account.uuid.toShort()
-                        onOk(account)
+                        onOk(principal)
                         closeWith(true)
                     }
                 }

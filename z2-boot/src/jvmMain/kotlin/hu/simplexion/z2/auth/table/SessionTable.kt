@@ -5,7 +5,7 @@ import hu.simplexion.z2.exposed.SchematicUuidTable
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
 open class SessionTable : SchematicUuidTable<Session>(
-    "auth_session",
+    "z2_auth_session",
     Session()
 ) {
 
@@ -13,9 +13,7 @@ open class SessionTable : SchematicUuidTable<Session>(
         val sessionTable = SessionTable()
     }
 
-    val account = uuid("account")
-    val fullName = varchar("fullName", 100)
-    val email = varchar("email", 264)
+    val principal = uuid("principal")
     val createdAt = timestamp("createdAt")
 
 }

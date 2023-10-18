@@ -1,7 +1,7 @@
 package hu.simplexion.z2.email.table
 
-import hu.simplexion.z2.auth.table.AccountPrivateTable
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.table.PrincipalTable
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQuery
@@ -14,18 +14,18 @@ import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.selectAll
 
 open class EmailTable(
-    accountPrivateTable: AccountPrivateTable
+    principalTable: PrincipalTable
 ) : SchematicUuidTable<Email>(
-    "email",
+    "z2_email",
     Email()
 ) {
 
     companion object {
-        val emailTable = EmailTable(accountPrivateTable)
+        val emailTable = EmailTable(principalTable)
     }
 
     val createdAt = timestamp("createdAt")
-    val createdBy = reference("createdBy", accountPrivateTable).nullable()
+    val createdBy = reference("createdBy", principalTable).nullable()
 
     val status = enumerationByName<EmailStatus>("status", 20)
     val sentAt = timestamp("sentAt").nullable()

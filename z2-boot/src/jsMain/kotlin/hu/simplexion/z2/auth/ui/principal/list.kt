@@ -1,7 +1,7 @@
-package hu.simplexion.z2.auth.ui.account
+package hu.simplexion.z2.auth.ui.principal
 
-import hu.simplexion.z2.auth.accountService
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
+import hu.simplexion.z2.auth.principalService
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.backgroundTransparent
@@ -17,7 +17,7 @@ internal fun Z2.list() =
     surfaceContainerLowest(borderOutline) {
         surfaceContainer(p0, backgroundTransparent, scroll = false) {
 
-            table<AccountPrivate> {
+            table<Principal> {
 
                 title {
                     text = baseStrings.accounts
@@ -25,11 +25,18 @@ internal fun Z2.list() =
                 }
 
                 rowId = { it.uuid }
-                query = { accountService.list() }
+                query = { principalService.list() }
 
-                schematicColumn { AccountPrivate().email }
-                schematicColumn { AccountPrivate().fullName }
-                schematicColumn { AccountPrivate().phone }
+                with(Principal()) {
+                    schematicColumn { name }
+                    schematicColumn { locked }
+                    schematicColumn { activated }
+                    schematicColumn { expired }
+                    schematicColumn { anonymized }
+                    schematicColumn { lastAuthSuccess }
+                    schematicColumn { lastAuthFail }
+                    schematicColumn { authFailCount }
+                }
 
                 actionColumn {
                     action {

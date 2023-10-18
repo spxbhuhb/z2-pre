@@ -97,4 +97,4 @@ hu.simplexion.z2.browser.demo.strings/help	Help
 hu.simplexion.z2.browser.demo.strings/privacy	Privacy
 hu.simplexion.z2.browser.demo.strings/term	Terms
 hu.simplexion.z2.browser.demo.strings/english	English
-hu.simplexion.z2.browser.demo.strings/registration	Create account
+hu.simplexion.z2.browser.demo.strings/registration	Create principal

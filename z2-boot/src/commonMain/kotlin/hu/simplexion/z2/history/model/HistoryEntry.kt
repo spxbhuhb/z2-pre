@@ -1,6 +1,6 @@
 package hu.simplexion.z2.history.model
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.schematic.Schematic
 
 class HistoryEntry : Schematic<HistoryEntry>() {
@@ -8,7 +8,7 @@ class HistoryEntry : Schematic<HistoryEntry>() {
     var uuid by uuid<HistoryEntry>()
 
     var createdAt by instant()
-    var createdBy by uuid<AccountPrivate>().nullable()
+    var createdBy by uuid<Principal>().nullable()
 
     var flags by int()
     var topic by string()

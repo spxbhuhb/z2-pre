@@ -1,7 +1,7 @@
 package hu.simplexion.z2.setting.impl
 
 import hu.simplexion.z2.auth.context.ensureSelfOrSecurityOfficer
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.settingHistory
@@ -17,13 +17,13 @@ class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
         val settingImpl = SettingImpl()
     }
 
-    override suspend fun put(owner: UUID<AccountPrivate>, path: String, value: String) {
+    override suspend fun put(owner: UUID<Principal>, path: String, value: String) {
         ensureSelfOrSecurityOfficer(owner)
         settingHistory(owner, baseStrings.settings, commonStrings.update, path to value)
         settingTable.put(owner, path, value)
     }
 
-    override suspend fun put(owner: UUID<AccountPrivate>, settings: List<Setting>) {
+    override suspend fun put(owner: UUID<Principal>, settings: List<Setting>) {
         ensureSelfOrSecurityOfficer(owner)
         for (setting in settings) {
             settingHistory(owner, baseStrings.settings, commonStrings.update, setting.path to setting.value)
@@ -31,7 +31,7 @@ class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
         }
     }
 
-    override suspend fun get(owner: UUID<AccountPrivate>, path: String, children: Boolean): List<Setting> {
+    override suspend fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
         ensureSelfOrSecurityOfficer(owner)
         return settingTable.get(owner, path, children)
     }

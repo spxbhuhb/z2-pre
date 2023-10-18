@@ -1,6 +1,6 @@
 package hu.simplexion.z2.setting.api
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.service.Service
@@ -30,12 +30,12 @@ interface SettingApi : Service {
      * @param  owner  The owner of the setting. Using different owner than the
      *                caller requires `securityOfficer` role.
      */
-    suspend fun put(owner : UUID<AccountPrivate>, path : String, value : String)
+    suspend fun put(owner : UUID<Principal>, path : String, value : String)
 
     /**
      * Put the [settings] into the setting database.
      */
-    suspend fun put(owner : UUID<AccountPrivate>, settings : List<Setting>)
+    suspend fun put(owner : UUID<Principal>, settings : List<Setting>)
 
     /**
      * Save all the non-default fields of [schematic] as an individual setting.
@@ -43,7 +43,7 @@ interface SettingApi : Service {
      * @param  [basePath]  The path to put before any field name to get the setting path.
      *                     For any given field the setting path is : `$basePath/${field.name}`
      */
-    suspend fun <T : Schematic<T>> put(owner : UUID<AccountPrivate>, basePath : String, schematic : T) {
+    suspend fun <T : Schematic<T>> put(owner : UUID<Principal>, basePath : String, schematic : T) {
         put(owner, schematic.encodeToSettings(basePath))
     }
 
@@ -57,7 +57,7 @@ interface SettingApi : Service {
      *                     `a/b` returns with `a/b/c` as well. It does not return
      *                     with `a/bc`.
      */
-    suspend fun get(owner: UUID<AccountPrivate>, path : String, children : Boolean = true) : List<Setting>
+    suspend fun get(owner: UUID<Principal>, path : String, children : Boolean = true) : List<Setting>
 
     /**
      * Set the fields of [schematic] from settings.
@@ -65,7 +65,7 @@ interface SettingApi : Service {
      * @param  [basePath]  The path to put before any field name to get the setting path.
      *                     For any given field the setting path is : `$basePath/${field.name}`
      */
-    suspend fun <T : Schematic<T>> get(owner: UUID<AccountPrivate>, basePath: String, schematic : T) : T {
+    suspend fun <T : Schematic<T>> get(owner: UUID<Principal>, basePath: String, schematic : T) : T {
         schematic.decodeFromSettings(basePath, get(owner, basePath, true))
         return schematic
     }

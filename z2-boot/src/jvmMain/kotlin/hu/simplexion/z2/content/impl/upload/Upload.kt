@@ -45,7 +45,7 @@ class Upload(
     lateinit var statusFile : RandomAccessFile
 
     /**
-     * Account of uploaded chunks. Updated whenever a chunk is added to the upload.
+     * Principal of uploaded chunks. Updated whenever a chunk is added to the upload.
      */
     var notes = listOf<ChunkNote>()
 

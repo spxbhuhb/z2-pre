@@ -15,7 +15,7 @@ class ContentTable(
 ) {
 
     companion object {
-        val contentTable = ContentTable("content")
+        val contentTable = ContentTable("z2_content")
     }
 
     val name = varchar("name", 200)

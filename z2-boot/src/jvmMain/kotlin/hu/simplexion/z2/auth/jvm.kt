@@ -1,12 +1,11 @@
 package hu.simplexion.z2.auth
 
-import hu.simplexion.z2.auth.impl.AccountImpl.Companion.accountImpl
+import hu.simplexion.z2.auth.impl.PrincipalImpl.Companion.principalImpl
 import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.*
-import hu.simplexion.z2.auth.table.AccountCredentialsTable.Companion.accountCredentialsTable
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
-import hu.simplexion.z2.auth.table.AccountStatusTable.Companion.accountStatusTable
+import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable
@@ -24,19 +23,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB
 
 internal lateinit var securityOfficerRole: Role
-internal lateinit var securityOfficerUuid: UUID<AccountPrivate>
-internal lateinit var anonymousUuid: UUID<AccountPrivate>
+internal lateinit var securityOfficerUuid: UUID<Principal>
+internal lateinit var anonymousUuid: UUID<Principal>
 
 const val securityOfficerRoleName = "security-officer"
-const val securityOfficerAccountName = "so"
-const val anonymousAccountName = "anonymous"
+const val securityOfficerPrincipalName = "so"
+const val anonymousPrincipalName = "anonymous"
 
 fun authJvm(initialSoPassword: String = System.getenv("Z2_INITIAL_SO_PASSWORD") ?: "so") {
 
     tables(
-        accountPrivateTable,
-        accountCredentialsTable,
-        accountStatusTable,
+        principalTable,
+        credentialsTable,
         roleTable,
         roleGrantTable,
         roleGroupTable,
@@ -44,13 +42,13 @@ fun authJvm(initialSoPassword: String = System.getenv("Z2_INITIAL_SO_PASSWORD") 
     )
 
     securityOfficerRole = getOrMakeSecurityOfficerRole()
-    securityOfficerUuid = getOrMakeAccount(securityOfficerAccountName, "Security Officer", initialSoPassword)
-    anonymousUuid = getOrMakeAccount(anonymousAccountName, "Anonymous")
+    securityOfficerUuid = getOrMakePrincipal(securityOfficerPrincipalName, initialSoPassword)
+    anonymousUuid = getOrMakePrincipal(anonymousPrincipalName)
 
     grantRole(securityOfficerRole, securityOfficerUuid)
 
     implementations(
-        accountImpl,
+        principalImpl,
         roleImpl,
         sessionImpl
     )
@@ -74,54 +72,45 @@ private fun getOrMakeSecurityOfficerRole(): Role {
     return role
 }
 
-internal fun getOrMakeAccount(
+internal fun getOrMakePrincipal(
     name: String,
-    fullName: String,
     password: String? = null
-): UUID<AccountPrivate> {
-    val account = transaction {
-        accountPrivateTable.getByAccountNameOrNull(name)
+): UUID<Principal> {
+    val principal = transaction {
+        principalTable.getByNameOrNull(name)
     }
-    if (account != null) return account.uuid
+    if (principal != null) return principal.uuid
 
     return transaction {
 
-        val accountId = accountPrivateTable.insert(
-            AccountPrivate().also {
-                it.accountName = name
-                it.email = "$name@127.0.0.1"
-                it.fullName = fullName
+        val principalId = principalTable.insert(
+            Principal().also {
+                it.name = name
+                it.activated = true
+                it.locked = (password == null)
             }
         )
 
         if (password != null) {
-            accountCredentialsTable.insert(
-                AccountCredentials().also {
-                    it.account = accountId
+            credentialsTable.insert(
+                Credentials().also {
+                    it.principal = principalId
                     it.type = CredentialType.PASSWORD
                     it.value = BCrypt.hashpw(password, BCrypt.gensalt())
                 }
             )
         }
 
-        accountStatusTable.insert(
-            AccountStatus().also {
-                it.account = accountId
-                it.activated = true
-                it.locked = (password == null)
-            }
-        )
+        securityHistory(principalId, baseStrings.account, commonStrings.add, principalId, name)
 
-        securityHistory(accountId, baseStrings.account, commonStrings.add, accountId, name)
-
-        return@transaction accountId
+        return@transaction principalId
     }
 }
 
-private fun grantRole(role: Role, account: UUID<AccountPrivate>) {
+private fun grantRole(role: Role, principal: UUID<Principal>) {
     transaction {
-        if (role.uuid in roleGrantTable.rolesOf(account, null).map { it.uuid }) return@transaction
-        roleGrantTable.insert(role.uuid, account, null)
-        securityHistory(securityOfficerUuid, baseStrings.role, baseStrings.grantRole, securityOfficerUuid, account, role.uuid, role.programmaticName, role.displayName)
+        if (role.uuid in roleGrantTable.rolesOf(principal, null).map { it.uuid }) return@transaction
+        roleGrantTable.insert(role.uuid, principal, null)
+        securityHistory(securityOfficerUuid, baseStrings.role, baseStrings.grantRole, securityOfficerUuid, principal, role.uuid, role.programmaticName, role.displayName)
     }
 }

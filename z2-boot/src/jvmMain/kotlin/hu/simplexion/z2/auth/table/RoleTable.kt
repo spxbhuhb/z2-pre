@@ -5,7 +5,7 @@ import hu.simplexion.z2.exposed.SchematicUuidTable
 import org.jetbrains.exposed.sql.select
 
 open class RoleTable : SchematicUuidTable<Role>(
-    "auth_role",
+    "z2_auth_role",
     Role()
 ) {
 

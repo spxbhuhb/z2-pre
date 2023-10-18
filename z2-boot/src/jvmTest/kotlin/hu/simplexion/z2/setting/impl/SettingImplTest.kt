@@ -5,9 +5,9 @@ class SettingImplTest {
 //    @Test
 //    fun basic() {
 //        integrated { context ->
-//            settingImpl(context).put(context.account, "a", "1")
+//            settingImpl(context).put(context.principal, "a", "1")
 //
-//            settingImpl(context).get(context.account, "a").apply {
+//            settingImpl(context).get(context.principal, "a").apply {
 //                assertEquals(1, size)
 //                assertItem(0, "a", "1")
 //            }
@@ -17,15 +17,15 @@ class SettingImplTest {
 //    @Test
 //    fun subsequent() {
 //        integrated { context ->
-//            settingImpl(context).put(context.account, "a", "1")
-//            settingImpl(context).put(context.account, "a/b", "1.2")
+//            settingImpl(context).put(context.principal, "a", "1")
+//            settingImpl(context).put(context.principal, "a/b", "1.2")
 //
-//            settingImpl(context).get(context.account, "a", false).apply {
+//            settingImpl(context).get(context.principal, "a", false).apply {
 //                assertEquals(1, size)
 //                assertItem(0, "a", "1")
 //            }
 //
-//            settingImpl(context).get(context.account, "a", true)
+//            settingImpl(context).get(context.principal, "a", true)
 //                .sortedBy { it.path }
 //                .apply {
 //                    assertEquals(2, size)
@@ -38,14 +38,14 @@ class SettingImplTest {
 //    @Test
 //    fun valueSeparation() {
 //        integrated { context ->
-//            settingImpl(context).put(context.account, "a", "1")
-//            settingImpl(context).put(context.account, "a/b", "1.2")
-//            settingImpl(context).put(context.account, "ab", "1")
-//            settingImpl(context).put(context.account, "b", "2")
-//            settingImpl(context).put(context.account, "b/a", "2.1")
+//            settingImpl(context).put(context.principal, "a", "1")
+//            settingImpl(context).put(context.principal, "a/b", "1.2")
+//            settingImpl(context).put(context.principal, "ab", "1")
+//            settingImpl(context).put(context.principal, "b", "2")
+//            settingImpl(context).put(context.principal, "b/a", "2.1")
 //
 //
-//            settingImpl(context).get(context.account, "a", true).apply {
+//            settingImpl(context).get(context.principal, "a", true).apply {
 //                assertEquals(2, size)
 //                assertItem(0, "a", "1")
 //                assertItem(1, "a/b", "1.2")
@@ -59,11 +59,11 @@ class SettingImplTest {
 //            val testImpl = settingImpl(test)
 //
 //            assertFailsWith<AccessDenied> {
-//                testImpl.put(so.account, "a", "2")
+//                testImpl.put(so.principal, "a", "2")
 //            }
 //
 //            assertFailsWith<AccessDenied> {
-//                testImpl.get(so.account, "a")
+//                testImpl.get(so.principal, "a")
 //            }
 //        }
 //    }
@@ -74,20 +74,20 @@ class SettingImplTest {
 //            val soImpl = settingImpl(so)
 //            val testImpl = settingImpl(test)
 //
-//            testImpl.put(test.account, "a", "1")
-//            soImpl.put(so.account, "a", "2")
+//            testImpl.put(test.principal, "a", "1")
+//            soImpl.put(so.principal, "a", "2")
 //
-//            testImpl.get(test.account, "a").apply {
+//            testImpl.get(test.principal, "a").apply {
 //                assertEquals(1, size)
 //                assertItem(0, "a", "1")
 //            }
 //
-//            soImpl.get(test.account, "a").apply {
+//            soImpl.get(test.principal, "a").apply {
 //                assertEquals(1, size)
 //                assertItem(0, "a", "1")
 //            }
 //
-//            soImpl.get(so.account, "a").apply {
+//            soImpl.get(so.principal, "a").apply {
 //                assertEquals(1, size)
 //                assertItem(0, "a", "2")
 //            }
@@ -106,13 +106,13 @@ class SettingImplTest {
 //
 //            val testImpl = settingImpl(test)
 //
-//            testImpl.put(test.account, "bp", s)
+//            testImpl.put(test.principal, "bp", s)
 //
-//            testImpl.get(test.account, "bp/i1").assertItem(0, "bp/i1", "1")
-//            testImpl.get(test.account, "bp/s1").assertItem(0, "bp/s1", "a")
+//            testImpl.get(test.principal, "bp/i1").assertItem(0, "bp/i1", "1")
+//            testImpl.get(test.principal, "bp/s1").assertItem(0, "bp/s1", "a")
 //            // the other two should not be here as those are the defaults
 //
-//            val s2 = testImpl.get(test.account, "bp", TestSettingSchematic())
+//            val s2 = testImpl.get(test.principal, "bp", TestSettingSchematic())
 //
 //            assertEquals(s.i1, s2.i1)
 //            assertEquals(s.i2, s2.i2)

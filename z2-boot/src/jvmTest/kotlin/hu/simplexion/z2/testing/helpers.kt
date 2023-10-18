@@ -1,7 +1,7 @@
 package hu.simplexion.z2.testing
 
 import hu.simplexion.z2.auth.authJvm
-import hu.simplexion.z2.auth.getOrMakeAccount
+import hu.simplexion.z2.auth.getOrMakePrincipal
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.email.emailJvm
 import hu.simplexion.z2.exposed.debugExposed
@@ -29,7 +29,7 @@ fun integrated(
         workerJvm()
         emailJvm()
 
-        getOrMakeAccount("test", "test", "test")
+        getOrMakePrincipal("test", "test")
 
         val context = BasicServiceContext()
 

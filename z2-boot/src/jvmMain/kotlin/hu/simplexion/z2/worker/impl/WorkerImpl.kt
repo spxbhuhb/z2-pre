@@ -1,7 +1,7 @@
 package hu.simplexion.z2.worker.impl
 
-import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
+import hu.simplexion.z2.auth.context.principal
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.service.ServiceImpl
@@ -21,7 +21,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         // FIXME uuid validation during create validate(registration)
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.AddRegistration,
             registration
         ).also {
@@ -34,7 +34,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureValid(registration)
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.UpdateRegistration,
             registration
         )
@@ -44,7 +44,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.RemoveRegistration,
             registrationUuid = registration
         )
@@ -54,7 +54,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.ListRegistrations
         ).also {
             return checkNotNull(it.registrationList)
@@ -65,7 +65,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.EnableRegistration,
             registrationUuid = registration
         )
@@ -75,7 +75,7 @@ class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
         ensureTechnicalAdmin()
 
         workerRuntime.sendAndWait(
-            serviceContext.account,
+            serviceContext.principal,
             WorkerRuntimeMessageType.DisableRegistration,
             registrationUuid = registration
         )

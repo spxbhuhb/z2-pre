@@ -1,5 +1,7 @@
 package hu.simplexion.z2.commons.util
 
+import kotlin.io.encoding.Base64.Default.encode
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.min
 
 fun String.toCamelCaseWords() : String {
@@ -142,4 +144,14 @@ fun String?.compareToVersion(other: String?): Int {
         thisParts.size < otherParts.size -> - 1
         else -> 0
     }
+}
+
+@OptIn(ExperimentalEncodingApi::class)
+fun randomBase64String256Bit(): String {
+    val key = ByteArray(32)
+    val random = fourRandomInt() + fourRandomInt()
+    for (i in random.indices) {
+        random[i].encodeInto(key, i * 4)
+    }
+    return encode(key)
 }

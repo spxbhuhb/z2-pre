@@ -1,7 +1,7 @@
 package hu.simplexion.z2.setting.table
 
-import hu.simplexion.z2.auth.model.AccountPrivate
-import hu.simplexion.z2.auth.table.AccountPrivateTable.Companion.accountPrivateTable
+import hu.simplexion.z2.auth.model.Principal
+import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.setting.model.Setting
@@ -10,18 +10,18 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 
 open class SettingTable : Table(
-    "setting"
+    "z2_setting"
 ) {
 
     companion object {
         val settingTable = SettingTable()
     }
 
-    val owner = reference("owner", accountPrivateTable).index()
+    val owner = reference("owner", principalTable).index()
     val path = varchar("path", 200).index()
     val value = text("value").nullable()
 
-    fun put(inOwner: UUID<AccountPrivate>, inPath: String, inValue: String?) {
+    fun put(inOwner: UUID<Principal>, inPath: String, inValue: String?) {
         deleteWhere { (owner eq inOwner.jvm) and ((path eq inPath) or (path like "$inPath/%")) }
         insert {
             it[owner] = inOwner.jvm
@@ -30,7 +30,7 @@ open class SettingTable : Table(
         }
     }
 
-    fun get(inOwner: UUID<AccountPrivate>, inPath: String, children: Boolean): List<Setting> {
+    fun get(inOwner: UUID<Principal>, inPath: String, children: Boolean): List<Setting> {
         val pathCondition = if (children) {
             ((path eq inPath) or (path like "$inPath/%"))
         } else {

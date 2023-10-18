@@ -1,7 +1,7 @@
 package hu.simplexion.z2.history.impl
 
 import hu.simplexion.z2.auth.context.ensure
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
@@ -28,7 +28,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     // ------------------------------------------------------------------------------------------
 
     fun add(
-        createdBy: UUID<AccountPrivate>?,
+        createdBy: UUID<Principal>?,
         flags: Int,
         topic: LocalizedText,
         verb: LocalizedText,
@@ -38,7 +38,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     }
 
     fun add(
-        createdBy: UUID<AccountPrivate>?,
+        createdBy: UUID<Principal>?,
         flags: Int,
         topic: LocalizedText,
         verb : LocalizedText,

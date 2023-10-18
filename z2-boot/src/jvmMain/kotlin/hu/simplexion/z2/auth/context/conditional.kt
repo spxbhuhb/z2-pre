@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.context
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.commons.util.UUID
@@ -45,13 +45,13 @@ fun ServiceContext?.isInternal(): ContextCheckResult {
 }
 
 /**
- * Allow when [SessionServiceContext.account != null].
+ * Allow when [SessionServiceContext.principal != null].
  *
  * Deny otherwise.
  */
 fun ServiceContext?.isLoggedIn(): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
-    if (session.account == null) return ContextCheckResult.Deny
+    if (session.principal == null) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
 
@@ -94,26 +94,26 @@ fun ServiceContext?.hasAny(vararg roles: Role): ContextCheckResult {
 }
 
 /**
- * Allow when [Session.account] is [account].
+ * Allow when [Session.principal] is [principal].
  *
  * Deny otherwise.
  */
-fun ServiceContext?.isAccount(account: UUID<AccountPrivate>): ContextCheckResult {
+fun ServiceContext?.isPrincipal(principal: UUID<Principal>): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
-    if (account != session.account) return ContextCheckResult.Deny
+    if (principal != session.principal) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
 
 /**
- * Get [Session.account].
+ * Get [Session.principal].
  *
- * @throws  IllegalStateException  when there is no session or there is no account
+ * @throws  IllegalStateException  when there is no session or there is no principal
  */
-val ServiceContext?.account
-    get() = checkNotNull(getSessionOrNull()?.account) { "there is no session in the service context" }
+val ServiceContext?.principal
+    get() = checkNotNull(getSessionOrNull()?.principal) { "there is no session in the service context" }
 
 /**
- * Get [Session.account] of present, null if it doesn't.
+ * Get [Session.principal] of present, null if it doesn't.
  */
-val ServiceContext?.accountOrNull
-    get() = getSessionOrNull()?.account
+val ServiceContext?.principalOrNull
+    get() = getSessionOrNull()?.principal

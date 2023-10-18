@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.context
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
@@ -33,10 +33,10 @@ fun ServiceImpl<*>.ensureInternal() {
 }
 
 /**
- * Ensures that the block runs only when there is an account in the context
- * (Session.account != null).
+ * Ensures that the block runs only when there is an principal in the context
+ * (Session.principal != null).
  *
- * @throws   AccessDenied  There is no account in the context.
+ * @throws   AccessDenied  There is no principal in the context.
  */
 fun <T> ServiceImpl<*>.ensureLoggedIn(block: () -> T): T {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
@@ -44,9 +44,9 @@ fun <T> ServiceImpl<*>.ensureLoggedIn(block: () -> T): T {
 }
 
 /**
- * Ensures that the block runs only when the account has the security officer role.
+ * Ensures that the block runs only when the principal has the security officer role.
  *
- * @throws   AccessDenied  The account does not have the security officer role.
+ * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun <T> ServiceImpl<*>.ensureSecurityOfficer(block: () -> T): T {
     ensure(securityOfficerRole)
@@ -54,27 +54,27 @@ fun <T> ServiceImpl<*>.ensureSecurityOfficer(block: () -> T): T {
 }
 
 /**
- * Ensures that the account has the security officer role.
+ * Ensures that the principal has the security officer role.
  *
- * @throws   AccessDenied  The account does not have the security officer role.
+ * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
     ensure(securityOfficerRole)
 }
 
 /**
- * Ensures that the account has the security officer role.
+ * Ensures that the principal has the security officer role.
  *
- * @throws   AccessDenied  The account does not have the security officer role.
+ * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureTechnicalAdmin() {
     ensure(securityOfficerRole) // TODO introduce a technial admin role
 }
 
 /**
- * Ensures that there is an account in the context (Session.account != null).
+ * Ensures that there is an principal in the context (Session.principal != null).
  *
- * @throws   AccessDenied  There is no account in the context.
+ * @throws   AccessDenied  There is no principal in the context.
  */
 fun ServiceImpl<*>.ensureLoggedIn() {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
@@ -162,11 +162,11 @@ fun publicAccess() {
 }
 
 /**
- * Ensure that the service context runs in the name of the account specified or
+ * Ensure that the service context runs in the name of the principal specified or
  * in the name of a security officer.
  */
-fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(account: UUID<AccountPrivate>) {
-    ensure(serviceContext.isAccount(account) or serviceContext.has(securityOfficerRole))
+fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
+    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(securityOfficerRole))
 }
 
 /**

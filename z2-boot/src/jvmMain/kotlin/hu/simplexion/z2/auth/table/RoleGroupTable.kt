@@ -7,7 +7,7 @@ import hu.simplexion.z2.exposed.jvm
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
-open class RoleGroupTable : Table("auth_role_group") {
+open class RoleGroupTable : Table("z2_auth_role_group") {
 
     companion object {
         val roleGroupTable = RoleGroupTable()

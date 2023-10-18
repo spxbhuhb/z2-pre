@@ -1,8 +1,8 @@
 package hu.simplexion.z2.site.impl
 
-import hu.simplexion.z2.auth.context.account
 import hu.simplexion.z2.auth.context.ensureLoggedIn
 import hu.simplexion.z2.auth.context.ensureTest
+import hu.simplexion.z2.auth.context.principal
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
@@ -22,7 +22,7 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
 
         // TODO cache site settings?
         val settings = runAsSecurityOfficer {
-            settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings())
+            settingImpl(it).get(it.principal, SITE_SETTINGS_KEY, SiteSettings())
         }
 
         return settings.protocol + "://" + settings.host + ":" + settings.port + "/"
@@ -30,7 +30,7 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
 
     override suspend fun isTest(): Boolean {
         return runAsSecurityOfficer {
-            settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings()).test
+            settingImpl(it).get(it.principal, SITE_SETTINGS_KEY, SiteSettings()).test
         }
     }
 
@@ -38,7 +38,7 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
         ensureLoggedIn()
         ensureTest()
         return runAsSecurityOfficer {
-            settingImpl(it).get(it.account, SITE_SETTINGS_KEY, SiteSettings()).testPassword
+            settingImpl(it).get(it.principal, SITE_SETTINGS_KEY, SiteSettings()).testPassword
         }
     }
 

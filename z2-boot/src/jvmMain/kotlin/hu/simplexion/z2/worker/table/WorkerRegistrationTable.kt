@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.update
 
 open class WorkerRegistrationTable : SchematicUuidTable<WorkerRegistration>(
-    "worker_registration",
+    "z2_worker_registration",
     WorkerRegistration()
 ) {
 

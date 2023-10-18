@@ -1,13 +1,13 @@
 package hu.simplexion.z2.email.model
 
-import hu.simplexion.z2.auth.model.AccountPrivate
+import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.schematic.Schematic
 
 class Email : Schematic<Email>() {
     var uuid by uuid<Email>()
 
     var createdAt by instant()
-    var createdBy by uuid<AccountPrivate>().nullable()
+    var createdBy by uuid<Principal>().nullable()
 
     var status by enum<EmailStatus>()
     var sentAt by instant().nullable()
