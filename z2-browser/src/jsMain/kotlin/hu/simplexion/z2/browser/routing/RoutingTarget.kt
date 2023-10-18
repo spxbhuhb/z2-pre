@@ -17,6 +17,10 @@ interface RoutingTarget<R> {
     val parameters: MutableList<RouterParameter<*>>
         get() = mutableListOf()
 
+    val loggedIn : Boolean
+
+    val roles : List<String>
+
     fun accepts(path: List<String>): Boolean {
         return path.first() == relativePath
     }
@@ -55,4 +59,12 @@ interface RoutingTarget<R> {
             return current
         }
 
+    fun visible() : Boolean {
+        if (loggedIn && ! isLoggedIn) return false
+        if (roles.isEmpty()) return true
+        for (role in effectiveRoles) {
+            if (role in this.roles) return true
+        }
+        return false
+    }
 }

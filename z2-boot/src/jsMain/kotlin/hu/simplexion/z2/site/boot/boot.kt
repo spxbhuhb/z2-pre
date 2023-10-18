@@ -9,6 +9,8 @@ import hu.simplexion.z2.browser.IBrowserStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.browser.routing.effectiveRoles
+import hu.simplexion.z2.browser.routing.isLoggedIn
 import hu.simplexion.z2.history.historyJs
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.localeJs
@@ -52,4 +54,7 @@ suspend fun bootJs(
     fieldStyle?.let { defaultFieldStyle = it }
 
     sessionService.getSession()?.let { session = it }
+
+    isLoggedIn = (session.principal != null)
+    effectiveRoles = session.roles.map { it.programmaticName }
 }

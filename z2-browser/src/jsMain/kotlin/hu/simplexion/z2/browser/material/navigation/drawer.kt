@@ -15,7 +15,7 @@ fun Z2.navigationDrawer(targets: Collection<RoutingTarget<Z2>>, scrollAutoHide :
     div("navigation-drawer-container") {
         if (scrollAutoHide) addClass("scroll-auto-hide")
         for (target in targets) {
-            if (target.icon == null && target.label == null) continue
+            if (!target.visible() || (target.icon == null && target.label == null)) continue
             drawerItem(target)
         }
     }

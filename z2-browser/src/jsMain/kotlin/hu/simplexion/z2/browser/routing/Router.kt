@@ -8,7 +8,9 @@ import kotlin.reflect.KProperty
 
 abstract class Router<R>(
     override val label: LocalizedText? = null,
-    override val icon: LocalizedIcon? = null
+    override val icon: LocalizedIcon? = null,
+    override val loggedIn : Boolean = true,
+    override val roles : List<String> = emptyList()
 ) : RoutingTarget<R> {
 
     override var parent: Router<R>? = null
@@ -70,12 +72,24 @@ abstract class Router<R>(
         return UuidRouterParameter()
     }
 
-    open fun action(label: LocalizedText? = null, icon: LocalizedIcon? = null, actionFun: () -> Unit): RoutedAction<R> {
-        return RoutedAction(label, icon, actionFun)
+    open fun action(
+        label: LocalizedText? = null,
+        icon: LocalizedIcon? = null,
+        loggedIn: Boolean = false,
+        roles: List<String> = emptyList(),
+        actionFun: () -> Unit
+    ): RoutedAction<R> {
+        return RoutedAction(label, icon, loggedIn, roles, actionFun)
     }
 
-    open fun render(label: LocalizedText? = null, icon: LocalizedIcon? = null, renderFun: R.() -> Unit): RoutedRenderer<R> {
-        return RoutedRenderer(label, icon, renderFun)
+    open fun render(
+        label: LocalizedText? = null,
+        icon: LocalizedIcon? = null,
+        loggedIn: Boolean = false,
+        roles: List<String> = emptyList(),
+        renderFun: R.() -> Unit
+    ): RoutedRenderer<R> {
+        return RoutedRenderer(label, icon, loggedIn, roles, renderFun)
     }
 
     class ParameterDelegate<R,T>(
