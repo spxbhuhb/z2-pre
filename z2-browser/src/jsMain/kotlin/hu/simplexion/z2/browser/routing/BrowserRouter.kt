@@ -142,4 +142,7 @@ open class BrowserRouter: Router<Z2>() {
 
     fun back() = window.history.back()
 
+    override fun visible(): Boolean {
+        return true
+    }
 }

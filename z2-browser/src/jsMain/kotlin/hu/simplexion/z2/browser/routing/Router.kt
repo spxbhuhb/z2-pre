@@ -24,6 +24,10 @@ abstract class Router<R>(
     override fun open(receiver: R, path: List<String>) {
         trace { "[routing]  open  router=${this::class.simpleName}  relativePath=$relativePath  absolutePath=${absolutePath()}  path.size=${path.size} path=${path.joinToString("/")}" }
 
+        if (!visible()) {
+            parent?.notFound(receiver, path) ?: notFound(receiver, path)
+        }
+
         val subPath = path.drop(1 + parameters.size)
 
         for (index in parameters.indices) {

@@ -10,6 +10,7 @@ import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTa
 import hu.simplexion.z2.localization.locales.localized
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.service.ServiceImpl
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
@@ -49,6 +50,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
         historyEntryTable.insert(
             HistoryEntry().apply {
                 this.createdBy = createdBy
+                this.createdAt = now() // FIXME schematic instant initialization (using program start time)
                 this.flags = flags
                 this.topic = topic.key
                 this.verb = verb.key
