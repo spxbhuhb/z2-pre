@@ -7,7 +7,6 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.localization.icon.LocalizedIcon
-import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
 
 fun <T> Z2.select(
@@ -48,7 +47,7 @@ fun <T> Z2.singleChipSelect(
     SelectBase(
         this,
         FieldState().also {
-            if (label != null) it.label = label.localeCapitalized
+            if (label != null) it.label = label.toString()
             if (supportingText != null) it.supportText = supportingText.toString()
         },
         SelectConfig(

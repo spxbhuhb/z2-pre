@@ -1,5 +1,6 @@
 package hu.simplexion.z2.email.impl
 
+import hu.simplexion.z2.auth.context.ensureInternal
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.content.model.Content
@@ -20,6 +21,8 @@ class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
     }
 
     override suspend fun send(recipients: String, subject: String, contentType: String, contentText: String, attachments: List<UUID<Content>>) {
+        ensureInternal()
+
         val email = Email().also {
             it.recipients = recipients
             it.subject = subject
@@ -43,7 +46,7 @@ class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
         return emailQueueTable.size()
     }
 
-    override suspend fun queryQueue(limit: Int, offset : Long): List<EmailQueueEntry> {
+    override suspend fun queryQueue(limit: Int, offset: Long): List<EmailQueueEntry> {
         ensureTechnicalAdmin()
         return emailQueueTable.list(limit, offset)
     }

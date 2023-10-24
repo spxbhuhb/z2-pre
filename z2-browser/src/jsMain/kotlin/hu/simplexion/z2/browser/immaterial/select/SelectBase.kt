@@ -44,6 +44,11 @@ class SelectBase<T>(
             update()
         }
 
+    fun toError() {
+        state.touched = true
+        state.error = true
+    }
+
     fun onChange(entry: T) {
         valueOrNull = entry
         config.onChange?.invoke(this)

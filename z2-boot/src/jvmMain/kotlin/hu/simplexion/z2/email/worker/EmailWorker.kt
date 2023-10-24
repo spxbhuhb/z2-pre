@@ -11,6 +11,7 @@ import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.setting.util.CommonSettings.getSystemSettings
+import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import kotlinx.coroutines.CancellationException
@@ -46,17 +47,14 @@ class EmailWorker(
 
         try {
             for (uuid in normalQueue) {
-                if (!job.isActive) return
-
-                try {
-                    send(uuid)
-                } catch (ex : CancellationException) {
-                    return
-                } catch (ex : Exception) {
-                    job.cancel()
+                if (! job.isActive) return
+                if (sendPending() == 0) {
+                    delay(500)
+                    sendPending()
                 }
-
             }
+        } catch (ex : Exception) {
+            ex.printStackTrace() // FIXME email processing exceptions
         } finally {
             EventCentral.detach(eventListener)
         }
@@ -66,6 +64,22 @@ class EmailWorker(
         transaction {
             emailQueueTable.list().filter { it.lastTry == null }.forEach { normalQueue.trySend(it.email) }
         }
+    }
+
+    fun sendPending() : Int {
+        val pending = transaction {
+            emailQueueTable.list().filter { it.lastTry == null }.map { it.email }
+        }
+
+        pending.forEach {
+            try {
+                send(it)
+            } catch (ex: CancellationException) {
+                return 0
+            }
+        }
+
+        return pending.size
     }
 
     suspend fun retry(job: Job) {
@@ -78,13 +92,13 @@ class EmailWorker(
             }
 
             for (uuid in uuids) {
-                if (!job.isActive) return
+                if (! job.isActive) return
 
                 try {
                     send(uuid)
-                } catch (ex : CancellationException) {
+                } catch (ex: CancellationException) {
                     return
-                } catch (ex : Exception) {
+                } catch (ex: Exception) {
                     job.cancel()
                 }
             }
@@ -117,10 +131,10 @@ class EmailWorker(
 
             val message = MimeMessage(session)
             message.setFrom(InternetAddress(settings.username))
-            message.setRecipients(
-                Message.RecipientType.TO, InternetAddress.parse(email.recipients)
-            )
 
+            val recipient = InternetAddress.parse(siteImpl.testEmail() ?: email.recipients)
+
+            message.setRecipients(Message.RecipientType.TO, recipient)
             message.setSubject(email.subject, "utf-8")
 
             val multipart = MimeMultipart()
@@ -137,7 +151,7 @@ class EmailWorker(
 
             Transport.send(message)
 
-            transaction{
+            transaction {
                 emailTable.sent(uuid)
                 emailQueueTable.remove(uuid)
             }

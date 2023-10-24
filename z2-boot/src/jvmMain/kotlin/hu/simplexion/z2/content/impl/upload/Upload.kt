@@ -3,6 +3,7 @@ package hu.simplexion.z2.content.impl.upload
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.commons.util.encodeInto
 import hu.simplexion.z2.commons.util.toLong
+import hu.simplexion.z2.content.impl.ContentImpl.Companion.traceUpload
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Path
@@ -80,6 +81,8 @@ class Upload(
         dataFile.write(chunk.data, 0, chunk.data.size)
 
         addNote(chunk.offset, chunk.data.size.toLong())
+
+        if (traceUpload) println("upload chunk: ${chunk.uuid} chunk.offset=${chunk.offset} chunk.size=${chunk.data.size} notes.size=${notes.size} ${notes.joinToString { "${it.offset}:${it.length}" }}")
     }
 
     fun addNote(offset: Long, size: Long) {

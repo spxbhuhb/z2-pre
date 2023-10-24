@@ -12,4 +12,15 @@ class StaticText(
     override fun toString(): String {
         return localizedTextStore[key]?.value ?: value
     }
+
+    val localized
+        get() = toString() // TODO think about storing the value in the store only but not in the object
+
+    fun localizedReplace(vararg args : Pair<String, Any>) : String {
+        var result = toString()
+        for(arg in args) {
+            result = result.replace("{${arg.first}}", arg.second.toString())
+        }
+        return result
+    }
 }

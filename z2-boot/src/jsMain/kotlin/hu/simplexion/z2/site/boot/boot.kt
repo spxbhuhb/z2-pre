@@ -27,6 +27,11 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 
 var session = Session()
+    set(value) {
+        field = value
+        isLoggedIn = (session.principal != null)
+        effectiveRoles = value.roles.map { it.programmaticName }
+    }
 
 suspend fun bootJs(
     fieldStyle : FieldStyle? = null,

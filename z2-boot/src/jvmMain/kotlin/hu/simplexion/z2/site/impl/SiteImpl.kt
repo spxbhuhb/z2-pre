@@ -4,6 +4,7 @@ import hu.simplexion.z2.auth.context.ensureLoggedIn
 import hu.simplexion.z2.auth.context.ensureTest
 import hu.simplexion.z2.auth.context.principal
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
+import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
 import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
 import hu.simplexion.z2.site.api.SiteApi
@@ -29,6 +30,7 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
     }
 
     override suspend fun isTest(): Boolean {
+        // TODO cache testing
         return runAsSecurityOfficer {
             settingImpl(it).get(it.principal, SITE_SETTINGS_KEY, SiteSettings()).test
         }
@@ -42,4 +44,9 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
         }
     }
 
+    fun testEmail(): String? {
+        return runTransactionAsSecurityOfficer { context ->
+            settingImpl(context).get(context.principal, SITE_SETTINGS_KEY, SiteSettings()).testEmailAddress.takeIf { it.isNotBlank() }
+        }
+    }
 }
