@@ -29,10 +29,12 @@ interface EmailSchemaFieldCommon {
     fun validateValueCommon(value: String, fails: MutableList<ValidationFailInfo>) {
         val length = value.length
 
-        if (length < minLength) fails += fail(validationStrings.minLengthFail, minLength)
+        if (blank == false || value.isNotEmpty()) {
+            if (length < minLength) fails += fail(validationStrings.minLengthFail, minLength)
+            if (value.isBlank()) fails += fail(validationStrings.blankFail)
+            if (! emailRegex.matches(value)) fails += fail(validationStrings.patternFail)
+        }
         if (length > maxLength) fails += fail(validationStrings.maxValueFail, maxLength)
-        if (blank == false && value.isBlank()) fails += fail(validationStrings.blankFail)
-        if (! emailRegex.matches(value)) fails += fail(validationStrings.patternFail)
     }
 
 }    

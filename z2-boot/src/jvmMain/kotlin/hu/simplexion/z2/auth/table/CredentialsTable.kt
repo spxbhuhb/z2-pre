@@ -1,12 +1,15 @@
 package hu.simplexion.z2.auth.table
 
+import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
 
@@ -35,5 +38,10 @@ open class CredentialsTable(
             .limit(1)
             .firstOrNull()
             ?.let { it[value] }
+
+
+    fun removeActivationKeys(inPrincipal: UUID<Principal>) {
+        deleteWhere { (principal eq inPrincipal) and (type eq ACTIVATION_KEY) }
+    }
 
 }

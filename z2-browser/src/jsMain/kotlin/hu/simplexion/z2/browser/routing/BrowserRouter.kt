@@ -32,9 +32,7 @@ open class BrowserRouter: Router<Z2>() {
             window.sessionStorage[lastShownKey] = current
         }
 
-        val path = decodeURIComponent(window.location.pathname)
-
-        browserOpen(path, window.location.search, window.location.hash)
+        browserOpen(window.location.pathname, window.location.search, window.location.hash)
     }
 
     override fun open(target: RoutingTarget<Z2>) {
@@ -60,7 +58,6 @@ open class BrowserRouter: Router<Z2>() {
             }
 
             val path = newPath.split('/')
-
 
 //            val parameters = mutableMapOf("#" to hash)
 //

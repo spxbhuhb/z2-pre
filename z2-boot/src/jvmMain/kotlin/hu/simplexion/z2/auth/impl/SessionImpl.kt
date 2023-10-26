@@ -4,6 +4,7 @@ import hu.simplexion.z2.auth.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.CredentialType
+import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
@@ -128,7 +129,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             val principal = principalTable.get(principalId)
 
             val result = when {
-                ! principal.activated -> Unauthorized("NotValidated")
+                ! principal.activated && credentialType != ACTIVATION_KEY -> Unauthorized("NotActivated")
                 principal.locked -> Unauthorized("Locked", true)
                 principal.expired -> Unauthorized("Expired")
                 principal.anonymized -> Unauthorized("Anonymized")

@@ -4,6 +4,7 @@ import hu.simplexion.z2.auth.api.PrincipalApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
+import hu.simplexion.z2.auth.model.CredentialType.PASSWORD
 import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
@@ -80,11 +81,22 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
         return principalTable.get(uuid)
     }
 
-    override suspend fun activate(credentials: Credentials, activationKey: Credentials) {
-        ensuredByLogic("calls other service function (add) directly")
-        add(credentials, activationKey)
+    override suspend fun activate(credentials: Credentials, activationKey: Credentials) : String {
+        publicAccess()
+        sessionImpl(serviceContext !!).authenticate(activationKey.principal, activationKey.value, true, ACTIVATION_KEY)
 
+        securityHistory(baseStrings.account, baseStrings.setActivated, activationKey.principal, true)
+
+        credentials.type = PASSWORD
+        credentials.createdAt = now()
+        credentials.principal = activationKey.principal
+        credentials.value = BCrypt.hashpw(credentials.value, BCrypt.gensalt())
+
+        credentialsTable.removeActivationKeys(activationKey.principal)
+        credentialsTable.insert(credentials)
         principalTable.setActivated(activationKey.principal, true)
+
+        return principalTable.get(activationKey.principal).name
     }
 
     override suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean) {
