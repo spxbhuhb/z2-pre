@@ -31,7 +31,7 @@ import kotlin.concurrent.withLock
 class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     companion object {
-        val sessionImpl = SessionImpl()
+        val sessionImpl = SessionImpl().internal
 
         val activeSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
     }
@@ -67,7 +67,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         }
 
         val session = Session().also {
-            it.uuid = serviceContext!!.uuid
+            it.uuid = serviceContext.uuid
             it.principal = principal.uuid
             it.roles = roleGrantTable.rolesOf(principal.uuid, null)
         }
@@ -87,8 +87,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     override suspend fun logout() {
         ensureLoggedIn()
         securityHistory(baseStrings.account, baseStrings.logout, serviceContext.principal)
-        activeSessions.remove(serviceContext!!.uuid)
-        serviceContext?.data?.remove(SESSION_TOKEN_UUID)
+        activeSessions.remove(serviceContext.uuid)
+        serviceContext.data.remove(SESSION_TOKEN_UUID)
     }
 
     override suspend fun logout(session: UUID<Session>) {

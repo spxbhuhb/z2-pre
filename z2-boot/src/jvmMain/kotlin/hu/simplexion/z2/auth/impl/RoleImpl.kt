@@ -22,7 +22,7 @@ import hu.simplexion.z2.service.ServiceImpl
 class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     companion object {
-        val roleImpl = RoleImpl()
+        val roleImpl = RoleImpl().internal
     }
 
     override suspend fun list(): List<Role> {

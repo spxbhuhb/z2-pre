@@ -44,8 +44,8 @@ fun ServiceImpl<*>.technicalHistory(topic : LocalizedText, verb : LocalizedText,
     history(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, null, *parameters)
 }
 
-fun technicalHistory(serviceContext: ServiceContext?, topic : LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    history(serviceContext?.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
+fun technicalHistory(serviceContext: ServiceContext, topic : LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
+    history(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
 }
 
 fun technicalHistory(createdBy: UUID<Principal>, topic : LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {

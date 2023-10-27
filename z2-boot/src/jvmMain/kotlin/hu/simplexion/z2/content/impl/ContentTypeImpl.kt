@@ -12,7 +12,7 @@ import hu.simplexion.z2.service.ServiceImpl
 open class ContentTypeImpl : ContentTypeApi, ServiceImpl<ContentTypeImpl> {
 
     companion object {
-        val contentTypeImpl = ContentTypeImpl()
+        val contentTypeImpl = ContentTypeImpl().internal
     }
 
     override suspend fun list(): List<ContentType> {

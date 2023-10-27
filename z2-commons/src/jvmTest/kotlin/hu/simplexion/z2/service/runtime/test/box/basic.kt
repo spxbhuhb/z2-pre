@@ -13,7 +13,7 @@ class BasicTest {
     fun box(): String {
         var response : String
         runBlocking {
-            defaultServiceImplFactory += TestServiceImpl(null)
+            defaultServiceImplFactory += TestServiceImpl(BasicServiceContext())
             response = TestServiceConsumer.testFun(1, "hello")
         }
         return if (response.startsWith("i:1 s:hello null")) "OK" else "Fail (response=$response)"
@@ -50,7 +50,7 @@ object TestServiceConsumer : TestService {
 
 }
 
-class TestServiceImpl(override val serviceContext: ServiceContext?) : TestService, ServiceImpl<TestServiceImpl> {
+class TestServiceImpl(override val serviceContext: ServiceContext) : TestService, ServiceImpl<TestServiceImpl> {
 
     override var serviceName = "TestService"
 
@@ -65,7 +65,7 @@ class TestServiceImpl(override val serviceContext: ServiceContext?) : TestServic
         }
     }
 
-    override fun newInstance(serviceContext: ServiceContext?) : TestServiceImpl {
+    override fun newInstance(serviceContext: ServiceContext) : TestServiceImpl {
         return TestServiceImpl(serviceContext)
     }
 

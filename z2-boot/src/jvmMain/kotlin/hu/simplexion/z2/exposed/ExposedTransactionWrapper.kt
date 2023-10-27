@@ -17,7 +17,7 @@ class ExposedTransactionWrapper(
         get() = wrappedService.serviceName
         set(value) { wrappedService.serviceName = value }
 
-    override fun newInstance(serviceContext: ServiceContext?) : ExposedTransactionWrapper {
+    override fun newInstance(serviceContext: ServiceContext) : ExposedTransactionWrapper {
         return ExposedTransactionWrapper(wrappedService.newInstance(serviceContext))
     }
 

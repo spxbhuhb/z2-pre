@@ -17,7 +17,7 @@ import hu.simplexion.z2.service.ServiceImpl
 class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
 
     companion object {
-        val emailImpl = EmailImpl()
+        val emailImpl = EmailImpl().internal
     }
 
     override suspend fun send(recipients: String, subject: String, contentType: String, contentText: String, attachments: List<UUID<Content>>) {

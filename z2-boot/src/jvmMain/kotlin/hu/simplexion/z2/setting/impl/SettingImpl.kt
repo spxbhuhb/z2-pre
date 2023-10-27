@@ -14,7 +14,7 @@ import hu.simplexion.z2.setting.table.SettingTable.Companion.settingTable
 class SettingImpl : SettingApi, ServiceImpl<SettingImpl> {
 
     companion object {
-        val settingImpl = SettingImpl()
+        val settingImpl = SettingImpl().internal
     }
 
     override suspend fun put(owner: UUID<Principal>, path: String, value: String) {

@@ -9,7 +9,7 @@ import hu.simplexion.z2.strictId.table.StrictIdTable.Companion.strictIdTable
 class StrictIdImpl : StrictIdApi, ServiceImpl<StrictIdImpl> {
 
     companion object {
-        val strictIdImpl = StrictIdImpl()
+        val strictIdImpl = StrictIdImpl().internal
 
         val strictIdLock = Lock()
     }

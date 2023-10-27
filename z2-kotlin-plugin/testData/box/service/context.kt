@@ -16,7 +16,7 @@ interface TestService : Service {
 
 }
 
-fun <T> ServiceContext?.ensure(vararg roles: String, block: () -> T): T {
+fun <T> ServiceContext.ensure(vararg roles: String, block: () -> T): T {
     return block()
 }
 

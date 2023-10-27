@@ -1,5 +1,6 @@
 package hu.simplexion.z2.service.ktor.server
 
+import hu.simplexion.z2.auth.context.AccessDenied
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.service.BasicServiceContext
@@ -47,7 +48,7 @@ fun Routing.basicWebsocketServiceCallTransport(
                     )
 
                 } catch (ex: Exception) {
-                    if (ex is AccessDeniedException) {
+                    if (ex is AccessDenied) {
                         ResponseEnvelope(
                             requestEnvelope.callId,
                             ServiceCallStatus.AccessDenied,

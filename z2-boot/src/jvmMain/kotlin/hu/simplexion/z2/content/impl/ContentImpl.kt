@@ -21,7 +21,7 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         var globalContentPlacementStrategy: ContentPlacementStrategy =
             BasicPlacementStrategy(Paths.get(System.getenv("Z2_CONTENT_PATH") ?: "./var/tmp" ))
 
-        val contentImpl = ContentImpl()
+        val contentImpl = ContentImpl().internal
 
         var traceUpload : Boolean = false
     }

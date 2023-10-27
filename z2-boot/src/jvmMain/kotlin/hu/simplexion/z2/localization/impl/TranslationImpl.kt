@@ -13,7 +13,7 @@ import hu.simplexion.z2.service.ServiceImpl
 class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
 
     companion object {
-        val translationImpl = TranslationImpl()
+        val translationImpl = TranslationImpl().internal
     }
 
     override suspend fun list(locale: UUID<Locale>): List<Translation> {

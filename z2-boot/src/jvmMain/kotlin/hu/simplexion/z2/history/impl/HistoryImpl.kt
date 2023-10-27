@@ -16,7 +16,7 @@ import kotlinx.datetime.Instant
 class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
 
     companion object {
-        val historyImpl = HistoryImpl()
+        val historyImpl = HistoryImpl().internal
     }
 
     override suspend fun list(flags: Int, start: Instant, end: Instant, limit: Int): List<HistoryEntry> {

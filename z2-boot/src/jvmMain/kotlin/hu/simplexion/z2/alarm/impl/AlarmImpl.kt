@@ -6,7 +6,7 @@ import hu.simplexion.z2.service.ServiceImpl
 class AlarmImpl : AlarmApi, ServiceImpl<AlarmImpl> {
 
     companion object {
-        val alarmImpl = AlarmImpl()
+        val alarmImpl = AlarmImpl().internal
     }
 
 //    override suspend fun alarm(subject: UUID<*>, message: LocalizedText, ex: Exception) {

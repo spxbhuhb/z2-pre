@@ -39,8 +39,10 @@ enum class ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.isInternal(): ContextCheckResult {
-    if (this != null) return ContextCheckResult.Deny
+fun ServiceContext.isInternal(): ContextCheckResult {
+    if (! this.uuid.isNil) return ContextCheckResult.Deny
+    // FIXME principal check for isInternal
+    // if (this.principal != null) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
 
@@ -49,7 +51,7 @@ fun ServiceContext?.isInternal(): ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.isLoggedIn(): ContextCheckResult {
+fun ServiceContext.isLoggedIn(): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     if (session.principal == null) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
@@ -61,7 +63,7 @@ fun ServiceContext?.isLoggedIn(): ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.has(role: Role): ContextCheckResult {
+fun ServiceContext.has(role: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     if (! session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
@@ -72,7 +74,7 @@ fun ServiceContext?.has(role: Role): ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.hasAll(vararg roles: Role): ContextCheckResult {
+fun ServiceContext.hasAll(vararg roles: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
         if (! session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Deny
@@ -85,7 +87,7 @@ fun ServiceContext?.hasAll(vararg roles: Role): ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.hasAny(vararg roles: Role): ContextCheckResult {
+fun ServiceContext.hasAny(vararg roles: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
         if (session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Allow
@@ -98,7 +100,7 @@ fun ServiceContext?.hasAny(vararg roles: Role): ContextCheckResult {
  *
  * Deny otherwise.
  */
-fun ServiceContext?.isPrincipal(principal: UUID<Principal>): ContextCheckResult {
+fun ServiceContext.isPrincipal(principal: UUID<Principal>): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     if (principal != session.principal) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
@@ -109,11 +111,11 @@ fun ServiceContext?.isPrincipal(principal: UUID<Principal>): ContextCheckResult 
  *
  * @throws  IllegalStateException  when there is no session or there is no principal
  */
-val ServiceContext?.principal
+val ServiceContext.principal
     get() = checkNotNull(getSessionOrNull()?.principal) { "there is no session in the service context" }
 
 /**
  * Get [Session.principal] of present, null if it doesn't.
  */
-val ServiceContext?.principalOrNull
+val ServiceContext.principalOrNull
     get() = getSessionOrNull()?.principal

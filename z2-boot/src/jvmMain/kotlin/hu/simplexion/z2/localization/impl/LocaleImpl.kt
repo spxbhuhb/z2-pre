@@ -16,7 +16,7 @@ import hu.simplexion.z2.service.ServiceImpl
 class LocaleImpl : LocaleApi, ServiceImpl<LocaleImpl> {
 
     companion object {
-        val localeImpl = LocaleImpl()
+        val localeImpl = LocaleImpl().internal
     }
 
     override suspend fun list(): List<Locale> {

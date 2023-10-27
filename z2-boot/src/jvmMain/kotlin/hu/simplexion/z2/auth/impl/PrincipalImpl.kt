@@ -24,7 +24,7 @@ import kotlinx.datetime.Clock.System.now
 class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     companion object {
-        val principalImpl = PrincipalImpl()
+        val principalImpl = PrincipalImpl().internal
     }
 
     override suspend fun list(): List<Principal> {

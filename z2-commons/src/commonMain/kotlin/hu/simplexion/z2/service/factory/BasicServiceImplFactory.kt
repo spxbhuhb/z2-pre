@@ -11,7 +11,7 @@ class BasicServiceImplFactory : ServiceImplFactory {
         templates[template.serviceName] = template
     }
 
-    override fun get(serviceName: String, context: ServiceContext?): ServiceImpl<*>? =
+    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =
         templates[serviceName]?.newInstance(context)
 
 }

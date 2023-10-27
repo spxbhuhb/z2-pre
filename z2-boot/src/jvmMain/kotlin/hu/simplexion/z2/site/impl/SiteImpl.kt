@@ -13,7 +13,7 @@ import hu.simplexion.z2.site.model.SiteSettings
 class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
 
     companion object {
-        val siteImpl = SiteImpl()
+        val siteImpl = SiteImpl().internal
 
         const val SITE_SETTINGS_KEY = "site" // TODO think about hard-coded keys
     }

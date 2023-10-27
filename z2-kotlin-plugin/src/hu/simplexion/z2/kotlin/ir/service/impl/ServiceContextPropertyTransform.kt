@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.expressions.IrExpressionBody
-import org.jetbrains.kotlin.ir.types.makeNullable
 
 class ServiceContextPropertyTransform(
     override val pluginContext: ServicePluginContext,
@@ -26,7 +25,7 @@ class ServiceContextPropertyTransform(
 
         property.backingField = irFactory.buildField {
             name = property.name
-            type = pluginContext.serviceContextType.makeNullable()
+            type = pluginContext.serviceContextType
             origin = IrDeclarationOrigin.PROPERTY_BACKING_FIELD
             visibility = DescriptorVisibilities.PRIVATE
         }.apply {

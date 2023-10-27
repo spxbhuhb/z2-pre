@@ -13,7 +13,7 @@ import hu.simplexion.z2.worker.runtime.WorkerRuntimeMessageType
 class WorkerImpl : WorkerApi, ServiceImpl<WorkerImpl> {
 
     companion object {
-        val workerImpl = WorkerImpl()
+        val workerImpl = WorkerImpl().internal
     }
 
     override suspend fun add(registration: WorkerRegistration): UUID<WorkerRegistration> {

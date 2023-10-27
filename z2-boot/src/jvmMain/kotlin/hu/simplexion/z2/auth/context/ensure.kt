@@ -176,5 +176,5 @@ fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
  * @throws  AccessDenied
  */
 suspend fun ServiceImpl<*>.ensureTest() {
-    if (!siteImpl(serviceContext!!).isTest()) throw AccessDenied()
+    if (!siteImpl(serviceContext).isTest()) throw AccessDenied()
 }

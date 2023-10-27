@@ -7,11 +7,11 @@ import hu.simplexion.z2.service.ServiceContext
 import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.service.get
 
-fun ServiceContext?.getSession(): Session =
+fun ServiceContext.getSession(): Session =
     checkNotNull(getSessionOrNull()) { "missing or invalid session" }
 
-fun ServiceContext?.getSessionOrNull() =
-    this?.let { it[SESSION_TOKEN_UUID] }
+fun ServiceContext.getSessionOrNull() =
+    this[SESSION_TOKEN_UUID]
 
 val ServiceImpl<*>.isSecurityOfficer
     get() = serviceContext.has(securityOfficerRole).isAllowed
