@@ -44,7 +44,7 @@ open class PhoneNumberSchemaField(
     override var blank : Boolean?
 ) : SchemaField<String>, PhoneNumberSchemaFieldCommon {
 
-    override val type: SchemaFieldType get() = SchemaFieldType.Phone
+    override val type: SchemaFieldType get() = SchemaFieldType.PhoneNumber
     override var isNullable: Boolean = false
     override val definitionDefault = ""
     override val naturalDefault = ""
@@ -84,7 +84,7 @@ open class NullablePhoneNumberSchemaField(
     override var blank : Boolean?
 ) : SchemaField<String?>, PhoneNumberSchemaFieldCommon {
 
-    override val type: SchemaFieldType get() = SchemaFieldType.Phone
+    override val type: SchemaFieldType get() = SchemaFieldType.PhoneNumber
     override var isNullable: Boolean = true
     override val definitionDefault = null
     override val naturalDefault = null

@@ -5,6 +5,7 @@ import hu.simplexion.z2.localization.text.ICommonStrings
 lateinit var browserStrings : IBrowserStrings
 
 interface IBrowserStrings : ICommonStrings {
+    val readOnly get() = static("nem módosítható")
     val actions get() = static("műveletek")
     val back get() = static("vissza")
     val discardChanges get() = static("Változások eldobása?")

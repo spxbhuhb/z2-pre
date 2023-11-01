@@ -783,7 +783,7 @@ class Table<T>(
         // multi-level table needs special processing because of the hidden
         // rows, so check for that also
 
-        if (searchText == null && !configuration.multiLevel) {
+        if (searchText == null && configuration.filterFun == null && !configuration.multiLevel) {
             filteredData = fullData
             renderData = filteredData.toMutableList()
             return
@@ -849,10 +849,14 @@ class Table<T>(
      * present in the filtered table.
      */
     fun filterRow(row: T, text: String?): Boolean {
-        columns.forEach {
-            if (it.matches(row, text)) return true
+        if (configuration.filterFun != null) {
+            return configuration.filterFun!!(row)
+        } else {
+            columns.forEach {
+                if (it.matches(row, text)) return true
+            }
+            return false
         }
-        return false
     }
 
     /**

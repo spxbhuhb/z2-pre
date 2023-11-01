@@ -6,4 +6,5 @@ class Translation : Schematic<Translation>() {
     var locale by uuid<Locale>()
     var key by string()
     var value by string()
+    var verified by boolean()
 }

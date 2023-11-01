@@ -44,6 +44,7 @@ class DockedDatePicker(
         textField.input.addClass(w304)
 
         textField.input.onFocus {
+            if (state.readOnly || state.disabled) return@onFocus
             selector.buildContent()
             selector.removeClass(displayNone)
         }
@@ -51,6 +52,8 @@ class DockedDatePicker(
         textField.input.onBlur {
             selector.addClass(displayNone)
         }
+
+        state.update = { textField.update() }
 
         return this
     }

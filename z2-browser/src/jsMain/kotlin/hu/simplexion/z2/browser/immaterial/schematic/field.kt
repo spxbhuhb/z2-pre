@@ -38,7 +38,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             //SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
             SchemaFieldType.LocalTime -> localTimeField(context, label) as BoundField<T>
             SchemaFieldType.Long -> longField(context, label) as BoundField<T>
-            SchemaFieldType.Phone -> phoneNumberField(context, label) as BoundField<T>
+            SchemaFieldType.PhoneNumber -> phoneNumberField(context, label) as BoundField<T>
             SchemaFieldType.Secret -> secretField(context, label) as BoundField<T>
             SchemaFieldType.String -> stringField(context, label) as BoundField<T>
             else -> throw NotImplementedError("field type ${field.type} is not implemented yet")

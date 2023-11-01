@@ -19,8 +19,8 @@ open class TableBuilder<T>(
         titleBuilder = TitleBuilder<T>().apply(builder)
     }
 
-    open fun column(builder : ColumnBuilder<T>.() -> Unit) {
-        columns += ColumnBuilder<T>().apply(builder)
+    open fun column(builder : ColumnBuilder<T>.() -> Unit) : ColumnBuilder<T> {
+        return ColumnBuilder<T>().apply(builder).also { columns += it }
     }
 
     open fun actionColumn(builder : ActionColumnBuilder<T>.() -> Unit) {

@@ -26,6 +26,7 @@ open class TranslationTable : Table(
     val locale = reference("owner", localeTable).index()
     val key = text("key").index()
     val value = text("value")
+    val verified = bool("verified").default(false)
 
     fun list(inLocale: UUID<Locale>): List<Translation> {
         return lock.use {
@@ -38,6 +39,7 @@ open class TranslationTable : Table(
                         it.locale = row[locale].z2()
                         it.key = row[key]
                         it.value = row[value]
+                        it.verified = row[verified]
                     }
                 }.also {
                     cache[inLocale] = it
@@ -50,6 +52,8 @@ open class TranslationTable : Table(
             it[locale] = translation.locale.jvm
             it[key] = translation.key
             it[value] = translation.value
+            it[verified] = translation.verified
+            cache.clear()
         }
     }
 

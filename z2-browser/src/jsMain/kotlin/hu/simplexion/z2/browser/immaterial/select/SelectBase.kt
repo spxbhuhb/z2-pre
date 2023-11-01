@@ -44,9 +44,10 @@ class SelectBase<T>(
             update()
         }
 
-    fun toError() {
+    fun toError(errorText : String? = null) {
         state.touched = true
         state.error = true
+        errorText?.let { state.errorText = it }
     }
 
     fun onChange(entry: T) {
@@ -86,7 +87,7 @@ class SelectBase<T>(
     override fun update() {
         super.update()
 
-        if (hasFocus) {
+        if (hasFocus && !state.readOnly && !state.disabled) {
             showItemContainer()
         } else {
             itemContainer?.htmlElement?.remove()

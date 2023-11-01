@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.material.textfield
 
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.FieldStyle
@@ -243,6 +244,8 @@ abstract class AbstractField<T>(
         if (state.disabled) inputElement.disabled = true
         if (state.readOnly) inputElement.readOnly = true
 
+        setLabel()
+
         inputElement.placeholder = if (hasFocus) "" else state.label ?: ""
 
         leading.clear()
@@ -293,4 +296,8 @@ abstract class AbstractField<T>(
         }
     }
 
+    fun setLabel() {
+        val readOnly = if (state.disabled || state.readOnly) " (${browserStrings.readOnly})" else ""
+        label.htmlElement.innerText = (state.label ?: "") + readOnly
+    }
 }

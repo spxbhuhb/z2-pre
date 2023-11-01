@@ -1,13 +1,10 @@
 package hu.simplexion.z2.localization
 
-import hu.simplexion.z2.localization.text.LocalizedText
-
-val Enum<*>.localized : LocalizedText
+val Enum<*>.localized : String
     get() {
-        val key = if (this is LocalizationProvider) {
-            "${this.localizationNamespace}/$name"
-        } else {
-            "${this::class.simpleName}/$name"
+        if (this is LocalizationProvider) {
+            localizedTextStore["${this.localizationNamespace}/$name"]?.let { return it.value }
         }
-        return localizationFor(key, name)
+        localizedTextStore["$fallbackNamespace/$name"]?.let { return it.value }
+        return name
     }
