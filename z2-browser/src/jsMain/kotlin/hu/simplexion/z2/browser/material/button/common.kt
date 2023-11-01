@@ -30,6 +30,11 @@ fun Z2.textLaunchButton(label: LocalizedText, onClickFun: suspend (event: Event)
         text { label.localeCapitalized }
     }
 
+fun Z2.textLaunchButton(label: Enum<*>, onClickFun: suspend (event: Event) -> Unit) =
+    LaunchButton(this, arrayOf("button-text", labelLarge), { onClickFun(it) }) {
+        text { label.localeCapitalized }
+    }
+
 fun Z2.smallDenseTextButton(label: LocalizedText, onClick: (event: Event) -> Unit) =
     Button(this, arrayOf("button-text", "dense", labelSmall), onClick) {
         text { label.localeCapitalized }

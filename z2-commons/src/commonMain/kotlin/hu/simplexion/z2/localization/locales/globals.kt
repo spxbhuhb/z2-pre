@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.localization.locales
 
+import hu.simplexion.z2.localization.localized
 import hu.simplexion.z2.localization.text.LocalizedText
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -81,4 +82,7 @@ inline val String.localeCapitalized
     get() = localizedFormats.capitalized(this)
 
 inline val LocalizedText.localeCapitalized
-    get() = hu.simplexion.z2.localization.locales.localizedFormats.capitalized(this.toString())
+    get() = localizedFormats.capitalized(this.toString())
+
+inline val Enum<*>.localeCapitalized
+    get() = localizedFormats.capitalized(this.localized)

@@ -1,10 +1,13 @@
 package hu.simplexion.z2.browser.immaterial.table
 
 import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.css.justifyContentFlexEnd
+import hu.simplexion.z2.browser.css.pr12
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.immaterial.schematic.label
 import hu.simplexion.z2.browser.immaterial.table.builders.ColumnBuilder
 import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
+import hu.simplexion.z2.browser.material.em
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.localization.locales.localized
 import hu.simplexion.z2.localization.localized
@@ -67,8 +70,12 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         SchemaFieldType.Int ->
             column {
                 label = schematicLabel
-                render = { schematic -> text { field.intValue(schematic) } }
+                render = { schematic ->
+                    addClass(justifyContentFlexEnd, pr12)
+                    text { field.intValue(schematic)?.localized }
+                }
                 comparator = { a, b -> compare(field.intValue(a), field.intValue(b)) }
+                initialSize = 10.em
             }
 
         SchemaFieldType.LocalDate ->
@@ -76,6 +83,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.localDateValue(schematic)?.localized } }
                 comparator = { a, b -> compare(field.localDateValue(a), field.localDateValue(b)) }
+                initialSize = 7.em
             }
 
         SchemaFieldType.LocalDateTime ->
@@ -95,8 +103,12 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         SchemaFieldType.Long ->
             column {
                 label = schematicLabel
-                render = { schematic -> text { field.longValue(schematic) } }
+                render = { schematic ->
+                    addClass(justifyContentFlexEnd, pr12)
+                    text { field.longValue(schematic)?.localized }
+                }
                 comparator = { a, b -> compare(field.longValue(a), field.longValue(b)) }
+                initialSize = 10.em
             }
 
         SchemaFieldType.Secret ->
@@ -190,7 +202,7 @@ private fun SchemaField<*>.localTimeValue(schematic: Schematic<*>) =
 
 private fun SchemaField<*>.longValue(schematic: Schematic<*>) =
     if (this.isNullable) {
-        (this as NullableLongSchemaField).getValue(schematic) ?: Long.MIN_VALUE
+        (this as NullableLongSchemaField).getValue(schematic)
     } else {
         (this as LongSchemaField).getValue(schematic)
     }
