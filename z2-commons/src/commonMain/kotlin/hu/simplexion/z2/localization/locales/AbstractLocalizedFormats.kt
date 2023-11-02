@@ -47,15 +47,15 @@ abstract class AbstractLocalizedFormats(
     // -------------------------------------------------------------------------
 
     override fun format(value: Long): String {
-        return value.toString()
+        return value.toString().withSeparators(config.thousandSeparator)
     }
 
     override fun toLong(value: String): Long {
-        return value.toLong()
+        return value.replace(config.thousandSeparator, "").toLong()
     }
 
     override fun toLongOrNull(value: String): Long? {
-        return value.toLongOrNull()
+        return value.replace(config.thousandSeparator, "").toLongOrNull()
     }
 
     // -------------------------------------------------------------------------
@@ -81,6 +81,7 @@ abstract class AbstractLocalizedFormats(
                     if (it == "-0") "0" else it
                 }
             }
+
             else -> {
                 val integral = if (value < 0.0) {
                     ceil(value)
