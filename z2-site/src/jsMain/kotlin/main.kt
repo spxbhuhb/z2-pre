@@ -7,8 +7,8 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
-import hu.simplexion.z2.browser.demo.components.file.fileDemo
 import hu.simplexion.z2.browser.demo.components.select.selectDemo
+import hu.simplexion.z2.browser.demo.field.stereotype.decimalDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
@@ -71,7 +71,7 @@ object mainRouter : BrowserRouter() {
 }
 
 @Suppress("unused")
-object componentRouter : NavRouter() {
+object componentRouter : NavRouter(loggedIn = false) {
     override val label = strings.components
 
     // @formatter:off
@@ -80,7 +80,7 @@ object componentRouter : NavRouter() {
     val card             by render(strings.card)             { cardDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
-    val file             by render(strings.file)             { fileDemo() }
+    val decimal          by render(strings.decimal)          { decimalDemo() }
     val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
     val modal            by render(strings.modal)            { modalDemo() }

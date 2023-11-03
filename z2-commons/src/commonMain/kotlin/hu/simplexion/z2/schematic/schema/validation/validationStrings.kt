@@ -24,4 +24,5 @@ interface IValidationStrings : LocalizedTextProvider {
     val schematicFail get() = static("Value required", name = "schematicFail")
     val enumFail get() = static("Value from the pre-defined set required", name = "enumFail")
     val listFail get() = static("Value is not a list", name = "listFail")
+    val numericFail get() = static("Numeric value is required", name = "doubleFail")
 }

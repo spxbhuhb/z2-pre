@@ -27,7 +27,6 @@ object administrationRouter : NavRouter() {
     val languages        by LanguagesList
 
     val account          by render(strings.account, icons.accounts)             {  }
-    val roles            by render(strings.role, icons.roles)                   {  }
     val securityPolicy   by render(strings.securityPolicy, icons.securityPolicy) {  }
 
     val connections      by render(strings.connection, icons.interfaces)         {  }

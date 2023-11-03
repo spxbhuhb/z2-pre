@@ -7,6 +7,7 @@ import hu.simplexion.z2.kotlin.ir.schematic.SchematicPluginContext
 import hu.simplexion.z2.kotlin.ir.schematic.util.IrBuilder
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isLocal
 import org.jetbrains.kotlin.ir.util.statements
 
@@ -44,7 +45,7 @@ class SchematicAccessCallTransform(
 
         // this is the expression that returns with the field value, a call to the getter
         val returnValue = returnStatement.value
-        check(returnValue is IrCall) { "accessor return value is not a call" }
+        check(returnValue is IrCall) { "accessor return value is not a call ${safCall.dumpKotlinLike()}" }
 
         val property = returnValue.symbol.owner.correspondingPropertySymbol
         check(property != null) { "can't find accessed property" }

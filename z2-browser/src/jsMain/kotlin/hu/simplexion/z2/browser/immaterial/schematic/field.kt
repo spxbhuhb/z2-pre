@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
 import hu.simplexion.z2.browser.field.FieldState
-import hu.simplexion.z2.browser.field.stereotypes.*
+import hu.simplexion.z2.browser.field.stereotype.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.datepicker.datePicker
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
@@ -15,6 +15,7 @@ import hu.simplexion.z2.schematic.SchematicAccessFunction
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.dump
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.schema.field.DecimalSchemaFieldDefault
 import hu.simplexion.z2.schematic.schema.field.EnumSchemaField
 
 /**
@@ -31,6 +32,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
         val label = field.label(context.schematic)
 
         when (field.type) {
+            SchemaFieldType.Decimal -> decimalField(context, label) as BoundField<T>
             SchemaFieldType.Email -> emailField(context, label) as BoundField<T>
             SchemaFieldType.Enum -> enumField(context, label) as BoundField<T>
             SchemaFieldType.Int -> intField(context, label) as BoundField<T>
@@ -60,7 +62,7 @@ private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText)
                 decodeFromString = { it }
             ) { context.schematic.schematicChange(context.field, it.value) }
         ).main().also {
-           it.valueOrNull = context.field.getValue(context.schematic) as? String
+            it.valueOrNull = context.field.getValue(context.schematic) as? String
         }
     }
 
@@ -74,6 +76,20 @@ private fun <T : Enum<T>> Z2.enumField(context: SchematicAccessContext, label: L
         // FIXME supporting text handling
         radioButtonGroup(value, field.entries.toList(), { + it.localized }) {
             context.schematic.schematicChange(context.field, it)
+        }
+    }
+
+private fun Z2.decimalField(context: SchematicAccessContext, label: LocalizedText) =
+    BoundField(this, context) {
+        DecimalField(
+            this,
+            FieldState(label),
+            FieldConfig(
+                decodeFromString = { context.field.toTypedValue(it, mutableListOf()) as Long? }
+            ) { it.valueOrNull?.let { context.schematic.schematicChange(context.field, it) } },
+            (context.field as DecimalSchemaFieldDefault).scale
+        ).main().also {
+            it.valueOrNull = context.field.getValue(context.schematic) as Long?
         }
     }
 
@@ -119,7 +135,7 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
 
 private fun Z2.localTimeField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
-        timePicker (label = label) {
+        timePicker(label = label) {
             context.schematic.schematicChange(context.field, it)
         }.main()
     }

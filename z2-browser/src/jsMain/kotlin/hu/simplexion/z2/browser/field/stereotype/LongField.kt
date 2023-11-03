@@ -1,4 +1,4 @@
-package hu.simplexion.z2.browser.field.stereotypes
+package hu.simplexion.z2.browser.field.stereotype
 
 import hu.simplexion.z2.browser.css.textAlignEnd
 import hu.simplexion.z2.browser.css.w304

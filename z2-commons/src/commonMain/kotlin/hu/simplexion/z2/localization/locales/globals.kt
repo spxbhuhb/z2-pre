@@ -33,10 +33,13 @@ inline val Boolean.localized: String
 inline val Int.localized: String
     get() = localizedFormats.format(this)
 
-// ---- Int ----
+// ---- Long ----
 
 inline val Long.localized: String
     get() = localizedFormats.format(this)
+
+fun Long.toDecimalString(scale : Int) : String =
+    localizedFormats.format(this.toDouble() / AbstractLocalizedFormats.shifts[scale], scale)
 
 // ---- Double ----
 

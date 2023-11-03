@@ -10,6 +10,11 @@ abstract class AbstractLocalizedFormats(
     val config: LocalizationConfig
 ) : LocalizedFormats {
 
+    companion object {
+        const val maxDecimals = 10
+        val shifts = Array(maxDecimals) { idx -> 10.0.pow(idx) }
+    }
+
     // -------------------------------------------------------------------------
     // Boolean
     // -------------------------------------------------------------------------
@@ -66,9 +71,6 @@ abstract class AbstractLocalizedFormats(
         return value.toString()
     }
 
-    val maxDecimals = 10
-    val shifts = Array(maxDecimals) { idx -> 10.0.pow(idx) }
-
     // TODO replace this with JavaScripts 'Number.toLocaleString'
     override fun format(value: Double, decimals: Int): String {
         check(decimals < maxDecimals) { "decimals must to be less than $maxDecimals" }
@@ -97,11 +99,11 @@ abstract class AbstractLocalizedFormats(
     }
 
     override fun toDouble(value: String): Double {
-        return value.toDouble()
+        return toDoubleOrNull(value) ?: throw NumberFormatException("cannot interpret $value as a number")
     }
 
     override fun toDoubleOrNull(value: String): Double? {
-        return value.toDoubleOrNull()
+        return value.replace(config.thousandSeparator, "").replace(config.decimalSeparator, ".").toDoubleOrNull()
     }
 
 

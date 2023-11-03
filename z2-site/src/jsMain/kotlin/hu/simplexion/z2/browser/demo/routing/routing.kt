@@ -51,7 +51,7 @@ object parameterRouter : Router<Z2>(strings.parameter, icons.parameter) {
     }
 }
 
-object parameterSubRouter : NavRouter(strings.parameterSubRoute, icons.parameter, false, routingRouter.nav) {
+object parameterSubRouter : NavRouter(strings.parameterSubRoute, icons.parameter, false, /* routingRouter.nav */) {
 
     val uuid by uuid<Any>()
 

@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.material.em
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.localization.locales.localized
+import hu.simplexion.z2.localization.locales.toDecimalString
 import hu.simplexion.z2.localization.localized
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicAccessFunction
@@ -37,8 +38,20 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         SchemaFieldType.Boolean ->
             column {
                 label = schematicLabel
-                render = { schematic -> text { if (field.booleanValue(schematic) == true) icon(browserIcons.check)  } }
+                render = { schematic -> text { if (field.booleanValue(schematic) == true) icon(browserIcons.check) } }
                 comparator = { a, b -> compare(field.booleanValue(a), field.booleanValue(b)) }
+            }
+
+        SchemaFieldType.Decimal ->
+            column {
+                field as DecimalSchemaFieldDefault
+                label = schematicLabel
+                render = { schematic ->
+                    addClass(justifyContentFlexEnd, pr12)
+                    text { field.decimalValue(schematic)?.toDecimalString(field.scale) }
+                }
+                comparator = { a, b -> compare(field.decimalValue(a), field.decimalValue(b)) }
+                initialSize = 10.em
             }
 
         SchemaFieldType.Duration ->
@@ -128,6 +141,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 render = { schematic -> text { field.uuidValue(schematic) } }
                 comparator = { a, b -> compare(field.uuidValue(a), field.uuidValue(b)) }
             }
+
         else -> throw NotImplementedError("schema field type ${field.type} not implemented in schematicColumn")
     }
 
@@ -147,12 +161,20 @@ private fun SchemaField<*>.booleanValue(schematic: Schematic<*>) =
         (this as BooleanSchemaField).getValue(schematic)
     }
 
+private fun SchemaField<*>.decimalValue(schematic: Schematic<*>) =
+    if (this.isNullable) {
+        (this as NullableDecimalSchemaField).getValue(schematic)
+    } else {
+        (this as DecimalSchemaField).getValue(schematic)
+    }
+
 private fun SchemaField<*>.durationValue(schematic: Schematic<*>) =
     if (this.isNullable) {
         (this as NullableDurationSchemaField).getValue(schematic)
     } else {
         (this as DurationSchemaField).getValue(schematic)
     }
+
 private fun SchemaField<*>.enumValue(schematic: Schematic<*>) =
     if (this.isNullable) {
         (this as NullableEnumSchemaField<*>).getValue(schematic)

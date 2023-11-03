@@ -3,6 +3,7 @@ package hu.simplexion.z2.exposed
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
+import hu.simplexion.z2.schematic.schema.field.DecimalSchemaFieldDefault
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
@@ -13,6 +14,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.wrap
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.statements.UpdateStatement
+import java.math.BigDecimal
 
 open class SchematicUuidTable<T : Schematic<T>>(
     name: String,
@@ -93,18 +95,23 @@ open class SchematicUuidTable<T : Schematic<T>>(
             val column = table.columns.firstOrNull { it.name == field.name } ?: continue
             val exposedValue = row[column] ?: continue
 
-            when {
+            sv[field.name] = when {
                 exposedValue is EntityID<*> -> {
                     val idValue = exposedValue.value as java.util.UUID
-                    sv[field.name] = UUID<Any>(idValue.mostSignificantBits, idValue.leastSignificantBits)
+                    UUID<Any>(idValue.mostSignificantBits, idValue.leastSignificantBits)
                 }
 
                 field.type == SchemaFieldType.UUID && exposedValue is java.util.UUID -> {
-                    sv[field.name] = UUID<Any>(exposedValue.mostSignificantBits, exposedValue.leastSignificantBits)
+                    UUID<Any>(exposedValue.mostSignificantBits, exposedValue.leastSignificantBits)
+                }
+
+                field.type == SchemaFieldType.Decimal -> {
+                    (exposedValue as BigDecimal)
+                    exposedValue.movePointRight(exposedValue.scale()).toLong()
                 }
 
                 else -> {
-                    sv[field.name] = field.toTypedValue(exposedValue, fails)
+                    field.toTypedValue(exposedValue, fails)
                 }
             }
         }
@@ -125,10 +132,11 @@ open class SchematicUuidTable<T : Schematic<T>>(
             @Suppress("UNCHECKED_CAST")
             val column = table.columns.firstOrNull { it.name == field.name } as? Column<Any?> ?: continue
             val value = schematic.schematicValues[field.name]
-            if (field.type == SchemaFieldType.UUID) {
-                statement[column] = (value as? UUID<*>)?.jvm
-            } else {
-                statement[column] = value
+
+            statement[column] = when (field.type) {
+                SchemaFieldType.Decimal -> value?.let { BigDecimal.valueOf(it as Long, (field as DecimalSchemaFieldDefault).scale) }
+                SchemaFieldType.UUID -> (value as? UUID<*>)?.jvm
+                else ->  value
             }
         }
     }
