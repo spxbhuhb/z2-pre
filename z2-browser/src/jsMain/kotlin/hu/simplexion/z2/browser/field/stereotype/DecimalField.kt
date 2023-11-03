@@ -4,6 +4,8 @@ import hu.simplexion.z2.browser.css.textAlignEnd
 import hu.simplexion.z2.browser.css.w304
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.html.onBlur
+import hu.simplexion.z2.browser.html.onFocus
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.localization.locales.AbstractLocalizedFormats
@@ -19,27 +21,18 @@ class DecimalField(
 ) : AbstractField<Long>(
     parent, state, config
 ) {
-    override var valueOrNull: Long? = null
-        set(value) {
-            if (field != value && value != null) {
-                inputElement.value = config.encodeToString(value)
-                update()
-            }
-            field = value
-
-        }
 
     override fun main(): DecimalField {
+
         config.encodeToString = {
-            it.toDecimalString(scale)
+            if (it == 0L) "0" else it.toDecimalString(scale).removeSurrounding("0")
         }
 
         config.decodeFromString = {
-            val double = localizedFormats.toDoubleOrNull(it)
-            if (double == null) {
+            if (it.isEmpty()) {
                 0L
             } else {
-                (double * AbstractLocalizedFormats.shifts[scale]).toLong()
+                (localizedFormats.toDouble(it) * AbstractLocalizedFormats.shifts[scale]).toLong()
             }
         }
 
@@ -48,6 +41,19 @@ class DecimalField(
         addClass(w304)
         inputElement.addClass(textAlignEnd)
 
+        input.onFocus {
+            if (! state.touched && valueOrNull == 0L) {
+                inputElement.value = ""
+            }
+        }
+
+        input.onBlur {
+            if (! state.touched && valueOrNull == 0L) {
+                value = 0L // to refresh the field
+            }
+        }
+
         return this
     }
+
 }

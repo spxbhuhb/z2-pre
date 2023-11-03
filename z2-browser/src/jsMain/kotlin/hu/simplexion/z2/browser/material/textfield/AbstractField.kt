@@ -29,6 +29,9 @@ abstract class AbstractField<T>(
 
     var hasFocus = false
 
+    val inError
+        get() = state.error || state.invalidInput
+
     val inputElement
         get() = input.htmlElement as HTMLInputElement
 
@@ -41,21 +44,32 @@ abstract class AbstractField<T>(
     override var valueOrNull: T? = null
         get() {
             // this is here for Chrome autofill bug
-            if (inputElement.value != "" && inputElement.value != field) {
-                field = config.decodeFromString(inputElement.value)
+            try {
+                val inputValue = config.decodeFromString(inputElement.value)
+                if (inputElement.value != "" && inputElement.value != field) {
+                    field = inputValue
+                }
+            } catch (ex: Exception) {
+                //
             }
             return field
         }
         set(value) {
             field = value
-            val encoded = value?.let { config.encodeToString(it) } ?: ""
-            if (inputElement.value != encoded) {
-                inputElement.value = encoded
-                update()
+
+            try {
+                val inputValue = config.decodeFromString(inputElement.value)
+                if (inputValue != value) {
+                    inputElement.value = value?.let { config.encodeToString(value) } ?: ""
+                    state.invalidInput = false // direct change, should not be wrong
+                    update()
+                }
+            } catch (ex: Exception) {
+                // nothing to do here
             }
         }
 
-    override fun main() : AbstractField<T> {
+    override fun main(): AbstractField<T> {
         addClass(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
 
         val baseHeight = if (config.style == FieldStyle.Chip) 32.px else 56.px
@@ -99,7 +113,8 @@ abstract class AbstractField<T>(
                         paddingTop2,
                         paddingRight2,
                         paddingBottom1,
-                        borderBottomWidth1, borderBottomSolid)
+                        borderBottomWidth1, borderBottomSolid
+                    )
                     input.addClass(pt20)
                 }
 
@@ -124,7 +139,7 @@ abstract class AbstractField<T>(
             }
 
             onClick {
-                if (!hasFocus) input.focus()
+                if (! hasFocus) input.focus()
             }
         }
 
@@ -139,11 +154,13 @@ abstract class AbstractField<T>(
                         borderWidth = 2.px
                         addClass(borderRadiusExtraSmall, pointerEventsNone)
                     }
+
                     FieldStyle.Chip -> {
                         height = baseHeight
                         borderWidth = 2.px
                         addClass(borderRadius8, pointerEventsNone)
                     }
+
                     else -> {
                         top = 46.px
                         height = 10.px
@@ -154,7 +171,7 @@ abstract class AbstractField<T>(
             }
             zIndex = 1
             onClick {
-                if (!hasFocus) input.focus()
+                if (! hasFocus) input.focus()
             }
         }
 
@@ -193,7 +210,7 @@ abstract class AbstractField<T>(
             }
 
             onFocus {
-                if (!hasFocus) {
+                if (! hasFocus) {
                     animation.removeClass(displayNone)
                     animation.addClass("scale-up-width", if (state.error) borderColorError else borderColorPrimary)
                 }
@@ -213,15 +230,24 @@ abstract class AbstractField<T>(
                 }
             }
             onInput {
-               this@AbstractField.onInput()
+                this@AbstractField.onInput()
             }
         }
     }
 
     open fun onInput() {
         if (! state.readOnly && ! state.disabled) {
-            valueOrNull = config.decodeFromString(inputElement.value)
-            config.onChange?.invoke(this@AbstractField)
+            state.touched = true
+            try {
+                valueOrNull = config.decodeFromString(inputElement.value)
+                state.invalidInput = false
+                config.onChange?.invoke(this@AbstractField)
+            } catch (ex: Exception) {
+                console.warn("invalid input: ${inputElement.value}")
+                ex.printStackTrace()
+                state.invalidInput = true
+            }
+            update()
         }
     }
 
@@ -275,7 +301,7 @@ abstract class AbstractField<T>(
             support.addClass(displayNone)
         }
 
-        if (state.touched && state.error) {
+        if (state.touched && inError) {
             label.replaceClass(primaryText, onSurfaceVariantText, errorText)
             self.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
             animation.replaceClass(borderColorPrimary, borderColorError)

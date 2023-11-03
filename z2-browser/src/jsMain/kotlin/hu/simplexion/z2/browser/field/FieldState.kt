@@ -51,6 +51,8 @@ class FieldState(
             update?.invoke()
         }
 
+    var invalidInput : Boolean = false
+
     var update : (() -> Unit)? = null
 
 }

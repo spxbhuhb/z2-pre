@@ -85,7 +85,7 @@ private fun Z2.decimalField(context: SchematicAccessContext, label: LocalizedTex
             this,
             FieldState(label),
             FieldConfig(
-                decodeFromString = { context.field.toTypedValue(it, mutableListOf()) as Long? }
+                decodeFromString = { throw IllegalStateException("decimal field should override decodeFromString") }
             ) { it.valueOrNull?.let { context.schematic.schematicChange(context.field, it) } },
             (context.field as DecimalSchemaFieldDefault).scale
         ).main().also {

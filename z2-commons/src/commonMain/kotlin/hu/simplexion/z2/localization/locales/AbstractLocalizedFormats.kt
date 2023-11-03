@@ -103,7 +103,27 @@ abstract class AbstractLocalizedFormats(
     }
 
     override fun toDoubleOrNull(value: String): Double? {
-        return value.replace(config.thousandSeparator, "").replace(config.decimalSeparator, ".").toDoubleOrNull()
+        val p = value.split(config.decimalSeparator)
+
+        if (p.size > 2) throw NumberFormatException(value)
+
+        val integralPart = if (p[0].isEmpty()) {
+            0L
+        } else {
+            p[0].split(config.thousandSeparator).forEachIndexed { index, part ->
+                if (index != 0 && part.length != 3) throw NumberFormatException()
+            }
+
+            p[0].replace(config.thousandSeparator, "").toLongOrNull() ?: throw NumberFormatException()
+        }
+
+        val decimalPart = if (p.size == 1 || p[1].isEmpty()) {
+            0
+        } else {
+            p[1].toLongOrNull() ?: throw NumberFormatException()
+        }
+
+        return integralPart.toDouble() + (if (decimalPart == 0L) 0.0 else decimalPart / shifts[p[1].length])
     }
 
 

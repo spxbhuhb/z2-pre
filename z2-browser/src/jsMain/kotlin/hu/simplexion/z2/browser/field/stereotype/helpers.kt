@@ -10,7 +10,7 @@ fun Z2.decimalField(value : Long, scale : Int, label : LocalizedText, changeFun 
         this,
         FieldState(label),
         FieldConfig(
-            decodeFromString = { it.toLongOrNull() ?: 0L }
+            decodeFromString = { throw IllegalStateException() }
         ) { changeFun(it.value) },
         scale
     ).also {
