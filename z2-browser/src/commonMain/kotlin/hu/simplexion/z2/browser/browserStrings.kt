@@ -45,4 +45,5 @@ interface IBrowserStrings : ICommonStrings {
     val sizeOverLimit get() = static("mérethatár felett")
     val invalidExtension get() = static("nem elfogadott formátum")
     val typeMinimumCharacters get() = static("legalább 3 karaktert be kell gépelni")
+    val saveSuccess get() = static("Sikeres mentés.")
 }

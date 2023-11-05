@@ -3,11 +3,14 @@
  */
 package hu.simplexion.z2.browser.material.modal
 
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
+import hu.simplexion.z2.browser.material.button.filledLaunchButton
+import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
@@ -33,7 +36,7 @@ open class ModalBase<T : Any?>(
     val channel = Channel<T>(1)
 
     fun Z2.title(title : LocalizedText) =
-        div(p24, pb16, displayFlex, alignItemsCenter, headlineSmall) {
+        div(pl24, pb16, pt24, pr24, mb8, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
             text { title.localeCapitalized }
         }
 
@@ -48,9 +51,18 @@ open class ModalBase<T : Any?>(
         }
 
     fun Z2.buttons(builder : Z2Builder) : Z2 =
-        grid(p24, gridAutoFlowColumn, gridAutoColumnsMinContent, gridGap16, justifyContentFlexEnd) {
+        grid(mt24, p16, gridAutoFlowColumn, gridAutoColumnsMinContent, gridGap16, justifyContentSpaceBetween, borderTopOutlineVariant) {
             builder()
         }
+
+    fun ModalBase<Unit>.save(saveFun : suspend () -> Unit) {
+        buttons {
+            textButton(browserStrings.cancel) { closeWith(Unit) }
+            filledLaunchButton(browserStrings.save) {
+                saveFun()
+            }
+        }
+    }
 
     fun launchShow() {
         localLaunch { show() }
