@@ -55,4 +55,9 @@ class FieldState(
 
     var update : (() -> Unit)? = null
 
+    fun toError(errorText: LocalizedText?) {
+        touched = true
+        error = true
+        this.errorText = errorText?.toString()
+    }
 }

@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.material.switch
 
 import hu.simplexion.z2.browser.browserIcons
-import hu.simplexion.z2.browser.css.selectNone
+import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
@@ -25,18 +25,29 @@ class SwitchField(
         set(value) {
             if (field != value) {
                 field = value
-                draw()
+                update()
             }
         }
 
     override fun main(): SwitchField {
-        super.main()
-        draw()
+        state.update = { update() }
+        update()
         return this
     }
 
-    fun draw() {
+    fun update() {
         clear()
+        if (config.addLabel) {
+            div(displayFlex, alignItemsCenter, justifyContentSpaceBetween) {
+                div(labelLarge) { + state.label }
+                switch()
+            }
+        } else {
+            switch()
+        }
+    }
+
+    fun Z2.switch() {
         div("switch-track", selectNone) {
             val selected = (valueOrNull == true)
             val statusClass = if (selected) "selected" else "unselected"

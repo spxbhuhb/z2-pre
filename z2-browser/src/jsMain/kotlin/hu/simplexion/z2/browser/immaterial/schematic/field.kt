@@ -1,13 +1,8 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
-import hu.simplexion.z2.browser.css.alignItemsCenter
-import hu.simplexion.z2.browser.css.displayFlex
-import hu.simplexion.z2.browser.css.justifyContentSpaceBetween
-import hu.simplexion.z2.browser.css.labelLarge
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.stereotype.*
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.datepicker.datePicker
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.switch.SwitchConfig
@@ -16,6 +11,7 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.browser.material.textfield.textField
 import hu.simplexion.z2.browser.material.timepicker.timePicker
+import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.localized
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.SchematicAccessFunction
@@ -61,27 +57,21 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
     }
 }
 
-private fun Z2.booleanField(context: SchematicAccessContext, label: LocalizedText) : BoundField<Boolean> {
-    lateinit var bf : BoundField<Boolean>
-
-    div(displayFlex, alignItemsCenter, justifyContentSpaceBetween) {
-        div(labelLarge) { + label }
-        bf = BoundField(this, context) {
-            SwitchField(
-                this,
-                FieldState(),
-                SwitchConfig().also {
-                    it.onChange = { f -> context.schematic.schematicChange(context.field, f.value) }
-                }
-            ).main().also {
-                it.valueOrNull = context.field.getValue(context.schematic) as? Boolean?
+private fun Z2.booleanField(context: SchematicAccessContext, label: LocalizedText): BoundField<Boolean> =
+    BoundField(this, context) {
+        SwitchField(
+            this,
+            FieldState().also {
+                it.label = label.localeCapitalized
+            },
+            SwitchConfig().also {
+                it.addLabel = true
+                it.onChange = { f -> context.schematic.schematicChange(context.field, f.value) }
             }
+        ).main().also {
+            it.valueOrNull = context.field.getValue(context.schematic) as? Boolean?
         }
     }
-
-    return bf
-}
-
 
 private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {

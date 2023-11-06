@@ -36,7 +36,7 @@ open class ModalBase<T : Any?>(
     val channel = Channel<T>(1)
 
     fun Z2.title(title : LocalizedText) =
-        div(pl24, pb16, pt24, pr24, mb8, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
+        div(pl24, pb16, pt24, pr24, mb24, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
             text { title.localeCapitalized }
         }
 

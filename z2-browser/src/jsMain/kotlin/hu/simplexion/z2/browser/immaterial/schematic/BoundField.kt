@@ -95,6 +95,20 @@ open class BoundField<T>(
             uiField.state.disabled = value
         }
 
+    infix fun label(value: String) {
+        label = value
+    }
+
+    infix fun label(value: LocalizedText?) {
+        label = value?.toString() ?: ""
+    }
+
+    var label
+        get() = uiField.state.label
+        set(value) {
+            uiField.state.label = value
+        }
+
     infix fun supportText(value: String) {
         supportText = value
     }
