@@ -15,6 +15,12 @@ class FieldState(
             update?.invoke()
         }
 
+    var supportEnabled : Boolean = true
+        set(value) {
+            field = value
+            update?.invoke()
+        }
+
     var supportText = supportText
         set(value) {
             field = value

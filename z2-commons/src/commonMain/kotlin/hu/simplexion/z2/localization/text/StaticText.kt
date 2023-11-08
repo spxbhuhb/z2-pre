@@ -23,4 +23,12 @@ class StaticText(
         }
         return result
     }
+
+    fun localizedReplace(vararg args : Any) : String {
+        val result = toString()
+        val parts = result.split("%N")
+        if (parts.size == 1) return result
+
+        return parts.zip(args).joinToString("") { "${it.first}${it.second}" } + parts.drop(args.size).joinToString("")
+    }
 }

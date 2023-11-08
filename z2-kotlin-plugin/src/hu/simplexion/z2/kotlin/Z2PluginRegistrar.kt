@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin
 
-import hu.simplexion.z2.kotlin.schematic.fir.SchematicDeclarationGenerator
+import hu.simplexion.z2.kotlin.fir.schematic.SchematicDeclarationGenerator
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
 

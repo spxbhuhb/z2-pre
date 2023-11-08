@@ -1,4 +1,4 @@
-package hu.simplexion.z2.kotlin.schematic.fir
+package hu.simplexion.z2.kotlin.fir.schematic
 
 import hu.simplexion.z2.kotlin.ir.schematic.RUNTIME_PACKAGE
 import hu.simplexion.z2.kotlin.ir.schematic.SCHEMATIC_CLASS

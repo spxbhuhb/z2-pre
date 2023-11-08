@@ -12,6 +12,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
@@ -78,3 +79,7 @@ fun implementations(vararg implementations : ServiceImpl<*>) {
         defaultServiceImplFactory += withTransaction { implementation }
     }
 }
+
+fun Table.isEmpty() = (selectAll().count() == 0L)
+
+fun Table.isNotEmpty() = (selectAll().count() != 0L)

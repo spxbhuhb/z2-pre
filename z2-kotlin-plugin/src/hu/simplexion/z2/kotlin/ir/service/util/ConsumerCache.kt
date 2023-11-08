@@ -2,6 +2,7 @@ package hu.simplexion.z2.kotlin.ir.service.util
 
 import hu.simplexion.z2.kotlin.ir.service.COMPANION_OBJECT_NAME
 import hu.simplexion.z2.kotlin.ir.service.ServicePluginContext
+import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
@@ -18,9 +19,9 @@ class ConsumerCache(
         consumers.getOrPut(type) { add(type) }
 
     fun add(type: IrType): IrClass {
-        val typeFqName = checkNotNull(type.classFqName)
+        val typeFqName = checkNotNull(type.classFqName) { "classFqName is null for ${type.asString()}"}
         val classId = ClassId(typeFqName.parent(), typeFqName.shortName()).createNestedClassId(Name.identifier(COMPANION_OBJECT_NAME))
-        return checkNotNull(pluginContext.irContext.referenceClass(classId)).owner
+        return checkNotNull(pluginContext.irContext.referenceClass(classId)) { "companion is missing for $classId"}.owner
     }
 
     fun add(type : IrType, consumer: IrClass) {

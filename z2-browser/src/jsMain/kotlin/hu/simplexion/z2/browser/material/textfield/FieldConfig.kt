@@ -32,12 +32,6 @@ open class FieldConfig<T>(
             update?.invoke()
         }
 
-    var supportEnabled : Boolean = true
-        set(value) {
-            field = value
-            update?.invoke()
-        }
-
     var onChange = onChange
         set(value) {
             field = value

@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth
 
+import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
 import hu.simplexion.z2.auth.impl.PrincipalImpl.Companion.principalImpl
 import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
@@ -22,9 +23,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB
 
-internal lateinit var securityOfficerRole: Role
-internal lateinit var securityOfficerUuid: UUID<Principal>
-internal lateinit var anonymousUuid: UUID<Principal>
+lateinit var securityOfficerRole: Role
+lateinit var securityOfficerUuid: UUID<Principal>
+lateinit var anonymousUuid: UUID<Principal>
 
 const val securityOfficerRoleName = "security-officer"
 const val securityOfficerPrincipalName = "so"
@@ -50,7 +51,8 @@ fun authJvm(initialSoPassword: String = System.getenv("Z2_INITIAL_SO_PASSWORD") 
     implementations(
         principalImpl,
         roleImpl,
-        sessionImpl
+        sessionImpl,
+        authAdminImpl
     )
 }
 

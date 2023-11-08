@@ -8,7 +8,6 @@ import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.localization.api.LocaleApi
 import hu.simplexion.z2.localization.model.Locale
-import hu.simplexion.z2.localization.model.Translation
 import hu.simplexion.z2.localization.table.LocaleTable.Companion.localeTable
 import hu.simplexion.z2.localization.table.TranslationTable.Companion.translationTable
 import hu.simplexion.z2.service.ServiceImpl
@@ -52,23 +51,7 @@ class LocaleImpl : LocaleApi, ServiceImpl<LocaleImpl> {
 
     override suspend fun load(uuid: UUID<Locale>, table: ByteArray) {
         ensure(securityOfficerRole)
-
-        // to make sure that the locale exists
-        val locale = localeTable.get(uuid).uuid
-
-        for (line in table.decodeToString().lines()) {
-            if (line.isBlank()) continue
-
-            val parts = line.split('\t', limit = 2)
-
-            translationTable.put(
-                Translation().also {
-                    it.locale = locale
-                    it.key = parts[0]
-                    it.value = if (parts.size > 1) parts[1] else ""
-                }
-            )
-        }
+        translationTable.load(uuid, table)
     }
 
     /**

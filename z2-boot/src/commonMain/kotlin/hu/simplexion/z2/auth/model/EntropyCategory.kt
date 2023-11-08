@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.model
 
-enum class EntropyCategories(
+enum class EntropyCategory(
     val min: Int,
     val max: Int
 ) {

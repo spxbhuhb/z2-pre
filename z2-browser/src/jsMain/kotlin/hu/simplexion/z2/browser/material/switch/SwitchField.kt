@@ -39,7 +39,7 @@ class SwitchField(
         clear()
         if (config.addLabel) {
             div(displayFlex, alignItemsCenter, justifyContentSpaceBetween) {
-                div(labelLarge) { + state.label }
+                div(labelLarge, pr16) { + state.label }
                 switch()
             }
         } else {

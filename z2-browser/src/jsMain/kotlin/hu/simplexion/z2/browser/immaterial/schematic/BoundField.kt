@@ -75,8 +75,9 @@ open class BoundField<T>(
         fullSuspendValidation = validation
     }
 
-    infix fun readOnly(value: Boolean) {
+    infix fun readOnly(value: Boolean)  : BoundField<T> {
         readOnly = value
+        return this
     }
 
     var readOnly
@@ -85,8 +86,9 @@ open class BoundField<T>(
             uiField.state.readOnly = value
         }
 
-    infix fun disabled(value: Boolean) {
+    infix fun disabled(value: Boolean) : BoundField<T> {
         disabled = value
+        return this
     }
 
     var disabled
@@ -95,12 +97,14 @@ open class BoundField<T>(
             uiField.state.disabled = value
         }
 
-    infix fun label(value: String) {
+    infix fun label(value: String) : BoundField<T> {
         label = value
+        return this
     }
 
-    infix fun label(value: LocalizedText?) {
+    infix fun label(value: LocalizedText?) : BoundField<T> {
         label = value?.toString() ?: ""
+        return this
     }
 
     var label
@@ -109,12 +113,26 @@ open class BoundField<T>(
             uiField.state.label = value
         }
 
-    infix fun supportText(value: String) {
-        supportText = value
+    infix fun supportEnabled(value: Boolean) : BoundField<T> {
+        supportEnabled = value
+        return this
     }
 
-    infix fun supportText(value: LocalizedText?) {
+    var supportEnabled
+        get() = uiField.state.supportEnabled
+        set(value) {
+            uiField.state.supportEnabled = value
+        }
+
+
+    infix fun supportText(value: String) : BoundField<T> {
+        supportText = value
+        return this
+    }
+
+    infix fun supportText(value: LocalizedText?) : BoundField<T> {
         supportText = value?.toString() ?: ""
+        return this
     }
 
     var supportText
@@ -123,8 +141,9 @@ open class BoundField<T>(
             uiField.state.supportText = value
         }
 
-    infix fun error(value: Boolean) {
+    infix fun error(value: Boolean) : BoundField<T> {
         error = value
+        return this
     }
 
     var error
@@ -133,8 +152,9 @@ open class BoundField<T>(
             uiField.state.error = value
         }
 
-    infix fun errorText(value: String) {
+    infix fun errorText(value: String) : BoundField<T> {
         errorText = value
+        return this
     }
 
     var errorText

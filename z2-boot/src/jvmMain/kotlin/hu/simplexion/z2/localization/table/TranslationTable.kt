@@ -57,4 +57,22 @@ open class TranslationTable : Table(
         }
     }
 
+    fun load(uuid: UUID<Locale>, table: ByteArray) {
+        // to make sure that the locale exists
+        val locale = localeTable.get(uuid).uuid
+
+        for (line in table.decodeToString().lines()) {
+            if (line.isBlank()) continue
+
+            val parts = line.split('\t', limit = 2)
+
+            translationTable.put(
+                Translation().also {
+                    it.locale = locale
+                    it.key = parts[0]
+                    it.value = if (parts.size > 1) parts[1] else ""
+                }
+            )
+        }
+    }
 }

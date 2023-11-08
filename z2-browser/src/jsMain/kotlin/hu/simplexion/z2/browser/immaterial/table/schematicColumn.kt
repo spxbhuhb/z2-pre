@@ -17,6 +17,11 @@ import hu.simplexion.z2.schematic.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.field.*
+import hu.simplexion.z2.schematic.schema.field.stereotype.EmailSchemaField
+import hu.simplexion.z2.schematic.schema.field.stereotype.NullableEmailSchemaField
+import hu.simplexion.z2.schematic.schema.field.stereotype.NullablePhoneNumberSchemaField
+import hu.simplexion.z2.schematic.schema.field.stereotype.PhoneNumberSchemaField
+import kotlinx.datetime.Instant
 
 
 /**
@@ -38,7 +43,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         SchemaFieldType.Boolean ->
             column {
                 label = schematicLabel
-                render = { schematic -> text { if (field.booleanValue(schematic) == true) icon(browserIcons.check) } }
+                render = { schematic -> if (field.booleanValue(schematic) == true) icon(browserIcons.check) }
                 comparator = { a, b -> compare(field.booleanValue(a), field.booleanValue(b)) }
             }
 
@@ -61,6 +66,13 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 comparator = { a, b -> compare(field.durationValue(a), field.durationValue(b)) }
             }
 
+        SchemaFieldType.Email ->
+            column {
+                label = schematicLabel
+                render = { schematic -> text { field.emailValue(schematic) } }
+                comparator = { a, b -> compare(field.emailValue(a), field.emailValue(b)) }
+            }
+
         SchemaFieldType.Enum ->
             column {
                 label = schematicLabel
@@ -71,7 +83,11 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         SchemaFieldType.Instant ->
             column {
                 label = schematicLabel
-                render = { schematic -> text { field.instantValue(schematic) } }
+                render = { schematic ->
+                    field.instantValue(schematic).also {
+                        if (it != Instant.DISTANT_PAST && it != Instant.DISTANT_FUTURE) text { it?.localized }
+                    }
+                }
                 comparator = { a, b -> compare(field.instantValue(a), field.instantValue(b)) }
             }
 
@@ -119,6 +135,13 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 initialSize = 10.em
             }
 
+        SchemaFieldType.PhoneNumber ->
+            column {
+                label = schematicLabel
+                render = { schematic -> text { field.phoneValue(schematic) } }
+                comparator = { a, b -> compare(field.phoneValue(a), field.phoneValue(b)) }
+            }
+
         SchemaFieldType.Secret ->
             column {
                 label = schematicLabel
@@ -126,9 +149,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 comparator = { _, _ -> 0 }
             }
 
-        SchemaFieldType.String,
-        SchemaFieldType.Email,
-        SchemaFieldType.PhoneNumber ->
+        SchemaFieldType.String ->
             column {
                 label = schematicLabel
                 render = { schematic -> text { field.stringValue(schematic) } }
@@ -174,6 +195,14 @@ private fun SchemaField<*>.durationValue(schematic: Schematic<*>) =
     } else {
         (this as DurationSchemaField).getValue(schematic)
     }
+
+private fun SchemaField<*>.emailValue(schematic: Schematic<*>) =
+    if (this.isNullable) {
+        (this as NullableEmailSchemaField).getValue(schematic)
+    } else {
+        (this as EmailSchemaField).getValue(schematic)
+    }
+
 
 private fun SchemaField<*>.enumValue(schematic: Schematic<*>) =
     if (this.isNullable) {
@@ -222,6 +251,13 @@ private fun SchemaField<*>.longValue(schematic: Schematic<*>) =
         (this as NullableLongSchemaField).getValue(schematic)
     } else {
         (this as LongSchemaField).getValue(schematic)
+    }
+
+private fun SchemaField<*>.phoneValue(schematic: Schematic<*>) =
+    if (this.isNullable) {
+        (this as NullablePhoneNumberSchemaField).getValue(schematic)
+    } else {
+        (this as PhoneNumberSchemaField).getValue(schematic)
     }
 
 private fun SchemaField<*>.stringValue(schematic: Schematic<*>) =

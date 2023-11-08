@@ -20,6 +20,7 @@ import hu.simplexion.z2.schematic.dump
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.field.DecimalSchemaFieldDefault
 import hu.simplexion.z2.schematic.schema.field.EnumSchemaField
+import kotlinx.datetime.Instant
 
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on
@@ -39,6 +40,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             SchemaFieldType.Decimal -> decimalField(context, label) as BoundField<T>
             SchemaFieldType.Email -> emailField(context, label) as BoundField<T>
             SchemaFieldType.Enum -> enumField(context, label) as BoundField<T>
+            SchemaFieldType.Instant -> instantField(context, label) as BoundField<T>
             SchemaFieldType.Int -> intField(context, label) as BoundField<T>
             SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
             //SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
@@ -110,6 +112,19 @@ private fun Z2.decimalField(context: SchematicAccessContext, label: LocalizedTex
             (context.field as DecimalSchemaFieldDefault).scale
         ).main().also {
             it.valueOrNull = context.field.getValue(context.schematic) as Long?
+        }
+    }
+
+private fun Z2.instantField(context: SchematicAccessContext, label: LocalizedText) =
+    BoundField(this, context) {
+        InstantField(
+            this,
+            FieldState(label),
+            FieldConfig(
+                decodeFromString = { null }
+            ) { it.valueOrNull?.let { context.schematic.schematicChange(context.field, it) } }
+        ).main().also {
+            it.valueOrNull = context.field.getValue(context.schematic) as Instant?
         }
     }
 

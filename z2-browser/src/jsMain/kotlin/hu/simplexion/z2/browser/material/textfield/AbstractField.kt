@@ -295,7 +295,7 @@ abstract class AbstractField<T>(
         trailing.clear()
         support.clear()
 
-        if (config.supportEnabled) {
+        if (state.supportEnabled) {
             support.removeClass(displayNone)
         } else {
             support.addClass(displayNone)

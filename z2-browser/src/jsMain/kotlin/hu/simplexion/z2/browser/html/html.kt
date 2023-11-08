@@ -25,6 +25,12 @@ fun Z2.form(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
 fun Z2.a(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
     Z2(this, document.createElement("a") as HTMLAnchorElement, classes, builder)
 
+fun Z2.ul(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
+    Z2(this, document.createElement("ul") as HTMLUListElement, classes, builder)
+
+fun Z2.li(vararg classes: String, builder: Z2.() -> Unit = {  }): Z2 =
+    Z2(this, document.createElement("li") as HTMLLIElement, classes, builder)
+
 /**
  * A plain HTML table tag. Decided to use a different name because I use this
  * tag very rarely and mostly inside library components.
