@@ -10,7 +10,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 
 fun Z2.datePicker(
-    value : LocalDate = hereAndNow().date,
+    value : LocalDate? = hereAndNow().date,
     label : LocalizedText? = null,
     supportText: LocalizedText? = dateTimeStrings.localDateSupportText,
     onChange: DockedDatePicker.(value: LocalDate) -> Unit
@@ -25,7 +25,7 @@ fun Z2.datePicker(
             it.onChange = onChange
         }
     ).also {
-        it.value = value
+        it.valueOrNull = value
     }.main()
 
 fun Z2.month(

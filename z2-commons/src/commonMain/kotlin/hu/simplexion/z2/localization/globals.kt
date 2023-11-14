@@ -10,3 +10,13 @@ var fallbackNamespace = ""
 val localizedTextStore = mutableMapOf<String, LocalizedText>()
 
 val localizedIconStore = mutableMapOf<String, LocalizedIcon>()
+
+fun withLocalization(provider : LocalizationProvider, block : () -> Unit) {
+    val original = fallbackNamespace
+    fallbackNamespace = provider.localizationNamespace
+    try {
+        block()
+    } finally {
+        fallbackNamespace = original
+    }
+}

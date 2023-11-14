@@ -20,7 +20,10 @@ import hu.simplexion.z2.schematic.dump
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.field.DecimalSchemaFieldDefault
 import hu.simplexion.z2.schematic.schema.field.EnumSchemaField
+import hu.simplexion.z2.schematic.schema.field.EnumSchemaFieldCommon
+import hu.simplexion.z2.schematic.schema.field.NullableEnumSchemaField
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on
@@ -88,12 +91,21 @@ private fun Z2.emailField(context: SchematicAccessContext, label: LocalizedText)
         }
     }
 
+@Suppress("UNCHECKED_CAST")
 private fun <T : Enum<T>> Z2.enumField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
 
-        @Suppress("UNCHECKED_CAST")
-        val field = context.field as EnumSchemaField<T>
-        val value = field.getValue(context.schematic)
+        val field = context.field
+
+        val value = if (field.isNullable) {
+            field as NullableEnumSchemaField<T>
+            field.getValue(context.schematic)
+        } else {
+            field as EnumSchemaField<T>
+            field.getValue(context.schematic)
+        }
+
+        field as EnumSchemaFieldCommon<T>
 
         // FIXME supporting text handling
         radioButtonGroup(value, field.entries.toList(), { + it.localized }) {
@@ -158,7 +170,9 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
     BoundField(this, context) {
         datePicker(label = label) {
             context.schematic.schematicChange(context.field, it)
-        }.main()
+        }.main().also {
+            it.valueOrNull = context.field.getValue(context.schematic) as LocalDate?
+        }
     }
 
 //private fun Z2.localDateTimeField(context: SchematicAccessContext, label: LocalizedText) =

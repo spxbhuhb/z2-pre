@@ -12,7 +12,6 @@ import hu.simplexion.z2.browser.demo.field.stereotype.decimalDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
-import hu.simplexion.z2.browser.demo.pages.administration.administrationRouter
 import hu.simplexion.z2.browser.demo.pages.loginDemo
 import hu.simplexion.z2.browser.demo.routing.routingRouter
 import hu.simplexion.z2.browser.demo.search.searchDemo
@@ -81,6 +80,7 @@ object componentRouter : NavRouter(loggedIn = false) {
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
     val decimal          by render(strings.decimal)          { decimalDemo() }
+    val enum             by render(strings.enum)             { enumDemo() }
     val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
     val modal            by render(strings.modal)            { modalDemo() }
@@ -103,7 +103,6 @@ object pagesRouter : NavRouter() {
 
     // @formatter:off
     val login          by render(strings.login)          { loginDemo() }
-    val administration by administrationRouter
     // @formatter:on
 }
 

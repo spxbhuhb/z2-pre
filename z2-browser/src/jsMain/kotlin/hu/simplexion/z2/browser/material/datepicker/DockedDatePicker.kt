@@ -29,7 +29,7 @@ class DockedDatePicker(
     override var valueOrNull: LocalDate? = hereAndNow().date
         set(value) {
             field = value
-            textField.value = value !!.localized
+            textField.value = value?.localized ?: ""
         }
 
     val textField: TextField = TextField(this, state, FieldConfig(decodeFromString = { it }).also {
@@ -65,7 +65,7 @@ class DockedDatePicker(
     fun Z2.buildContent() {
         clear()
         div(positionAbsolute) {
-            DockedDatePickerSelector(this, value, { close() }) {
+            DockedDatePickerSelector(this, valueOrNull ?: hereAndNow().date, { close() }) {
                 this@DockedDatePicker.value = it
                 textField.value = it.localized
                 config.onChange?.invoke(this@DockedDatePicker, value)

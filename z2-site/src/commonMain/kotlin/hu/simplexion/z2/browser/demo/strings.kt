@@ -5,6 +5,7 @@ import hu.simplexion.z2.localization.text.IDateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.IValidationStrings
 
 object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
+    val enum = static("enum")
     val select = static("Select")
     val components = static("Components")
     val pages = static("Pages")
