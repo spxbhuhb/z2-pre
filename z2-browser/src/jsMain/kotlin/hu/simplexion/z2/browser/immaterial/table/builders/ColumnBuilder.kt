@@ -9,15 +9,24 @@ import hu.simplexion.z2.localization.text.LocalizedText
 
 open class ColumnBuilder<T> {
 
-    var label : LocalizedText = browserStrings._empty
-    var labelBuilder : Z2Builder = { text { label } }
+    var label: LocalizedText = browserStrings._empty
+    var labelBuilder: Z2Builder = { text { label } }
     var render: Z2.(row: T) -> Unit = { }
-    var comparator: (T,T) -> Int = { _,_ -> 0 }
+    var comparator: (T, T) -> Int = { _, _ -> 0 }
     var initialSize = "1fr"
     var exportable = true
-    var exportHeader : LocalizedText = browserStrings._empty
+    var exportHeader: LocalizedText = browserStrings._empty
 
     open fun toColumn(table: Table<T>): TableColumn<T> =
         TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader)
 
+    infix fun label(value: LocalizedText): ColumnBuilder<T> {
+        label = value
+        return this
+    }
+
+    infix fun initialSize(value: String): ColumnBuilder<T> {
+        initialSize = value
+        return this
+    }
 }

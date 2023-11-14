@@ -8,7 +8,7 @@ import hu.simplexion.z2.browser.css.w400
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.browser.material.modal.modal
+import hu.simplexion.z2.browser.material.modal.inputModal
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.localeService
 import hu.simplexion.z2.localization.model.Locale
@@ -26,25 +26,23 @@ internal fun languageModal(
     buttonLabel: LocalizedText,
     onOk: suspend (locale: Locale) -> Unit
 ) {
-    localLaunch {
-        modal(w400) {
-            title(modalTitle)
+    inputModal(w400) {
+        title(modalTitle)
 
-            grid(p24, gridGap24) {
-                field { locale.isoCode }
-                field { locale.countryCode }
-                field { locale.nativeName }
-            }
+        grid(p24, gridGap24) {
+            field { locale.isoCode }
+            field { locale.countryCode }
+            field { locale.nativeName }
+        }
 
-            buttons {
-                textButton(browserStrings.cancel) { closeWith(false) }
-                textButton(buttonLabel) {
-                    localLaunch {
-                        onOk(locale)
-                        closeWith(true)
-                    }
+        buttons {
+            textButton(browserStrings.cancel) { closeWith(false) }
+            textButton(buttonLabel) {
+                localLaunch {
+                    onOk(locale)
+                    closeWith(true)
                 }
             }
-        }.show()
+        }
     }
 }

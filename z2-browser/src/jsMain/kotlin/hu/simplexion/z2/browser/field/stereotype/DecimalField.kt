@@ -9,6 +9,7 @@ import hu.simplexion.z2.browser.html.onFocus
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.localization.locales.AbstractLocalizedFormats
+import hu.simplexion.z2.localization.locales.localized
 import hu.simplexion.z2.localization.locales.localizedFormats
 import hu.simplexion.z2.localization.locales.toDecimalString
 import kotlinx.dom.addClass
@@ -50,6 +51,9 @@ class DecimalField(
         input.onBlur {
             if (! state.touched && valueOrNull == 0L) {
                 value = 0L // to refresh the field
+            }
+            if (value != 0L) {
+                inputElement.value = value.localized
             }
         }
 

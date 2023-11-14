@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
+import hu.simplexion.z2.browser.immaterial.schematic.State
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.immaterial.table.TableConfiguration
 
@@ -12,6 +13,8 @@ open class TableBuilder<T>(
     var query: (suspend () -> List<T>)? = null
 
     var data: List<T>? = null
+
+    var state : State<List<T>>? = null
 
     var rowId: ((row : T) -> Any)? = null
 

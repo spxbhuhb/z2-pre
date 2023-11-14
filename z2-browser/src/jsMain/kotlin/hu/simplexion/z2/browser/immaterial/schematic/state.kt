@@ -9,7 +9,7 @@ import hu.simplexion.z2.commons.util.nextHandle
 
 inline fun <T> state(builder : () -> T) = State(builder())
 
-fun <T> Z2.attach(state : State<T>, renderFun : (value : T) -> Unit) {
+fun <T> Z2.attach(state : State<T>, renderFun : Z2.(value : T) -> Unit) {
     listeners += AnonymousEventListener(state.handle) {
         clear()
         @Suppress("UNCHECKED_CAST")

@@ -61,15 +61,20 @@ open class TranslationTable : Table(
         // to make sure that the locale exists
         val locale = localeTable.get(uuid).uuid
 
+        val existing = list(uuid).associateBy { it.key }
+
         for (line in table.decodeToString().lines()) {
             if (line.isBlank()) continue
 
             val parts = line.split('\t', limit = 2)
+            val key = parts[0]
 
-            translationTable.put(
+            if (key in existing) continue
+
+            put(
                 Translation().also {
                     it.locale = locale
-                    it.key = parts[0]
+                    it.key = key
                     it.value = if (parts.size > 1) parts[1] else ""
                 }
             )

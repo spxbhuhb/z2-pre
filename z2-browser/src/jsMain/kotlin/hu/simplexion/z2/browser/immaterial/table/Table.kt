@@ -6,10 +6,13 @@ package hu.simplexion.z2.browser.immaterial.table
 
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.browser.immaterial.schematic.State
 import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry
 import hu.simplexion.z2.browser.util.launchApply
+import hu.simplexion.z2.commons.event.AnonymousEventListener
+import hu.simplexion.z2.commons.event.EventCentral
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.datetime.*
@@ -32,7 +35,9 @@ class Table<T>(
 
     val configuration: TableConfiguration<T>
     val columns: List<TableColumn<T>>
+
     var query: (suspend () -> List<T>)? = null
+    var state: State<List<T>>? = null
 
     val exportFileName: String
         get() {
@@ -126,8 +131,10 @@ class Table<T>(
             configuration = build
             columns = build.columns.map { it.toColumn(this) }
             query = build.query
+            state = build.state
             getRowId = checkNotNull(build.rowId) { "rowId has to be set in the table builder" }
             build.data?.let { setData(it) }
+            build.state?.let { setData(it.value) }
         }
 
         configuration.titleBuilder?.build(this)
@@ -160,6 +167,15 @@ class Table<T>(
         onDblClick(::onDblClick)
         onClick(::onClick)
 
+        state?.let { s ->
+            AnonymousEventListener(s.handle) {
+                setData(s.value)
+            }.also {
+                listeners += it
+                EventCentral.attach(it)
+            }
+        }
+
         resume()
     }
 
@@ -167,6 +183,7 @@ class Table<T>(
     fun resume() {
 
         val query = this.query
+        val state = this.state
 
         when {
             query != null && (configuration.runQueryOnResume || firstOnResume) -> {
@@ -182,7 +199,7 @@ class Table<T>(
             }
         }
 
-        if (!firstOnResume) {
+        if (! firstOnResume) {
             window.requestAnimationFrame {
                 contentElement.scrollTo(contentScrollLeft, contentScrollTop)
             }
@@ -235,7 +252,7 @@ class Table<T>(
         val target = event.target
 
         if (target is HTMLElement && target.getDatasetEntry(LEVEL_TOGGLE) != null) {
-            toggleMultiLevelRow(renderData[target.getDatasetEntry(ROW_INDEX)!!.toInt()])
+            toggleMultiLevelRow(renderData[target.getDatasetEntry(ROW_INDEX) !!.toInt()])
             return
         }
 
@@ -262,7 +279,7 @@ class Table<T>(
 
         lastKnownScrollPosition = contentElement.scrollTop.let { if (it < 0) 0.0 else it } // Safari may have negative scrollTop
 
-        if (!ticking) {
+        if (! ticking) {
             window.requestAnimationFrame {
                 onScroll(lastKnownScrollPosition)
                 ticking = false
@@ -308,7 +325,7 @@ class Table<T>(
      * By default, all top-level rows are closed.
      */
     fun buildMultiLevelState() {
-        if (!configuration.multiLevel) return
+        if (! configuration.multiLevel) return
         if (fullData.isEmpty()) return
 
         var previousLevel = 0
@@ -426,7 +443,7 @@ class Table<T>(
             htmlElement.dataset[ROW_INDEX] = index.toString()
         }
 
-        return element!!
+        return element !!
     }
 
     // -------------------------------------------------------------------------
@@ -456,7 +473,7 @@ class Table<T>(
                     row = row.nextElementSibling as HTMLTableRowElement?
                 }
 
-                if (!added) {
+                if (! added) {
                     tableBodyElement.insertBefore(it.htmlElement, tableBodyElement.lastElementChild)
                 }
             }
@@ -472,7 +489,7 @@ class Table<T>(
     fun remove(index: Int): Double {
         return renderData[index].let { row ->
             row.element?.htmlElement?.remove()
-            row.height!!
+            row.height !!
         }
     }
 
@@ -532,7 +549,7 @@ class Table<T>(
 
         return (start until end).sumOf { index ->
             renderData[index].let { state ->
-                state.height ?: state.element!!.htmlElement.firstElementChild!!.getBoundingClientRect().height.also {
+                state.height ?: state.element !!.htmlElement.firstElementChild !!.getBoundingClientRect().height.also {
                     state.height = it
                 }
             }
@@ -783,7 +800,7 @@ class Table<T>(
         // multi-level table needs special processing because of the hidden
         // rows, so check for that also
 
-        if (searchText == null && configuration.filterFun == null && !configuration.multiLevel) {
+        if (searchText == null && configuration.filterFun == null && ! configuration.multiLevel) {
             filteredData = fullData
             renderData = filteredData.toMutableList()
             return
@@ -793,7 +810,7 @@ class Table<T>(
 
         // when not multi-level, perform single filtering
 
-        if (!configuration.multiLevel) {
+        if (! configuration.multiLevel) {
             filteredData = fullData.filter { filterRow(it.data, lc) }
             renderData = filteredData.toMutableList()
             return
@@ -823,7 +840,7 @@ class Table<T>(
 
             val children = getChildren(fullData, index, row.level)
 
-            if (!match) match = (children.firstOrNull { filterRow(it.data, lc) } != null)
+            if (! match) match = (children.firstOrNull { filterRow(it.data, lc) } != null)
 
             if (match) {
                 filterResult += row
@@ -850,7 +867,7 @@ class Table<T>(
      */
     fun filterRow(row: T, text: String?): Boolean {
         if (configuration.filterFun != null) {
-            return configuration.filterFun!!(row)
+            return configuration.filterFun !!(row)
         } else {
             columns.forEach {
                 if (it.matches(row, text)) return true
@@ -930,7 +947,7 @@ class Table<T>(
 
             if (next.level > level) {
                 children += next
-                index++
+                index ++
             } else {
                 break
             }
@@ -944,11 +961,11 @@ class Table<T>(
     // -------------------------------------------------------------------------
 
     fun sort(ascending: Boolean, comparator: (T, T) -> Int) {
-        fullData = if (!configuration.multiLevel) {
+        fullData = if (! configuration.multiLevel) {
             if (ascending) {
                 fullData.sortedWith { a, b -> comparator(a.data, b.data) }
             } else {
-                fullData.sortedWith { a, b -> -comparator(a.data, b.data) }
+                fullData.sortedWith { a, b -> - comparator(a.data, b.data) }
             }
         } else {
             multiSort(fullData, ascending, comparator)
@@ -1004,7 +1021,7 @@ class Table<T>(
         val sortedTop = if (ascending) {
             top.sortedWith { a, b -> comparator(a.row.data, b.row.data) }
         } else {
-            top.sortedWith { a, b -> -comparator(a.row.data, b.row.data) }
+            top.sortedWith { a, b -> - comparator(a.row.data, b.row.data) }
         }
 
         val result = mutableListOf<TableRow<T>>()

@@ -134,7 +134,7 @@ class SelectBase<T>(
                     span(pl16) { text { browserStrings.noHits } }
                 }
                 // TODO move options out of config
-                config.options.isEmpty() -> {
+                config.options.isEmpty() && queryFun != null -> {
                     span(pl16) { text { browserStrings.typeMinimumCharacters } }
                 }
                 else -> Unit

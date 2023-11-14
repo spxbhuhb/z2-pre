@@ -10,7 +10,7 @@ import hu.simplexion.z2.browser.css.w400
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.browser.material.modal.modal
+import hu.simplexion.z2.browser.material.modal.inputModal
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.text.LocalizedText
 
@@ -27,7 +27,7 @@ internal fun roleModal(
     onOk: suspend (role: Role) -> Unit
 ) {
     localLaunch {
-        modal(w400) {
+        inputModal(w400) {
             title(modalTitle)
 
             grid(p24, gridGap24) {
