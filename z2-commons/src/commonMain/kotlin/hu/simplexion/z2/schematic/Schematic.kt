@@ -126,7 +126,8 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
 
         fun boolean(default: Boolean? = null) = BooleanSchemaField(default)
 
-        fun decimal(scale : Int = 2, default: Long? = null, min: Long? = null, max: Long? = null) = DecimalSchemaField(scale, default, min, max)
+        fun decimal(scale: Int = 2, precision: Int = 18, default: Long? = null, min: Long? = null, max: Long? = null) =
+            DecimalSchemaField(scale, precision, default, min, max)
 
         fun duration(default: Duration? = null) = DurationSchemaField(default)
 

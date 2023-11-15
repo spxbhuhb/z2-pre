@@ -13,6 +13,7 @@ import hu.simplexion.z2.schematic.schema.validation.validationStrings
 
 interface DecimalSchemaFieldDefault {
     val scale : Int
+    val precision : Int
     val shift : Double
     var min: Long?
     var max: Long?
@@ -38,6 +39,7 @@ interface DecimalSchemaFieldDefault {
 
 open class DecimalSchemaField(
     final override val scale : Int,
+    final override val precision: Int,
     override var definitionDefault: Long?,
     override var min: Long?,
     override var max: Long?
@@ -85,13 +87,14 @@ open class DecimalSchemaField(
     }
 
     fun nullable(): NullableDecimalSchemaField {
-        return NullableDecimalSchemaField(scale, definitionDefault, min, max)
+        return NullableDecimalSchemaField(scale, precision, definitionDefault, min, max)
     }
 
 }
 
 open class NullableDecimalSchemaField(
     final override val scale : Int,
+    final override val precision: Int,
     override var definitionDefault: Long?,
     override var min: Long?,
     override var max: Long?

@@ -49,12 +49,16 @@ open class SchematicUuidTable<T : Schematic<T>>(
         }
     }
 
-    fun get(uuid: UUID<T>): T =
+    operator fun get(uuid: UUID<T>): T =
         select { id eq uuid.jvm }
             .map {
                 it.toSchematic(this, newInstance())
             }
             .first()
+
+    operator fun plusAssign(schematic: T) {
+        insert(schematic)
+    }
 
     fun insert(schematic: T): UUID<T> {
         val uuid : UUID<T> = checkNotNull(
@@ -80,6 +84,10 @@ open class SchematicUuidTable<T : Schematic<T>>(
 
     fun update(uuid: UUID<T>, limit: Int? = null, body: SchematicUuidTable<T>.(UpdateStatement) -> Unit) {
         update({ id eq uuid.jvm }, limit, body)
+    }
+
+    operator fun minusAssign(uuid: UUID<T>) {
+        remove(uuid)
     }
 
     fun remove(uuid: UUID<T>) {

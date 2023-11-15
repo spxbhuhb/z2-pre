@@ -52,7 +52,11 @@ abstract class AbstractLocalizedFormats(
     // -------------------------------------------------------------------------
 
     override fun format(value: Long): String {
-        return value.toString().withSeparators(config.thousandSeparator)
+        return if (value < 0) {
+            "-" + abs(value).toString().withSeparators(config.thousandSeparator)
+        } else {
+            value.toString().withSeparators(config.thousandSeparator)
+        }
     }
 
     override fun toLong(value: String): Long {

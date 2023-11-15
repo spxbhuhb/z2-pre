@@ -8,6 +8,7 @@ import hu.simplexion.z2.localization.text.LocalizedText
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlin.math.abs
 
 fun setLocalizedFormats(locale: String) {
     localizedFormats = when (locale.lowercase()) {
@@ -38,8 +39,13 @@ inline val Int.localized: String
 inline val Long.localized: String
     get() = localizedFormats.format(this)
 
+// FIXME quick and dirty decimal formatting hack
 fun Long.toDecimalString(scale : Int) : String =
-    localizedFormats.format(this.toDouble() / AbstractLocalizedFormats.shifts[scale], scale)
+    if (this < 0) {
+        "-" + localizedFormats.format(abs(this).toDouble() / AbstractLocalizedFormats.shifts[scale], scale)
+    } else {
+        localizedFormats.format(this.toDouble() / AbstractLocalizedFormats.shifts[scale], scale)
+    }
 
 // ---- Double ----
 
