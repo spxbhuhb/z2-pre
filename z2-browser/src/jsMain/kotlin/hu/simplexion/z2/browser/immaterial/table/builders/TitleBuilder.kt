@@ -1,10 +1,14 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
 import hu.simplexion.z2.browser.browserStrings
-import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.css.alignSelfCenter
+import hu.simplexion.z2.browser.css.gridGap16
+import hu.simplexion.z2.browser.css.titleLarge
+import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.material.button.textButton
+import hu.simplexion.z2.commons.browser.CssClass
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
 

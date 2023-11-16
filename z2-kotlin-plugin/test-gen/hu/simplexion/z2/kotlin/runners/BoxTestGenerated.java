@@ -23,6 +23,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/css")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Css {
+        @Test
+        @TestMetadata("adhoc.kt")
+        public void testAdhoc() throws Exception {
+            runTest("testData/box/css/adhoc.kt");
+        }
+
+        @Test
+        public void testAllFilesPresentInCss() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/css"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+    }
+
+    @Nested
     @TestMetadata("testData/box/localization")
     @TestDataPath("$PROJECT_ROOT")
     public class Localization {

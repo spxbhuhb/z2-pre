@@ -17,12 +17,6 @@ import java.util.regex.Pattern;
 @TestDataPath("$PROJECT_ROOT")
 public class AdhocTestGenerated extends AbstractAdhocTest {
     @Test
-    @TestMetadata("adhoc.kt")
-    public void testAdhoc() throws Exception {
-        runTest("testData/adhoc/adhoc.kt");
-    }
-
-    @Test
     public void testAllFilesPresentInAdhoc() throws Exception {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/adhoc"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
     }

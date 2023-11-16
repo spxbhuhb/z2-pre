@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.material.modal
 
 import hu.simplexion.z2.browser.browserStrings
-import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.util.EditMode
+import hu.simplexion.z2.commons.browser.CssClass
 import hu.simplexion.z2.commons.util.localLaunch
 import hu.simplexion.z2.localization.text.LocalizedText
 

@@ -38,7 +38,7 @@ fun Z2.containerDemo() =
     }
 
 internal fun Z2.content(text: () -> String) =
-    div(labelMedium, "primary-text", textTransformUppercase) {
+    div(labelMedium, primaryText, textTransformUppercase) {
         style.height = 60.px
         text { text() }
     }

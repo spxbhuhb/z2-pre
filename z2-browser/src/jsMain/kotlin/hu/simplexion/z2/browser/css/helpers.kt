@@ -1,6 +1,7 @@
 package hu.simplexion.z2.browser.css
 
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.commons.browser.CssClass
 import kotlinx.dom.hasClass
 import org.w3c.dom.Element
 

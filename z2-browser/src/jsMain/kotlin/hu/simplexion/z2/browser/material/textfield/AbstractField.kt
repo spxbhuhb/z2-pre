@@ -8,6 +8,7 @@ import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.commons.browser.CssClass
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLInputElement
@@ -77,15 +78,13 @@ abstract class AbstractField<T>(
         gridTemplateColumns = "minmax(0,1fr)"
         gridTemplateRows = "$baseHeight min-content"
 
-        grid(
-            paddingLeft0
-        ) {
+        grid(pl0) {
             gridTemplateColumns = "min-content minmax(0, 1fr) min-content"
             gridTemplateRows = baseHeight
 
             self = this
 
-            label = div(positionAbsolute, paddingLeft14, bodySmall) {
+            label = div(positionAbsolute, pl14, bodySmall) {
                 htmlElement.style.top = 8.px
                 text { state.label }
             }
@@ -102,17 +101,17 @@ abstract class AbstractField<T>(
                         surfaceContainerHighest,
                         borderTopLeftRadiusExtraSmall,
                         borderTopRightRadiusExtraSmall,
-                        paddingTop2,
-                        paddingRight2,
-                        paddingBottom1,
+                        pt2,
+                        pr2,
+                        pb2,
                     )
                 }
 
                 FieldStyle.Transparent -> {
                     self.addCss(
-                        paddingTop2,
-                        paddingRight2,
-                        paddingBottom1,
+                        pt2,
+                        pr2,
+                        pb2,
                         borderBottomWidth1, borderBottomSolid
                     )
                     input.addCss(pt20)
@@ -120,9 +119,9 @@ abstract class AbstractField<T>(
 
                 FieldStyle.Outlined -> {
                     self.addCss(
-                        paddingTop2,
-                        paddingRight2,
-                        paddingBottom1,
+                        pt2,
+                        pr2,
+                        pb1,
                         borderWidth1, borderSolid, borderColorOutline,
                         borderRadiusExtraSmall
                     )
@@ -191,8 +190,8 @@ abstract class AbstractField<T>(
             borderNone,
             widthFull,
             heightFull,
-            paddingLeft14,
-            paddingRight14,
+            pl14,
+            pr14,
             alignSelfCenter,
             justifyContentFlexStart,
             backgroundTransparent,

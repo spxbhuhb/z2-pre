@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.html
 
-import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.css.displayGrid
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.commons.browser.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.*
 

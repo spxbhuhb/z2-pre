@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.html
 
-import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.commons.browser.CssClass
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.event.Z2EventListener
 import hu.simplexion.z2.localization.icon.LocalizedIcon

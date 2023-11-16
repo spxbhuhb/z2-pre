@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.material.datepicker
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.commons.browser.CssClass
 import hu.simplexion.z2.commons.util.hereAndNow
 import kotlinx.browser.document
 import kotlinx.datetime.*

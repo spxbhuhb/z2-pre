@@ -3,6 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.ir
 
+import hu.simplexion.z2.kotlin.ir.css.CssModuleTransform
+import hu.simplexion.z2.kotlin.ir.css.CssPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.ModuleTransform
 import hu.simplexion.z2.kotlin.ir.localization.export.ExportResources
@@ -25,6 +27,7 @@ internal class Z2GenerationExtension(
         localization(moduleFragment, pluginContext)
         schematic(moduleFragment, pluginContext)
         service(moduleFragment, pluginContext)
+        css(moduleFragment, pluginContext)
     }
 
     fun localization(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
@@ -59,6 +62,12 @@ internal class Z2GenerationExtension(
 
 //            debug("service") { moduleFragment.dump() }
 //            debug("service") { "====  END  ====".padEnd(80, '=') }
+        }
+    }
+
+    fun css(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
+        CssPluginContext(options, pluginContext).apply {
+            moduleFragment.accept(CssModuleTransform(this), null)
         }
     }
 }

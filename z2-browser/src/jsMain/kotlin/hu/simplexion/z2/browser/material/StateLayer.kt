@@ -2,6 +2,7 @@ package hu.simplexion.z2.browser.material
 
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.commons.browser.CssClass
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.dom.addClass
