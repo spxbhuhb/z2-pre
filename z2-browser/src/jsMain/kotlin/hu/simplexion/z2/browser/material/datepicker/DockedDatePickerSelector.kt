@@ -43,13 +43,13 @@ class DockedDatePickerSelector(
     }
 
     fun build() {
-        addClass(displayGrid, wMinContent, surfaceContainerHigh, elevationLevel3, shapeCornerLarge, p0, pb12, positionRelative)
+        addCss(displayGrid, wMinContent, surfaceContainerHigh, elevationLevel3, shapeCornerLarge, p0, pb12, positionRelative)
         style.width = 304.px
         style.height = 384.px
         dayView()
     }
 
-    fun Z2.headerContainer(vararg classes: String, builder: Z2Builder) =
+    fun Z2.headerContainer(vararg classes: CssClass, builder: Z2Builder) =
         grid(justifySelfCenter, widthFull, pt20, boxSizingBorderBox, pl12, pr12, *classes) {
             gridTemplateColumns = "1fr 1fr"
             gridTemplateRows = "24px"
@@ -77,9 +77,9 @@ class DockedDatePickerSelector(
     fun Z2.header(mode: Int) =
         headerContainer {
             if (mode == DAY_SELECT) {
-                addClass(pb30)
+                addCss(pb30)
             } else {
-                addClass(pb16, borderBottomOutlineVariant)
+                addCss(pb16, borderBottomOutlineVariant)
             }
 
             div(displayFlex, alignItemsCenter, pl12) {
@@ -128,7 +128,7 @@ class DockedDatePickerSelector(
             when (mode) {
                 DAY_SELECT -> onClick { monthSelectView() }
                 MONTH_SELECT -> onClick { dayView() }
-                YEAR_SELECT -> addClass(onSurfaceText, opacity38)
+                YEAR_SELECT -> addCss(onSurfaceText, opacity38)
             }
         }
 
@@ -142,7 +142,7 @@ class DockedDatePickerSelector(
             }
             when (mode) {
                 DAY_SELECT -> onClick { yearSelectView() }
-                MONTH_SELECT -> addClass(onSurfaceText, opacity38)
+                MONTH_SELECT -> addCss(onSurfaceText, opacity38)
                 YEAR_SELECT -> onClick { dayView() }
             }
         }

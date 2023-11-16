@@ -28,7 +28,7 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
 
     fun <T> Z2.actionRender(row: T, actions: List<RowActionBuilder<T>>) {
 
-        addClass(
+        addCss(
             displayGrid, gridAutoColumnsMinContent, gridAutoFlowColumn, gridGap16, labelMedium
         )
 

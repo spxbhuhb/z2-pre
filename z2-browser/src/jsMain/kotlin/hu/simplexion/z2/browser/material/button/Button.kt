@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.material.button
 
+import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.css.labelLarge
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.onClick
@@ -10,7 +11,7 @@ import org.w3c.dom.events.Event
 
 open class Button(
     parent : Z2? = null,
-    classes : Array<out String>,
+    classes : Array<out CssClass>,
     onClickFun: (event : Event) -> Unit,
     builder: Z2.() -> Unit
 ) : Z2(
@@ -31,7 +32,7 @@ open class Button(
 
     init {
 
-        addClass(labelLarge)
+        addCss(labelLarge)
 
         onClick {
             if (isDisabled) return@onClick

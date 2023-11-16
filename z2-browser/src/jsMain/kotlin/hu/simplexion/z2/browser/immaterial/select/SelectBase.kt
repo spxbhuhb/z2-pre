@@ -116,7 +116,7 @@ class SelectBase<T>(
         Z2 {
             style.position = "fixed"
 
-            addClass(
+            addCss(
                 surfaceContainer, widthFull, pt8, pb8,
                 borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall,
                 borderColorPrimary, borderSolid, borderWidth1,
@@ -151,7 +151,7 @@ class SelectBase<T>(
             if (spaceBelow < 300 && spaceBelow < spaceAbove) {
                 style.bottom = (wh - br.top).px
                 style.maxHeight = (spaceAbove - 16).px
-                addClass(borderTopLeftRadiusExtraSmall, borderTopRightRadiusExtraSmall)
+                addCss(borderTopLeftRadiusExtraSmall, borderTopRightRadiusExtraSmall)
             } else {
                 style.top = (br.top + if (config.style == FieldStyle.Chip) 32 else 56).px
                 style.maxHeight = (spaceBelow - 16).px

@@ -33,7 +33,7 @@ class FileSelect(
 
     init {
         if (config.renderFun == null) {
-            addClass(cursorPointer, heightMinContent)
+            addCss(cursorPointer, heightMinContent)
             surfaceContainerHigh {
                 + browserStrings.dropAttachmentHere
             }

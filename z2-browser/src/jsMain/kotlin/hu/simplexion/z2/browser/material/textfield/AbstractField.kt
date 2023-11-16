@@ -70,7 +70,7 @@ abstract class AbstractField<T>(
         }
 
     override fun main(): AbstractField<T> {
-        addClass(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
+        addCss(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
 
         val baseHeight = if (config.style == FieldStyle.Chip) 32.px else 56.px
 
@@ -90,13 +90,13 @@ abstract class AbstractField<T>(
                 text { state.label }
             }
 
-            leading = div(alignSelfCenter) { if (config.style == FieldStyle.Transparent) addClass(pt16) }
+            leading = div(alignSelfCenter) { if (config.style == FieldStyle.Transparent) addCss(pt16) }
             content = div(alignSelfCenter) { input() }
-            trailing = div(pr12, alignSelfCenter) { if (config.style == FieldStyle.Transparent) addClass(pt16) }
+            trailing = div(pr12, alignSelfCenter) { if (config.style == FieldStyle.Transparent) addCss(pt16) }
 
             when (config.style) {
                 FieldStyle.Filled -> {
-                    self.addClass(
+                    self.addCss(
                         borderBottomWidth1, borderBottomSolid,
                         borderColorOutline,
                         surfaceContainerHighest,
@@ -109,17 +109,17 @@ abstract class AbstractField<T>(
                 }
 
                 FieldStyle.Transparent -> {
-                    self.addClass(
+                    self.addCss(
                         paddingTop2,
                         paddingRight2,
                         paddingBottom1,
                         borderBottomWidth1, borderBottomSolid
                     )
-                    input.addClass(pt20)
+                    input.addCss(pt20)
                 }
 
                 FieldStyle.Outlined -> {
-                    self.addClass(
+                    self.addCss(
                         paddingTop2,
                         paddingRight2,
                         paddingBottom1,
@@ -129,12 +129,12 @@ abstract class AbstractField<T>(
                 }
 
                 FieldStyle.Chip -> {
-                    self.addClass(
+                    self.addCss(
                         borderWidth1, borderSolid, borderColorOutline,
                         borderRadius8,
                         labelLarge
                     )
-                    label.addClass(displayNone)
+                    label.addCss(displayNone)
                 }
             }
 
@@ -152,13 +152,13 @@ abstract class AbstractField<T>(
                     FieldStyle.Outlined -> {
                         height = baseHeight
                         borderWidth = 2.px
-                        addClass(borderRadiusExtraSmall, pointerEventsNone)
+                        addCss(borderRadiusExtraSmall, pointerEventsNone)
                     }
 
                     FieldStyle.Chip -> {
                         height = baseHeight
                         borderWidth = 2.px
-                        addClass(borderRadius8, pointerEventsNone)
+                        addCss(borderRadius8, pointerEventsNone)
                     }
 
                     else -> {
@@ -202,25 +202,25 @@ abstract class AbstractField<T>(
             input = this
 
             if (config.style == FieldStyle.Chip) {
-                addClass(labelLarge)
+                input.addCss(labelLarge)
                 inputElement.style.lineHeight = 24.px
             } else {
-                addClass(bodyLarge)
+                input.addCss(bodyLarge)
                 inputElement.style.lineHeight = 40.px
             }
 
             onFocus {
                 if (! hasFocus) {
-                    animation.removeClass(displayNone)
-                    animation.addClass("scale-up-width", if (state.error) borderColorError else borderColorPrimary)
+                    animation.removeCss(displayNone)
+                    animation.addCss(CssClass("scale-up-width"), if (state.error) borderColorError else borderColorPrimary)
                 }
                 hasFocus = true
                 update()
             }
             onBlur {
                 hasFocus = false
-                animation.addClass(displayNone)
-                animation.removeClass("scale-up-width", borderColorError, borderColorPrimary)
+                animation.addCss(displayNone)
+                animation.removeCss(CssClass("scale-up-width"), borderColorError, borderColorPrimary)
                 update()
             }
             onKeyDown { event ->
@@ -258,12 +258,12 @@ abstract class AbstractField<T>(
 
     open fun update() {
         if (inputElement.value.isEmpty() && ! hasFocus) {
-            label.addClass(displayNone)
-            if (config.style != FieldStyle.Transparent) input.removeClass(pt20)
+            label.addCss(displayNone)
+            if (config.style != FieldStyle.Transparent) input.removeCss(pt20)
         } else {
             if (config.style != FieldStyle.Chip) {
-                label.removeClass(displayNone)
-                if (config.style != FieldStyle.Transparent) input.addClass(pt20)
+                label.removeCss(displayNone)
+                if (config.style != FieldStyle.Transparent) input.addCss(pt20)
             }
         }
 
@@ -281,14 +281,14 @@ abstract class AbstractField<T>(
             label.htmlElement.style.left = 0.px
         } else {
             label.htmlElement.style.left = 36.px
-            leading.icon(li).addClass(pl12, onSurfaceVariantText)
+            leading.icon(li).addCss(pl12, onSurfaceVariantText)
         }
 
         if (config.style == FieldStyle.Filled) {
             if (inputElement.value.isEmpty() && ! hasFocus) {
-                input.removeClass(pt20)
+                input.removeCss(pt20)
             } else {
-                input.addClass(pt20)
+                input.addCss(pt20)
             }
         }
 
@@ -296,29 +296,29 @@ abstract class AbstractField<T>(
         support.clear()
 
         if (state.supportEnabled) {
-            support.removeClass(displayNone)
+            support.removeCss(displayNone)
         } else {
-            support.addClass(displayNone)
+            support.addCss(displayNone)
         }
 
         if (state.touched && inError) {
-            label.replaceClass(primaryText, onSurfaceVariantText, errorText)
-            self.replaceClass(borderColorOutline, borderColorPrimary, borderColorError)
-            animation.replaceClass(borderColorPrimary, borderColorError)
+            label.replaceCss(primaryText, onSurfaceVariantText, errorText)
+            self.replaceCss(borderColorOutline, borderColorPrimary, borderColorError)
+            animation.replaceCss(borderColorPrimary, borderColorError)
             inputElement.addClass("input-error")
             support.span(errorText) { + (state.errorText ?: state.supportText) }
-            trailing.icon(config.errorIcon, fill = 1).addClass(errorText)
+            trailing.icon(config.errorIcon, fill = 1).addCss(errorText)
         } else {
-            label.replaceClass(errorText, primaryText, onSurfaceVariantText, if (hasFocus) primaryText else onSurfaceVariantText)
+            label.replaceCss(errorText, primaryText, onSurfaceVariantText, if (hasFocus) primaryText else onSurfaceVariantText)
             if (hasFocus) {
-                self.replaceClass(borderColorError, borderColorOutline, borderColorPrimary)
+                self.replaceCss(borderColorError, borderColorOutline, borderColorPrimary)
             } else {
-                self.replaceClass(borderColorError, borderColorPrimary, borderColorOutline)
+                self.replaceCss(borderColorError, borderColorPrimary, borderColorOutline)
             }
-            animation.replaceClass(borderColorError, borderColorPrimary)
+            animation.replaceCss(borderColorError, borderColorPrimary)
             inputElement.removeClass("input-error")
             support.span(onSurfaceVariantText) { + state.supportText }
-            config.trailingIcon?.let { trailing.icon(it).addClass(onSurfaceVariantText) }
+            config.trailingIcon?.let { trailing.icon(it).addCss(onSurfaceVariantText) }
         }
     }
 

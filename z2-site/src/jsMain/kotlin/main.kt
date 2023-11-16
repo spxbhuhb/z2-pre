@@ -133,7 +133,7 @@ fun Z2.defaultLayout(router: Router<Z2>, nav: Z2Builder, content: Z2Builder) {
 
             div(displayFlex, alignItemsCenter, pl24) {
                 if (router != mainRouter) {
-                    addClass(pt8)
+                    addCss(pt8)
                     outlinedIconButton(browserIcons.back, browserStrings.back) { router.up() }
                     div(pl8) { text { router.parent?.label } }
                 }

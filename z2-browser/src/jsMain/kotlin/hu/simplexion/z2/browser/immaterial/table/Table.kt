@@ -4,6 +4,9 @@
 
 package hu.simplexion.z2.browser.immaterial.table
 
+import hu.simplexion.z2.browser.css.borderNone
+import hu.simplexion.z2.browser.css.css
+import hu.simplexion.z2.browser.css.p0
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.immaterial.schematic.State
@@ -29,7 +32,7 @@ class Table<T>(
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
-    arrayOf("table-outer-container"),
+    arrayOf("table-outer-container".css),
     null
 ) {
 
@@ -139,11 +142,11 @@ class Table<T>(
 
         configuration.titleBuilder?.build(this)
 
-        div("table-content-container") {
+        div("table-content-container".css) {
             contentContainer = this
             contentElement = this.htmlElement
 
-            tableHtml("table") {
+            tableHtml("table".css) {
                 tableElement = this.htmlElement
                 table = this
                 style.cssText = inlineCss()
@@ -411,7 +414,7 @@ class Table<T>(
     fun addPlaceHolderRow() {
         tableBody.tr {
             repeat(columns.size) {
-                td("border-0", "p0") { }
+                td(borderNone, p0) { }
             }
         }
     }
@@ -434,7 +437,7 @@ class Table<T>(
             emptyArray()
         ) {
             for (column in columns) {
-                td("table-cell", heightClass) {
+                td("table-cell".css, heightClass.css) {
                     column.render(this, index, row.data)
                 }
             }

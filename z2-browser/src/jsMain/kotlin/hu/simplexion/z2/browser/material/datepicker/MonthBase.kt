@@ -14,7 +14,7 @@ class MonthBase(
     val today : LocalDate = hereAndNow().date,
     dense : Boolean,
     markedDays : List<LocalDate> = emptyList(),
-    dayLetterPadding : String = pb16,
+    dayLetterPadding : CssClass = pb16,
     onSelected: (date : LocalDate) -> Unit
 ) : Z2(
     parent,

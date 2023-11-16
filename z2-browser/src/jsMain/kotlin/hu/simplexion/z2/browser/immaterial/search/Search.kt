@@ -47,7 +47,7 @@ class Search<T>(
             search = div(displayGrid, h46, pt0, pb0, pl16, pr16) {
                 gridTemplateColumns = "min-content minmax(0,1fr) min-content"
 
-                icon(browserIcons.search).apply { addClass(alignSelfCenter, onSurfaceVariantText)}
+                icon(browserIcons.search).apply { addCss(alignSelfCenter, onSurfaceVariantText) }
 
                 input(pl16, pr16, outlineNone, h46, bodyMedium, backgroundTransparent, borderNone) {
                     input = this.htmlElement as HTMLInputElement
@@ -70,7 +70,7 @@ class Search<T>(
                 }
 
                 icon(browserIcons.cancel).apply {
-                    addClass(alignSelfCenter, onSurfaceVariantText)
+                    addCss(alignSelfCenter, onSurfaceVariantText)
                     onClick {
                         input.value = ""
                         runQuery("")
@@ -95,19 +95,19 @@ class Search<T>(
         when {
             running -> {
                 feedback.clear()
-                feedback.removeClass(displayNone)
-                feedback.addClass(displayFlex)
+                feedback.replaceCss(displayNone)
+                feedback.addCss(displayFlex)
                 feedback.apply { text { browserStrings.searchInProgress } }
             }
             noItems -> {
                 feedback.clear()
-                feedback.removeClass(displayNone)
-                feedback.addClass(displayFlex)
+                feedback.replaceCss(displayNone)
+                feedback.addCss(displayFlex)
                 feedback.apply { text { browserStrings.noHits }}
             }
             else -> {
-                feedback.addClass(displayNone)
-                feedback.removeClass(displayFlex)
+                feedback.addCss(displayNone)
+                feedback.replaceCss(displayFlex)
             }
         }
 

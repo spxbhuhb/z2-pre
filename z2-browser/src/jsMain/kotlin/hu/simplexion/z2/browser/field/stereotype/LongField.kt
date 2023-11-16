@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.field.stereotype
 
+import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.textAlignEnd
 import hu.simplexion.z2.browser.css.w304
 import hu.simplexion.z2.browser.field.FieldState
@@ -8,7 +9,6 @@ import hu.simplexion.z2.browser.html.onBlur
 import hu.simplexion.z2.browser.html.onFocus
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
-import kotlinx.dom.addClass
 
 class LongField(
     parent: Z2,
@@ -32,8 +32,8 @@ class LongField(
             }
         }
 
-        addClass(w304)
-        inputElement.addClass(textAlignEnd)
+        addCss(w304)
+        inputElement.addCss(textAlignEnd)
         inputElement.type = "number"
         return this
     }

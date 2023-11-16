@@ -1,6 +1,8 @@
 package hu.simplexion.z2.browser.material.snackbar
 
 import hu.simplexion.z2.browser.browserIcons
+import hu.simplexion.z2.browser.css.bodyMedium
+import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.button.textButton
@@ -20,13 +22,13 @@ class SnackbarBase(
 ) : Z2(
     null,
     document.createElement("div") as HTMLElement,
-    arrayOf("snackbar"),
+    arrayOf("snackbar".css),
     null
 ) {
 
     init {
 
-        div("body-medium") { text { message } }
+        div(bodyMedium) { text { message } }
 
         action?.let {
             label?.let { textButton(label, action) }

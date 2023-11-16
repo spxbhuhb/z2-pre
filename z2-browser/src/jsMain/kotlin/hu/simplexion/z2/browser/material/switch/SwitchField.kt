@@ -48,17 +48,17 @@ class SwitchField(
     }
 
     fun Z2.switch() {
-        div("switch-track", selectNone) {
+        div("switch-track".css, selectNone) {
             val selected = (valueOrNull == true)
-            val statusClass = if (selected) "selected" else "unselected"
-            addClass(statusClass)
+            val statusClass = (if (selected) "selected" else "unselected").css
+            addCss(statusClass)
 
             if ((valueOrNull == true && config.selectedIcon) || (! selected && config.unselectedIcon)) {
-                div("switch-thumb-icon", statusClass) {
+                div("switch-thumb-icon".css, statusClass) {
                     icon(if (selected) browserIcons.switchSelected else browserIcons.switchUnselected, size = 16)
                 }
             } else {
-                div("switch-thumb", statusClass) {}
+                div("switch-thumb".css, statusClass) {}
             }
 
             onClick {

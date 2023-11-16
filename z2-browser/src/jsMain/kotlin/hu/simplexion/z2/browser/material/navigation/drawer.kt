@@ -1,6 +1,7 @@
 package hu.simplexion.z2.browser.material.navigation
 
 import hu.simplexion.z2.browser.css.alignSelfCenter
+import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.css.labelLarge
 import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
 import hu.simplexion.z2.browser.html.*
@@ -12,7 +13,7 @@ fun Z2.navigationDrawer(vararg targets : RoutingTarget<Z2>, scrollAutoHide : Boo
     navigationDrawer(targets.toList(), scrollAutoHide)
 
 fun Z2.navigationDrawer(targets: Collection<RoutingTarget<Z2>>, scrollAutoHide : Boolean = true) =
-    div("navigation-drawer-container") {
+    div("navigation-drawer-container".css) {
         if (scrollAutoHide) addClass("scroll-auto-hide")
         for (target in targets) {
             if (!target.visible() || (target.icon == null && target.label == null)) continue
@@ -21,8 +22,8 @@ fun Z2.navigationDrawer(targets: Collection<RoutingTarget<Z2>>, scrollAutoHide :
     }
 
 fun Z2.navigationDrawer(scrollAutoHide : Boolean = true, builder: Z2.() -> Unit) =
-    div("navigation-drawer-container") {
-        if (scrollAutoHide) addClass("scroll-auto-hide")
+    div("navigation-drawer-container".css) {
+        if (scrollAutoHide) addCss("scroll-auto-hide".css)
         builder()
     }
 
@@ -32,7 +33,7 @@ fun Z2.drawerItem(target : RoutingTarget<Z2>) {
 
 fun Z2.drawerItem(item: NavigationItem, onClick: (() -> Unit)? = null) =
 
-    div("navigation-drawer-item") {
+    div("navigation-drawer-item".css) {
         gridTemplateColumns = if (item.badgeLabel != null) {
             "min-content 1fr 24px"
         } else {
@@ -40,18 +41,18 @@ fun Z2.drawerItem(item: NavigationItem, onClick: (() -> Unit)? = null) =
         }
 
         item.icon?.let {
-            div("navigation-drawer-icon") {
-                icon(it, weight = 300, cssClass = "navigation-rail-icon")
+            div("navigation-drawer-icon".css) {
+                icon(it, weight = 300, cssClass = "navigation-rail-icon".css)
             }
         }
 
-        div("navigation-drawer-label", labelLarge, alignSelfCenter, whiteSpaceNoWrap) {
+        div("navigation-drawer-label".css, labelLarge, alignSelfCenter, whiteSpaceNoWrap) {
             text { item.label?.localeCapitalized }
             if (item.icon == null) gridColumn = "1/span2"
         }
 
         if (item.badgeLabel != null) {
-            div("navigation-drawer-badge", alignSelfCenter) {
+            div("navigation-drawer-badge".css, alignSelfCenter) {
                 text { item.badgeLabel }
             }
         }

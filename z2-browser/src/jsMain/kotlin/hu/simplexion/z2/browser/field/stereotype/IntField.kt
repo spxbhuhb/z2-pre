@@ -1,11 +1,11 @@
 package hu.simplexion.z2.browser.field.stereotype
 
+import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.textAlignEnd
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.textfield.AbstractField
 import hu.simplexion.z2.browser.material.textfield.FieldConfig
-import kotlinx.dom.addClass
 
 class IntField(
     parent: Z2,
@@ -16,7 +16,7 @@ class IntField(
 ) {
     override fun main(): IntField {
         super.main()
-        inputElement.addClass(textAlignEnd)
+        inputElement.addCss(textAlignEnd)
         return this
     }
 }

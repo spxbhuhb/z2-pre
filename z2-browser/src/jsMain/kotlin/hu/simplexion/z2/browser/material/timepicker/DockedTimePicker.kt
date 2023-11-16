@@ -40,15 +40,15 @@ class DockedTimePicker(
 
     override fun main(): DockedTimePicker {
 
-        addClass(minWidth140, positionRelative)
+        addCss(minWidth140, positionRelative)
 
         textField.input.onFocus {
             selector.buildContent()
-            selector.removeClass(displayNone)
+            selector.removeCss(displayNone)
         }
 
         textField.input.onBlur {
-            selector.addClass(displayNone)
+            selector.addCss(displayNone)
         }
 
         return this

@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.browser.material.popup
 
+import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.onFocusOut
 import kotlinx.browser.document
@@ -17,7 +18,7 @@ open class PopupBase(
 ) : Z2(
     null,
     document.createElement("div") as HTMLElement,
-    arrayOf("popup"),
+    arrayOf("popup".css),
     builder
 ) {
 

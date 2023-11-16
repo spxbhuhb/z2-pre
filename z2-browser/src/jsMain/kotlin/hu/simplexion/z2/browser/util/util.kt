@@ -17,7 +17,7 @@ var uniqueNodeId = 0
 
 fun launchBlocking(func: suspend () -> Unit) {
     val overlay = Z2().also {
-        it.addClass(widthFull, heightFull, surface, opacity38)
+        it.addCss(widthFull, heightFull, surface, opacity38)
         it.zIndex = 100
         it.style.position = "fixed"
         it.style.top = "0"

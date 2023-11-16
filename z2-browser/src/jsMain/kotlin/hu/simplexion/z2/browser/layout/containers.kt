@@ -7,32 +7,32 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.gridTemplateRows
 import hu.simplexion.z2.localization.text.LocalizedText
 
-fun Z2.surfaceContainerLowest(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
-    container(classes, "surface-container-lowest", scroll, fullHeight, builder)
+fun Z2.surfaceContainerLowest(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, surfaceContainerLowest, scroll, fullHeight, builder)
 
-fun Z2.surfaceContainerLow(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
-    container(classes, "surface-container-low", scroll, fullHeight, builder)
+fun Z2.surfaceContainerLow(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, surfaceContainerLow, scroll, fullHeight, builder)
 
-fun Z2.surfaceContainer(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
-    container(classes, "surface-container", scroll, fullHeight, builder)
+fun Z2.surfaceContainer(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, surfaceContainer, scroll, fullHeight, builder)
 
-fun Z2.surfaceContainerHigh(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
-    container(classes, "surface-container-high", scroll, fullHeight, builder)
+fun Z2.surfaceContainerHigh(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+    container(classes, surfaceContainerHigh, scroll, fullHeight, builder)
 
-fun Z2.surfaceContainerHighest(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+fun Z2.surfaceContainerHighest(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, surfaceContainerHighest, scroll, fullHeight, builder)
 
-fun Z2.container(classes: Array<out String>, type: String?, scroll: Boolean, fullHeight: Boolean, builder: Z2.() -> Unit) =
+fun Z2.container(classes: Array<out CssClass>, type: CssClass?, scroll: Boolean, fullHeight: Boolean, builder: Z2.() -> Unit) =
     div(boxSizingBorderBox, borderRadius16, p16) {
-        if (type != null) addClass(type)
-        if (classes.isNotEmpty()) addClass(*classes)
-        if (scroll) addClass(overflowYAuto)
-        if (fullHeight) addClass(heightFull)
+        if (type != null) addCss(type)
+        if (classes.isNotEmpty()) addCss(*classes)
+        if (scroll) addCss(overflowYAuto)
+        if (fullHeight) addCss(heightFull)
         builder()
     }
 
 // TODO clean up the container mess
-fun Z2.container(vararg classes: String, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
+fun Z2.container(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =
     container(classes, null, scroll, fullHeight, builder)
 
 fun Z2.scrolledBoxWithLabel(label: LocalizedText, builder: Z2Builder) =

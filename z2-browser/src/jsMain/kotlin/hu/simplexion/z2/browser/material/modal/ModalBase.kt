@@ -34,7 +34,7 @@ open class ModalBase<T : Any?>(
 
     override fun main() : ModalBase<T> {
         if (defaultModalGrid) {
-            addClass(displayGrid)
+            addCss(displayGrid)
             gridTemplateColumns = "1fr"
             gridTemplateRows = "min-content 1fr min-content"
         }

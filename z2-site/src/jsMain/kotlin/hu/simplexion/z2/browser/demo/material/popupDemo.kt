@@ -25,7 +25,7 @@ fun Z2.popupDemo() =
                     it.preventDefault()
                     it.stopPropagation() // this is necessary for buttons
                 }.let {
-                    addClass("position-relative", "popup-parent")
+                    addCss("position-relative", "popup-parent")
                     popup = popup { filledCard { text { strings.loremShort } } }
                 }
             }
@@ -35,7 +35,7 @@ fun Z2.popupDemo() =
                 actionIcon(browserIcons.settings) {
                     popup?.toggle()
                 }.apply {
-                    addClass("position-relative", "popup-parent")
+                    addCss("position-relative", "popup-parent")
                     popup = popup { filledCard { text { strings.loremShort } } }
                 }
             }

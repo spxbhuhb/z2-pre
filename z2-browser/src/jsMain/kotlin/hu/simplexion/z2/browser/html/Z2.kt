@@ -1,5 +1,8 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.browser.css.CssClass
+import hu.simplexion.z2.browser.css.addCss
+import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.commons.event.EventCentral
 import hu.simplexion.z2.commons.event.Z2EventListener
@@ -14,15 +17,17 @@ import org.w3c.dom.HTMLElement
 open class Z2(
     val parent: Z2? = null,
     val htmlElement: HTMLElement = document.createElement("div") as HTMLElement,
-    classes: Array<out String> = emptyArray(),
+    classes: Array<out CssClass>? = null,
     val builder: (Z2.() -> Unit)? = null,
 ) {
     val style
         get() = htmlElement.style
 
-    var zIndex : Int
+    var zIndex: Int
         get() = style.zIndex.toInt()
-        set(value) { style.zIndex = value.toString() }
+        set(value) {
+            style.zIndex = value.toString()
+        }
 
     /**
      * Set `htmlElement.tabIndex`
@@ -33,9 +38,11 @@ open class Z2(
      * N     before m > N but after 0
      * ```
      */
-    var tabIndex : Int
+    var tabIndex: Int
         get() = htmlElement.tabIndex
-        set(value) { htmlElement.tabIndex = value }
+        set(value) {
+            htmlElement.tabIndex = value
+        }
 
     val children = mutableListOf<Z2>()
 
@@ -44,7 +51,7 @@ open class Z2(
     init {
         // better do this directly here for performance
         // as this is a new element, there shouldn't be any classes
-        htmlElement.className = classes.joinToString(" ")
+        classes?.let { htmlElement.className = it.joinToString(" ") { c -> c.name } }
         builder?.let { this.it() }
         parent?.let {
             it.htmlElement.append(this.htmlElement)
@@ -52,7 +59,7 @@ open class Z2(
         }
     }
 
-    open fun main() : Z2 {
+    open fun main(): Z2 {
         return this
     }
 
@@ -71,14 +78,35 @@ open class Z2(
         return this
     }
 
+    fun addCss(vararg classes: CssClass): Z2 {
+        htmlElement.addCss(*classes)
+        return this
+    }
+
+    fun addCss(classes: Iterable<CssClass>): Z2 {
+        htmlElement.addCss(classes)
+        return this
+    }
+
     fun removeClass(vararg classes: String): Z2 {
         htmlElement.removeClass(*classes)
         return this
     }
 
-    fun replaceClass(vararg classes : String): Z2 {
+    fun removeCss(vararg classes: CssClass): Z2 {
+        htmlElement.removeCss(*classes)
+        return this
+    }
+
+    fun replaceClass(vararg classes: String): Z2 {
         htmlElement.removeClass(*classes)
         if (classes.isNotEmpty()) htmlElement.addClass(classes.last())
+        return this
+    }
+
+    fun replaceCss(vararg classes: CssClass): Z2 {
+        htmlElement.removeCss(*classes)
+        if (classes.isNotEmpty()) htmlElement.addCss(classes.last())
         return this
     }
 
@@ -128,6 +156,14 @@ open class Z2(
 
     operator fun LocalizedIcon.unaryPlus() {
         icon(this@unaryPlus)
+    }
+
+    infix fun Z2.gridRow(value : String) {
+        gridColumn = value
+    }
+
+    infix fun Z2.gridColumn(value : String) {
+        gridColumn = value
     }
 
 }

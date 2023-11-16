@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.material.datepicker
 
+import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.css.pb16
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.html.Z2
@@ -33,7 +34,7 @@ fun Z2.month(
     month: Month,
     dense : Boolean = true,
     markedDays : List<LocalDate> = emptyList(),
-    dayLetterPadding : String = pb16,
+    dayLetterPadding : CssClass = pb16,
     onSelected: (date : LocalDate) -> Unit
 ) =
     MonthBase(this, year, month, dense = dense, dayLetterPadding = dayLetterPadding, markedDays = markedDays, onSelected = onSelected)

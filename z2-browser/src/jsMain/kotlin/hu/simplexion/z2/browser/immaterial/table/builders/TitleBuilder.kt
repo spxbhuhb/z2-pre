@@ -1,10 +1,7 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
 import hu.simplexion.z2.browser.browserStrings
-import hu.simplexion.z2.browser.css.alignSelfCenter
-import hu.simplexion.z2.browser.css.gridGap16
-import hu.simplexion.z2.browser.css.titleLarge
-import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
+import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.material.button.textButton
@@ -15,7 +12,7 @@ class TitleBuilder<T> {
 
     var text: LocalizedText = browserStrings._empty
 
-    var textClasses = emptyArray<String>()
+    var textClasses = emptyArray<CssClass>()
 
     val actions = mutableListOf<TableActionBuilder<T>>()
 

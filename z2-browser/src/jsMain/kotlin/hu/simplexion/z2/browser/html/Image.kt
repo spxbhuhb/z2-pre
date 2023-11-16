@@ -1,11 +1,12 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.browser.css.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
 
 class Image(
    parent : Z2? = null,
-   classes : Array<out String>,
+   classes : Array<out CssClass>,
    builder: Image.() -> Unit
 ) : Z2(
    parent,

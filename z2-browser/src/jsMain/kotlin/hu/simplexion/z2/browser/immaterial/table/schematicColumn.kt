@@ -52,7 +52,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 field as DecimalSchemaFieldDefault
                 label = schematicLabel
                 render = { schematic ->
-                    addClass(justifyContentFlexEnd, pr12)
+                    addCss(justifyContentFlexEnd, pr12)
                     text { field.decimalValue(schematic)?.toDecimalString(field.scale) }
                 }
                 comparator = { a, b -> compare(field.decimalValue(a), field.decimalValue(b)) }
@@ -95,7 +95,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
             column {
                 label = schematicLabel
                 render = { schematic ->
-                    addClass(justifyContentFlexEnd, pr12)
+                    addCss(justifyContentFlexEnd, pr12)
                     text { field.intValue(schematic)?.localized }
                 }
                 comparator = { a, b -> compare(field.intValue(a), field.intValue(b)) }
@@ -128,7 +128,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
             column {
                 label = schematicLabel
                 render = { schematic ->
-                    addClass(justifyContentFlexEnd, pr12)
+                    addCss(justifyContentFlexEnd, pr12)
                     text { field.longValue(schematic)?.localized }
                 }
                 comparator = { a, b -> compare(field.longValue(a), field.longValue(b)) }

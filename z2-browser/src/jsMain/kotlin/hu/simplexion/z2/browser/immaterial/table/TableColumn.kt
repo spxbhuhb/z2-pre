@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.browser.immaterial.table
 
+import hu.simplexion.z2.browser.css.CssClass
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.labelMedium
 import hu.simplexion.z2.browser.css.selectNone
@@ -49,7 +50,7 @@ open class TableColumn<T>(
             if (configuration.fixHeaderHeight) addClass("table-header-cell-fix-height")
             labelBuilder()
             sortSign = sortSign()
-            span("table-resize-handle") {
+            span(CssClass("table-resize-handle")) {
                 onMouseDown(::onResizeMouseDown)
             }
             onClick(::onClick)
@@ -57,7 +58,7 @@ open class TableColumn<T>(
 
     fun Z2.sortSign() =
         div {
-            div("table-sort-sign") { }
+            div(CssClass("table-sort-sign")) { }
         }
 
     /**
@@ -88,7 +89,7 @@ open class TableColumn<T>(
         sort()
 
         table.columns.forEach {
-            it.sortSign.addClass(displayNone)
+            it.sortSign.addCss(displayNone)
         }
 
         sortSign.removeClass("ascending", "descending")
@@ -99,7 +100,7 @@ open class TableColumn<T>(
             sortSign.addClass("descending")
         }
 
-        sortSign.removeClass(displayNone)
+        sortSign.removeCss(displayNone)
 
         table.filter()
         table.render()
@@ -117,7 +118,7 @@ open class TableColumn<T>(
         }
 
         element.addClass("table-being-resized")
-        table.addClass(selectNone)
+        table.addCss(selectNone)
 
         window.addEventListener("mouseup", mouseUpWrapper)
         window.addEventListener("mousemove", mouseMoveWrapper)
@@ -136,7 +137,7 @@ open class TableColumn<T>(
         }
 
         element.removeClass("table-being-resized")
-        table.removeClass(selectNone)
+        table.removeCss(selectNone)
 
         window.removeEventListener("mouseup", mouseUpWrapper)
         window.removeEventListener("mousemove", mouseMoveWrapper)

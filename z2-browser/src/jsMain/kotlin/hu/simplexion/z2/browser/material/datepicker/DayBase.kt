@@ -24,14 +24,14 @@ class DayBase(
     val stateLayer = div(displayNone, primary, stateLayerOpacityHover, positionAbsolute, widthFull, heightFull) {  }
 
     init {
-        if (dense) addClass(h32, w32, borderRadius16) else addClass(h40, w40, borderRadius20)
+        if (dense) addCss(h32, w32, borderRadius16) else addCss(h40, w40, borderRadius20)
 
         if (marked) {
-            addClass(primary, onPrimaryText)
+            addCss(primary, onPrimaryText)
         } else {
-            addClass(onSurfaceText)
-            if (otherMonth) addClass(opacity38)
-            if (today) addClass(borderPrimary)
+            addCss(onSurfaceText)
+            if (otherMonth) addCss(opacity38)
+            if (today) addCss(borderPrimary)
         }
 
         div(alignSelfCenter) { text { date.dayOfMonth } }
@@ -39,10 +39,10 @@ class DayBase(
         onClick { onSelected(date) }
 
         onMouseEnter {
-            stateLayer.removeClass(displayNone)
+            stateLayer.removeCss(displayNone)
         }
         onMouseLeave {
-            stateLayer.addClass(displayNone)
+            stateLayer.addCss(displayNone)
         }
     }
 

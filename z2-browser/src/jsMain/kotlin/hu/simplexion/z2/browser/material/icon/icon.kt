@@ -1,5 +1,8 @@
 package hu.simplexion.z2.browser.material.icon
 
+import hu.simplexion.z2.browser.css.CssClass
+import hu.simplexion.z2.browser.css.bodySmall
+import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
@@ -14,10 +17,10 @@ fun Z2.icon(
     weight : Int = 400,
     fill : Int = 0,
     pointer : Boolean = true,
-    cssClass: String? = null
+    cssClass: CssClass? = null
 ) : Z2 =
     div {
-        cssClass?.let { addClass(it) }
+        cssClass?.let { addCss(it) }
 
         addClass("icon-$size")
         if (pointer) style.cursor = "pointer"
@@ -33,12 +36,12 @@ fun Z2.actionIcon(
     size: Int = 24,
     weight : Int = 400,
     fill : Int = 0,
-    cssClass: String? = null,
+    cssClass: CssClass? = null,
     inline : Boolean = false,
     onClick: (event : Event) -> Unit
 ) : Z2 =
     div {
-        cssClass?.let { addClass(it) }
+        cssClass?.let { addCss(it) }
 
         addClass("icon-$size", if (inline) "inline-action-icon" else "action-icon")
 
@@ -46,7 +49,7 @@ fun Z2.actionIcon(
 
         if (hint != null) {
             addClass("tooltip")
-            div("plain-tooltip", "body-small") { text { hint } }
+            div("plain-tooltip".css, bodySmall) { text { hint } }
         }
 
         onMouseDown { it.preventDefault() }// to avoid focus
@@ -59,7 +62,7 @@ fun Z2.inlineActionIcon(
     size: Int = 24,
     weight : Int = 400,
     fill : Int = 0,
-    cssClass: String? = null,
+    cssClass: CssClass? = null,
     onClick: (event : Event) -> Unit
 ) : Z2 =
     actionIcon(icon, hint, size, weight, fill, cssClass, true, onClick)

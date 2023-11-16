@@ -3,14 +3,16 @@
  */
 package hu.simplexion.z2.browser.material.modal
 
+import hu.simplexion.z2.browser.css.CssClass
+import hu.simplexion.z2.browser.css.addCss
+import hu.simplexion.z2.browser.css.displayNone
+import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.vh
 import hu.simplexion.z2.browser.material.vw
 import kotlinx.browser.document
-import kotlinx.dom.addClass
-import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLDivElement
 
 /**
@@ -19,14 +21,14 @@ import org.w3c.dom.HTMLDivElement
 object Modals : Z2(
     null,
     document.createElement("div") as HTMLDivElement,
-    arrayOf("hidden", "persistent"),
+    arrayOf(displayNone, CssClass("persistent")),
     { document.body?.appendChild(this.htmlElement) }
 ) {
 
     val layers = mutableListOf<Z2>()
 
     operator fun plusAssign(child: Z2) {
-        htmlElement.removeClass("hidden")
+        htmlElement.removeCss(displayNone)
         layers += layer(child)
     }
 
@@ -41,7 +43,7 @@ object Modals : Z2(
             layers.removeLast()
         }
 
-        if (layers.isEmpty()) htmlElement.addClass("hidden")
+        if (layers.isEmpty()) htmlElement.addCss(displayNone)
     }
 
     fun Z2.layer(child: Z2) =

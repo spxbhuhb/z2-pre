@@ -68,9 +68,9 @@ class RadioButtonBase(
                 size = 20
             ).also {
                 when {
-                    disabled -> it.addClass(onSurfaceText, opacity38)
-                    selected -> it.addClass(primaryText)
-                    else -> it.addClass(onSurfaceVariantText)
+                    disabled -> it.addCss(onSurfaceText, opacity38)
+                    selected -> it.addCss(primaryText)
+                    else -> it.addCss(onSurfaceVariantText)
                 }
             }
         }

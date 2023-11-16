@@ -10,7 +10,7 @@ import org.w3c.dom.events.MouseEvent
 
 class StateLayer(
     parent: Z2,
-    classes: Array<out String>,
+    classes: Array<out CssClass>,
     disabled : Boolean
 ) : Z2(
     parent,
@@ -28,7 +28,7 @@ class StateLayer(
     var hasFocus: Boolean = false
 
     init {
-        addClass(positionAbsolute, overflowHidden, primary, displayNone, heightFull, widthFull)
+        addCss(positionAbsolute, overflowHidden, primary, displayNone, heightFull, widthFull)
         addEventListeners()
     }
 
@@ -60,13 +60,13 @@ class StateLayer(
     }
 
     fun updateState() {
-        removeClass(displayNone, stateLayerOpacityHover, stateLayerOpacityFocus)
+        removeCss(displayNone, stateLayerOpacityHover, stateLayerOpacityFocus)
 
         when {
-            disabled -> addClass(displayNone)
-            hasFocus -> addClass(stateLayerOpacityFocus)
-            hasHover -> addClass(stateLayerOpacityHover)
-            else -> addClass(displayNone)
+            disabled -> addCss(displayNone)
+            hasFocus -> addCss(stateLayerOpacityFocus)
+            hasHover -> addCss(stateLayerOpacityHover)
+            else -> addCss(displayNone)
         }
     }
 

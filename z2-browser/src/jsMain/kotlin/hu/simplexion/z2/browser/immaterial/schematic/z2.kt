@@ -13,10 +13,11 @@ fun Z2.attachListener(schematicNode: SchematicNode, listenerFun : (event : Schem
         }
 }
 
-fun Z2.attach(schematicNode: SchematicNode, renderFun : Z2.() -> Unit) {
+fun Z2.attach(schematicNode: SchematicNode, renderFun : Z2.() -> Unit) : Z2 {
     renderFun()
     attachListener(schematicNode) {
         clear()
         renderFun()
     }
+    return this
 }

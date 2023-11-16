@@ -39,18 +39,18 @@ class DockedDatePicker(
     val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
     override fun main(): DockedDatePicker {
-        addClass(w304, positionRelative)
+        addCss(w304, positionRelative)
 
-        textField.input.addClass(w304)
+        textField.input.addCss(w304)
 
         textField.input.onFocus {
             if (state.readOnly || state.disabled) return@onFocus
             selector.buildContent()
-            selector.removeClass(displayNone)
+            selector.removeCss(displayNone)
         }
 
         textField.input.onBlur {
-            selector.addClass(displayNone)
+            selector.addCss(displayNone)
         }
 
         state.update = { textField.update() }

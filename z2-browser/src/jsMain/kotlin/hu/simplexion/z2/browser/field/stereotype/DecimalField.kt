@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.field.stereotype
 
+import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.textAlignEnd
 import hu.simplexion.z2.browser.css.w304
 import hu.simplexion.z2.browser.field.FieldState
@@ -12,7 +13,6 @@ import hu.simplexion.z2.localization.locales.AbstractLocalizedFormats
 import hu.simplexion.z2.localization.locales.localized
 import hu.simplexion.z2.localization.locales.localizedFormats
 import hu.simplexion.z2.localization.locales.toDecimalString
-import kotlinx.dom.addClass
 
 class DecimalField(
     parent: Z2,
@@ -39,8 +39,8 @@ class DecimalField(
 
         super.main()
 
-        addClass(w304)
-        inputElement.addClass(textAlignEnd)
+        addCss(w304)
+        inputElement.addCss(textAlignEnd)
 
         input.onFocus {
             if (! state.touched && valueOrNull == 0L) {

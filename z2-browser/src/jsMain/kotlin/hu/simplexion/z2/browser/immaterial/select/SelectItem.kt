@@ -23,7 +23,7 @@ class SelectItem<T>(
 
     companion object {
         fun <T> SelectItem<T>.defaultItemBuilderFun(selectBase: SelectBase<T>, value: T) {
-            addClass(
+            addCss(
                 pl12, pr12, h48,
                 positionRelative, boxSizingBorderBox,
                 displayGrid,
@@ -42,7 +42,7 @@ class SelectItem<T>(
             }
 
             div(alignSelfCenter) {
-                + selectBase.config.itemTextFun(value)
+                selectBase.config.itemContentFun(this, value)
             }
 
             onMouseDown {
