@@ -117,7 +117,7 @@ class SelectBase<T>(
             style.position = "fixed"
 
             addCss(
-                surfaceContainer, widthFull, pt8, pb8,
+                surfaceContainer, wFull, pt8, pb8,
                 borderBottomRightRadiusExtraSmall, borderBottomLeftRadiusExtraSmall,
                 borderColorPrimary, borderSolid, borderWidth1,
                 boxSizingBorderBox, overflowYAuto, labelLarge

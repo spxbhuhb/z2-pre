@@ -12,7 +12,7 @@ import hu.simplexion.z2.browser.material.textfield.outlinedTextField
 import org.w3c.dom.HTMLInputElement
 
 fun Z2.loginDemo() =
-    surfaceContainerLow(widthFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
+    surfaceContainerLow(wFull, heightFull, p0, m0, displayFlex, alignItemsCenter, justifyContentCenter) {
         grid(gridGap8) {
             gridTemplateColumns = "min-content"
             gridAutoRows = "min-content"

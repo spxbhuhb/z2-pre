@@ -21,7 +21,7 @@ class DayBase(
     classes = arrayOf(boxSizingBorderBox, displayFlex, justifyContentCenter, cursorPointer, bodySmall, positionRelative, overflowHidden)
 ) {
     // TODO think about date picker class list, it is long and when rendering a whole year it is an unnecessary repetition
-    val stateLayer = div(displayNone, primary, stateLayerOpacityHover, positionAbsolute, widthFull, heightFull) {  }
+    val stateLayer = div(displayNone, primary, stateLayerOpacityHover, positionAbsolute, wFull, heightFull) {  }
 
     init {
         if (dense) addCss(h32, w32, borderRadius16) else addCss(h40, w40, borderRadius20)

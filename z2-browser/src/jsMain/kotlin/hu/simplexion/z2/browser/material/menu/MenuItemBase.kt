@@ -28,7 +28,7 @@ class MenuItemBase<T>(
         gridTemplateColumns = "min-content 1fr min-content"
         gridTemplateRows = "minmax(48px, 1fr)"
 
-        StateLayer(this, arrayOf(widthFull, heightFull), disabled)
+        StateLayer(this, arrayOf(wFull, heightFull), disabled)
 
         div(alignSelfCenter) {
             if (icon != null) icon(icon, size = 24, cssClass = pr12)

@@ -51,7 +51,7 @@ class DockedDatePickerSelector(
     }
 
     fun Z2.headerContainer(vararg classes: CssClass, builder: Z2Builder) =
-        grid(justifySelfCenter, widthFull, pt20, boxSizingBorderBox, pl12, pr12, *classes) {
+        grid(justifySelfCenter, wFull, pt20, boxSizingBorderBox, pl12, pr12, *classes) {
             gridTemplateColumns = "1fr 1fr"
             gridTemplateRows = "24px"
             builder()

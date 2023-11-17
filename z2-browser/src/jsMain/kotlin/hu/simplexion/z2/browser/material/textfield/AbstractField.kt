@@ -188,7 +188,7 @@ abstract class AbstractField<T>(
             boxSizingBorderBox,
             outlineNone,
             borderNone,
-            widthFull,
+            wFull,
             heightFull,
             pl14,
             pr14,

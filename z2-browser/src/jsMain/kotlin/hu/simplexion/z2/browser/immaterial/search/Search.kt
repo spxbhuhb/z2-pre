@@ -17,7 +17,7 @@ class Search<T>(
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
-    arrayOf(widthFull, h46, positionRelative)
+    arrayOf(wFull, h46, positionRelative)
 ) {
     var revision = 0
     var running = false
@@ -42,7 +42,7 @@ class Search<T>(
      * TODO in Safari the border radius is not properly handled when there are hits
      */
     fun build() {
-        div(widthFull, positionAbsolute, elevationLevel3, borderRadius28, surfaceContainerLowest, p0, overflowHidden) {
+        div(wFull, positionAbsolute, elevationLevel3, borderRadius28, surfaceContainerLowest, p0, overflowHidden) {
 
             search = div(displayGrid, h46, pt0, pb0, pl16, pr16) {
                 gridTemplateColumns = "min-content minmax(0,1fr) min-content"
@@ -78,13 +78,13 @@ class Search<T>(
                 }
             }
 
-            itemContainer = div(widthFull, boxSizingBorderBox) {
+            itemContainer = div(wFull, boxSizingBorderBox) {
                 onMouseDown {
                     it.preventDefault()
                 }
             }
 
-            feedback = div(displayNone, h46, alignItemsCenter, justifyContentCenter, widthFull, boxSizingBorderBox, borderTopOutlineVariant) {
+            feedback = div(displayNone, h46, alignItemsCenter, justifyContentCenter, wFull, boxSizingBorderBox, borderTopOutlineVariant) {
 
             }
 

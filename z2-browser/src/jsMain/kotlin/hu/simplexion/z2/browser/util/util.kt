@@ -3,7 +3,7 @@ package hu.simplexion.z2.browser.util
 import hu.simplexion.z2.browser.css.heightFull
 import hu.simplexion.z2.browser.css.opacity38
 import hu.simplexion.z2.browser.css.surface
-import hu.simplexion.z2.browser.css.widthFull
+import hu.simplexion.z2.browser.css.wFull
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.commons.util.localLaunch
 import kotlinx.browser.document
@@ -17,7 +17,7 @@ var uniqueNodeId = 0
 
 fun launchBlocking(func: suspend () -> Unit) {
     val overlay = Z2().also {
-        it.addCss(widthFull, heightFull, surface, opacity38)
+        it.addCss(wFull, heightFull, surface, opacity38)
         it.zIndex = 100
         it.style.position = "fixed"
         it.style.top = "0"

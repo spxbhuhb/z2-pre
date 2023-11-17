@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.demo.material
 
 import hu.simplexion.z2.browser.css.borderBottomOutline
-import hu.simplexion.z2.browser.css.widthFull
+import hu.simplexion.z2.browser.css.wFull
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.immaterial.schematic.field
@@ -13,7 +13,7 @@ fun Z2.enumDemo() =
     div {
         val test = EnumTest()
         field { test.enumField }
-        div(widthFull, borderBottomOutline) { }
+        div(wFull, borderBottomOutline) { }
         field { test.optionalEnumField }
     }
 
