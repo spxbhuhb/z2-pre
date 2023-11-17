@@ -3,6 +3,8 @@ package hu.simplexion.z2.browser.demo.material
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.browser.immaterial.button.filledSelectButton
+import hu.simplexion.z2.browser.immaterial.button.textSelectButton
 import hu.simplexion.z2.browser.layout.surfaceContainerLow
 import hu.simplexion.z2.browser.material.button.*
 import hu.simplexion.z2.browser.material.px
@@ -50,5 +52,10 @@ fun Z2.buttonDemo() =
                 strings.segment2 to true,
                 strings.segment3 to false
             ) { snackbar("${strings.click}: $it") }
+
+            val items = listOf(strings.item1, strings.item2, strings.item3)
+
+            filledSelectButton(items, items[0]) {  }
+            textSelectButton(items, items[0]) {  }
         }
     }

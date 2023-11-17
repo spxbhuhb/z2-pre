@@ -27,7 +27,7 @@ internal class Z2GenerationExtension(
         localization(moduleFragment, pluginContext)
         schematic(moduleFragment, pluginContext)
         service(moduleFragment, pluginContext)
-        css(moduleFragment, pluginContext)
+        // css(moduleFragment, pluginContext)
     }
 
     fun localization(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {

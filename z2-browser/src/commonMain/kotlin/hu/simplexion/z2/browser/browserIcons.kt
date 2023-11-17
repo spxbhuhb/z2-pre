@@ -27,4 +27,5 @@ interface BrowserIcons : LocalizedIconProvider {
     val calendar get() = static("calendar_today")
     val edit get() = static("edit")
     val schedule get() = static("schedule")
+    val empty get() = static("")
 }
