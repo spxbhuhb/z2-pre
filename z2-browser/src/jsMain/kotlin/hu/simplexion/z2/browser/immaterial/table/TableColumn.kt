@@ -11,6 +11,7 @@ import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.util.uniqueNodeId
 import hu.simplexion.z2.commons.browser.CssClass
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.schematic.schema.SchemaField
 import kotlinx.browser.window
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
@@ -27,7 +28,9 @@ open class TableColumn<T>(
     val comparator: (T, T) -> Int,
     var initialSize: String = "1fr",
     val exportable: Boolean = true,
-    val exportHeader: LocalizedText
+    val exportHeader: LocalizedText?,
+    val exportFun: ((T) -> Any?)?,
+    val schemaField: SchemaField<*>?
 ) {
     val id = uniqueNodeId
 
@@ -235,5 +238,4 @@ open class TableColumn<T>(
     open fun exportCsv(row: T): String {
         return ""
     }
-
 }

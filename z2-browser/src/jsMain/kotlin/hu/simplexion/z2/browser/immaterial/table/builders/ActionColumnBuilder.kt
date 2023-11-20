@@ -23,7 +23,7 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
     }
 
     override fun toColumn(table: Table<T>): TableColumn<T> {
-        return TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader)
+        return TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader, null, null)
     }
 
     fun <T> Z2.actionRender(row: T, actions: List<RowActionBuilder<T>>) {

@@ -38,7 +38,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
     val field = context.field
     val schematicLabel = field.label(context.schematic)
 
-    return when (field.type) {
+    val col = when (field.type) {
 
         SchemaFieldType.Boolean ->
             column {
@@ -166,6 +166,11 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
         else -> throw NotImplementedError("schema field type ${field.type} not implemented in schematicColumn")
     }
 
+    col.exportFun = { field.getValue(it) }
+    col.exportHeader = col.label
+    col.fieldType = field
+
+    return col
 }
 
 private fun <T : Comparable<T>> compare(a: T?, b: T?): Int {

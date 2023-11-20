@@ -6,6 +6,7 @@ import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.immaterial.table.TableColumn
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.schematic.schema.SchemaField
 
 open class ColumnBuilder<T> {
 
@@ -15,10 +16,12 @@ open class ColumnBuilder<T> {
     var comparator: (T, T) -> Int = { _, _ -> 0 }
     var initialSize = "1fr"
     var exportable = true
-    var exportHeader: LocalizedText = browserStrings._empty
+    var exportHeader: LocalizedText? = null
+    var exportFun : ((T) -> Any?)? = null
+    var fieldType : SchemaField<*>? = null
 
     open fun toColumn(table: Table<T>): TableColumn<T> =
-        TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader)
+        TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader, exportFun, fieldType)
 
     infix fun label(value: LocalizedText): ColumnBuilder<T> {
         label = value
