@@ -49,7 +49,7 @@ fun <T> ServiceImpl<*>.ensureLoggedIn(block: () -> T): T {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun <T> ServiceImpl<*>.ensureSecurityOfficer(block: () -> T): T {
-    ensure(securityOfficerRole)
+    ensureRole(securityOfficerRole)
     return block()
 }
 
@@ -59,7 +59,7 @@ fun <T> ServiceImpl<*>.ensureSecurityOfficer(block: () -> T): T {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
-    ensure(securityOfficerRole)
+    ensureRole(securityOfficerRole)
 }
 
 /**
@@ -68,7 +68,7 @@ fun ServiceImpl<*>.ensureSecurityOfficer() {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureTechnicalAdmin() {
-    ensure(securityOfficerRole) // TODO introduce a technial admin role
+    ensureRole(securityOfficerRole) // TODO introduce a technial admin role
 }
 
 /**
@@ -86,19 +86,8 @@ fun ServiceImpl<*>.ensureLoggedIn() {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensure(vararg roles: Role) {
+fun ServiceImpl<*>.ensureRole(vararg roles: Role) {
     if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
-}
-
-/**
- * Ensures that the block runs only when there context contains **ALL**
- * of the specified roles.
- *
- * @throws   AccessDenied  At least one of the roles is not in the context.
- */
-fun <T> ServiceImpl<*>.ensure(vararg roles: Role, block: () -> T): T {
-    if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
-    return block()
 }
 
 /**

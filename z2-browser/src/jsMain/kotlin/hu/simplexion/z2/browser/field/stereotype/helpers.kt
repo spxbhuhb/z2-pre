@@ -18,6 +18,19 @@ fun Z2.decimalField(value : Long, scale : Int, label : LocalizedText, changeFun 
         it.value = value
     }
 
+
+fun Z2.intField(value : Int, label : LocalizedText, changeFun : (Int) -> Unit) =
+    IntField(
+        this,
+        FieldState(label),
+        FieldConfig(
+            decodeFromString = { it.toIntOrNull() ?: 0 }
+        ) { changeFun(it.value) }
+    ).also {
+        it.main()
+        it.value = value
+    }
+
 fun Z2.longField(value : Long, label : LocalizedText, changeFun : (Long) -> Unit) =
     LongField(
         this,

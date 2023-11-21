@@ -48,6 +48,15 @@ val monthShortNameTable by lazy {
     )
 }
 
+val quarterNameTable by lazy {
+    arrayOf(
+        dateTimeStrings.firstQuarter,
+        dateTimeStrings.secondQuarter,
+        dateTimeStrings.thirdQuarter,
+        dateTimeStrings.fourthQuarter
+    )
+}
+
 val numbersToStringTable =
     arrayOf(
         "00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
@@ -69,8 +78,8 @@ interface IDateTimeStrings : LocalizedTextProvider {
     val sunday get() = static("vasárnap", name = "sunday")
 
     val january get() = static("január", name = "january")
-    val february get() = static("február", name = "")
-    val march get() = static("március", name = "february")
+    val february get() = static("február", name = "february")
+    val march get() = static("március", name = "march")
     val april get() = static("április", name = "april")
     val may get() = static("május", name = "may")
     val june get() = static("június", name = "june")
@@ -93,6 +102,11 @@ interface IDateTimeStrings : LocalizedTextProvider {
     val octoberShort get() = static("okt", name = "octoberShort")
     val novemberShort get() = static("nov", name = "novemberShort")
     val decemberShort get() = static("dec", name = "decemberShort")
+
+    val firstQuarter get() = static("I. negyedév", name = "firstQuarter")
+    val secondQuarter get() = static("II. negyedév", name = "secondQuarter")
+    val thirdQuarter get() = static("III. negyedév", name = "thirdQuarter")
+    val fourthQuarter get() = static("IV. negyedév", name = "fourthQuarter")
 
     val localDateSupportText get() = static("ÉÉÉÉ.HH.NN", name = "localDateSupportText")
     val localTimeSupportText get() = static("ÓÓ:PP", name = "localTimeSupportText")

@@ -1,6 +1,6 @@
 package hu.simplexion.z2.localization.impl
 
-import hu.simplexion.z2.auth.context.ensure
+import hu.simplexion.z2.auth.context.ensureRole
 import hu.simplexion.z2.auth.context.ensuredByLogic
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
@@ -23,7 +23,7 @@ class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
     }
 
     override suspend fun put(translation: Translation) {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         translationTable.put(translation)
     }
 

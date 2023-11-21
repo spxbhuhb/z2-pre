@@ -1,6 +1,6 @@
 package hu.simplexion.z2.history.impl
 
-import hu.simplexion.z2.auth.context.ensure
+import hu.simplexion.z2.auth.context.ensureRole
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.commons.util.UUID
@@ -20,7 +20,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     }
 
     override suspend fun list(flags: Int, start: Instant, end: Instant, limit: Int): List<HistoryEntry> {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         return historyEntryTable.list(flags, start, end, limit)
     }
 

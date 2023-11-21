@@ -28,7 +28,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     }
 
     override suspend fun list(): List<Principal> {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         return principalTable.list()
     }
 
@@ -39,7 +39,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
         roles: List<UUID<Role>>
     ): UUID<Principal> {
 
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         ensureValid(principal, true)
 
         val uuid = principalTable.insert(principal)
@@ -100,14 +100,14 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     }
 
     override suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean) {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         securityHistory(baseStrings.account, baseStrings.setActivated, uuid, true)
 
         principalTable.setActivated(uuid, true)
     }
 
     override suspend fun setLocked(uuid: UUID<Principal>, locked: Boolean) {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         securityHistory(baseStrings.account, baseStrings.setLocked, uuid, locked)
 
         principalTable.setLocked(uuid, locked)

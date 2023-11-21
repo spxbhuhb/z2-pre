@@ -92,12 +92,12 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     }
 
     override suspend fun logout(session: UUID<Session>) {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         // TODO forced logout
     }
 
     override suspend fun list(): List<Session> {
-        ensure(securityOfficerRole)
+        ensureRole(securityOfficerRole)
         return sessionTable.list()
     }
 
