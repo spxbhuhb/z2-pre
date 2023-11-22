@@ -2,6 +2,7 @@ package hu.simplexion.z2.auth.table
 
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.exposed.SchematicUuidTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 
 open class RoleTable : SchematicUuidTable<Role>(
@@ -24,8 +25,8 @@ open class RoleTable : SchematicUuidTable<Role>(
             .map { it.toSchematic(this, Role()) }
             .single()
 
-    fun getByNameOrNull(name : String) : Role? =
-        select { programmaticName eq name }
+    fun getByNameOrNull(name : String, context : String? = null) : Role? =
+        select { (programmaticName eq name) and (contextName eq contextName) }
             .map { it.toSchematic(this, Role()) }
             .singleOrNull()
 
