@@ -5,7 +5,7 @@ import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.immaterial.table.TableColumn
-import hu.simplexion.z2.browser.material.button.textButton
+import hu.simplexion.z2.browser.material.button.textLaunchButton
 import hu.simplexion.z2.browser.material.px
 
 class ActionColumnBuilder<T> : ColumnBuilder<T>() {
@@ -35,7 +35,7 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
         style.marginLeft = (-12).px
 
         for (action in actions) {
-            textButton(action.label) { action.handler(row) }
+            textLaunchButton(action.label) { action.handler(row) }
         }
 
     }

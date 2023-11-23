@@ -26,7 +26,11 @@ open class RoleTable : SchematicUuidTable<Role>(
             .single()
 
     fun getByNameOrNull(name : String, context : String? = null) : Role? =
-        select { (programmaticName eq name) and (contextName eq contextName) }
+        if (context == null) {
+            select { (programmaticName eq name) and contextName.isNull() }
+        } else {
+            select { (programmaticName eq name) and (contextName eq contextName) }
+        }
             .map { it.toSchematic(this, Role()) }
             .singleOrNull()
 
