@@ -96,6 +96,19 @@ fun ServiceContext.hasAny(vararg roles: Role): ContextCheckResult {
 }
 
 /**
+ * Allow when **ANY** the roles are in [Session.roles].
+ *
+ * Deny otherwise.
+ */
+fun ServiceContext.hasAny(vararg roles: UUID<Role>): ContextCheckResult {
+    val session = getSessionOrNull() ?: return ContextCheckResult.Deny
+    for (role in roles) {
+        if (session.roles.any { it.uuid == role }) return ContextCheckResult.Allow
+    }
+    return ContextCheckResult.Deny
+}
+
+/**
  * Allow when [Session.principal] is [principal].
  *
  * Deny otherwise.
