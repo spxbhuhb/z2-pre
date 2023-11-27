@@ -146,6 +146,18 @@ open class BoundField<T>(
         return this
     }
 
+    var value
+        get() = uiField.value
+        set(value) {
+            uiField.value = value
+        }
+
+    var valueOrNull
+        get() = uiField.valueOrNull
+        set(value) {
+            uiField.valueOrNull = valueOrNull
+        }
+
     var error
         get() = uiField.state.error
         set(value) {
@@ -163,4 +175,16 @@ open class BoundField<T>(
             uiField.state.errorText = value
         }
 
+    fun touch() {
+        uiField.state.touched = true
+    }
+
+    fun toNormal() {
+        uiField.state.error = false
+        uiField.state.errorText = null
+    }
+
+    fun toError(errorText : LocalizedText? = null) {
+        uiField.state.toError(errorText)
+    }
 }

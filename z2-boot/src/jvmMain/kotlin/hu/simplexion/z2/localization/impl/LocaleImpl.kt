@@ -1,6 +1,6 @@
 package hu.simplexion.z2.localization.impl
 
-import hu.simplexion.z2.auth.context.ensureRole
+import hu.simplexion.z2.auth.context.ensureAll
 import hu.simplexion.z2.auth.context.ensuredByLogic
 import hu.simplexion.z2.auth.context.has
 import hu.simplexion.z2.auth.context.publicAccess
@@ -25,32 +25,32 @@ class LocaleImpl : LocaleApi, ServiceImpl<LocaleImpl> {
     }
 
     override suspend fun add(locale: Locale): UUID<Locale> {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         return localeTable.insert(locale)
     }
 
     override suspend fun update(locale: Locale) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         return localeTable.update(locale.uuid, locale)
     }
 
     override suspend fun remove(uuid: UUID<Locale>) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         localeTable.remove(uuid)
     }
 
     override suspend fun show(uuid: UUID<Locale>) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         localeTable.setVisible(uuid, true)
     }
 
     override suspend fun hide(uuid: UUID<Locale>) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         localeTable.setVisible(uuid, false)
     }
 
     override suspend fun load(uuid: UUID<Locale>, table: ByteArray) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         translationTable.load(uuid, table)
     }
 

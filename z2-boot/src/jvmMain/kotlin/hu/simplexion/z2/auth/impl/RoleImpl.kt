@@ -23,12 +23,12 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun list(): List<Role> {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         return roleTable.list()
     }
 
     override suspend fun add(role: Role) : UUID<Role> {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         ensureValid(role, true)
 
         val roleUuid = roleTable.insert(role)
@@ -39,7 +39,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun update(role: Role) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         ensureValid(role)
 
         securityHistory(baseStrings.role, commonStrings.update, role.uuid, role)
@@ -48,7 +48,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun remove(uuid: UUID<Role>) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         securityHistory(baseStrings.role, commonStrings.remove, uuid)
 
         roleGrantTable.remove(uuid)
@@ -61,14 +61,14 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun grant(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         securityHistory(baseStrings.role, baseStrings.grantRole, principal, role, context)
 
         roleGrantTable.insert(role, principal, context)
     }
 
     override suspend fun revoke(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         securityHistory(baseStrings.role, baseStrings.revokeRole, principal, role, context)
 
         roleGrantTable.remove(role, principal, context)
@@ -80,7 +80,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun grantedTo(role: UUID<Role>, context : String?): List<Grant> {
-        ensureRole(securityOfficerRole)
+        ensureAll(securityOfficerRole)
         return roleGrantTable.grantedTo(role, context)
     }
 
