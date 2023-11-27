@@ -5,6 +5,7 @@ import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.CredentialType.PASSWORD
+import hu.simplexion.z2.auth.model.CredentialType.PASSWORD_RESET_KEY
 import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
@@ -67,7 +68,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
         if (! isSecurityOfficer || credentials.principal == serviceContext.principal) {
             requireNotNull(currentCredentials)
-            sessionImpl(serviceContext !!).authenticate(credentials.principal, currentCredentials.value, true, currentCredentials.type)
+            sessionImpl(serviceContext).authenticate(credentials.principal, currentCredentials.value, true, currentCredentials.type)
         }
 
         credentials.createdAt = now()
@@ -81,22 +82,39 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
         return principalTable.get(uuid)
     }
 
-    override suspend fun activate(credentials: Credentials, activationKey: Credentials) : String {
+    override suspend fun activate(credentials: Credentials, key: Credentials) : String {
         publicAccess()
-        sessionImpl(serviceContext).authenticate(activationKey.principal, activationKey.value, true, ACTIVATION_KEY)
+        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, ACTIVATION_KEY)
 
-        securityHistory(baseStrings.account, baseStrings.setActivated, activationKey.principal, true)
+        securityHistory(baseStrings.account, baseStrings.setActivated, key.principal, true)
 
         credentials.type = PASSWORD
         credentials.createdAt = now()
-        credentials.principal = activationKey.principal
+        credentials.principal = key.principal
         credentials.value = BCrypt.hashpw(credentials.value, BCrypt.gensalt())
 
-        credentialsTable.removeActivationKeys(activationKey.principal)
+        credentialsTable.removeActivationKeys(key.principal)
         credentialsTable.insert(credentials)
-        principalTable.setActivated(activationKey.principal, true)
+        principalTable.setActivated(key.principal, true)
 
-        return principalTable.get(activationKey.principal).name
+        return principalTable[key.principal].name
+    }
+
+    override suspend fun resetPassword(credentials: Credentials, key: Credentials) : String {
+        publicAccess()
+        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, PASSWORD_RESET_KEY)
+
+        securityHistory(baseStrings.account, baseStrings.passwordReset, key.principal, true)
+
+        credentials.type = PASSWORD
+        credentials.createdAt = now()
+        credentials.principal = key.principal
+        credentials.value = BCrypt.hashpw(credentials.value, BCrypt.gensalt())
+
+        credentialsTable.removePasswordResetKeys(key.principal)
+        credentialsTable.insert(credentials)
+
+        return principalTable[key.principal].name
     }
 
     override suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean) {

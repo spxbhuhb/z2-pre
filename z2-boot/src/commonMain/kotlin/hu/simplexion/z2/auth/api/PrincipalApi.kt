@@ -17,7 +17,9 @@ interface PrincipalApi : Service {
 
     suspend fun get(uuid: UUID<Principal>): Principal
 
-    suspend fun activate(credentials: Credentials, activationKey: Credentials) : String
+    suspend fun activate(credentials: Credentials, key: Credentials) : String
+
+    suspend fun resetPassword(credentials: Credentials, key: Credentials) : String
 
     suspend fun setActivated(uuid: UUID<Principal>, activated : Boolean)
 

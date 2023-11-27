@@ -19,6 +19,7 @@ interface IBaseStrings : IBrowserStrings {
     val editAccount get() = static("Fiók szerkesztése")
 
     val changeCredentials get() = static("Jelszó változtatás")
+    val passwordReset get() = static("Jelszó megújítás")
 
     val authenticateSuccess get() = static("Sikeres azonosítás")
     val authenticateFail get() = static("Sikertelen azonosítás")

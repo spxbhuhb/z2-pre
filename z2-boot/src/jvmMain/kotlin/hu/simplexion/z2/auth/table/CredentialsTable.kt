@@ -1,6 +1,7 @@
 package hu.simplexion.z2.auth.table
 
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
+import hu.simplexion.z2.auth.model.CredentialType.PASSWORD_RESET_KEY
 import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
@@ -42,6 +43,10 @@ open class CredentialsTable(
 
     fun removeActivationKeys(inPrincipal: UUID<Principal>) {
         deleteWhere { (principal eq inPrincipal) and (type eq ACTIVATION_KEY) }
+    }
+
+    fun removePasswordResetKeys(inPrincipal: UUID<Principal>) {
+        deleteWhere { (principal eq inPrincipal) and (type eq PASSWORD_RESET_KEY) }
     }
 
 }

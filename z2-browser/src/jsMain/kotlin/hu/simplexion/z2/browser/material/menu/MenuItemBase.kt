@@ -30,9 +30,9 @@ class MenuItemBase<T>(
 
         StateLayer(this, arrayOf(wFull, heightFull), disabled)
 
-        div(alignSelfCenter) {
-            if (icon != null) icon(icon, size = 24, cssClass = pr12)
-            if (leading != null) div(pr12) { leading() }
+        div(alignSelfCenter, pr12) {
+            if (icon != null) icon(icon, size = 24)
+            if (leading != null) div(pl12) { leading() }
         }
 
         div(labelLarge, justifySelfStart, whiteSpaceNoWrap, alignSelfCenter) {

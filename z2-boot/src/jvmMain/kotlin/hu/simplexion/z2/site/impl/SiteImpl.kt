@@ -3,6 +3,7 @@ package hu.simplexion.z2.site.impl
 import hu.simplexion.z2.auth.context.ensureLoggedIn
 import hu.simplexion.z2.auth.context.ensureTest
 import hu.simplexion.z2.auth.context.principal
+import hu.simplexion.z2.auth.context.publicAccess
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
 import hu.simplexion.z2.service.ServiceImpl
@@ -19,7 +20,7 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
     }
 
     override suspend fun siteUrl(): String {
-        ensureLoggedIn()
+        publicAccess()
 
         // TODO cache site settings?
         val settings = runAsSecurityOfficer {

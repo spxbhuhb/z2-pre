@@ -175,6 +175,10 @@ open class BoundField<T>(
             uiField.state.errorText = value
         }
 
+    var touched
+        get() = uiField.state.touched
+        set(value) { uiField.state.touched = value}
+
     fun touch() {
         uiField.state.touched = true
     }

@@ -24,7 +24,7 @@ interface IBrowserStrings : ICommonStrings {
     val details get() = static("részletek")
     val ok get() = static("rendben")
     val previous get() = static("előző")
-    val next get() = static("következő")
+    val next get() = static("tovább")
     val searchInProgress get() = static("...keresés...")
     val noHits get() = static("nincs találat")
     val dropFileHere get() = static("dobja ide a fájlt vagy klikkeljen a kiválasztáshoz")
