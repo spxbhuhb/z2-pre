@@ -4,7 +4,6 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
-import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.menu.menuItem
@@ -22,7 +21,6 @@ import kotlin.math.max
 class DockedDatePickerSelector(
     parent: Z2? = null,
     value: LocalDate = hereAndNow().date,
-    val onClose: () -> Unit = { },
     val onSelected: (date: LocalDate) -> Unit,
 ) : Z2(parent) {
 
@@ -72,7 +70,6 @@ class DockedDatePickerSelector(
                 onSelected(it)
             }
         }
-        actions()
     }
 
     fun Z2.header(mode: Int) =
@@ -108,12 +105,6 @@ class DockedDatePickerSelector(
             actionIcon(browserIcons.right, browserStrings.next, inline = true) { onClick() }
         } else {
             div(pl24) { }
-        }
-
-    fun Z2.actions() =
-        div(displayFlex, justifyContentFlexEnd, pl12, pr12) {
-            textButton(browserStrings.cancel) { onClose() }
-            textButton(browserStrings.ok) { onClose() }
         }
 
     fun Z2.monthMenu(mode: Int) =
