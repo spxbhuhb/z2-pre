@@ -10,7 +10,6 @@ import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.SecurityPolicy
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -26,10 +25,16 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     companion object {
         val principalImpl = PrincipalImpl().internal
+
+        var addRoles = emptyArray<Role>()
+        var getRoles = emptyArray<Role>()
+        var updateRoles = emptyArray<Role>()
+        var policyGetRoles = emptyArray<Role>()
+        var policySetRoles = emptyArray<Role>()
     }
 
     override suspend fun list(): List<Principal> {
-        ensureAll(securityOfficerRole)
+        ensureAny(*getRoles)
         return principalTable.list()
     }
 
@@ -40,7 +45,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
         roles: List<UUID<Role>>
     ): UUID<Principal> {
 
-        ensureAll(securityOfficerRole)
+        ensureAny(*addRoles)
         ensureValid(principal, true)
 
         val uuid = principalTable.insert(principal)
@@ -78,7 +83,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     }
 
     override suspend fun get(uuid: UUID<Principal>): Principal {
-        ensure(serviceContext.has(securityOfficerRole) or serviceContext.isPrincipal(uuid))
+        ensure(serviceContext.hasAny(*getRoles) or serviceContext.isPrincipal(uuid))
         return principalTable.get(uuid)
     }
 
@@ -118,24 +123,26 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     }
 
     override suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean) {
-        ensureAll(securityOfficerRole)
+        ensureAny(*updateRoles)
         securityHistory(baseStrings.account, baseStrings.setActivated, uuid, true)
 
         principalTable.setActivated(uuid, true)
     }
 
     override suspend fun setLocked(uuid: UUID<Principal>, locked: Boolean) {
-        ensureAll(securityOfficerRole)
+        ensureAny(*updateRoles)
         securityHistory(baseStrings.account, baseStrings.setLocked, uuid, locked)
 
         principalTable.setLocked(uuid, locked)
     }
 
     override suspend fun getPolicy(): SecurityPolicy {
+        ensureAny(*policyGetRoles)
         TODO("Not yet implemented")
     }
 
     override suspend fun changePolicy(policy: SecurityPolicy) {
+        ensureAny(*policySetRoles)
         TODO("Not yet implemented")
     }
 

@@ -62,6 +62,7 @@ class SwitchField(
             }
 
             onClick {
+                if (state.readOnly) return@onClick
                 valueOrNull = (valueOrNull != true)
                 config.onChange?.invoke(this@SwitchField)
             }
