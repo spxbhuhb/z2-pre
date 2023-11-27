@@ -47,6 +47,7 @@ open class PopupBase(
 
     open fun show() {
         shown = true
+        anchor.children += this // so dispose will remove this component as well
         Popups.append(this)
         alignPopup(this, anchor, minHeight, minWidth)
         htmlElement.tabIndex = 0
@@ -56,6 +57,7 @@ open class PopupBase(
     fun hide() {
         if (shown) {
             shown = false
+            anchor.children -= this
             Popups.remove(this)
         }
     }
