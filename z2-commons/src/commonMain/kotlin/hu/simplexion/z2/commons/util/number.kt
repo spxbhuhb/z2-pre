@@ -58,8 +58,9 @@ private val sizes = listOf("", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
  * @param  bytesText  The text to use when there are only a few (less than 1024) bytes.
  *                    for example
  */
+@PublicApi
 fun Number.formatByteLength(decimals: Int = 2, emptyText: LocalizedText, bytesText: LocalizedText): String {
-    if (this == 0L) return emptyText.toString()
+    if (this.toLong() == 0L) return emptyText.toString()
 
     val bytes = this.toDouble()
 

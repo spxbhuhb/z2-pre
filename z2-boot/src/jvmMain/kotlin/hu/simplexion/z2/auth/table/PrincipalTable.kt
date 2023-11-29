@@ -37,6 +37,7 @@ open class PrincipalTable : SchematicUuidTable<Principal>(
             it[this.activated] = activated
         }
     }
+
     fun getByNameOrNull(inName : String) : Principal? =
         select { name eq inName }
             .map {
@@ -44,4 +45,9 @@ open class PrincipalTable : SchematicUuidTable<Principal>(
             }
             .firstOrNull()
 
+    fun updateName(inPrincipal : UUID<Principal>, inName : String) {
+        update({ id eq inPrincipal }) {
+            it[name] = inName
+        }
+    }
 }

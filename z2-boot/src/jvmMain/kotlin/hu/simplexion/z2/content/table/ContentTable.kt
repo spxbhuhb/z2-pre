@@ -18,7 +18,7 @@ class ContentTable(
         val contentTable = ContentTable("z2_content")
     }
 
-    val name = varchar("name", 200)
+    val name = varchar("name", 1000)
     val type = varchar("type", 40)
     val size = long("size")
     val sha256 = varchar("sha256", 44).nullable()

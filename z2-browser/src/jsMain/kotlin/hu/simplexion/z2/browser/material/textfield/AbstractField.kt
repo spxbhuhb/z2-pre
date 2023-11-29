@@ -1,6 +1,5 @@
 package hu.simplexion.z2.browser.material.textfield
 
-import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.FieldStyle
@@ -32,6 +31,8 @@ abstract class AbstractField<T>(
 
     val inError
         get() = state.error || state.invalidInput
+
+    open var forceReadOnly = false
 
     val inputElement
         get() = input.htmlElement as HTMLInputElement
@@ -256,7 +257,7 @@ abstract class AbstractField<T>(
         }
 
     open fun update() {
-        if (inputElement.value.isEmpty() && ! hasFocus) {
+        if (inputElement.value.isEmpty() && ! hasFocus && !state.readOnly && !state.disabled) {
             label.addCss(displayNone)
             if (config.style != FieldStyle.Transparent) input.removeCss(pt20)
         } else {
@@ -267,11 +268,11 @@ abstract class AbstractField<T>(
         }
 
         if (state.disabled) inputElement.disabled = true
-        if (state.readOnly) inputElement.readOnly = true
+        if (state.readOnly || forceReadOnly) inputElement.readOnly = true
 
         setLabel()
 
-        inputElement.placeholder = if (hasFocus) "" else state.label ?: ""
+        inputElement.placeholder = if (hasFocus || state.disabled || state.readOnly) "" else state.label ?: ""
 
         leading.clear()
 
@@ -288,6 +289,13 @@ abstract class AbstractField<T>(
                 input.removeCss(pt20)
             } else {
                 input.addCss(pt20)
+            }
+            if (state.readOnly || state.disabled) {
+                self.removeCss(surfaceContainerHighest)
+                self.addCss(borderOutline, borderRadius4)
+            } else {
+                self.addCss(surfaceContainerHighest)
+                self.removeCss(borderOutline, borderRadius4)
             }
         }
 
@@ -322,7 +330,7 @@ abstract class AbstractField<T>(
     }
 
     fun setLabel() {
-        val readOnly = if (state.disabled || state.readOnly) " (${browserStrings.readOnly})" else ""
-        label.htmlElement.innerText = (state.label ?: "") + readOnly
+        label.htmlElement.innerText = (state.label ?: "")
     }
+
 }
