@@ -13,7 +13,7 @@ import hu.simplexion.z2.browser.immaterial.table.table
 import hu.simplexion.z2.browser.layout.surfaceContainer
 import hu.simplexion.z2.browser.layout.surfaceContainerLowest
 
-internal fun Z2.list() =
+fun Z2.list() =
     surfaceContainerLowest(borderOutline) {
         surfaceContainer(p0, backgroundTransparent, scroll = false) {
 

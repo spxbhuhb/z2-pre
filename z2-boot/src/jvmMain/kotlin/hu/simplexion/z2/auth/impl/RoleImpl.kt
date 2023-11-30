@@ -20,15 +20,19 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     companion object {
         val roleImpl = RoleImpl().internal
+
+        var addRoles = emptyArray<Role>()
+        var getRoles = emptyArray<Role>()
+        var updateRoles = emptyArray<Role>()
     }
 
     override suspend fun list(): List<Role> {
-        ensureAll(securityOfficerRole)
+        ensureAny(*getRoles)
         return roleTable.list()
     }
 
     override suspend fun add(role: Role) : UUID<Role> {
-        ensureAll(securityOfficerRole)
+        ensureAny(*addRoles)
         ensureValid(role, true)
 
         val roleUuid = roleTable.insert(role)
@@ -39,7 +43,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun update(role: Role) {
-        ensureAll(securityOfficerRole)
+        ensureAll(*updateRoles)
         ensureValid(role)
 
         securityHistory(baseStrings.role, commonStrings.update, role.uuid, role)
@@ -48,7 +52,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun remove(uuid: UUID<Role>) {
-        ensureAll(securityOfficerRole)
+        ensureAll(*updateRoles)
         securityHistory(baseStrings.role, commonStrings.remove, uuid)
 
         roleGrantTable.remove(uuid)
@@ -85,10 +89,12 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun addToGroup(role: UUID<Role>, group: UUID<Role>) {
+        ensureAll(securityOfficerRole)
         roleGroupTable.add(role, group)
     }
 
     override suspend fun removeFromGroup(role: UUID<Role>, group: UUID<Role>) {
+        ensureAll(securityOfficerRole)
         roleGroupTable.remove(role, group)
     }
 
