@@ -15,12 +15,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.collections.set
 
-class BasicWebSocketServiceTransport(
+open class BasicWebSocketServiceTransport(
     val path : String = "/z2/service",
-    val trace : Boolean = false
+    val trace : Boolean = false,
 ) : ServiceCallTransport {
 
-    val callTimeout = 10_000_000
+    val callTimeout = 20_000_000
 
     class OutgoingCall(
         val request: RequestEnvelope,
@@ -66,6 +66,7 @@ class BasicWebSocketServiceTransport(
 
                             call.responseChannel.trySend(responseEnvelope)
                         } catch (ex: Exception) {
+                            connectionError(ex)
                             ex.printStackTrace() // TODO logging
                         }
                     }
@@ -90,6 +91,7 @@ class BasicWebSocketServiceTransport(
                     pendingCalls.remove(callId)
                     // TODO change ServiceCallStatus.Exception to Timeout
                     call.responseChannel.trySend(ResponseEnvelope(callId, ServiceCallStatus.Exception, ByteArray(0)))
+                    timeoutError(call)
                 }
 
             delay(1_000)
@@ -103,9 +105,22 @@ class BasicWebSocketServiceTransport(
             val responseEnvelope = it.responseChannel.receive()
             if (trace) println("response for $serviceName.$funName\n${responseEnvelope.dump()}")
             if (responseEnvelope.status != ServiceCallStatus.Ok) {
+                responseError(serviceName, funName, responseEnvelope)
                 throw RuntimeException("$serviceName  $funName  ${responseEnvelope.status}")
             }
             decoder.decodeProto(ProtoMessage(responseEnvelope.payload))
         }
+
+    open fun connectionError(ex: Exception) {
+
+    }
+
+    open fun timeoutError(call: OutgoingCall) {
+
+    }
+
+    open fun responseError(serviceName: String, funName: String, responseEnvelope: ResponseEnvelope) {
+
+    }
 
 }

@@ -21,7 +21,6 @@ import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.IValidationStrings
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.service.defaultServiceCallTransport
-import hu.simplexion.z2.service.ktor.client.BasicWebSocketServiceTransport
 import io.ktor.client.fetch.*
 import kotlinx.browser.window
 import kotlinx.coroutines.await
@@ -39,7 +38,7 @@ suspend fun bootJs(
 ) {
     fetch("/z2/session").await()
 
-    defaultServiceCallTransport = BasicWebSocketServiceTransport(
+    defaultServiceCallTransport = SnackbarWebSocketTransport(
         window.location.origin.replace("http", "ws") + "/z2/services",
         false
     ).also {

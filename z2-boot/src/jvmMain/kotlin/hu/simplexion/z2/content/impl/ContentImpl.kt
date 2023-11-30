@@ -12,6 +12,7 @@ import hu.simplexion.z2.content.model.ContentStatus
 import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
 import hu.simplexion.z2.service.ServiceImpl
 import hu.simplexion.z2.service.get
+import hu.simplexion.z2.setting.util.fromEnvironmentMandatory
 import java.nio.file.Paths
 
 open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
@@ -19,7 +20,7 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
     companion object {
         // TODO content placement strategy settings
         var globalContentPlacementStrategy: ContentPlacementStrategy =
-            BasicPlacementStrategy(Paths.get(System.getenv("Z2_CONTENT_PATH") ?: "./var/tmp" ))
+            BasicPlacementStrategy(Paths.get("CONTENT_PATH".fromEnvironmentMandatory))
 
         val contentImpl = ContentImpl().internal
 

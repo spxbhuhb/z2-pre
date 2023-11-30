@@ -9,6 +9,7 @@ import hu.simplexion.z2.ktor.session
 import hu.simplexion.z2.ktor.sessionWebsocketServiceCallTransport
 import hu.simplexion.z2.localization.localizationJvm
 import hu.simplexion.z2.setting.settingJvm
+import hu.simplexion.z2.setting.util.fromEnvironmentMandatory
 import hu.simplexion.z2.site.siteJvm
 import hu.simplexion.z2.strictId.strictIdJvm
 import hu.simplexion.z2.worker.workerJvm
@@ -23,10 +24,10 @@ import java.time.Duration
 
 fun bootJvm(siteConfig: Application.() -> Unit) {
     dbFromEnvironment()
-    // TODO document Z2_SITE_PORT and mention that it is INTENTIONALLY different from SiteSettings.port
+    // TODO document Z2_INTERNAL_PORT and mention that it is INTENTIONALLY different from SiteSettings.port
     // the port visible from the outside has nothing to do with the actual port Netty runs on, it is quite
     // usual to have proxies, firewalls, relays in the middle
-    val port = System.getenv("Z2_SITE_PORT")?.toIntOrNull() ?: 8080
+    val port = System.getenv("INTERNAL_PORT")?.toIntOrNull() ?: 8080
     embeddedServer(Netty, port = port, module = { module(siteConfig) }).start(wait = true)
 }
 
@@ -54,7 +55,7 @@ fun Application.module(siteConfig: Application.() -> Unit) {
     routing {
         session()
         sessionWebsocketServiceCallTransport("/z2/services")
-        staticFiles("/", File(System.getenv("Z2_SITE_STATIC"))) {
+        staticFiles("/", File("SITE_STATIC".fromEnvironmentMandatory)) {
             this.default("index.html")
         }
     }

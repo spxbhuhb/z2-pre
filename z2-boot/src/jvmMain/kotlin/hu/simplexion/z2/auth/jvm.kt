@@ -19,6 +19,7 @@ import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.commonStrings
+import hu.simplexion.z2.setting.util.fromEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
 
 internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB
@@ -31,7 +32,7 @@ const val securityOfficerRoleName = "security-officer"
 const val securityOfficerPrincipalName = "so"
 const val anonymousPrincipalName = "anonymous"
 
-fun authJvm(initialSoPassword: String = System.getenv("Z2_INITIAL_SO_PASSWORD") ?: "so") {
+fun authJvm(initialSoPassword: String = "INITIAL_SO_PASSWORD".fromEnvironment ?: "so") {
 
     tables(
         principalTable,

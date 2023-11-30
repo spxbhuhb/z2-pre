@@ -10,7 +10,6 @@ import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
-import hu.simplexion.z2.setting.util.CommonSettings.getSystemSettings
 import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
@@ -31,14 +30,15 @@ class EmailWorker(
     override val registration: UUID<WorkerRegistration>
 ) : BackgroundWorker {
 
-    val settings = EmailSettings()
+    companion object {
+        val settings = EmailSettings() // FIXME per-instance e-mail settings
+    }
 
     val eventListener = AnonymousEventListener(emailBusHandle, ::onBusEvent)
 
     val normalQueue = Channel<UUID<Email>>(Channel.UNLIMITED)
 
     override suspend fun run(job: Job) {
-        getSystemSettings(registration, settings)
         EventCentral.attach(eventListener)
 
         localLaunch { retry(job) }

@@ -17,4 +17,8 @@ interface ICommonStrings : LocalizedTextProvider {
     val save get() = static("mentés", name = "save")
     val cancel get() = static("mégse", name = "cancel")
 
+    val communicationError get() = static("Kommunikációs hiba, kérem frissítse az oldalt.")
+    val timeoutError get() = static("A szerver nem válaszolt időben, kérem frissítse az oldalt.")
+    val responseError get() = static("A szerver végrehajtási hibát jelzett, kérem vegye fel a kapcsolatot az üzemeltetéssel.")
+
 }
