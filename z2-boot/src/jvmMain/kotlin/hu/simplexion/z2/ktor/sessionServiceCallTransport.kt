@@ -1,7 +1,9 @@
 package hu.simplexion.z2.ktor
 
+import hu.simplexion.z2.auth.context.AccessDenied
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.activeSessions
 import hu.simplexion.z2.auth.model.Session
+import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.commons.util.UUID
@@ -56,19 +58,31 @@ fun Routing.sessionWebsocketServiceCallTransport(
                     )
 
                 } catch (ex: Exception) {
-                    if (ex is AccessDeniedException) {
-                        ResponseEnvelope(
-                            requestEnvelope.callId,
-                            ServiceCallStatus.AccessDenied,
-                            byteArrayOf()
-                        )
-                    } else {
-                        ex.printStackTrace() // TODO proper logging
-                        ResponseEnvelope(
-                            requestEnvelope.callId,
-                            ServiceCallStatus.Exception,
-                            ProtoMessageBuilder().string(1, ex::class.simpleName ?: "").pack()
-                        )
+                    when (ex) {
+                        is AccessDenied -> {
+                            ResponseEnvelope(
+                                requestEnvelope.callId,
+                                ServiceCallStatus.AccessDenied,
+                                byteArrayOf()
+                            )
+                        }
+
+                        is AuthenticationFail -> {
+                            ResponseEnvelope(
+                                requestEnvelope.callId,
+                                if (ex.locked) ServiceCallStatus.AuthenticationFailLocked else ServiceCallStatus.AuthenticationFail,
+                                byteArrayOf()
+                            )
+                        }
+
+                        else -> {
+                            ex.printStackTrace() // TODO proper logging
+                            ResponseEnvelope(
+                                requestEnvelope.callId,
+                                ServiceCallStatus.Exception,
+                                ProtoMessageBuilder().string(1, ex::class.simpleName ?: "").pack()
+                            )
+                        }
                     }
                 }
 

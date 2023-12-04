@@ -15,8 +15,8 @@ import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
+import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.auth.util.BCrypt
-import hu.simplexion.z2.auth.util.Unauthorized
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
@@ -55,15 +55,15 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
         if (principal == null) {
             securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
-            throw AccessDenied()
+            throw AuthenticationFail("Unknown", false)
         }
 
         try {
             authenticate(principal.uuid, password, true, CredentialType.PASSWORD)
-        } catch (ex: Unauthorized) {
+        } catch (ex: AuthenticationFail) {
             // FIXME, is locked meaningful? if we send it to the user it is possible to find principal names by N failed auth
             securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
-            throw AccessDenied()
+            throw ex
         }
 
         val session = Session().also {
@@ -118,7 +118,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         // FIXME check credential expiration
 
         val validCredentials = if (checkCredentials) {
-            val credential = credentialsTable.readValue(principalId, credentialType) ?: throw Unauthorized("NoCredential")
+            val credential = credentialsTable.readValue(principalId, credentialType) ?: throw AuthenticationFail("NoCredential")
             BCrypt.checkpw(password, credential)
         } else true
 
@@ -129,11 +129,11 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             val principal = principalTable.get(principalId)
 
             val result = when {
-                ! principal.activated && credentialType != ACTIVATION_KEY -> Unauthorized("NotActivated")
-                principal.locked -> Unauthorized("Locked", true)
-                principal.expired -> Unauthorized("Expired")
-                principal.anonymized -> Unauthorized("Anonymized")
-                ! validCredentials -> Unauthorized("InvalidCredentials")
+                ! principal.activated && credentialType != ACTIVATION_KEY -> AuthenticationFail("NotActivated")
+                principal.locked -> AuthenticationFail("Locked", true)
+                principal.expired -> AuthenticationFail("Expired")
+                principal.anonymized -> AuthenticationFail("Anonymized")
+                ! validCredentials -> AuthenticationFail("InvalidCredentials")
                 else -> null
             }
 
