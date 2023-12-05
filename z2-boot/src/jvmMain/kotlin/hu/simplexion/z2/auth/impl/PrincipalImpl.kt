@@ -15,7 +15,9 @@ import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
+import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.commons.util.use
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.service.ServiceImpl
@@ -25,6 +27,11 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     companion object {
         val principalImpl = PrincipalImpl().internal
+
+        val policyLock = Lock()
+
+        val securityPolicy = SecurityPolicy()
+            get() = policyLock.use { field }
 
         var addRoles = emptyArray<Role>()
         var getRoles = emptyArray<Role>()
@@ -138,12 +145,14 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     override suspend fun getPolicy(): SecurityPolicy {
         ensureAny(*policyGetRoles)
-        TODO("Not yet implemented")
+        return securityPolicy.copy()
     }
 
     override suspend fun changePolicy(policy: SecurityPolicy) {
         ensureAny(*policySetRoles)
-        TODO("Not yet implemented")
+        policyLock.use {
+            securityPolicy.copyFrom(policy)
+        }
     }
 
 }
