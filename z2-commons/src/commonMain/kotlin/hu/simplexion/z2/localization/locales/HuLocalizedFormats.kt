@@ -14,6 +14,7 @@ object HuLocalizedFormats : AbstractLocalizedFormats(
 ) {
 
     override fun format(value: Instant): String {
+        if (value == Instant.DISTANT_PAST || value == Instant.DISTANT_FUTURE) return ""
         return format(value.toLocalDateTime(TimeZone.currentSystemDefault()))
     }
 

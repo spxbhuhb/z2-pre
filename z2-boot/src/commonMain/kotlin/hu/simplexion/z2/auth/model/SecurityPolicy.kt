@@ -3,9 +3,7 @@ package hu.simplexion.z2.auth.model
 import hu.simplexion.z2.schematic.Schematic
 
 class SecurityPolicy : Schematic<SecurityPolicy>() {
-    val uuid by uuid<SecurityPolicy>()
-
-    var passwordChangeInterval by duration()
+    var passwordChangeInterval by int()
     var passwordHistoryLength by int()
     var passwordLengthMinimum by int()
     var uppercaseMinimum by int()

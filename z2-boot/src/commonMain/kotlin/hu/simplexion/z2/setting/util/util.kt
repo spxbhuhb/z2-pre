@@ -17,7 +17,7 @@ fun <T : Schematic<T>> T.decodeFromSettings(basePath: String, settings: List<Set
         val actualValue = if (settingsValue != null || field.isNullable) {
             field.toTypedValue(settingsValue, mutableListOf()) // FIXME fails are ignored
         } else {
-            field.definitionDefault
+            if (field.isNullable) field.definitionDefault else field.definitionDefault ?: field.naturalDefault
         }
         schematicCompanion.setFieldValue(this, field.name, actualValue)
     }

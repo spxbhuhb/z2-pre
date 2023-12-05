@@ -9,15 +9,12 @@ import hu.simplexion.z2.auth.model.CredentialType.PASSWORD_RESET_KEY
 import hu.simplexion.z2.auth.model.Credentials
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.model.SecurityPolicy
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.commons.util.use
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.service.ServiceImpl
@@ -28,16 +25,9 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     companion object {
         val principalImpl = PrincipalImpl().internal
 
-        val policyLock = Lock()
-
-        val securityPolicy = SecurityPolicy()
-            get() = policyLock.use { field }
-
         var addRoles = emptyArray<Role>()
         var getRoles = emptyArray<Role>()
         var updateRoles = emptyArray<Role>()
-        var policyGetRoles = emptyArray<Role>()
-        var policySetRoles = emptyArray<Role>()
     }
 
     override suspend fun list(): List<Principal> {
@@ -141,18 +131,6 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
         securityHistory(baseStrings.account, baseStrings.setLocked, uuid, locked)
 
         principalTable.setLocked(uuid, locked)
-    }
-
-    override suspend fun getPolicy(): SecurityPolicy {
-        ensureAny(*policyGetRoles)
-        return securityPolicy.copy()
-    }
-
-    override suspend fun changePolicy(policy: SecurityPolicy) {
-        ensureAny(*policySetRoles)
-        policyLock.use {
-            securityPolicy.copyFrom(policy)
-        }
     }
 
 }

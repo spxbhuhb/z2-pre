@@ -345,7 +345,7 @@ class DumpTransport : ServiceCallTransport {
         println(funName)
         println(payload.dumpProto())
 
-        val service = requireNotNull(defaultServiceImplFactory[serviceName, null])
+        val service = requireNotNull(defaultServiceImplFactory[serviceName, BasicServiceContext()])
 
         val responseBuilder = ProtoMessageBuilder()
 
