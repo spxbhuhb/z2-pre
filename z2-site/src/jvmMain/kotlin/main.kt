@@ -14,7 +14,7 @@ fun main() {
     baseStrings = strings
     validationStrings = strings
 
-    bootJvm {
+    bootJvm({}) {
         init()
     }
 }

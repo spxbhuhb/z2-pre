@@ -15,19 +15,19 @@ fun ServiceImpl<*>.securityHistory(topic: LocalizedText, verb : LocalizedText, s
     historyImpl.add(serviceContext.principalOrNull, HistoryFlags.SECURITY, topic, verb, parameters.joinToString())
 }
 
-fun securityHistory(principal: UUID<Principal>, topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
+fun securityHistory(principal: UUID<Principal>?, topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
     historyImpl.add(principal, HistoryFlags.SECURITY, topic, verb, parameters.joinToString())
 }
 
-fun ServiceImpl<*>.history(topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
+fun ServiceImpl<*>.businessHistory(topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
     historyImpl.add(serviceContext.principal, HistoryFlags.BUSINESS, topic, verb, parameters.joinToString())
 }
 
-fun ServiceImpl<*>.history(topic: LocalizedText, subject: UUID<*>, verb : LocalizedText, vararg parameters: Any?) {
+fun ServiceImpl<*>.businessHistory(topic: LocalizedText, subject: UUID<*>, verb : LocalizedText, vararg parameters: Any?) {
     historyImpl.add(serviceContext.principal, HistoryFlags.BUSINESS, topic, verb, subject, "text/plain", parameters.joinToString())
 }
 
-fun history(principal: UUID<Principal>, topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
+fun businessHistory(principal: UUID<Principal>, topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
     historyImpl.add(principal, HistoryFlags.BUSINESS, topic, verb, parameters.joinToString())
 }
 
@@ -35,23 +35,26 @@ fun ServiceImpl<*>.settingHistory(owner : UUID<Principal>, topic: LocalizedText,
     historyImpl.add(serviceContext.principalOrNull, HistoryFlags.SETTING, topic, verb, owner, "text/plain", parameters.joinToString())
 }
 
-fun systemHistory(topic: LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    // TECHNICAL here is intentional, system history is actually technical history
-    history(null, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
+fun technicalHistory(topic: LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
+    businessHistory(null, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
+}
+
+fun technicalHistory(topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
+    historyImpl.add(null, HistoryFlags.TECHNICAL, topic, verb, null, "text/plain", parameters.joinToString())
 }
 
 fun ServiceImpl<*>.technicalHistory(topic : LocalizedText, verb : LocalizedText, vararg parameters: Pair<LocalizedText, Any?>) {
-    history(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, null, *parameters)
+    businessHistory(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, null, *parameters)
 }
 
 fun technicalHistory(serviceContext: ServiceContext, topic : LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    history(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
+    businessHistory(serviceContext.principalOrNull, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
 }
 
 fun technicalHistory(createdBy: UUID<Principal>, topic : LocalizedText, verb : LocalizedText, subject: UUID<*>, vararg parameters: Pair<LocalizedText, Any?>) {
-    history(createdBy, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
+    businessHistory(createdBy, HistoryFlags.TECHNICAL, topic, verb, subject, *parameters)
 }
 
-fun history(principal : UUID<Principal>?, flags : Int, topic: LocalizedText, verb : LocalizedText, subject: UUID<*>?, vararg parameters: Pair<LocalizedText, Any?>) {
+fun businessHistory(principal : UUID<Principal>?, flags : Int, topic: LocalizedText, verb : LocalizedText, subject: UUID<*>?, vararg parameters: Pair<LocalizedText, Any?>) {
     historyImpl.add(principal, flags, topic, verb, subject, "text/plain", parameters.format())
 }

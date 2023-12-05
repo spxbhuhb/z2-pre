@@ -72,5 +72,4 @@ interface IBaseStrings : IBrowserStrings {
     val addProvider get() = static("add worker provider")
     val provider get() = static("provider")
     val setStoppedDuringStart get() = static("Worker status set to stopped because it cannot be running during startup. This may happen if the system had an uncontrolled shutdown.")
-
 }

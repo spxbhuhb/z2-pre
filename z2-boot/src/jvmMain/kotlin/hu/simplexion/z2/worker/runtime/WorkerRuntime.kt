@@ -5,10 +5,8 @@ import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.util.runBlockingAsSecurityOfficer
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.history.util.systemHistory
 import hu.simplexion.z2.history.util.technicalHistory
 import hu.simplexion.z2.localization.text.commonStrings
-import hu.simplexion.z2.logging.util.info
 import hu.simplexion.z2.worker.model.WorkerProvider
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import hu.simplexion.z2.worker.model.WorkerStartMode
@@ -70,13 +68,11 @@ open class WorkerRuntime {
     }
 
     open fun start() {
-        info(baseStrings.worker, baseStrings.startRuntime)
         scope.launch { main() }
     }
 
     open fun stop(wait: Boolean = true) {
         runBlocking {
-            info(baseStrings.workers, baseStrings.stopRuntime)
             messages.close()
             scope.cancel()
             while (wait && scope.isActive) {
@@ -142,8 +138,6 @@ open class WorkerRuntime {
             return
         }
         workerProviders[provider.uuid] = provider
-
-        info(baseStrings.worker, baseStrings.addProvider, baseStrings.provider to provider.uuid)
 
         for (registration in workerRegistrations.values) {
             if (registration.provider == provider.uuid && registration.status == WorkerStatus.Stopped && registration.startMode != WorkerStartMode.Manual) {
@@ -296,7 +290,7 @@ open class WorkerRuntime {
         }.also {
             transaction {
                 workerRegistrationTable.setStatus(it)
-                systemHistory(
+                technicalHistory(
                     baseStrings.worker,
                     commonStrings.update,
                     it.uuid,
