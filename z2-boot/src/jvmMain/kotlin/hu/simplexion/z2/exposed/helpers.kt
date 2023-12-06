@@ -82,3 +82,8 @@ fun implementations(vararg implementations : ServiceImpl<*>) {
 fun Table.isEmpty() = (selectAll().count() == 0L)
 
 fun Table.isNotEmpty() = (selectAll().count() != 0L)
+
+fun Boolean.alsoTransactionIf(block : (it : Boolean) -> Unit) : Boolean {
+    transaction { block(this@alsoTransactionIf) }
+    return this
+}

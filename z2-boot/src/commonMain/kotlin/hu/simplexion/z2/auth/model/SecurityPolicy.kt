@@ -3,7 +3,10 @@ package hu.simplexion.z2.auth.model
 import hu.simplexion.z2.schematic.Schematic
 
 class SecurityPolicy : Schematic<SecurityPolicy>() {
-    var passwordChangeInterval by int()
+    var twoFactorAuthentication by boolean()
+    var sessionActivationInterval by int(5) // minutes
+    var sessionExpirationInterval by int(30) // minutes
+    var passwordChangeInterval by int() // days
     var passwordHistoryLength by int()
     var passwordLengthMinimum by int()
     var uppercaseMinimum by int()

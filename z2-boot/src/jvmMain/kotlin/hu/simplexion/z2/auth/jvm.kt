@@ -4,7 +4,10 @@ import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
 import hu.simplexion.z2.auth.impl.PrincipalImpl.Companion.principalImpl
 import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
-import hu.simplexion.z2.auth.model.*
+import hu.simplexion.z2.auth.model.CredentialType
+import hu.simplexion.z2.auth.model.Credentials
+import hu.simplexion.z2.auth.model.Principal
+import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -21,8 +24,6 @@ import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.setting.util.fromEnvironment
 import org.jetbrains.exposed.sql.transactions.transaction
-
-internal val securityPolicy = SecurityPolicy() // FIXME read policy from DB
 
 lateinit var securityOfficerRole: Role
 lateinit var securityOfficerUuid: UUID<Principal>

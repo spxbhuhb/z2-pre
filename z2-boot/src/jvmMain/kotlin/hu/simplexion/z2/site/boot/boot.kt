@@ -19,8 +19,15 @@ import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.time.Duration
+
+/**
+ * Scope for housekeeping background tasks. Cancelled during shutdown.
+ */
+val housekeepingScope = CoroutineScope(Dispatchers.IO)
 
 lateinit var applicationEngine: ApplicationEngine
 

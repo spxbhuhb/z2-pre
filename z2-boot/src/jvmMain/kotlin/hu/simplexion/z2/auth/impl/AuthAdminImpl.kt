@@ -19,6 +19,7 @@ class AuthAdminImpl : AuthAdminApi, ServiceImpl<AuthAdminImpl> {
         val KEY = "securityPolicy"
 
         var policySetRoles = emptyArray<Role>()
+
     }
 
     override suspend fun getPolicy(): SecurityPolicy {

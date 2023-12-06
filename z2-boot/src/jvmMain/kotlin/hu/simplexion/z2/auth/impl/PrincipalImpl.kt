@@ -2,6 +2,7 @@ package hu.simplexion.z2.auth.impl
 
 import hu.simplexion.z2.auth.api.PrincipalApi
 import hu.simplexion.z2.auth.context.*
+import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.CredentialType.PASSWORD
@@ -70,7 +71,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
         if (! isSecurityOfficer || credentials.principal == serviceContext.principal) {
             requireNotNull(currentCredentials)
-            sessionImpl(serviceContext).authenticate(credentials.principal, currentCredentials.value, true, currentCredentials.type)
+            sessionImpl(serviceContext).authenticate(credentials.principal, currentCredentials.value, true, currentCredentials.type, authAdminImpl.getPolicy())
         }
 
         credentials.createdAt = now()
@@ -86,7 +87,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     override suspend fun activate(credentials: Credentials, key: Credentials) : String {
         publicAccess()
-        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, ACTIVATION_KEY)
+        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, ACTIVATION_KEY, authAdminImpl.getPolicy())
 
         securityHistory(baseStrings.account, baseStrings.setActivated, key.principal, true)
 
@@ -104,7 +105,7 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     override suspend fun resetPassword(credentials: Credentials, key: Credentials) : String {
         publicAccess()
-        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, PASSWORD_RESET_KEY)
+        sessionImpl(serviceContext).authenticate(key.principal, key.value, true, PASSWORD_RESET_KEY, authAdminImpl.getPolicy())
 
         securityHistory(baseStrings.account, baseStrings.passwordReset, key.principal, true)
 

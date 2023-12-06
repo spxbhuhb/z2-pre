@@ -33,6 +33,13 @@ interface IBaseStrings : IBrowserStrings {
     val setLocked get() = static("Fiók zárolás beállítása")
     val setActivated get() = static("Fiók aktiválás beállítása")
 
+    val session get() = static("munkamenet")
+    val created get() = static("létrehozva")
+    val removed get() = static("eltávolítva")
+    val expired get() = static("lejárt")
+    val expiredSecurityCode get() = static("biztonsági kód lejárt")
+    val securityCodeOk get() = static("biztonsági kód rendben")
+
     val securityPolicy get() = static("Biztonsági házirend", "Biztonsági szabályok beállítása. Jelszóerősség, hibás bejelentkezések száma stb.")
 
     val upload get() = static("feltöltés")

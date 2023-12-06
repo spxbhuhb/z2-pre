@@ -14,6 +14,8 @@ interface SessionApi : Service {
 
     suspend fun login(name : String, password : String) : Session
 
+    suspend fun activateSession(securityCode : String) : Session
+
     suspend fun getSession() : Session?
 
     suspend fun logout()

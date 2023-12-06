@@ -3,14 +3,12 @@ package hu.simplexion.z2.auth.impl
 import hu.simplexion.z2.auth.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
-import hu.simplexion.z2.auth.model.CredentialType
+import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
+import hu.simplexion.z2.auth.model.*
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
-import hu.simplexion.z2.auth.model.Principal
-import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.model.Session
+import hu.simplexion.z2.auth.model.Session.Companion.LOGOUT_TOKEN_UUID
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
 import hu.simplexion.z2.auth.securityOfficerRole
-import hu.simplexion.z2.auth.securityPolicy
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -19,21 +17,89 @@ import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.commons.util.fourRandomInt
 import hu.simplexion.z2.history.util.securityHistory
+import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.service.ServiceContext
 import hu.simplexion.z2.service.ServiceImpl
+import hu.simplexion.z2.site.boot.housekeepingScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
+import kotlin.math.abs
+import kotlin.time.Duration.Companion.minutes
 
 class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     companion object {
         val sessionImpl = SessionImpl().internal
 
-        val activeSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
+        /**
+         * Sessions waiting for the second step of 2FA.
+         */
+        private val preparedSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
+
+        /**
+         * Active sessions used for authorization. Use the [getSessionForContext] method
+         * to get the session.
+         */
+        private val activeSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
+
+        /**
+         * Function to send the security code.
+         */
+        var sendSecurityCode: (session: Session) -> Unit = { }
+
+        suspend fun sessionExpiration() {
+            while (housekeepingScope.isActive) {
+                val policy = transaction { runBlocking { authAdminImpl.getPolicy() } }
+                val now = now()
+                val next = now.plus(1.minutes)
+
+                activeSessions.values
+                    .filter {
+                        it.lastActivity.plus(policy.sessionExpirationInterval.minutes) < now
+                    }
+                    .forEach { session ->
+                        activeSessions.remove(session.uuid)
+                        transaction {
+                            session.history(baseStrings.expired)
+                        }
+                    }
+
+                while (housekeepingScope.isActive) {
+                    val preparedNow = now()
+                    if (preparedNow > next) break
+
+                    preparedSessions.values
+                        .filter { it.createdAt.plus(policy.sessionActivationInterval.minutes) < preparedNow }
+                        .forEach { session ->
+                            preparedSessions.remove(session.uuid)
+                            transaction {
+                                session.history(baseStrings.expiredSecurityCode)
+                            }
+                        }
+
+                    delay(5000)
+                }
+            }
+        }
+
+        private fun Session.history(event: LocalizedText) {
+            securityHistory(principal, baseStrings.session, event, baseStrings.session, uuid, baseStrings.account, principal)
+        }
+
+        init {
+            housekeepingScope.launch { sessionExpiration() }
+        }
     }
 
     // ----------------------------------------------------------------------------------
@@ -41,12 +107,12 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     // ----------------------------------------------------------------------------------
 
     override suspend fun owner(): UUID<Principal>? {
-        ensuredByLogic("Session owner gets its own principal.")
+        ensuredByLogic("Session owner gets own principal.")
         return serviceContext.getSessionOrNull()?.principal
     }
 
     override suspend fun roles(): List<Role> {
-        ensuredByLogic("Session owner gets its own roles.")
+        ensuredByLogic("Session owner gets own roles.")
         return serviceContext.getSessionOrNull()?.roles ?: emptyList()
     }
 
@@ -59,9 +125,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         }
 
         try {
-            authenticate(principal.uuid, password, true, CredentialType.PASSWORD)
+            authenticate(principal.uuid, password, true, CredentialType.PASSWORD, authAdminImpl.getPolicy())
         } catch (ex: AuthenticationFail) {
-            // FIXME, is locked meaningful? if we send it to the user it is possible to find principal names by N failed auth
             securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
             throw ex
         }
@@ -72,10 +137,29 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             it.roles = roleGrantTable.rolesOf(principal.uuid, null)
         }
 
-        requireNotNull(serviceContext).let {
-            activeSessions[it.uuid] = session
-            it.data[SESSION_TOKEN_UUID] = session
+        session.history(baseStrings.created)
+
+        if (authAdminImpl.getPolicy().twoFactorAuthentication) {
+            preparedSessions[serviceContext.uuid] = session
+            session.securityCode = abs(fourRandomInt()[0]).toString().padStart(6, '0').substring(0, 6)
+            sendSecurityCode(session)
+        } else {
+            activeSessions[serviceContext.uuid] = session
+            serviceContext.data[SESSION_TOKEN_UUID] = session
         }
+
+        return session
+    }
+
+    override suspend fun activateSession(securityCode: String): Session {
+        val session = preparedSessions[serviceContext.uuid] ?: throw AccessDenied()
+        if (session.securityCode != securityCode) throw AuthenticationFail("Code")
+
+        session.history(baseStrings.securityCodeOk)
+
+        preparedSessions.remove(serviceContext.uuid)
+        activeSessions[serviceContext.uuid] = session
+        serviceContext.data[SESSION_TOKEN_UUID] = session
 
         return session
     }
@@ -86,9 +170,14 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     override suspend fun logout() {
         ensureLoggedIn()
+
         securityHistory(baseStrings.account, baseStrings.logout, serviceContext.principal)
+        serviceContext.getSession().history(baseStrings.removed)
+
         activeSessions.remove(serviceContext.uuid)
         serviceContext.data.remove(SESSION_TOKEN_UUID)
+
+        serviceContext.data[LOGOUT_TOKEN_UUID] = true
     }
 
     override suspend fun logout(session: UUID<Session>) {
@@ -113,6 +202,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         password: String,
         checkCredentials: Boolean,
         credentialType: String,
+        policy : SecurityPolicy
     ) {
 
         // FIXME check credential expiration
@@ -139,8 +229,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
             if (result != null) {
                 principal.authFailCount ++
-                principal.lastAuthFail = Clock.System.now()
-                principal.locked = principal.locked || (principal.authFailCount > securityPolicy.maxFailedAuths)
+                principal.lastAuthFail = now()
+                principal.locked = principal.locked || (principal.authFailCount > policy.maxFailedAuths)
 
                 principalTable.update(principal.uuid, principal)
                 securityHistory(principalId, baseStrings.account, baseStrings.authenticateFail, principalId, result.reason, result.locked)
@@ -186,4 +276,11 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             authenticateInProgress -= principalId
         }
     }
+
+    fun getSessionForContext(sessionUuid: UUID<ServiceContext>): Session? =
+        activeSessions.computeIfPresent(sessionUuid) { _, session ->
+            session.lastActivity = now()
+            session
+        }
+
 }

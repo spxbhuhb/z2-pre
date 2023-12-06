@@ -2,8 +2,9 @@ package hu.simplexion.z2.ktor
 
 import hu.simplexion.z2.auth.context.AccessDenied
 import hu.simplexion.z2.auth.context.principalOrNull
-import hu.simplexion.z2.auth.impl.SessionImpl.Companion.activeSessions
+import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
 import hu.simplexion.z2.auth.model.Session
+import hu.simplexion.z2.auth.model.Session.Companion.LOGOUT_TOKEN_UUID
 import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
@@ -27,6 +28,7 @@ fun accessLog(context : ServiceContext, requestEnvelope : RequestEnvelope, respo
     serviceAccessLog.info("${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${responseEnvelope.status} ${responseEnvelope.payload.size} ${context.principalOrNull}")
 }
 
+// FIXME flood detection, session id brute force attack detection
 fun Routing.sessionWebsocketServiceCallTransport(
     path: String = "/z2/service",
     newContext: (uuid: UUID<ServiceContext>) -> ServiceContext = { BasicServiceContext(it) }
@@ -37,7 +39,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
             val context = newContext(sessionUuid)
 
-            activeSessions[sessionUuid]?.let {
+            sessionImpl.getSessionForContext(sessionUuid)?.let {
                 context.data[Session.SESSION_TOKEN_UUID] = it
             }
 
@@ -99,6 +101,8 @@ fun Routing.sessionWebsocketServiceCallTransport(
                 accessLog(context, requestEnvelope, responseEnvelope)
 
                 send(Frame.Binary(true, ResponseEnvelope.encodeProto(responseEnvelope)))
+
+                if (context.data[LOGOUT_TOKEN_UUID] == true) break
             }
 
         } catch (e: Exception) {
