@@ -36,7 +36,7 @@ fun bootJvm(earlyConfig: Application.() -> Unit, siteConfig: Application.() -> U
     // TODO document Z2_INTERNAL_PORT and mention that it is INTENTIONALLY different from SiteSettings.port
     // the port visible from the outside has nothing to do with the actual port Netty runs on, it is quite
     // usual to have proxies, firewalls, relays in the middle
-    val port = System.getenv("INTERNAL_PORT")?.toIntOrNull() ?: 8080
+    val port = "INTERNAL_PORT".fromEnvironmentMandatory.toInt()
     embeddedServer(Netty, port = port, module = { module(earlyConfig, siteConfig) }).also {
         applicationEngine = it
         it.start(wait = true)
