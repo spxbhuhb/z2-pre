@@ -59,7 +59,7 @@ fun ServiceContext.isLoggedIn(): ContextCheckResult {
 
 
 /**
- * Allow when **ALL** the roles are in [Session.roles].
+ * Allow when the role is in [Session.roles].
  *
  * Deny otherwise.
  */

@@ -19,13 +19,17 @@ import java.math.BigDecimal
 open class SchematicUuidTable<T : Schematic<T>>(
     name: String,
     val template: T,
-    val autoGenerateId : Boolean = true,
+    val autoGenerateId: Boolean = true,
 ) : UUIDTable(name, columnName = "uuid") {
 
     fun newInstance() =
         template.schematicCompanion.newInstance()
 
-    fun list(limit: Int? = null, offset: Long? = null): List<T> {
+    @Deprecated("use query instead", ReplaceWith("query"))
+    fun list(limit: Int? = null, offset: Long? = null): List<T> =
+        query(limit, offset)
+
+    fun query(limit: Int? = null, offset: Long? = null): List<T> {
         var statement = selectAll()
 
         if (limit != null) {
@@ -37,7 +41,12 @@ open class SchematicUuidTable<T : Schematic<T>>(
         }
     }
 
-    fun list(limit: Int? = null, offset: Long? = null, where: SqlExpressionBuilder.() -> Op<Boolean>): List<T> {
+    @Deprecated("use query instead", ReplaceWith("query"))
+    fun list(limit: Int? = null, offset: Long? = null, where: SqlExpressionBuilder.() -> Op<Boolean>): List<T> =
+        query(limit, offset, where)
+
+    fun query(limit: Int? = null, offset: Long? = null, where: SqlExpressionBuilder.() -> Op<Boolean>): List<T> {
+
         var statement = select(where)
 
         if (limit != null) {
@@ -61,7 +70,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
     }
 
     fun insert(schematic: T): UUID<T> {
-        val uuid : UUID<T> = checkNotNull(
+        val uuid: UUID<T> = checkNotNull(
             insert {
                 it.fromSchematic(this, schematic, autoGenerateId)
             }.getOrNull(id)
@@ -129,7 +138,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
         return schematic
     }
 
-    fun UpdateBuilder<*>.fromSchematic(table: Table, schematic: Schematic<*>, skipId : Boolean) {
+    fun UpdateBuilder<*>.fromSchematic(table: Table, schematic: Schematic<*>, skipId: Boolean) {
         val statement = this
         for (field in schematic.schematicSchema.fields) {
             // this let the SQL generate the uuid instead using the one in the schematic
@@ -144,7 +153,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
             statement[column] = when (field.type) {
                 SchemaFieldType.Decimal -> value?.let { BigDecimal.valueOf(it as Long, (field as DecimalSchemaFieldDefault).scale) }
                 SchemaFieldType.UUID -> (value as? UUID<*>)?.jvm
-                else ->  value
+                else -> value
             }
         }
     }

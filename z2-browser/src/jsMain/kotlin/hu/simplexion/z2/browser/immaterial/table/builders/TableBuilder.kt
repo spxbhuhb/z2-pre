@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
+import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.immaterial.schematic.State
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.immaterial.table.TableConfiguration
@@ -28,6 +29,24 @@ open class TableBuilder<T>(
 
     open fun actionColumn(builder : ActionColumnBuilder<T>.() -> Unit) {
         columns += ActionColumnBuilder<T>().apply(builder)
+    }
+
+    open fun editActionColumn(actionFun : suspend (row : T) -> Unit) {
+        columns += ActionColumnBuilder<T>().apply {
+            action {
+                label = browserStrings.edit
+                handler = actionFun
+            }
+        }
+    }
+
+    open fun detailsActionColumn(actionFun : suspend (row : T) -> Unit) {
+        columns += ActionColumnBuilder<T>().apply {
+            action {
+                label = browserStrings.details
+                handler = actionFun
+            }
+        }
     }
 
 //    fun Z2.titleBar(): Z2 =

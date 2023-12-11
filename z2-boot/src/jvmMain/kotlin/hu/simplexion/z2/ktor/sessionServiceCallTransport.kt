@@ -52,21 +52,33 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 val responseEnvelope = try {
 
-                    val service = requireNotNull(defaultServiceImplFactory[requestEnvelope.serviceName, context])
+                    val service = defaultServiceImplFactory[requestEnvelope.serviceName, context]
 
                     val responseBuilder = ProtoMessageBuilder()
 
-                    service.dispatch(
-                        requestEnvelope.funName,
-                        ProtoMessage(requestEnvelope.payload),
-                        responseBuilder
-                    )
+                    if (service != null) {
 
-                    ResponseEnvelope(
-                        requestEnvelope.callId,
-                        ServiceCallStatus.Ok,
-                        responseBuilder.pack()
-                    )
+                        service.dispatch(
+                            requestEnvelope.funName,
+                            ProtoMessage(requestEnvelope.payload),
+                            responseBuilder
+                        )
+
+                        ResponseEnvelope(
+                            requestEnvelope.callId,
+                            ServiceCallStatus.Ok,
+                            responseBuilder.pack()
+                        )
+
+                    } else {
+
+                        ResponseEnvelope(
+                            requestEnvelope.callId,
+                            ServiceCallStatus.ServiceNotFound,
+                            responseBuilder.pack()
+                        )
+
+                    }
 
                 } catch (ex: Exception) {
                     when (ex) {

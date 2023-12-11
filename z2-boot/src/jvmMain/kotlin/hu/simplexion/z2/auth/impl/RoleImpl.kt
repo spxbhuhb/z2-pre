@@ -26,7 +26,7 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
         var updateRoles = emptyArray<Role>()
     }
 
-    override suspend fun list(): List<Role> {
+    override suspend fun query(): List<Role> {
         ensureAny(*getRoles)
         return roleTable.list()
     }

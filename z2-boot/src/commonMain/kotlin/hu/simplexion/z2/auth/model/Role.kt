@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth.model
 
+import hu.simplexion.z2.localization.localizedTextStore
 import hu.simplexion.z2.schematic.Schematic
 
 class Role : Schematic<Role>() {
@@ -20,4 +21,7 @@ class Role : Schematic<Role>() {
     override fun hashCode(): Int {
         return uuid.hashCode()
     }
+
+    override fun toString() : String =
+        localizedTextStore[uuid.toString()]?.value ?: displayName
 }

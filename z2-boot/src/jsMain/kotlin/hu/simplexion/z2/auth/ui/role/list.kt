@@ -25,7 +25,7 @@ fun Z2.list() =
                 }
 
                 rowId = { it.uuid }
-                query = { roleService.list() }
+                query = { roleService.query() }
 
                 schematicColumn { Role().programmaticName }
                 schematicColumn { Role().displayName }

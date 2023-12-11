@@ -8,7 +8,7 @@ import hu.simplexion.z2.service.Service
 
 interface RoleApi : Service {
 
-    suspend fun list(): List<Role>
+    suspend fun query(): List<Role>
 
     suspend fun add(role: Role) : UUID<Role>
 
