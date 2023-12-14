@@ -68,7 +68,6 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
                 activeSessions.values
                     .filter {
-                        println("$now $next $cutoff ${it.lastActivity} ${it.lastActivity < cutoff}")
                         it.lastActivity < cutoff
                     }
                     .forEach { session ->
