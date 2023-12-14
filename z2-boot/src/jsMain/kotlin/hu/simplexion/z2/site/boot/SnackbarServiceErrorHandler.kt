@@ -1,6 +1,7 @@
 package hu.simplexion.z2.site.boot
 
 import hu.simplexion.z2.browser.material.snackbar.errorSnackbar
+import hu.simplexion.z2.browser.material.snackbar.warningSnackbar
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.service.ServiceErrorHandler
 import hu.simplexion.z2.service.transport.ResponseEnvelope
@@ -27,6 +28,18 @@ class SnackbarServiceErrorHandler : ServiceErrorHandler() {
 
             ServiceCallStatus.Timeout -> {
                 errorSnackbar(commonStrings.timeoutError)
+            }
+
+            ServiceCallStatus.Logout -> {
+                // nothing to do here, the logout functions should redirect the user
+            }
+
+            ServiceCallStatus.InvalidSession -> {
+                warningSnackbar(commonStrings.expiredSessionRedirectToLogin)
+            }
+
+            ServiceCallStatus.AccessDenied -> {
+                errorSnackbar(commonStrings.expiredSession)
             }
 
             else -> {

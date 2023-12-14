@@ -1,27 +1,21 @@
-# Z2 Schematic
+# Schematic
 
-[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-schematic-runtime)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-schematic-runtime)
-[![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+Schematic lets you provide metadata and validation for your classes in a clean, concise way.
+There are different libraries that provide this functionality, however Z2 takes this a step
+further and gives you many integrated tools to use this metadata automatically:
 
-Schematic classes for easy UI building, data management and communication.
-
-Status: **proof-of-concept**
-
-Schematic classes provide functions to:
-
-* give metadata (data type, label, icon etc.) to UI components automatically
-* provide validation and user feedback for the UI components
-* create patches that contain only the changes
-* apply patches to previous versions
-
-You can think of schematic classes as view models with benefits.
-
-The library has a runtime part and a Kotlin compiler plugin that transforms the code.
-
-## Caveats
-
-* inner classes are not supported
-* field declaration in constructor is not supported
+* schematic aware UI components use the metadata to:
+    * automatically provide two-way data binding
+    * automatically select the appropriate editor and table column for the given data type
+    * automatically validate user input based on the schema
+    * automatically provide validation feedback to the users (with full localization support)
+    * automatically add labels to the fields and headers to tables
+    * automatically provide data type and locale aware formatting, search, sorting for tables
+* services support schematic classes as parameters and return values automatically
+* schematic classes fire data change events on the event bus events
+* automatic mapping between schematic classes and Exposed columns
+* provide functions to get and set values based on field name
+* provide sensible [defaults](#defaults) for all data types
 
 ## Overview
 
@@ -35,44 +29,50 @@ The first two is quite straightforward, while the third is a bit tricky, but ver
 
 ## Schematic Data Classes
 
-Schematic data classes store the data the application handles:
+Schematic data classes store the data the application handles. They **MUST** extend the `Schematic` interface.
 
 ```kotlin
 import hu.simplexion.z2.schematic.Schematic
 
-class Author : Schematic<Author>() {
-    var name by string() minLength 5 maxLength 5 blank false
+class Author : Schematic<Author> {
+    val uuid: UUID<Author>
+    val name by string {
+        constraint minLength 5 maxlength 5 blank false
+        attribute label "Author's Name"
+    }
 }
 
-class Book : Schematic<Book>() {
-    var title by string() maxLength 100 blank false
-    var authors by schematicList<Author>()
-    var publicationDate by localDate()
-}
-```
-
-If you don't like the infix notation, you can use parameters directly:
-
-```kotlin
-import hu.simplexion.z2.schematic.Schematic
-
-class Author : Schematic<Author>() {
-    var name by string(minLength = 5, maxLength = 5, blank = false)
-}
-
-class Book : Schematic<Book>() { 
-    var title by string(minLength = 1, maxLength = 100, blank = false)
-    var authors by schematicList<Author>()
-    var publicationDate by localDate()
+class Book : Schematic<Book> {
+    var title by string { constraint maxLength 100 blank false }
+    var authors by list<Author> { constraint minLength 1 }
+    var publicationDate: LocalDate
 }
 ```
 
-When you have a schematic class, you can:
+You can define fields with the definition functions provided by the `Schematic` interface or as a normal
+Kotlin field if you do not want to provide additional metadata.
 
-* get and set the properties just as you do with any other class,
-* listen to events fired when a property value changes
-* collect the changes to perform partial updates
-* validate the data with the `Schema` of the class
+Each schematic class has:
+
+* two automatically added [constructors](#constructors-and-defaults)
+* a [companion object](#companion-object) which implements the `SchematicCompanion` interface
+* a [schema](#schemas) which contains the [field definitions](#field-definitions) and provides various functions
+
+### Constructors and Defaults
+
+All schematic classes have at least two constructors generated automatically:
+
+* empty constructor
+* all-field constructor
+
+Both constructors set all the fields to their default value but the all-field constructor lets you change
+any of the fields when you create a new instance.
+
+The default value of a field depends on the [field definition](#field-definitions), nullability and [data type](#data-types).
+
+1. if there is an explicit `defaultVal` or `defaultFun` specified in the schema, the value or function return value is set, respectively
+2. otherwise if the field is nullable the `null` value is set
+3. otherwise the default value of for the field [data type](#data-types) is set
 
 ### Data Types
 
@@ -98,40 +98,87 @@ Support for the following data types is built in.
 |              | UUID<T>                   | `uuid<T>()`          | `UUID.nil<T>()`                |
 |              | MutableList<UUID<T>>      | `uuidList<T>()`      | mutableListOf<UUID<T>>()`      |
 
-* All fields are initialized to their "natural" default values.
-* For nullable fields the natural default is `null`.
-* If you want a different default value use the `default` parameter or infix function.
 * Datetime types are from `kotlinx.datetime`
 * UUID is from Z2 Commons
-* List types are added on-demand and as of now they cannot contain null values.
+* List types cannot contain null values.
 
-To add a new field type just extend the existing ones or define your own by implementing
-the `SchemaField` or `ListSchemaField` interface. For example check the existing field definitions.
+### Field Definitions
 
-### Schemas
+All fields of schematic classes have a definition in the schema, even if you use the minimal definition without additional metadata.
 
-The `Schema` is generated for the schematic class automatically by the compiler plugin.
-You can't see it in the editor, but it looks like this:
+The following example contains three field definitions showing how to specify additional constraints and attributes.
 
 ```kotlin
-class Book : Schematic<Book>() {
-    //. .. definition of fields as above
-    companion object {
-        val schematicSchema = Schema(
-            StringSchemaField("title", maxLength = 100, blank = false),
-            ListSchemaField("authors", minSize = 1, maxSize = 2, Author.schematicSchema),
-            LocalDateSchemaField("publicationDate", after = LocalDate(1970,1,1))
-        )
-    }
+import hu.simplexion.z2.schematic.Schematic
+
+class Author : Schematic<Author> {
     
+    val uuid: UUID<Author>
+    
+    val name by string {
+        constraint minLength 5 maxlength 5 blank false
+        attribute label "Author's Name"
+        attribute doc "This is the name of the author. If there are more than one authors, please add them separately."
+    }
+  
+    val active by boolean { 
+        attribute default true
+        attribute doc "This field is true if the author is still an active author, false otherwise."
+    }
 }
 ```
 
-You can:
+### Companion object
 
-* access the schema of a schematic class instance in the `schematicSchema` property
-* validate a schematic data class instance with the `validate` and `suspendValidate` functions
-* get the schema field for any schematic property automatically with schematic access functions
+The compiler plugin automatically adds a companion object to all classes that implements the `Schematic` interface.
+This companion cannot be seen in the editor, but it looks like this:
+
+```kotlin
+class Author : Schematic<Author>() {
+    //. .. definition of fields as above
+
+    companion object : SchematicCompanion<Author> {
+        
+        val schematicSchema = Schema(
+            UuidSchemaField("title") { },
+            StringSchemaField("name") { 
+                constraint minLength 5 maxlength 5 blank false
+                attribute label "Author's Name"
+                attribute doc "This is the name of the author. If there are more than one authors, please add them separately."
+            },
+            BooleanSchemaField("active") {
+                attibute default true
+              attribute doc "This field is true if the author is still an active author, false otherwise."
+            }
+        )
+    }
+}
+```
+
+As you see, the field definitions are **MOVED** from the class into the companion object.
+
+### Schemas
+
+You can access the schema with the `schematicSchema` property of the companion or an instance.
+
+```kotlin
+Author.schematicSchema.dumpln()
+Author().schematicSchema.dumpln()
+```
+
+You can get a definition of a specific field through the `fields` property of the schema:
+
+```kotlin
+Author.schematicSchema.fields["uuid"].dumpln()
+```
+
+`fields` is an array, so you can iterate over it to access all the fields defined in the schema:
+
+```kotlin
+Author.schematicSchema.fields.forEach { 
+    field.dumpln()
+}
+```
 
 ### Schematic Access Functions
 
@@ -148,9 +195,9 @@ div { // let's assume this is part of a web page
 
 ```kotlin
 @SchematicAccessFunction
-fun editor(context : SchematicAccessContext? = null, accessor : () -> Any?) {
+fun editor(context: SchematicAccessContext? = null, accessor: () -> Any?) {
     checkNotNull(context)
-   
+
     when (context.field.type) {
         SchematicFieldType.String -> stringEditor(context)
         SchematicFieldType.LocalDate -> localDateEditor(context)
@@ -173,9 +220,9 @@ The `SchematicAccessContext` class contains:
 
 ```kotlin
 class SchematicAccessContext(
-    val schematic : Schematic<*>, // this is the instance of book used in the curly brackets.
-    val field : SchemaField<*>, // this is the metadata that belongs to `title`
-    val value : Any? // this is the value of `title`
+    val schematic: Schematic<*>, // this is the instance of book used in the curly brackets.
+    val field: SchemaField<*>, // this is the metadata that belongs to `title`
+    val value: Any? // this is the value of `title`
 )
 ```
 
@@ -189,7 +236,7 @@ data.
 To define a schematic class, extend `Schematic` and use the provided field definition functions.
 
 ```kotlin
-class Test : Schematic<Test>() {
+class Test : Schematic<Test> {
     val intField by int(min = 5)
 }
 ```
@@ -199,8 +246,8 @@ Is turned into:
 ```kotlin
 class Test : Schematic<Test> {
 
-    val intField : Int
-        get() = schematicValues["intField"]!! as Int
+    val intField: Int
+        get() = schematicValues["intField"] !! as Int
         set(value) {
             schematicChangeInt("intField", value)
         }

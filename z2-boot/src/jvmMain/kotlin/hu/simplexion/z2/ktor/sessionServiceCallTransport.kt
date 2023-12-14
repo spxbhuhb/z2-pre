@@ -24,7 +24,7 @@ import kotlin.collections.set
 
 val serviceAccessLog = LoggerFactory.getLogger("hu.z2.service.ServiceAccessLog")
 
-fun accessLog(context : ServiceContext, requestEnvelope : RequestEnvelope, responseEnvelope: ResponseEnvelope) {
+fun accessLog(context: ServiceContext, requestEnvelope: RequestEnvelope, responseEnvelope: ResponseEnvelope) {
     serviceAccessLog.info("${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${responseEnvelope.status} ${responseEnvelope.payload.size} ${context.principalOrNull}")
 }
 
@@ -34,6 +34,14 @@ fun Routing.sessionWebsocketServiceCallTransport(
     newContext: (uuid: UUID<ServiceContext>) -> ServiceContext = { BasicServiceContext(it) }
 ) {
     webSocket(path) {
+
+        class SessionClose : RuntimeException()
+
+        suspend fun close(status: ServiceCallStatus) : Nothing {
+            send(Frame.Binary(true, ResponseEnvelope.encodeProto(ResponseEnvelope(UUID(), status, byteArrayOf()))))
+            throw SessionClose()
+        }
+
         try {
             val sessionUuid = call.request.cookies["Z2_SESSION"]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
@@ -104,7 +112,10 @@ fun Routing.sessionWebsocketServiceCallTransport(
                                 ServiceCallStatus.Exception,
                                 ProtoMessageBuilder().string(1, ex::class.simpleName ?: "").pack()
                             ).also {
-                                errorLog.warn("${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${it.status} ${it.payload.size} ${context.principalOrNull}", ex)
+                                errorLog.warn(
+                                    "${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${it.status} ${it.payload.size} ${context.principalOrNull}",
+                                    ex
+                                )
                             }
                         }
                     }
@@ -114,9 +125,12 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 send(Frame.Binary(true, ResponseEnvelope.encodeProto(responseEnvelope)))
 
-                if (context.data[LOGOUT_TOKEN_UUID] == true) break
+                if (context.data[LOGOUT_TOKEN_UUID] == true) {
+                    close(ServiceCallStatus.Logout)
+                }
             }
-
+        } catch (ex : SessionClose) {
+            // intentionally left empty, nothing to do when we simply close the session
         } catch (e: Exception) {
             e.printStackTrace()
         }

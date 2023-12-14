@@ -10,5 +10,7 @@ enum class ServiceCallStatus(
     Timeout(4),
     AccessDenied(5),
     AuthenticationFail(6),
-    AuthenticationFailLocked(7)
+    AuthenticationFailLocked(7),
+    InvalidSession(8),
+    Logout(9)
 }

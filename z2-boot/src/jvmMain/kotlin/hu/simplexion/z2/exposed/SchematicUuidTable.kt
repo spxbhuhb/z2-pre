@@ -25,7 +25,7 @@ open class SchematicUuidTable<T : Schematic<T>>(
     fun newInstance() =
         template.schematicCompanion.newInstance()
 
-    @Deprecated("use query instead", ReplaceWith("query"))
+    @Deprecated("use query instead", ReplaceWith("query()"))
     fun list(limit: Int? = null, offset: Long? = null): List<T> =
         query(limit, offset)
 

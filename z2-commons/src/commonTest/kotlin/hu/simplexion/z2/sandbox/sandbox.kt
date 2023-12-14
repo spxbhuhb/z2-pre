@@ -61,7 +61,7 @@ class A {
 
     constructor() { }
 
-    constructor(inS : String, inOs : String) : this() {
+    constructor(inS : String = "12", inOs : String = "12") : this() {
         // s = inS
         os = inOs
     }
@@ -78,4 +78,9 @@ class A {
         attribute default "12"
     }
 
+}
+
+fun main() {
+    A()
+    A("13")
 }

@@ -18,6 +18,7 @@ import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.commons.util.UUID
 import hu.simplexion.z2.commons.util.fourRandomInt
+import hu.simplexion.z2.commons.util.vmNowSecond
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.service.ServiceContext
@@ -27,7 +28,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -35,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.math.abs
-import kotlin.time.Duration.Companion.minutes
 
 class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
@@ -60,13 +59,17 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
         suspend fun sessionExpiration() {
             while (housekeepingScope.isActive) {
-                val policy = transaction { runBlocking { authAdminImpl.getPolicy() } }
-                val now = now()
-                val next = now.plus(1.minutes)
+                val policy = transaction { runBlocking { authAdminImpl.getPolicy() } } // TODO cache policy
+
+                val now = vmNowSecond()
+                val next = now + 60
+
+                val cutoff = now - policy.sessionExpirationInterval * 60 // any last activity before the cutoff is too old
 
                 activeSessions.values
                     .filter {
-                        it.lastActivity.plus(policy.sessionExpirationInterval.minutes) < now
+                        println("$now $next $cutoff ${it.lastActivity} ${it.lastActivity < cutoff}")
+                        it.lastActivity < cutoff
                     }
                     .forEach { session ->
                         activeSessions.remove(session.uuid)
@@ -76,11 +79,12 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
                     }
 
                 while (housekeepingScope.isActive) {
-                    val preparedNow = now()
+                    val preparedNow = vmNowSecond()
+                    val preparedCutoff = now - policy.sessionActivationInterval * 60 // any last activity before the cutoff is too old
                     if (preparedNow > next) break
 
                     preparedSessions.values
-                        .filter { it.createdAt.plus(policy.sessionActivationInterval.minutes) < preparedNow }
+                        .filter { it.vmCreatedAt < preparedCutoff }
                         .forEach { session ->
                             preparedSessions.remove(session.uuid)
                             transaction {
@@ -134,6 +138,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val session = Session().also {
             it.uuid = serviceContext.uuid
             it.principal = principal.uuid
+            it.vmCreatedAt = vmNowSecond()
+            it.lastActivity = it.vmCreatedAt
             it.roles = roleGrantTable.rolesOf(principal.uuid, null)
         }
 
@@ -169,15 +175,17 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     }
 
     override suspend fun logout() {
-        ensureLoggedIn()
+        publicAccess()
+
+        serviceContext.data[LOGOUT_TOKEN_UUID] = true
+
+        if (serviceContext.getSessionOrNull() == null) return
 
         securityHistory(baseStrings.account, baseStrings.logout, serviceContext.principal)
         serviceContext.getSession().history(baseStrings.removed)
 
         activeSessions.remove(serviceContext.uuid)
         serviceContext.data.remove(SESSION_TOKEN_UUID)
-
-        serviceContext.data[LOGOUT_TOKEN_UUID] = true
     }
 
     override suspend fun logout(session: UUID<Session>) {
@@ -187,7 +195,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     override suspend fun list(): List<Session> {
         ensureAll(securityOfficerRole)
-        return sessionTable.list()
+        return sessionTable.query()
     }
 
     // ----------------------------------------------------------------------------------
@@ -216,7 +224,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         lockState(principalId)
 
         try {
-            val principal = principalTable.get(principalId)
+            val principal = principalTable[principalId]
 
             val result = when {
                 ! principal.activated && credentialType != ACTIVATION_KEY -> AuthenticationFail("NotActivated")
@@ -240,7 +248,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
                 throw result
             }
 
-            principal.lastAuthSuccess = Clock.System.now()
+            principal.lastAuthSuccess = now()
             principal.authSuccessCount ++
             principal.authFailCount = 0
 
@@ -279,7 +287,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     fun getSessionForContext(sessionUuid: UUID<ServiceContext>): Session? =
         activeSessions.computeIfPresent(sessionUuid) { _, session ->
-            session.lastActivity = now()
+            session.lastActivity = vmNowSecond()
             session
         }
 

@@ -9,7 +9,8 @@ class Session : Schematic<Session>() {
     var uuid by uuid<ServiceContext>()
     var securityCode by string()
     val createdAt by instant()
-    var lastActivity by instant()
+    var vmCreatedAt by long()
+    var lastActivity by long()
     var principal by uuid<Principal>().nullable()
     var roles by schematicList<Role>()
 

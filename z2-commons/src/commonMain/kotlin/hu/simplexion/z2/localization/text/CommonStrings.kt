@@ -20,5 +20,9 @@ interface ICommonStrings : LocalizedTextProvider {
     val communicationError get() = static("Kommunikációs hiba, kérem frissítse az oldalt.")
     val timeoutError get() = static("A szerver nem válaszolt időben, kérem frissítse az oldalt.")
     val responseError get() = static("A szerver végrehajtási hibát jelzett, kérem vegye fel a kapcsolatot az üzemeltetéssel.")
+    val expiredSession get() = static("Lejárt munkamenet, kérem frissítse az oldalt.")
+    val expiredSessionRedirectToLogin get() = static("Lejárt munkamenet, kérjük lépjen be újra.")
+
+    val lostConnection get() = static("Elveszett a kapcsolat a szerverrel.")
 
 }

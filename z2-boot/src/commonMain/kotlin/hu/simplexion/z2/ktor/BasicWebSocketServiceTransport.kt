@@ -2,7 +2,9 @@ package hu.simplexion.z2.ktor
 
 import hu.simplexion.z2.commons.protobuf.ProtoDecoder
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
+import hu.simplexion.z2.commons.util.Lock
 import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.commons.util.use
 import hu.simplexion.z2.commons.util.vmNowMicro
 import hu.simplexion.z2.service.ServiceErrorHandler
 import hu.simplexion.z2.service.ServiceResultException
@@ -35,7 +37,8 @@ open class BasicWebSocketServiceTransport(
     var retryDelay = 200L // milliseconds
     val scope = CoroutineScope(Dispatchers.Default)
 
-    val outgoingCalls = Channel<OutgoingCall>(Channel.UNLIMITED)
+    val outgoingLock = Lock()
+    private val outgoingCalls = Channel<OutgoingCall>(Channel.UNLIMITED)
     val pendingCalls = mutableMapOf<UUID<RequestEnvelope>, OutgoingCall>()
 
     val client = HttpClient {
@@ -52,16 +55,26 @@ open class BasicWebSocketServiceTransport(
     suspend fun run() {
         while (scope.isActive) {
             try {
+                retryDelay = 200 // reset the retry delay as we have a working connection
+
                 client.webSocket(path) {
 
                     launch {
-                        for (call in outgoingCalls) {
-                            pendingCalls[call.request.callId] = call
-                            send(Frame.Binary(true, RequestEnvelope.encodeProto(call.request)))
+                        try {
+                            for (call in outgoingCalls) {
+                                try {
+                                    send(Frame.Binary(true, RequestEnvelope.encodeProto(call.request)))
+                                    pendingCalls[call.request.callId] = call
+                                } catch (ex: CancellationException) {
+                                    postponeAfterCancel(call)
+                                    // break to get out of for, so we can retry
+                                    break
+                                }
+                            }
+                        } catch (ex: Exception) {
+                            ex.printStackTrace()
                         }
                     }
-
-                    retryDelay = 200 // reset the retry delay as we have a working connection
 
                     for (frame in incoming) {
 
@@ -70,17 +83,46 @@ open class BasicWebSocketServiceTransport(
                         val responseEnvelope = ResponseEnvelope.decodeProto(ProtoMessage(frame.data))
 
                         val call = pendingCalls.remove(responseEnvelope.callId)
-                            ?: continue // TODO report unknown call ids
-
-                        call.responseChannel.trySend(responseEnvelope)
+                        if (call != null) {
+                            call.responseChannel.trySend(responseEnvelope)
+                        } else {
+                            errorHandler?.callError("", "", responseEnvelope)
+                        }
                     }
-
                 }
+
             } catch (ex: Exception) {
                 connectionError(ex)
-                delay(retryDelay) // wait a second before trying to re-establish the connection
+                delay(retryDelay) // wait a bit before trying to re-establish the connection
                 if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
             }
+        }
+    }
+
+    private fun postponeAfterCancel(call: OutgoingCall) {
+        outgoingLock.use {
+
+            val cutoff = vmNowMicro() - callTimeout
+
+            // if we get a cancellation exception we try to reopen the connection and retry the calls
+            // however the call that failed is removed from [outgoingCalls], so we copy remove all
+            // entries from [outgoingCalls] and put them in again, here [outgoingCalls] is protected by
+            // [outgoingLock], so this copy should be fine even if someone calls [call] during the copy
+
+            val calls = mutableListOf<OutgoingCall>()
+
+            var next: OutgoingCall? = call
+
+            while (next != null) {
+                if (next.createdMicros < cutoff) {
+                    next.responseChannel.trySend(ResponseEnvelope(next.request.callId, ServiceCallStatus.Timeout, ByteArray(0)))
+                } else {
+                    calls += next
+                }
+                next = outgoingCalls.tryReceive().getOrNull()
+            }
+
+            calls.forEach { outgoingCalls.trySend(it) }
         }
     }
 
@@ -111,7 +153,9 @@ open class BasicWebSocketServiceTransport(
     override suspend fun <T> call(serviceName: String, funName: String, payload: ByteArray, decoder: ProtoDecoder<T>): T =
         OutgoingCall(RequestEnvelope(UUID(), serviceName, funName, payload)).let { outgoingCall ->
 
-            outgoingCalls.send(outgoingCall)
+            outgoingLock.use {
+                outgoingCalls.send(outgoingCall)
+            }
             if (trace) println("outgoing call: $serviceName.$funName")
 
             val responseEnvelope = outgoingCall.responseChannel.receive()
