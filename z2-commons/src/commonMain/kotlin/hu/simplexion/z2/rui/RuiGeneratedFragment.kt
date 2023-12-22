@@ -11,24 +11,33 @@ package hu.simplexion.z2.rui
 @RuiPublicApi
 interface RuiGeneratedFragment<BT> : RuiFragment<BT> {
 
-    val ruiFragment: RuiFragment<BT>
+    /**
+     * The top level fragment of this scope. This may be:
+     *
+     * - a structural fragment such as block, when or a loop
+     * - direct call to another rui function
+     *
+     * Set to [RuiFragment.ruiScope] by the initializer of the class
+     * that implements [RuiGeneratedFragment].
+     */
+    val containedFragment: RuiFragment<BT>
 
     override fun ruiCreate() {
-        ruiFragment.ruiCreate()
+        containedFragment.ruiCreate()
     }
 
     override fun ruiMount(bridge: RuiBridge<BT>) {
-        ruiFragment.ruiMount(bridge)
+        containedFragment.ruiMount(bridge)
     }
 
     // do not override ruiPatch, it should be generated in all cases
 
     override fun ruiUnmount(bridge: RuiBridge<BT>) {
-        ruiFragment.ruiUnmount(bridge)
+        containedFragment.ruiUnmount(bridge)
     }
 
     override fun ruiDispose() {
-        ruiFragment.ruiDispose()
+        containedFragment.ruiDispose()
     }
 
 }

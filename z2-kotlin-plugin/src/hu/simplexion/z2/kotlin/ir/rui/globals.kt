@@ -96,7 +96,7 @@ const val RUI_DIRTY = "ruiDirty"
 const val RUI_ADAPTER = "ruiAdapter"
 const val RUI_SCOPE = "ruiScope"
 const val RUI_EXTERNAL_PATCH = "ruiExternalPatch"
-const val RUI_FRAGMENT = "ruiFragment"
+const val RUI_FRAGMENT = "containedFragment"
 const val RUI_MASK = "mask"
 
 const val RUI_BLOCK = "ruiBlock"

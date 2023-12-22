@@ -6,19 +6,25 @@ package hu.simplexion.rui.kotlin.plugin.ir.successes
 import hu.simplexion.z2.rui.Rui
 import hu.simplexion.z2.rui.rui
 import hu.simplexion.z2.rui.RuiAdapterRegistry
+import hu.simplexion.z2.rui.testing.RuiTestAdapter
 import hu.simplexion.z2.rui.testing.RuiTestAdapterFactory
-import hu.simplexion.z2.rui.testing.RuiTestFunction
 
 @Rui
 fun Empty() {
 
 }
 
-fun box() {
+fun box() : String {
 
     RuiAdapterRegistry.register(RuiTestAdapterFactory)
 
     rui {
         Empty()
     }
+
+    println("========")
+    println(RuiTestAdapter.lastTrace.joinToString("\n"))
+    println("........")
+
+    return "OK"
 }

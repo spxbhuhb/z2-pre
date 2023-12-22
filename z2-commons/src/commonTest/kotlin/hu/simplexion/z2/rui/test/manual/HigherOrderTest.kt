@@ -61,7 +61,7 @@ class HigherOrder(
     override val ruiScope: RuiFragment<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, scopeMask -> scopeMask }
 
-    override val ruiFragment: RuiFragment<TestNode>
+    override val containedFragment: RuiFragment<TestNode>
 
     var i = 12
 
@@ -96,17 +96,17 @@ class HigherOrder(
     }
 
     override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = ruiFragment.ruiExternalPatch(ruiFragment, scopeMask)
-        if (extendedScopeMask != 0L) ruiFragment.ruiPatch(extendedScopeMask)
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+        if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }
 
     fun ruiBuilder0(ruiAdapter: RuiAdapter<TestNode>) =
         RuiImplicit0(ruiAdapter, this, ::ruiEpImplicit).also {
-            it.ruiFragment = RuiT1(ruiAdapter, it, ::ruiEpT1, i)
+            it.containedFragment = RuiT1(ruiAdapter, it, ::ruiEpT1, i)
         }
 
     init {
-        ruiFragment = RuiH1(ruiAdapter, this, ::ruiEpH1, ::ruiBuilder0)
+        containedFragment = RuiH1(ruiAdapter, this, ::ruiEpH1, ::ruiBuilder0)
     }
 }

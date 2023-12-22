@@ -65,7 +65,7 @@ class Branch(
     override val ruiScope: RuiFragment<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, _ -> 0L }
 
-    override val ruiFragment: RuiFragment<TestNode>
+    override val containedFragment: RuiFragment<TestNode>
 
     var v0: Int = 1
 
@@ -100,8 +100,8 @@ class Branch(
     }
 
     override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = ruiFragment.ruiExternalPatch(ruiFragment, scopeMask)
-        if (extendedScopeMask != 0L) ruiFragment.ruiPatch(extendedScopeMask)
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+        if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }
 
@@ -117,7 +117,7 @@ class Branch(
         }
 
     init {
-        ruiFragment = RuiWhen(
+        containedFragment = RuiWhen(
             ruiAdapter,
             ::ruiSelect,
             ::ruiBranch0,

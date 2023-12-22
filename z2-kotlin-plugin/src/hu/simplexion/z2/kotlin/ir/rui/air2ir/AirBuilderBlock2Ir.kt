@@ -4,6 +4,7 @@ import hu.simplexion.z2.kotlin.ir.rui.*
 import hu.simplexion.z2.kotlin.ir.rui.air.AirBuilderBlock
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
+import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.addElement
@@ -25,25 +26,29 @@ class AirBuilderBlock2Ir(
 
         irFunction.body = DeclarationIrBuilder(irContext, irFunction.symbol).irBlockBody {
 
-            IrConstructorCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                symbolMap.defaultType,
-                symbolMap.primaryConstructor.symbol,
-                0, 0,
-                RUI_BLOCK_ARGUMENT_COUNT // adapter, array of fragments
-            ).also { constructorCall ->
+            val receiver = irFunction.dispatchReceiverParameter !!
 
-                constructorCall.putValueArgument(
-                    RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER,
-                    irGetValue(airClass.adapter, irGet(startScope))
-                )
+            + irReturn(
+                IrConstructorCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    symbolMap.defaultType,
+                    symbolMap.primaryConstructor.symbol,
+                    0, 0,
+                    RUI_BLOCK_ARGUMENT_COUNT // adapter, array of fragments
+                ).also { constructorCall ->
 
-                constructorCall.putValueArgument(
-                    RUI_BLOCK_ARGUMENT_INDEX_FRAGMENTS,
-                    buildFragmentVarArg(startScope)
-                )
+                    constructorCall.putValueArgument(
+                        RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER,
+                        irGetValue(airClass.adapter, irGet(receiver))
+                    )
 
-            }
+                    constructorCall.putValueArgument(
+                        RUI_BLOCK_ARGUMENT_INDEX_FRAGMENTS,
+                        buildFragmentVarArg(startScope)
+                    )
+
+                }
+            )
         }
     }
 

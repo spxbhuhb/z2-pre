@@ -9,10 +9,10 @@ class RuiImplicit0<BT>(
     override val ruiExternalPatch: RuiExternalPathType<BT>,
 ) : RuiGeneratedFragment<BT> {
 
-    override lateinit var ruiFragment: RuiFragment<BT>
+    override lateinit var containedFragment: RuiFragment<BT>
 
     override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = ruiFragment.ruiExternalPatch(ruiFragment, scopeMask)
-        if (extendedScopeMask != 0L) ruiFragment.ruiPatch(extendedScopeMask)
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+        if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
     }
 }

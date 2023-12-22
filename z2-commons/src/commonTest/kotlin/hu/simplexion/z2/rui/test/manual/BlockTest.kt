@@ -42,7 +42,7 @@ class Block(
     override val ruiScope: RuiFragment<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, _ -> 0L }
 
-    override val ruiFragment: RuiFragment<TestNode>
+    override val containedFragment: RuiFragment<TestNode>
 
     var v0 = 1
 
@@ -65,13 +65,13 @@ class Block(
     }
 
     override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = ruiFragment.ruiExternalPatch(ruiFragment, scopeMask)
-        if (extendedScopeMask != 0L) ruiFragment.ruiPatch(extendedScopeMask)
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+        if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }
 
     init {
-        ruiFragment = RuiBlock(
+        containedFragment = RuiBlock(
             ruiAdapter,
             RuiT1(ruiAdapter, this, ::ruiEp1, v0),
             RuiT0(ruiAdapter, this) { _, _ -> 0L }
