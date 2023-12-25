@@ -3,34 +3,55 @@
  */
 package hu.simplexion.z2.kotlin.ir.rui.ir2rum
 
-import hu.simplexion.z2.kotlin.ir.rui.rum.RumClass
-import hu.simplexion.z2.kotlin.ir.rui.rum.RumDependencies
+import hu.simplexion.z2.kotlin.ir.rui.RuiPluginContext
+import hu.simplexion.z2.kotlin.ir.rui.rum.RumScope
+import hu.simplexion.z2.kotlin.ir.rui.rum.RumStateVariable
 import hu.simplexion.z2.kotlin.ir.rui.util.RuiAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.psi.KtModifierListOwner
 
 class DependencyVisitor(
-    private val rumClass: RumClass
+    private val ruiContext : RuiPluginContext,
+    private val endScope: RumScope
 ) : RuiAnnotationBasedExtension, IrElementVisitorVoid {
 
-    var dependencies: RumDependencies = mutableListOf()
+    var dependencies = mutableListOf<RumStateVariable>()
 
     override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
-        rumClass.ruiContext.annotations
+        ruiContext.annotations
 
     override fun visitElement(element: IrElement) {
         element.acceptChildren(this, null)
     }
 
     /**
-     * State variable reads are calls to the getter.
+     * Call to the getter.
      */
     override fun visitCall(expression: IrCall) {
-        rumClass.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
-            dependencies += it.index
+        var scope : RumScope? = endScope
+        while (scope != null) {
+            scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
+                dependencies += it
+            }
+            scope = scope.parentScope
         }
         super.visitCall(expression)
+    }
+
+    /**
+     * Parameter get from the original function.
+     */
+    override fun visitGetValue(expression: IrGetValue) {
+        var scope : RumScope? = endScope
+        while (scope != null) {
+            scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
+                dependencies += it
+            }
+            scope = scope.parentScope
+        }
+        super.visitGetValue(expression)
     }
 }

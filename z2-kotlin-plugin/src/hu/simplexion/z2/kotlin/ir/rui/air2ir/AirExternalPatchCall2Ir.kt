@@ -85,7 +85,7 @@ class AirExternalPatchCall2Ir(
     private fun calcCallSiteDependencyMask(): Long {
         var mask = 0L
         for (argument in arguments) {
-            for (index in argument.dependencies) {
+            for (index in argument.dependencies.map { it.index }) {
                 mask = mask or (1L shl index)
             }
         }
@@ -109,11 +109,11 @@ class AirExternalPatchCall2Ir(
     private fun irVariablePatchCondition(expression: RumExpression): IrExpression {
         val dependencies = expression.dependencies
 
-        var stateVariable = airClass.stateVariableList[dependencies[0]]
+        var stateVariable = airClass.stateVariableList[dependencies[0].index] // FIXME wrong higher order access
         var result = stateVariable.irIsDirty(irGet(dispatchReceiver))
 
         for (i in 1 until dependencies.size) {
-            stateVariable = airClass.stateVariableList[dependencies[i]]
+            stateVariable = airClass.stateVariableList[dependencies[i].index] // FIXME wrong higher order access
             result = irOrOr(result, stateVariable.irIsDirty(irGet(dispatchReceiver)))
         }
         return result

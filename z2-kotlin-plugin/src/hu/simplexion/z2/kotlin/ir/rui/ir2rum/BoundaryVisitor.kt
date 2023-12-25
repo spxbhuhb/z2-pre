@@ -49,10 +49,9 @@ class BoundaryVisitor(
     }
 
     override fun visitCall(expression: IrCall) {
-        if (expression.symbol.owner.isAnnotatedWithRui()) {
-            found = true
-        } else {
-            super.visitCall(expression)
+        when {
+            expression.isAnnotatedWithRui() -> found = true
+            else -> super.visitCall(expression)
         }
     }
 }

@@ -38,6 +38,7 @@ open class RuiTracingFragment<BT>(
 }
 
 @Rui
+@Suppress("unused", "FunctionName")
 fun T0() {
 }
 

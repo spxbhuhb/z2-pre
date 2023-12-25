@@ -41,7 +41,7 @@ open class AbstractBoxTest : BaseTestRunner(), RunnerWithTargetBackendForTestGen
             dependencyKind = DependencyKind.Binary
         }
 
-        val dumps = true
+        val dumps = false
 
         useCustomRuntimeClasspathProviders(AbstractBoxTest::commonsRuntimeClassPathProvider)
 

@@ -34,32 +34,35 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  *
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
-class Ir2RumTransform(
+class IrFunction2Rum(
     val ruiContext: RuiPluginContext,
     val irFunction: IrFunction,
-    val skipParameters: Int
+    val skipParameters: Int,
+    val parentScope: RumScope? = null
 ) : RuiAnnotationBasedExtension {
 
     lateinit var rumClass: RumClass
 
     var blockIndex = 0
-        get() = field++
+        get() = field ++
 
     override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
         rumClass.ruiContext.annotations
 
-    fun IrElement.dependencies(): List<Int> {
-        val visitor = DependencyVisitor(rumClass)
+    fun IrElement.dependencies(): List<RumStateVariable> {
+        val visitor = DependencyVisitor(ruiContext, rumClass)
         accept(visitor, null)
         return visitor.dependencies
     }
 
     fun transform(): RumClass {
-        rumClass = RumClass(ruiContext, irFunction)
+        rumClass = RumClass(ruiContext, irFunction, parentScope)
 
         StateDefinitionTransform(rumClass, skipParameters).transform()
 
         transformRoot()
+
+        ruiContext.rumClasses += rumClass
 
         return rumClass
     }
@@ -153,12 +156,12 @@ class Ir2RumTransform(
         val block = body.statements[1]
 
         check(irLoopVariable is IrVariable)
-        check(block is IrBlock && block.origin == null)
+        check((block is IrBlock && block.origin == null) || block is IrCall) // TODO think for loop check details
 
         val iterator = transformDeclaration(irIterator, RumDeclarationOrigin.FOR_LOOP_ITERATOR) ?: return null
         val loopVariable = transformDeclaration(irLoopVariable, RumDeclarationOrigin.FOR_LOOP_VARIABLE) ?: return null
 
-        val rendering = transformRenderingExpression(block)
+        val rendering = transformRenderingExpression(block as IrExpression)
             ?: return null
 
         return RumForLoop(
@@ -182,7 +185,7 @@ class Ir2RumTransform(
 
     fun transformCall(statement: IrCall): RumCall? {
 
-        if (!statement.symbol.owner.isAnnotatedWithRui()) {
+        if (! statement.isAnnotatedWithRui()) {
             return RIU_IR_RENDERING_NON_RUI_CALL.report(rumClass, statement)
         }
 
@@ -222,14 +225,14 @@ class Ir2RumTransform(
     }
 
     fun transformHigherOrderCall(irCall: IrCall): RumHigherOrderCall {
-        val ruiHigherOrderCall = RumHigherOrderCall(rumClass, blockIndex, irCall)
+        val rumHigherOrderCall = RumHigherOrderCall(rumClass, blockIndex, irCall)
 
         val calleeArguments = irCall.symbol.owner.valueParameters // arguments of the higher order function
 
         for (index in 0 until irCall.valueArgumentsCount) {
             val expression = irCall.getValueArgument(index) ?: continue // TODO handle parameter default values
 
-            ruiHigherOrderCall.valueArguments +=
+            rumHigherOrderCall.valueArguments +=
                 if (calleeArguments[index].isAnnotatedWithRui() && expression is IrFunctionExpression) {
                     transformHigherOrderArgument(index, expression)
                 } else {
@@ -237,20 +240,19 @@ class Ir2RumTransform(
                 }
         }
 
-        return ruiHigherOrderCall
+        return rumHigherOrderCall
     }
 
     /**
-     * This is actually a very complicated and costly transformation as it calls [Ir2RumTransform]
+     * This is actually a very complicated and costly transformation as it calls [IrFunction2Rum]
      * recursively as long as there are higher order function calls inside the higher order function call.
      */
     fun transformHigherOrderArgument(index: Int, expression: IrFunctionExpression): RumExpression =
         RumHigherOrderArgument(
-            rumClass,
-            index,
-            expression,
+            IrFunction2Rum(ruiContext, expression.function, 0, rumClass).transform(),
+            index, // the parameter index of the parameter function at the given call site
+            expression, // the code of the parameter function
             expression.dependencies(),
-            // this was the implicit class, Ir2RumTransform(ruiContext, expression.function, 0).transform()
         )
 
     // ---------------------------------------------------------------------------

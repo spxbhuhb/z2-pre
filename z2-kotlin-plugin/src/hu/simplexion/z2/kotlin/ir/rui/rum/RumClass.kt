@@ -16,9 +16,10 @@ import org.jetbrains.kotlin.ir.util.statements
 class RumClass(
     val ruiContext: RuiPluginContext,
     val originalFunction: IrFunction,
-) : RumElement {
+    override val parentScope: RumScope?,
+) : RumElement, RumScope {
 
-    val fqName = originalFunction.toRuiClassFqName(ruiContext)
+    val fqName = originalFunction.toRuiClassFqName(ruiContext, parentScope != null)
     val name = fqName.shortName()
 
     var compilationError: Boolean = false
@@ -30,7 +31,7 @@ class RumClass(
     val initializerStatements = mutableListOf<IrStatement>()
     val renderingStatements = mutableListOf<IrStatement>()
 
-    val stateVariables = mutableListOf<RumStateVariable>()
+    override val stateVariables = mutableListOf<RumStateVariable>()
     val dirtyMasks = mutableListOf<RumDirtyMask>()
 
     lateinit var rendering: RumRenderingStatement

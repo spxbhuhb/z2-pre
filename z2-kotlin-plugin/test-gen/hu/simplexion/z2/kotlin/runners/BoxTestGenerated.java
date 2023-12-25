@@ -70,18 +70,90 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
-        @TestMetadata("testData/box/rui/successes")
+        @TestMetadata("testData/box/rui/success")
         @TestDataPath("$PROJECT_ROOT")
-        public class Successes {
+        public class Success {
             @Test
-            public void testAllFilesPresentInSuccesses() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/rui/successes"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            public void testAllFilesPresentInSuccess() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/rui/success"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("Basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/rui/success/Basic.kt");
             }
 
             @Test
             @TestMetadata("Empty.kt")
             public void testEmpty() throws Exception {
-                runTest("testData/box/rui/successes/Empty.kt");
+                runTest("testData/box/rui/success/Empty.kt");
+            }
+
+            @Test
+            @TestMetadata("ForLoop.kt")
+            public void testForLoop() throws Exception {
+                runTest("testData/box/rui/success/ForLoop.kt");
+            }
+
+            @Test
+            @TestMetadata("HigherOrder.kt")
+            public void testHigherOrder() throws Exception {
+                runTest("testData/box/rui/success/HigherOrder.kt");
+            }
+
+            @Test
+            @TestMetadata("IfBranch.kt")
+            public void testIfBranch() throws Exception {
+                runTest("testData/box/rui/success/IfBranch.kt");
+            }
+
+            @Test
+            @TestMetadata("ManyVariables.kt")
+            public void testManyVariables() throws Exception {
+                runTest("testData/box/rui/success/ManyVariables.kt");
+            }
+
+            @Test
+            @TestMetadata("OneCallConstArgument.kt")
+            public void testOneCallConstArgument() throws Exception {
+                runTest("testData/box/rui/success/OneCallConstArgument.kt");
+            }
+
+            @Test
+            @TestMetadata("OneCallNoArguments.kt")
+            public void testOneCallNoArguments() throws Exception {
+                runTest("testData/box/rui/success/OneCallNoArguments.kt");
+            }
+
+            @Test
+            @TestMetadata("OnlyExternal.kt")
+            public void testOnlyExternal() throws Exception {
+                runTest("testData/box/rui/success/OnlyExternal.kt");
+            }
+
+            @Test
+            @TestMetadata("OnlyInternal.kt")
+            public void testOnlyInternal() throws Exception {
+                runTest("testData/box/rui/success/OnlyInternal.kt");
+            }
+
+            @Test
+            @TestMetadata("Sequence.kt")
+            public void testSequence() throws Exception {
+                runTest("testData/box/rui/success/Sequence.kt");
+            }
+
+            @Test
+            @TestMetadata("Variables.kt")
+            public void testVariables() throws Exception {
+                runTest("testData/box/rui/success/Variables.kt");
+            }
+
+            @Test
+            @TestMetadata("WhenBranch.kt")
+            public void testWhenBranch() throws Exception {
+                runTest("testData/box/rui/success/WhenBranch.kt");
             }
         }
     }

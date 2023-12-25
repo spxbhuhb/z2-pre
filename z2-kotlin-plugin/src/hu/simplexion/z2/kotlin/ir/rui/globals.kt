@@ -78,6 +78,7 @@ const val RUI_STATE_VARIABLE_LIMIT = 60
 const val RUI_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
 const val RUI_ROOT_CLASS_PREFIX = "RuiRoot"
+const val RUI_HIGHER_ORDER_PREFIX = "RuiHigherOrder"
 
 const val RUI_BT = "BT" // type parameter for fragment, Bridge Type
 const val RUI_ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
@@ -120,9 +121,12 @@ val RUI_FQN_FOR_LOOP_CLASS = FqName.fromSegments(RUI_FOR_LOOP_CLASS)
 val RUI_FQN_ENTRY_FUNCTION = FqName.fromSegments(RUI_ENTRY_FUNCTION)
 val RUI_FQN_IMPLICIT0_CLASS = FqName.fromSegments(RUI_IMPLICIT0_CLASS)
 
-fun IrFunction.toRuiClassFqName(ruiContext: RuiPluginContext): FqName {
+fun IrFunction.toRuiClassFqName(ruiContext: RuiPluginContext, higherOrder: Boolean): FqName {
     val parent = kotlinFqName.parentOrNull() ?: FqName.ROOT
     return when {
+        higherOrder -> {
+            parent.child(Name.identifier("$RUI_HIGHER_ORDER_PREFIX${startOffset}"))
+        }
         isAnonymousFunction || name.asString() == "<anonymous>" -> {
             val postfix = when (ruiContext.rootNameStrategy) {
                 RuiRootNameStrategy.StartOffset -> this.file.name.replace(".kt", "").capitalizeFirstChar() + startOffset.toString()

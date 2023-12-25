@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 class RumHigherOrderCall(
     rumClass: RumClass,
     index: Int,
-    irCall: IrCall
+    irCall: IrCall,
 ) : RumCall(rumClass, index, irCall) {
 
     override val name = "$RUI_HIGHER_ORDER_CALL$index"

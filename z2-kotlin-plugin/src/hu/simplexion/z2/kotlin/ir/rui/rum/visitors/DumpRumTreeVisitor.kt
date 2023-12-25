@@ -133,7 +133,7 @@ class DumpRumTreeVisitor(
     override fun visitHigherOrderArgument(higherOrderArgument: RumHigherOrderArgument) {
         indented {
             with(higherOrderArgument) {
-                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+                println { "$origin $index type:${rumClass.name} ${dependencies.withLabel("dependencies")}" }
             }
         }
     }

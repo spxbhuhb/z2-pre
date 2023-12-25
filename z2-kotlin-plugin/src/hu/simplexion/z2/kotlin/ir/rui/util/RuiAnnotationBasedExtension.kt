@@ -3,10 +3,15 @@
  */
 package hu.simplexion.z2.kotlin.ir.rui.util
 
+import hu.simplexion.z2.kotlin.ir.rui.RUI_ANNOTATION
 import org.jetbrains.kotlin.extensions.AnnotationBasedExtension
+import org.jetbrains.kotlin.ir.backend.js.utils.asString
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.descriptors.toIrBasedDescriptor
+import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
 
 interface RuiAnnotationBasedExtension : AnnotationBasedExtension {
 
@@ -28,5 +33,10 @@ interface RuiAnnotationBasedExtension : AnnotationBasedExtension {
 
     fun IrFunction.isAnnotatedWithRui(): Boolean =
         toIrBasedDescriptor().hasSpecialAnnotation(null)
+
+    fun IrCall.isAnnotatedWithRui(): Boolean =
+        dispatchReceiver.let { dr ->
+            dr is IrGetValue && dr.symbol.owner.annotations.any { it.type.asString() == RUI_ANNOTATION }
+        } || (symbol.owner.origin == IrDeclarationOrigin.DEFINED && symbol.owner.isAnnotatedWithRui())
 
 }

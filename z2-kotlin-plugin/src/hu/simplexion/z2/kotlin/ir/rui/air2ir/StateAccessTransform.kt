@@ -50,18 +50,16 @@ class StateAccessTransform(
 
     companion object {
         fun ClassBoundIrBuilder.transformStateAccess(expression: RumExpression, intoScope: IrValueSymbol): IrExpression =
-            StateAccessTransform(this, intoScope)
-                .visitExpression(
-                    expression
-                        .irExpression
-                        .deepCopyWithVariables()
-                )
+            expression
+                .irExpression
+                .deepCopyWithVariables()
+                .transform(StateAccessTransform(this, intoScope), null)
 
         fun ClassBoundIrBuilder.transformStateAccess(statement: IrStatement, intoScope: IrValueSymbol): IrStatement =
-            StateAccessTransform(this, intoScope)
-                .visitElement(
-                    statement.deepCopyWithVariables()
-                ) as IrStatement
+            statement
+                .deepCopyWithVariables()
+                .transform(StateAccessTransform(this, intoScope), null)
+                as IrStatement
     }
 
     override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
@@ -77,7 +75,7 @@ class StateAccessTransform(
 
     val irBuiltIns = irContext.irBuiltIns
 
-    fun scopeReceiver() = IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, intoScope)
+    fun scopeReceiver() = irBuilder.irImplicitAs(intoScope.owner.type, IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, intoScope))
 
     var haveToPatch = false
 
@@ -95,7 +93,7 @@ class StateAccessTransform(
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         haveToPatch = false
         val transformed = super.visitFunctionNew(declaration) as IrFunction
-        if (!haveToPatch) return transformed
+        if (! haveToPatch) return transformed
 
         val ps = parentScope // this is the IR scope, not the Rui scope
 
@@ -114,13 +112,13 @@ class StateAccessTransform(
         val body = function.body ?: return function
 
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
-            for (statement in body.statements) +statement
+            for (statement in body.statements) + statement
 
             // FIXME this applies patch to the very end of the function, it should cover all returns
             // FIXME analyze all the possible uses of state changing functions and the possible scopes
 
             // SOURCE  patch(ruiDirty0)
-            +irCall(
+            + irCall(
                 airClass.patch.symbol,
                 irBuiltIns.unitType,
                 valueArgumentsCount = 1,
@@ -171,16 +169,16 @@ class StateAccessTransform(
 
         if (currentScope == null) return super.visitSetValue(expression)
 
-        return DeclarationIrBuilder(irContext, currentScope!!.scope.scopeOwnerSymbol).irComposite {
+        return DeclarationIrBuilder(irContext, currentScope !!.scope.scopeOwnerSymbol).irComposite {
 
             val traceData = traceStateChangeBefore(stateVariable)
 
-            +irBuilder.irSetValue(stateVariable.irProperty, expression.value, scopeReceiver())
+            + irBuilder.irSetValue(stateVariable.irProperty, expression.value, scopeReceiver())
 
             val index = stateVariable.rumElement.index
             val dirtyMask = airClass.dirtyMasks[index / RUI_STATE_VARIABLE_LIMIT]
 
-            +irCallOp(
+            + irCallOp(
                 dirtyMask.invalidate.symbol,
                 irBuiltIns.unitType,
                 IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, intoScope),
@@ -192,21 +190,23 @@ class StateAccessTransform(
     }
 
     fun IrBlockBuilder.traceStateChangeBefore(stateVariable: AirStateVariable): IrVariable? {
-        if (!irBuilder.context.withTrace) return null
+        if (! irBuilder.context.withTrace) return null
 
         return irTemporary(irTraceGet(stateVariable, irBuilder.irThisReceiver()))
-            .also { it.parent = currentFunction!!.irElement as IrFunction }
+            .also { it.parent = currentFunction !!.irElement as IrFunction }
     }
 
     fun IrBlockBuilder.traceStateChangeAfter(stateVariable: AirStateVariable, traceData: IrVariable?) {
         if (traceData == null) return
 
-        irBuilder.irTrace("state change", listOf(
-            irString("${stateVariable.irProperty.name.identifier}:"),
-            irGet(traceData),
-            irString(" ⇢ "),
-            irTraceGet(stateVariable, irBuilder.irThisReceiver())
-        ))
+        irBuilder.irTrace(
+            "state change", listOf(
+                irString("${stateVariable.irProperty.name.identifier}:"),
+                irGet(traceData),
+                irString(" ⇢ "),
+                irTraceGet(stateVariable, irBuilder.irThisReceiver())
+            )
+        )
     }
 
     fun IrBlockBuilder.irTraceGet(stateVariable: AirStateVariable, receiver: IrExpression): IrExpression =

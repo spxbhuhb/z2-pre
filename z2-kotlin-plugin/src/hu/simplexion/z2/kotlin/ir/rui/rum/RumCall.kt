@@ -18,7 +18,7 @@ open class RumCall(
 
     override val name = "$RUI_CALL$index"
 
-    val target = irCall.symbol.owner.toRuiClassFqName(rumClass.ruiContext)
+    open val target = irCall.symbol.owner.toRuiClassFqName(rumClass.ruiContext, false)
 
     val valueArguments = mutableListOf<RumExpression>()
 
@@ -32,4 +32,5 @@ open class RumCall(
     override fun <D> acceptChildren(visitor: RumElementVisitor<Unit, D>, data: D) {
         valueArguments.forEach { it.accept(visitor, data) }
     }
+
 }

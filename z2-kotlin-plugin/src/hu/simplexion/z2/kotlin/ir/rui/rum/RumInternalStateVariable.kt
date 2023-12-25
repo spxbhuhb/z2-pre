@@ -33,4 +33,7 @@ class RumInternalStateVariable(
         ErrorsRui.RUI_IR_TOO_MANY_STATE_VARIABLES.check(rumClass, irVariable) { index <= RUI_STATE_VARIABLE_LIMIT }
     }
 
+    override fun toString(): String {
+        return "INTERNAL_STATE_VARIABLE index:$index name:$name"
+    }
 }
