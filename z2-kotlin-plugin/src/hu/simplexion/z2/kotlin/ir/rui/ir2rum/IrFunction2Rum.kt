@@ -9,6 +9,7 @@ import hu.simplexion.z2.kotlin.ir.rui.diagnostics.ErrorsRui.RUI_IR_INVALID_RENDE
 import hu.simplexion.z2.kotlin.ir.rui.diagnostics.ErrorsRui.RUI_IR_RENDERING_INVALID_DECLARATION
 import hu.simplexion.z2.kotlin.ir.rui.rum.*
 import hu.simplexion.z2.kotlin.ir.rui.util.RuiAnnotationBasedExtension
+import hu.simplexion.z2.kotlin.ir.rui.util.isParameterCall
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
@@ -210,7 +211,12 @@ class IrFunction2Rum(
         }
 
     fun transformSimpleCall(statement: IrCall): RumCall {
-        val rumCall = RumCall(rumClass, blockIndex, statement)
+
+        val rumCall = if (statement.isParameterCall) {
+            RumParameterFunctionCall(rumClass, blockIndex, statement)
+        } else {
+            RumCall(rumClass, blockIndex, statement)
+        }
 
         for (index in 0 until statement.valueArgumentsCount) {
             val expression = statement.getValueArgument(index) ?: continue

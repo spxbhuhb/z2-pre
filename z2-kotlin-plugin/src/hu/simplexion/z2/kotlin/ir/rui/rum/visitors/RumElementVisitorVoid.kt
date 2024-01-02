@@ -40,6 +40,9 @@ interface RumElementVisitorVoid<out R> : RumElementVisitor<R, Nothing?> {
     fun visitHigherOrderCall(statement: RumHigherOrderCall) = visitElement(statement)
     override fun visitHigherOrderCall(statement: RumHigherOrderCall, data: Nothing?) = visitHigherOrderCall(statement)
 
+    fun visitParameterFunctionCall(statement: RumParameterFunctionCall) = visitElement(statement)
+    override fun visitParameterFunctionCall(statement: RumParameterFunctionCall, data: Nothing?) = visitParameterFunctionCall(statement)
+
     fun visitWhen(statement: RumWhen) = visitElement(statement)
     override fun visitWhen(statement: RumWhen, data: Nothing?) = visitWhen(statement)
 

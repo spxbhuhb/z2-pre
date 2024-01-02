@@ -11,6 +11,7 @@ enum class RuiDumpPoint(
     Before("before"),
     After("after"),
     RuiTree("rui-tree"),
+    AirTree("air-tree"),
     KotlinLike("kotlin-like");
 
     fun dump(ruiPluginContext: RuiPluginContext, dumpFunc: () -> Unit) {
@@ -18,7 +19,7 @@ enum class RuiDumpPoint(
     }
 
     companion object {
-        fun optionValues(): List<String> = values().map { it.optionValue }
-        fun fromOption(value: String): RuiDumpPoint? = values().firstOrNull { it.optionValue == value }
+        fun optionValues(): List<String> = entries.map { it.optionValue }
+        fun fromOption(value: String): RuiDumpPoint? = entries.firstOrNull { it.optionValue == value }
     }
 }

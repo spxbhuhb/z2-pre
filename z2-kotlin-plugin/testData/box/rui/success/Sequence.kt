@@ -26,5 +26,9 @@ fun box() : String {
     }
 
     return RuiTestAdapter.assert(listOf(
+        TraceEvent("RuiT0", "create", ),
+        TraceEvent("RuiT0", "create", ),
+        TraceEvent("RuiT0", "mount", "bridge:", "1"),
+        TraceEvent("RuiT0", "mount", "bridge:", "1")
     ))
 }

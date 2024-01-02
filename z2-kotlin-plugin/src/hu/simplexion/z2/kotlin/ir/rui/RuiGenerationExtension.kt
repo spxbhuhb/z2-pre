@@ -22,7 +22,7 @@ internal class RuiGenerationExtension(
 
         val options = RuiOptions(
             annotations = listOf(RUI_ANNOTATION),
-            dumpPoints = listOf(RuiDumpPoint.RuiTree),
+            dumpPoints = listOf(RuiDumpPoint.RuiTree, RuiDumpPoint.AirTree, RuiDumpPoint.After, RuiDumpPoint.KotlinLike),
             rootNameStrategy = RuiRootNameStrategy.StartOffset,
             withTrace = false,
             exportState = false,
@@ -67,6 +67,11 @@ internal class RuiGenerationExtension(
 
             rumClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
             rumEntryPoints.forEach { airEntryPoints += it.toAir(this) }
+
+            RuiDumpPoint.AirTree.dump(this) {
+                output("AIR CLASSES", airClasses.values.joinToString("\n\n") { it.dump() })
+                output("AIR ENTRY POINTS", airEntryPoints.joinToString("\n\n") { it.dump() })
+            }
 
             // --------  AIR to IR  --------
 

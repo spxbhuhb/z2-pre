@@ -12,9 +12,10 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.defaultType
 
 class AirBuilderCall2Ir(
-    parent: ClassBoundIrBuilder,
+    val parent: ClassBoundIrBuilder,
     val call: AirBuilderCall
 ) : ClassBoundIrBuilder(parent) {
 
@@ -56,7 +57,7 @@ class AirBuilderCall2Ir(
         }
     }
 
-    fun irExternalPatchReference(scope: IrValueParameter): IrExpression =
+    fun irExternalPatchReference(startScope: IrValueParameter): IrExpression =
         IrFunctionReferenceImpl.fromSymbolOwner(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             classBoundExternalPatchType,
@@ -64,6 +65,6 @@ class AirBuilderCall2Ir(
             typeArgumentsCount = 0,
             reflectionTarget = call.externalPatch.irFunction.symbol
         ).also {
-            it.dispatchReceiver = irGet(scope)
+            it.dispatchReceiver = irImplicitAs(parent.irClass.defaultType,irGet(startScope))
         }
 }

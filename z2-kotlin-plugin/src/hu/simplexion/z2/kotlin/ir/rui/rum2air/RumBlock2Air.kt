@@ -24,6 +24,7 @@ class RumBlock2Air(
             externalPatch,
             statements.map { it.toAir(this@RumBlock2Air) }
         )
+
         airClass.functions += builder
 
         return builder

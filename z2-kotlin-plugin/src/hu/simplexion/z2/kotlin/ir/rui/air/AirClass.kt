@@ -1,6 +1,7 @@
 package hu.simplexion.z2.kotlin.ir.rui.air
 
 import hu.simplexion.z2.kotlin.ir.rui.RuiPluginContext
+import hu.simplexion.z2.kotlin.ir.rui.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.ir.rui.air2ir.AirClass2Ir
 import hu.simplexion.z2.kotlin.ir.rui.rum.RumClass
 import org.jetbrains.kotlin.ir.declarations.*
@@ -35,5 +36,14 @@ class AirClass(
     val functions = mutableListOf<AirFunction>()
 
     fun toIr(context: RuiPluginContext): IrClass = AirClass2Ir(context, this).toIr()
+
+    override fun <R, D> accept(visitor: AirElementVisitor<R, D>, data: D): R =
+        visitor.visitClass(this, data)
+
+    override fun <D> acceptChildren(visitor: AirElementVisitor<Unit, D>, data: D) {
+        stateVariableList.forEach { it.accept(visitor, data) }
+        dirtyMasks.forEach { it.accept(visitor, data) }
+        functions.forEach { it.accept(visitor, data) }
+    }
 
 }

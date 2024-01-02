@@ -86,6 +86,16 @@ class DumpRumTreeVisitor(
         }
     }
 
+
+    override fun visitParameterFunctionCall(statement: RumParameterFunctionCall) {
+        indented {
+            with(statement) {
+                println { "PARAMETER_FUNCTION_CALL index:$index name:$name" }
+            }
+            super.visitParameterFunctionCall(statement)
+        }
+    }
+
     override fun visitWhen(statement: RumWhen) {
         indented {
             with(statement) {

@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 class AirBuilderBlock2Ir(
-    parent: ClassBoundIrBuilder,
+    val parent: ClassBoundIrBuilder,
     val builder: AirBuilderBlock
 ) : ClassBoundIrBuilder(parent) {
 
@@ -67,6 +67,7 @@ class AirBuilderBlock2Ir(
                     typeArgumentsCount = 0,
                     valueArgumentsCount = 1
                 ).apply {
+                    dispatchReceiver = irGet(irFunction.dispatchReceiverParameter !!)
                     putValueArgument(0, irGet(startScope))
                 }
 

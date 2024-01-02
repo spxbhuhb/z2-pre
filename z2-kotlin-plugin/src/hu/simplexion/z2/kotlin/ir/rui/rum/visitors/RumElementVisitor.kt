@@ -22,6 +22,7 @@ interface RumElementVisitor<out R, in D> {
     fun visitBlock(statement: RumBlock, data: D) = visitStatement(statement, data)
     fun visitCall(statement: RumCall, data: D) = visitStatement(statement, data)
     fun visitHigherOrderCall(statement: RumHigherOrderCall, data: D) = visitStatement(statement, data)
+    fun visitParameterFunctionCall(statement: RumParameterFunctionCall, data: D) = visitStatement(statement, data)
     fun visitWhen(statement: RumWhen, data: D) = visitStatement(statement, data)
     fun visitForLoop(statement: RumForLoop, data: D) = visitStatement(statement, data)
 
