@@ -6,8 +6,8 @@ package hu.simplexion.z2.kotlin.ir.rui.rum
 import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.ir.rui.RUI_FOR_LOOP
 import hu.simplexion.z2.kotlin.ir.rui.RUI_FQN_FOR_LOOP_CLASS
-import hu.simplexion.z2.kotlin.ir.rui.air.AirBuilderBlock
 import hu.simplexion.z2.kotlin.ir.rui.rum.visitors.RumElementVisitor
+import hu.simplexion.z2.kotlin.ir.rui.rum2air.RumForLoop2Air
 import org.jetbrains.kotlin.ir.expressions.IrBlock
 
 class RumForLoop(
@@ -24,9 +24,7 @@ class RumForLoop(
 
     override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.context.ruiSymbolMap.getSymbolMap(RUI_FQN_FOR_LOOP_CLASS)
 
-    override fun toAir(parent: ClassBoundIrBuilder): AirBuilderBlock {
-        TODO("Not yet implemented")
-    }
+    override fun toAir(parent: ClassBoundIrBuilder) = RumForLoop2Air(parent, this).toAir()
 
     override fun <R, D> accept(visitor: RumElementVisitor<R, D>, data: D): R =
         visitor.visitForLoop(this, data)

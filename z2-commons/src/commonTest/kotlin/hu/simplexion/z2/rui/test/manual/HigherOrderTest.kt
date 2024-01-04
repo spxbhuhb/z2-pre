@@ -102,7 +102,7 @@ class HigherOrder(
     }
 
     fun ruiBuilder0(ruiAdapter: RuiAdapter<TestNode>) =
-        RuiImplicit0(ruiAdapter, this, ::ruiEpImplicit).also {
+        RuiAnonymous(ruiAdapter, this, ::ruiEpImplicit).also {
             it.containedFragment = RuiT1(ruiAdapter, it, ::ruiEpT1, i)
         }
 

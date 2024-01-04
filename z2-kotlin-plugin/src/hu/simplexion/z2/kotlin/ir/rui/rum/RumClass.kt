@@ -16,13 +16,16 @@ import org.jetbrains.kotlin.ir.util.statements
 class RumClass(
     val ruiContext: RuiPluginContext,
     val originalFunction: IrFunction,
-    override val parentScope: RumScope?,
-) : RumElement, RumScope {
+    val parentScope: RumClass?,
+) : RumElement {
 
-    val fqName = originalFunction.toRuiClassFqName(ruiContext, parentScope != null)
+    val fqName = originalFunction.toRuiClassFqName(ruiContext, isAnonymous)
     val name = fqName.shortName()
 
     var compilationError: Boolean = false
+
+    val isAnonymous
+        get() = (parentScope != null)
 
     val boundary: RumBoundary = BoundaryVisitor(ruiContext).findBoundary(originalFunction)
 
@@ -31,7 +34,7 @@ class RumClass(
     val initializerStatements = mutableListOf<IrStatement>()
     val renderingStatements = mutableListOf<IrStatement>()
 
-    override val stateVariables = mutableListOf<RumStateVariable>()
+    val stateVariables = mutableListOf<RumStateVariable>()
     val dirtyMasks = mutableListOf<RumDirtyMask>()
 
     lateinit var rendering: RumRenderingStatement

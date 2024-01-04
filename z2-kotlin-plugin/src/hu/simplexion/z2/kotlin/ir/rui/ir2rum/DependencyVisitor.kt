@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin.ir.rui.ir2rum
 
 import hu.simplexion.z2.kotlin.ir.rui.RuiPluginContext
-import hu.simplexion.z2.kotlin.ir.rui.rum.RumScope
+import hu.simplexion.z2.kotlin.ir.rui.rum.RumClass
 import hu.simplexion.z2.kotlin.ir.rui.rum.RumStateVariable
 import hu.simplexion.z2.kotlin.ir.rui.util.RuiAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
@@ -13,9 +13,16 @@ import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.psi.KtModifierListOwner
 
+/**
+ * Collects state variable dependencies. These may be:
+ *
+ * - [IrCall]: variable getter
+ * - [IrGetValue]: access a parameter of the original function
+ *
+ */
 class DependencyVisitor(
     private val ruiContext : RuiPluginContext,
-    private val endScope: RumScope
+    private val endScope: RumClass
 ) : RuiAnnotationBasedExtension, IrElementVisitorVoid {
 
     var dependencies = mutableListOf<RumStateVariable>()
@@ -31,7 +38,7 @@ class DependencyVisitor(
      * Call to the getter.
      */
     override fun visitCall(expression: IrCall) {
-        var scope : RumScope? = endScope
+        var scope : RumClass? = endScope
         while (scope != null) {
             scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
                 dependencies += it
@@ -45,7 +52,7 @@ class DependencyVisitor(
      * Parameter get from the original function.
      */
     override fun visitGetValue(expression: IrGetValue) {
-        var scope : RumScope? = endScope
+        var scope : RumClass? = endScope
         while (scope != null) {
             scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
                 dependencies += it

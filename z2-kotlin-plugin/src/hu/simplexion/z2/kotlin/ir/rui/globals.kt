@@ -33,7 +33,7 @@ val RUI_BLOCK_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiBlock")
 val RUI_WHEN_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiWhen")
 val RUI_FOR_LOOP_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiForLoop")
 val RUI_ENTRY_FUNCTION = listOf("hu", "simplexion", "z2", "rui", "rui")
-val RUI_IMPLICIT0_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiImplicit0")
+val RUI_ANONYMOUS_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiAnonymous")
 
 /**
  * Number of Rui related constructor arguments.
@@ -78,7 +78,7 @@ const val RUI_STATE_VARIABLE_LIMIT = 60
 const val RUI_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
 const val RUI_ROOT_CLASS_PREFIX = "RuiRoot"
-const val RUI_HIGHER_ORDER_PREFIX = "RuiHigherOrder"
+const val RUI_ANONYMOUS_PREFIX = "RuiAnonymous"
 
 const val RUI_BT = "BT" // type parameter for fragment, Bridge Type
 const val RUI_ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
@@ -119,13 +119,13 @@ val RUI_FQN_BLOCK_CLASS = FqName.fromSegments(RUI_BLOCK_CLASS)
 val RUI_FQN_WHEN_CLASS = FqName.fromSegments(RUI_WHEN_CLASS)
 val RUI_FQN_FOR_LOOP_CLASS = FqName.fromSegments(RUI_FOR_LOOP_CLASS)
 val RUI_FQN_ENTRY_FUNCTION = FqName.fromSegments(RUI_ENTRY_FUNCTION)
-val RUI_FQN_IMPLICIT0_CLASS = FqName.fromSegments(RUI_IMPLICIT0_CLASS)
+val RUI_FQN_ANONYMOUS_CLASS = FqName.fromSegments(RUI_ANONYMOUS_CLASS)
 
-fun IrFunction.toRuiClassFqName(ruiContext: RuiPluginContext, higherOrder: Boolean): FqName {
+fun IrFunction.toRuiClassFqName(ruiContext: RuiPluginContext, anonymous: Boolean): FqName {
     val parent = kotlinFqName.parentOrNull() ?: FqName.ROOT
     return when {
-        higherOrder -> {
-            parent.child(Name.identifier("$RUI_HIGHER_ORDER_PREFIX${startOffset}"))
+        anonymous -> {
+            parent.child(Name.identifier("$RUI_ANONYMOUS_PREFIX${startOffset}"))
         }
         isAnonymousFunction || name.asString() == "<anonymous>" -> {
             val postfix = when (ruiContext.rootNameStrategy) {

@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.ir.declarations.*
 class AirClass(
 
     val rumClass: RumClass,
+    val airScope : AirClass?,
 
     val irClass: IrClass,
 
@@ -21,6 +22,7 @@ class AirClass(
     val initializer: IrAnonymousInitializer,
 
     val patch: IrSimpleFunction
+
 ) : AirElement {
 
     override val rumElement
@@ -35,6 +37,9 @@ class AirClass(
 
     val functions = mutableListOf<AirFunction>()
 
+    val isAnonymous
+        get() = (airScope != null)
+
     fun toIr(context: RuiPluginContext): IrClass = AirClass2Ir(context, this).toIr()
 
     override fun <R, D> accept(visitor: AirElementVisitor<R, D>, data: D): R =
@@ -46,4 +51,16 @@ class AirClass(
         functions.forEach { it.accept(visitor, data) }
     }
 
+    fun findStateVariable(name : String) : Pair<AirStateVariable, List<AirClass>>? {
+        var scope : AirClass? = this
+        val path = mutableListOf<AirClass>()
+        while (scope != null) {
+            path += scope
+            scope.stateVariableMap[name]?.let {
+                return (it to path)
+            }
+            scope = this.airScope
+        }
+        return null
+    }
 }

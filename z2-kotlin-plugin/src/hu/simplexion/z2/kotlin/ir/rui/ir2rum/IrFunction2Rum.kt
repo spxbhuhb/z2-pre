@@ -39,7 +39,7 @@ class IrFunction2Rum(
     val ruiContext: RuiPluginContext,
     val irFunction: IrFunction,
     val skipParameters: Int,
-    val parentScope: RumScope? = null
+    val scope: RumClass? = null
 ) : RuiAnnotationBasedExtension {
 
     lateinit var rumClass: RumClass
@@ -57,7 +57,7 @@ class IrFunction2Rum(
     }
 
     fun transform(): RumClass {
-        rumClass = RumClass(ruiContext, irFunction, parentScope)
+        rumClass = RumClass(ruiContext, irFunction, scope)
 
         StateDefinitionTransform(rumClass, skipParameters).transform()
 
@@ -74,12 +74,12 @@ class IrFunction2Rum(
         val startOffset = rumClass.originalFunction.startOffset
         val endOffset = rumClass.originalFunction.endOffset
 
-        val irBlock = IrBlockImpl(startOffset, endOffset, ruiContext.irContext.irBuiltIns.unitType)
-        irBlock.statements.addAll(statements.subList(rumClass.boundary.statementIndex, statements.size))
+        val renderingBlock = IrBlockImpl(startOffset, endOffset, ruiContext.irContext.irBuiltIns.unitType)
+        renderingBlock.statements.addAll(statements.subList(rumClass.boundary.statementIndex, statements.size))
 
         // if this is a single statement, we don't need the surrounding block
         // TODO check if this is the right place for the optimization
-        rumClass.rendering = transformBlock(irBlock).let {
+        rumClass.rendering = transformBlock(renderingBlock).let {
             if (it.statements.size == 1) {
                 it.statements[0]
             } else {
@@ -103,7 +103,9 @@ class IrFunction2Rum(
                 }
 
                 is IrCall -> transformCall(statement)
+
                 is IrWhen -> transformWhen(statement)
+
                 else -> RUI_IR_INVALID_RENDERING_STATEMENT.report(rumClass, statement)
 
             }?.let {
@@ -184,19 +186,6 @@ class IrFunction2Rum(
     // Call
     // ---------------------------------------------------------------------------
 
-    fun transformCall(statement: IrCall): RumCall? {
-
-        if (! statement.isAnnotatedWithRui()) {
-            return RIU_IR_RENDERING_NON_RUI_CALL.report(rumClass, statement)
-        }
-
-        return if (statement.isHigherOrder) {
-            transformHigherOrderCall(statement)
-        } else {
-            transformSimpleCall(statement)
-        }
-    }
-
     val IrCall.isHigherOrder: Boolean
         get() {
             // TODO check if caching for higher order function symbols has positive impact on compilation performance
@@ -209,6 +198,19 @@ class IrFunction2Rum(
             }
             return false
         }
+
+    fun transformCall(statement: IrCall): RumCall? {
+
+        if (! statement.isAnnotatedWithRui()) {
+            return RIU_IR_RENDERING_NON_RUI_CALL.report(rumClass, statement)
+        }
+
+        return if (statement.isHigherOrder) {
+            transformHigherOrderCall(statement)
+        } else {
+            transformSimpleCall(statement)
+        }
+    }
 
     fun transformSimpleCall(statement: IrCall): RumCall {
 

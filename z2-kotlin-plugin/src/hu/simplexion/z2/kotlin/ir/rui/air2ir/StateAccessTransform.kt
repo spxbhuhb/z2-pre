@@ -90,6 +90,11 @@ class StateAccessTransform(
         return super.visitVariable(declaration)
     }
 
+    /**
+     * Transforms non-rendering functions such as callbacks defined inside the original
+     * function. When these functions modify state variables they have to call patch
+     * before they return.
+     */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         haveToPatch = false
         val transformed = super.visitFunctionNew(declaration) as IrFunction
@@ -106,7 +111,8 @@ class StateAccessTransform(
     }
 
     /**
-     * Adds a call to the patch function as the last statement of the function body.
+     * Adds a call to the `ruiPatch` function as the last statement of the function body to
+     * notify the components about the state change.
      */
     fun addPatch(function: IrFunction): IrFunction {
         val body = function.body ?: return function
@@ -137,19 +143,20 @@ class StateAccessTransform(
         return function
     }
 
+    /**
+     * Replace local variable get with scope-aware property get. Traverses up in the scopes
+     * to find the one that stores the state variable. The scope that stores the state
+     * variable has to be cast to the proper type, or we'll get a compilation error.
+     */
     override fun visitGetValue(expression: IrGetValue): IrExpression {
 
         val name = expression.symbol.owner.name.identifier
 
-        val stateVariable = airClass.stateVariableMap[name]
-            ?: return super.visitGetValue(expression)
+        val (stateVariable,path) = airClass.findStateVariable(name) ?: return super.visitGetValue(expression)
 
         RUI_IR_STATE_VARIABLE_SHADOW.check(rumClass, expression) { stateVariable.rumElement.matches(expression.symbol) }
 
-        val property = airClass.stateVariableMap[name]?.irProperty
-            ?: throw IllegalStateException("missing state variable $name in ${rumClass.originalFunction.name}")
-
-        return irBuilder.irGetValue(property, scopeReceiver())
+        return irBuilder.irGetValue(stateVariable.irProperty, scopeReceiver(/* path */))
     }
 
     /**

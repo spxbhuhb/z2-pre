@@ -139,6 +139,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
+            @TestMetadata("RumTree.kt")
+            public void testRumTree() throws Exception {
+                runTest("testData/box/rui/success/RumTree.kt");
+            }
+
+            @Test
             @TestMetadata("Sequence.kt")
             public void testSequence() throws Exception {
                 runTest("testData/box/rui/success/Sequence.kt");

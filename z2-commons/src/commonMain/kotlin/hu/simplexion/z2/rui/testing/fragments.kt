@@ -119,6 +119,35 @@ class RuiH1(
 }
 
 @Suppress("unused")
+@Rui
+fun H2(i1 : Int, @Rui builder: (i2 : Int) -> Unit) {
+    builder(i1 + 2)
+}
+
+@Suppress("unused")
+class RuiH2(
+    ruiAdapter: RuiAdapter<TestNode>,
+    ruiScope: RuiFragment<TestNode>?,
+    ruiExternalPatch: RuiExternalPathType<TestNode>,
+    val i1 : Int,
+    @Rui builder: (ruiAdapter: RuiAdapter<TestNode>, arguments : Array<Any>) -> RuiFragment<TestNode>
+) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch) {
+
+    override val fragment0 = builder(ruiAdapter, arrayOf(i1 + 1))
+
+    override fun ruiMount(bridge: RuiBridge<TestNode>) {
+        super.ruiMount(bridge)
+        fragment0.ruiMount(bridge)
+    }
+
+    init {
+        ruiAdapter.trace(traceName, "init")
+    }
+
+    // FIXME finish RUI H2 test fragment
+}
+
+@Suppress("unused")
 abstract class RuiC1(
     ruiAdapter: RuiAdapter<TestNode>,
     scope: RuiFragment<TestNode>?,

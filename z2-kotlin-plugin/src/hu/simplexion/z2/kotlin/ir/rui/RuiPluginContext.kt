@@ -74,7 +74,7 @@ class RuiPluginContext(
 
     val ruiSymbolMap = RuiSymbolMap(this)
 
-    val implicit0SymbolMap = ruiSymbolMap.getSymbolMap(RUI_FQN_IMPLICIT0_CLASS)
+    val implicit0SymbolMap = ruiSymbolMap.getSymbolMap(RUI_FQN_ANONYMOUS_CLASS)
 
     private fun property(name: String) =
         ruiGeneratedFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()

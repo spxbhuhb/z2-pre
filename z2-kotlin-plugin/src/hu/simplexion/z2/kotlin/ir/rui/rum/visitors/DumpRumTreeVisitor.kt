@@ -26,7 +26,7 @@ class DumpRumTreeVisitor(
     override fun visitClass(rumClass: RumClass) {
         indented {
             with(rumClass) {
-                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex})" }
+                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex}) parentScope:${parentScope?.fqName}" }
             }
             super.visitClass(rumClass)
         }
@@ -62,7 +62,7 @@ class DumpRumTreeVisitor(
     override fun visitBlock(statement: RumBlock) {
         indented {
             with(statement) {
-                println { "BLOCK index:$index name:$name startOffset: ${statement.irBlock.startOffset}" }
+                println { "RENDERING type:BLOCK index:$index name:$name startOffset: ${statement.irBlock.startOffset}" }
             }
             super.visitBlock(statement)
         }
@@ -71,7 +71,7 @@ class DumpRumTreeVisitor(
     override fun visitCall(statement: RumCall) {
         indented {
             with(statement) {
-                println { "CALL index:$index name:$name startOffset: ${statement.irCall.startOffset} type:<$target>" }
+                println { "RENDERING type:CALL index:$index name:$name startOffset: ${statement.irCall.startOffset} type:<$target>" }
             }
             super.visitCall(statement)
         }
@@ -80,7 +80,7 @@ class DumpRumTreeVisitor(
     override fun visitHigherOrderCall(statement: RumHigherOrderCall) {
         indented {
             with(statement) {
-                println { "HIGHER_ORDER_CALL index:$index name:$name type:<$target>" }
+                println { "RENDERING type:HIGHER_ORDER_CALL index:$index name:$name type:<$target>" }
             }
             super.visitHigherOrderCall(statement)
         }
@@ -90,7 +90,7 @@ class DumpRumTreeVisitor(
     override fun visitParameterFunctionCall(statement: RumParameterFunctionCall) {
         indented {
             with(statement) {
-                println { "PARAMETER_FUNCTION_CALL index:$index name:$name" }
+                println { "RENDERING type:PARAMETER_FUNCTION_CALL index:$index name:$name" }
             }
             super.visitParameterFunctionCall(statement)
         }
@@ -99,7 +99,7 @@ class DumpRumTreeVisitor(
     override fun visitWhen(statement: RumWhen) {
         indented {
             with(statement) {
-                println { "WHEN index:$index name:$name" }
+                println { "RENDERING type:WHEN index:$index name:$name" }
             }
             super.visitWhen(statement)
         }
@@ -108,7 +108,7 @@ class DumpRumTreeVisitor(
     override fun visitForLoop(statement: RumForLoop) {
         indented {
             with(statement) {
-                println { "FOR_LOOP index:$index name:$name" }
+                println { "RENDERING type:FOR_LOOP index:$index name:$name" }
             }
             super.visitForLoop(statement)
         }
@@ -117,7 +117,7 @@ class DumpRumTreeVisitor(
     override fun visitBranch(branch: RumBranch) {
         indented {
             with(branch) {
-                println { "BRANCH index:$index name:$name" }
+                println { "RENDERING type:BRANCH index:$index name:$name" }
             }
             super.visitBranch(branch)
         }

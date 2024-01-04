@@ -81,8 +81,11 @@ We use classes from the runtime to create instances of these implicit components
 The number in the class name is the number of state variables the class stores. The first two should cover
 most of the use cases why the last may be used for any number of parameters.
 
-These classes **do not actually store** the state variables from the *start scope* and the intermediate *local scopes*.
-Instead, they have a `ruiScope` property which stores the first upper level scope.
+These classes **do not store** the state variables from the *start scope* and the intermediate *local scopes*,
+only the state variables of the end scope.
+
+To access state variables of upper scopes the `ruiScope` property stores the first upper level scope (which may or 
+may not be the direct parent component).
 
 ### Patching
 

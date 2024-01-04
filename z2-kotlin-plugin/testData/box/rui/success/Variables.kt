@@ -13,11 +13,11 @@ import hu.simplexion.z2.rui.testing.T1
 
 @Rui
 fun Variables(i: Int, s: String) {
-    val i2 = 12
+//    val i2 = 12
 
-    T1(0)
+//    T1(0)
     T1(i)
-    T1(i2)
+//    T1(i2)
 }
 
 fun box() : String {

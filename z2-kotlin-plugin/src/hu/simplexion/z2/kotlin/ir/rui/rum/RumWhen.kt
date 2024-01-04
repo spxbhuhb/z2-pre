@@ -6,8 +6,8 @@ package hu.simplexion.z2.kotlin.ir.rui.rum
 import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.ir.rui.RUI_FQN_WHEN_CLASS
 import hu.simplexion.z2.kotlin.ir.rui.RUI_WHEN
-import hu.simplexion.z2.kotlin.ir.rui.air.AirBuilderBlock
 import hu.simplexion.z2.kotlin.ir.rui.rum.visitors.RumElementVisitor
+import hu.simplexion.z2.kotlin.ir.rui.rum2air.RumWhen2Air
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrWhen
 
@@ -24,9 +24,7 @@ class RumWhen(
 
     override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.context.ruiSymbolMap.getSymbolMap(RUI_FQN_WHEN_CLASS)
 
-    override fun toAir(parent: ClassBoundIrBuilder): AirBuilderBlock {
-        TODO("Not yet implemented")
-    }
+    override fun toAir(parent: ClassBoundIrBuilder) = RumWhen2Air(parent, this).toAir()
 
     override fun <R, D> accept(visitor: RumElementVisitor<R, D>, data: D): R =
         visitor.visitWhen(this, data)

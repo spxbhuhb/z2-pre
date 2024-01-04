@@ -69,6 +69,7 @@ class RumClass2Air(
 
         airClass = AirClass(
             rumClass,
+            null,
             irClass,
             adapter,
             scope,

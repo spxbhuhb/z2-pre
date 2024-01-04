@@ -33,6 +33,10 @@ open class ClassBoundIrBuilder(
     val context: RuiPluginContext
 ) {
 
+    companion object {
+        const val SCOPE_ARG_NAME = "scope"
+    }
+
     constructor(parent: ClassBoundIrBuilder) : this(parent.context) {
         this.irClass = parent.irClass
         this.airClass = parent.airClass
@@ -220,7 +224,7 @@ open class ClassBoundIrBuilder(
     // --------------------------------------------------------------------------------------------------------
 
     /**
-     * Defines a `fun ruiBuilderNNN(startScope : RuiFragment<BT>) : RuiFragment<BT>` function (NNN = [startOffset])
+     * Defines a `fun ruiBuilderNNN(scope : RuiFragment<BT>) : RuiFragment<BT>` function (NNN = [startOffset])
      */
     fun builder(startOffset: Int): IrSimpleFunction =
         irFactory.buildFun {
@@ -234,7 +238,7 @@ open class ClassBoundIrBuilder(
             }
 
             function.addValueParameter {
-                name = Name.identifier("startScope")
+                name = Name.identifier(SCOPE_ARG_NAME)
                 type = classBoundFragmentType
             }
 
