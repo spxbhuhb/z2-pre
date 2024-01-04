@@ -1,11 +1,11 @@
 package hu.simplexion.z2.service.runtime.test.box.context
 
-import hu.simplexion.z2.service.runtime.Service
-import hu.simplexion.z2.service.runtime.getService
-import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.service.Service
+import hu.simplexion.z2.service.getService
+import hu.simplexion.z2.service.ServiceContext
+import hu.simplexion.z2.service.ServiceImpl
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
+import hu.simplexion.z2.service.defaultServiceImplFactory
 import hu.simplexion.z2.commons.util.UUID
 
 interface TestService : Service {
@@ -36,7 +36,7 @@ fun box(): String {
 
     var response = runBlocking { testServiceConsumer.testFun(1, "hello") }
 
-    if (! response.startsWith("i:1 s:hello null")) return "Fail (response=$response)"
+    if (! response.startsWith("i:1 s:hello")) return "Fail (response=$response)"
 
     val uuidResponse = runBlocking { testServiceConsumer.testFun() }
 

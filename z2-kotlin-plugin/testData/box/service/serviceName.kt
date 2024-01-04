@@ -2,14 +2,14 @@ package foo.bar
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.commons.protobuf.ProtoOneString
-import hu.simplexion.z2.service.runtime.Service
-import hu.simplexion.z2.service.runtime.defaultServiceCallTransport
+import hu.simplexion.z2.service.Service
+import hu.simplexion.z2.service.defaultServiceCallTransport
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
-import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.service.runtime.ServiceImpl
-import hu.simplexion.z2.service.runtime.getService
+import hu.simplexion.z2.service.ServiceContext
+import hu.simplexion.z2.service.ServiceImpl
+import hu.simplexion.z2.service.getService
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
+import hu.simplexion.z2.service.defaultServiceImplFactory
 
 interface TestService : Service {
 

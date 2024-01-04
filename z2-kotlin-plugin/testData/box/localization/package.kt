@@ -32,7 +32,7 @@ fun box() : String {
     if (test1.value2.key != "a.b.c.test1/value2") return "Fail key 2"
     if (test1.value2.value != "test-value-2") return "Fail value 2"
 
-    if (Test3.localizationNamespace != "a.b.c.Test3") return "Fail fqname"
+    if (Test3.EnumValue1.localizationNamespace != "a.b.c.Test3") return "Fail fqname"
     if (Test5().schematicFqName != "a.b.c.Test5") return "Fail fqname"
 
 

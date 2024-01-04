@@ -2,8 +2,8 @@ package foo.bar
 
 import hu.simplexion.z2.commons.protobuf.*
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.*
-import hu.simplexion.z2.service.runtime.transport.ServiceCallTransport
+import hu.simplexion.z2.service.*
+import hu.simplexion.z2.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 
 interface BasicService : Service {
@@ -41,7 +41,7 @@ class DumpTransport : ServiceCallTransport {
         println(funName)
         println(payload.dumpProto())
 
-        val service = requireNotNull(defaultServiceImplFactory[serviceName, null])
+        val service = requireNotNull(defaultServiceImplFactory[serviceName, BasicServiceContext()])
 
         val responseBuilder = ProtoMessageBuilder()
 

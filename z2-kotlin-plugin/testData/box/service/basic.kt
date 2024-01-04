@@ -1,11 +1,11 @@
 package foo.bar
 
-import hu.simplexion.z2.service.runtime.defaultServiceImplFactory
+import hu.simplexion.z2.service.defaultServiceImplFactory
 import hu.simplexion.z2.commons.protobuf.*
 import hu.simplexion.z2.commons.util.UUID
-import hu.simplexion.z2.service.runtime.*
-import hu.simplexion.z2.service.runtime.BasicServiceContext
-import hu.simplexion.z2.service.runtime.transport.ServiceCallTransport
+import hu.simplexion.z2.service.*
+import hu.simplexion.z2.service.BasicServiceContext
+import hu.simplexion.z2.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
