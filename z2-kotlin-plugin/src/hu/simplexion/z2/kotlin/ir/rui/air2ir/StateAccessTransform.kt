@@ -97,8 +97,6 @@ class StateAccessTransform(
 
     var haveToPatch = false
 
-    val startScope = airClass.startScope
-
     override fun visitVariable(declaration: IrVariable): IrStatement {
         RUI_IR_RENDERING_VARIABLE.check(airClass.rumClass, declaration) {
             declaration.startOffset < airClass.rumClass.boundary.startOffset ||
@@ -145,7 +143,7 @@ class StateAccessTransform(
 
             // SOURCE  patch(ruiDirty0)
             + irCall(
-                startScope.patch.symbol,
+                airClass.patch.symbol,
                 irBuiltIns.unitType,
                 valueArgumentsCount = 1,
                 typeArgumentsCount = 0,
@@ -172,7 +170,7 @@ class StateAccessTransform(
 
         val name = expression.symbol.owner.name.identifier
 
-        val (stateVariable,path) = airClass.findStateVariable(name) ?: return super.visitGetValue(expression)
+        val (stateVariable,path) = airClass.findStateVariable(irBuilder.context, name) ?: return super.visitGetValue(expression)
 
         RUI_IR_STATE_VARIABLE_SHADOW.check(rumClass, expression) { stateVariable.rumElement.matches(expression.symbol) }
 

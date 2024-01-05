@@ -5,11 +5,12 @@ import hu.simplexion.z2.kotlin.ir.rui.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.ir.rui.air2ir.AirClass2Ir
 import hu.simplexion.z2.kotlin.ir.rui.rum.RumClass
 import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.name.FqName
 
 class AirClass(
 
     val rumClass: RumClass,
-    val airScope : AirClass?,
+    val scopeClassName : FqName?,
 
     val irClass: IrClass,
 
@@ -37,18 +38,6 @@ class AirClass(
 
     val functions = mutableListOf<AirFunction>()
 
-    val isAnonymous
-        get() = (airScope != null)
-
-    val startScope : AirClass
-        get() {
-            var scope : AirClass = this
-            while (scope.airScope != null) {
-                scope = scope.airScope!!
-            }
-            return scope
-        }
-
     fun toIr(context: RuiPluginContext): IrClass = AirClass2Ir(context, this).toIr()
 
     override fun <R, D> accept(visitor: AirElementVisitor<R, D>, data: D): R =
@@ -60,7 +49,7 @@ class AirClass(
         functions.forEach { it.accept(visitor, data) }
     }
 
-    fun findStateVariable(name : String) : Pair<AirStateVariable, List<AirClass>>? {
+    fun findStateVariable(context : RuiPluginContext, name : String) : Pair<AirStateVariable, List<AirClass>>? {
         var scope : AirClass? = this
         val path = mutableListOf<AirClass>()
         while (scope != null) {
@@ -68,7 +57,7 @@ class AirClass(
             scope.stateVariableMap[name]?.let {
                 return (it to path)
             }
-            scope = this.airScope
+            scope = this.scopeClassName?.let { context.airClasses[it] }
         }
         return null
     }

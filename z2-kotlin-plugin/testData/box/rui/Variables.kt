@@ -13,11 +13,12 @@ import hu.simplexion.z2.rui.testing.T1
 
 @Rui
 fun Variables(i: Int, s: String) {
-//    val i2 = 12
+    val i2 = 12
 
-//    T1(0)
+    T1(0)
     T1(i)
-//    T1(i2)
+    T1(i2)
+    T1(i + i2)
 }
 
 fun box() : String {
@@ -29,5 +30,17 @@ fun box() : String {
     }
 
     return RuiTestAdapter.assert(listOf(
+        TraceEvent("RuiT1", "init", ),
+        TraceEvent("RuiT1", "init", ),
+        TraceEvent("RuiT1", "init", ),
+        TraceEvent("RuiT1", "init", ),
+        TraceEvent("RuiT1", "create", "p0:", "0"),
+        TraceEvent("RuiT1", "create", "p0:", "123"),
+        TraceEvent("RuiT1", "create", "p0:", "12"),
+        TraceEvent("RuiT1", "create", "p0:", "135"),
+        TraceEvent("RuiT1", "mount", "bridge:", "1"),
+        TraceEvent("RuiT1", "mount", "bridge:", "1"),
+        TraceEvent("RuiT1", "mount", "bridge:", "1"),
+        TraceEvent("RuiT1", "mount", "bridge:", "1")
     ))
 }

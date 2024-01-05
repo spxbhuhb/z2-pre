@@ -69,7 +69,7 @@ class RumClass2Air(
 
         airClass = AirClass(
             rumClass,
-            null,
+            rumClass.parentScope?.fqName,
             irClass,
             adapter,
             scope,
