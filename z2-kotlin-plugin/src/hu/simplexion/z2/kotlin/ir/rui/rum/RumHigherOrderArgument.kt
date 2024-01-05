@@ -6,6 +6,9 @@ package hu.simplexion.z2.kotlin.ir.rui.rum
 import hu.simplexion.z2.kotlin.ir.rui.rum.visitors.RumElementVisitor
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 
+/**
+ * @param rumClass The class that belongs to the parameter function.
+ */
 class RumHigherOrderArgument(
     rumClass: RumClass,
     val index: Int,
@@ -14,7 +17,7 @@ class RumHigherOrderArgument(
 ) : RumExpression(rumClass, value, RumExpressionOrigin.HIGHER_ORDER_ARGUMENT, dependencies) {
 
     /**
-     * Parameters of the parameter function, these are state variables of the implicit
+     * Parameters of the parameter function, these are state variables of the anonymous
      * component (in addition to the state variables of the start and intermediate scopes).
      */
     val valueParameters = value.function.valueParameters
