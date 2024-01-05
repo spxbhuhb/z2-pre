@@ -45,6 +45,40 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/rui")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Rui {
+        @Test
+        public void testAllFilesPresentInRui() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/rui"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+
+        @Test
+        @TestMetadata("Basic.kt")
+        public void testBasic() throws Exception {
+            runTest("testData/box/rui/Basic.kt");
+        }
+
+        @Test
+        @TestMetadata("Empty.kt")
+        public void testEmpty() throws Exception {
+            runTest("testData/box/rui/Empty.kt");
+        }
+
+        @Test
+        @TestMetadata("Sequence.kt")
+        public void testSequence() throws Exception {
+            runTest("testData/box/rui/Sequence.kt");
+        }
+
+        @Test
+        @TestMetadata("Variables.kt")
+        public void testVariables() throws Exception {
+            runTest("testData/box/rui/Variables.kt");
+        }
+    }
+
+    @Nested
     @TestMetadata("testData/box/schematic")
     @TestDataPath("$PROJECT_ROOT")
     public class Schematic {

@@ -4,6 +4,7 @@ import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.ir.rui.RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_FRAGMENT
 import hu.simplexion.z2.kotlin.ir.rui.RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_SCOPE_MASK
 import hu.simplexion.z2.kotlin.ir.rui.RUI_STATE_VARIABLE_LIMIT
+import hu.simplexion.z2.kotlin.ir.rui.air.AirClass
 import hu.simplexion.z2.kotlin.ir.rui.air.AirExternalPatchCall
 import hu.simplexion.z2.kotlin.ir.rui.air.AirStateVariable
 import hu.simplexion.z2.kotlin.ir.rui.air2ir.StateAccessTransform.Companion.transformStateAccess
@@ -11,8 +12,10 @@ import hu.simplexion.z2.kotlin.ir.rui.rum.RumExpression
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.IrValueDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.util.defaultType
 
 /**
  * Generates external patch for calls.
@@ -107,15 +110,29 @@ class AirExternalPatchCall2Ir(
     }
 
     private fun irVariablePatchCondition(expression: RumExpression): IrExpression {
-        val dependencies = expression.dependencies
 
-        var stateVariable = airClass.stateVariableList[dependencies[0].index] // FIXME wrong higher order access
-        var result = stateVariable.irIsDirty(irGet(dispatchReceiver))
+        var result : IrExpression? = null
 
-        for (i in 1 until dependencies.size) {
-            stateVariable = airClass.stateVariableList[dependencies[i].index] // FIXME wrong higher order access
-            result = irOrOr(result, stateVariable.irIsDirty(irGet(dispatchReceiver)))
+        for (dependency in expression.dependencies) {
+            val (stateVariable, scopePath) = checkNotNull(airClass.findStateVariable(dependency.name.identifier)) { "missing state variable: $dependency"}
+
+            result = if (result == null) {
+                stateVariable.irIsDirty(scopePath.getScopeFragment(dispatchReceiver))
+            } else {
+                irOrOr(result, stateVariable.irIsDirty(scopePath.getScopeFragment(dispatchReceiver)))
+            }
         }
+
+        return checkNotNull(result)
+    }
+
+    fun List<AirClass>.getScopeFragment(dispatchReceiver : IrValueParameter) : IrExpression {
+        var result = irImplicitAs(airClass.irClass.defaultType, irGet(dispatchReceiver))
+
+        for (parentScope in this.drop(1)) {
+            result = irImplicitAs(parentScope.irClass.defaultType, result)
+        }
+
         return result
     }
 

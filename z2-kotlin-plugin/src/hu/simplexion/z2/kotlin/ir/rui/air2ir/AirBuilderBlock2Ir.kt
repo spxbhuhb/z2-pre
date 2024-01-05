@@ -5,7 +5,6 @@ import hu.simplexion.z2.kotlin.ir.rui.air.AirBuilderBlock
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.addElement
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -22,11 +21,9 @@ class AirBuilderBlock2Ir(
     fun toIr() = with(builder) {
         val symbolMap = RUI_FQN_BLOCK_CLASS.symbolMap
 
-        val startScope = irFunction.valueParameters[RUI_BUILDER_ARGUMENT_INDEX_START_SCOPE]
-
         irFunction.body = DeclarationIrBuilder(irContext, irFunction.symbol).irBlockBody {
 
-            val receiver = irFunction.dispatchReceiverParameter !!
+            val localScope = irFunction.dispatchReceiverParameter !!
 
             + irReturn(
                 IrConstructorCallImpl(
@@ -39,12 +36,12 @@ class AirBuilderBlock2Ir(
 
                     constructorCall.putValueArgument(
                         RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER,
-                        irGetValue(airClass.adapter, irGet(receiver))
+                        irGetValue(airClass.adapter, irGet(localScope))
                     )
 
                     constructorCall.putValueArgument(
                         RUI_BLOCK_ARGUMENT_INDEX_FRAGMENTS,
-                        buildFragmentVarArg(startScope)
+                        buildFragmentVarArg()
                     )
 
                 }
@@ -52,7 +49,7 @@ class AirBuilderBlock2Ir(
         }
     }
 
-    fun AirBuilderBlock.buildFragmentVarArg(startScope: IrValueParameter): IrExpression {
+    fun AirBuilderBlock.buildFragmentVarArg(): IrExpression {
         return IrVarargImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.arrayClass.typeWith(context.ruiFragmentType),
@@ -65,10 +62,9 @@ class AirBuilderBlock2Ir(
                     context.ruiFragmentType,
                     sub.irFunction.symbol,
                     typeArgumentsCount = 0,
-                    valueArgumentsCount = 1
+                    valueArgumentsCount = 0
                 ).apply {
                     dispatchReceiver = irGet(irFunction.dispatchReceiverParameter !!)
-                    putValueArgument(0, irGet(startScope))
                 }
 
                 vararg.addElement(call)

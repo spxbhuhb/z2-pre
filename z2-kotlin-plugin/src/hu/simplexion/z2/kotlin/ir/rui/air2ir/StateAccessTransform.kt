@@ -33,32 +33,50 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  * Transforms state variable accesses from the original code into property
  * access in the generated IrClass.
  *
- * Adds:
+ * # General transform
+ *
+ * - original function parameter reads (IrGetValue):
+ *   - transformed into state variable getter calls (start scope)
+ * - top level local variable reads (IrCall to the getter)
+ *   - transformed into state variable getter calls (start scope)
+ * - top level local variable writes (IrCall to the setter)
+ *   - transformed into state variable setter calls (start scope)
+ * - anonymous function parameter reads (IrGetValue)
+ *    - transformed into state variable getter calls (intermediate or end scope)
+ *
+ * # Local function transform
+ *
+ * In addition to the general transform, local functions that modify state variables
+ * are extended with dirty mask update and patch call.
  *
  * - `ruiInvalidate0(stateVariableIndex)` calls to invalidate the variable
  * - `ruiPatch(ruiDirty0)` calls to execute patch when necessary
  *
- * Applies to:
- *
- * - initializer statements
- * - function parameters
+ * @param  startScopeValue  the value that stores the instance of the start scope class
  */
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
-    private val intoScope: IrValueSymbol
+    private val startScopeValue: IrValueSymbol
 ) : IrElementTransformerVoidWithContext(), RuiAnnotationBasedExtension {
 
     companion object {
-        fun ClassBoundIrBuilder.transformStateAccess(expression: RumExpression, intoScope: IrValueSymbol): IrExpression =
+
+        /**
+         * Transforms variable access in external patch and CALL rendering builder.
+         */
+        fun ClassBoundIrBuilder.transformStateAccess(expression: RumExpression, startScopeValue: IrValueSymbol): IrExpression =
             expression
                 .irExpression
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, intoScope), null)
+                .transform(StateAccessTransform(this, startScopeValue), null)
 
-        fun ClassBoundIrBuilder.transformStateAccess(statement: IrStatement, intoScope: IrValueSymbol): IrStatement =
+        /**
+         * Transforms an initializer statement.
+         */
+        fun ClassBoundIrBuilder.transformStateAccess(statement: IrStatement, startScopeValue: IrValueSymbol): IrStatement =
             statement
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, intoScope), null)
+                .transform(StateAccessTransform(this, startScopeValue), null)
                 as IrStatement
     }
 
@@ -75,9 +93,11 @@ class StateAccessTransform(
 
     val irBuiltIns = irContext.irBuiltIns
 
-    fun scopeReceiver() = irBuilder.irImplicitAs(intoScope.owner.type, IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, intoScope))
+    fun scopeReceiver() = irBuilder.irImplicitAs(startScopeValue.owner.type, IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, startScopeValue))
 
     var haveToPatch = false
+
+    val startScope = airClass.startScope
 
     override fun visitVariable(declaration: IrVariable): IrStatement {
         RUI_IR_RENDERING_VARIABLE.check(airClass.rumClass, declaration) {
@@ -125,7 +145,7 @@ class StateAccessTransform(
 
             // SOURCE  patch(ruiDirty0)
             + irCall(
-                airClass.patch.symbol,
+                startScope.patch.symbol,
                 irBuiltIns.unitType,
                 valueArgumentsCount = 1,
                 typeArgumentsCount = 0,
@@ -188,7 +208,7 @@ class StateAccessTransform(
             + irCallOp(
                 dirtyMask.invalidate.symbol,
                 irBuiltIns.unitType,
-                IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, intoScope),
+                IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, startScopeValue),
                 (index % RUI_STATE_VARIABLE_LIMIT).toIrConst(irBuiltIns.longType)
             )
 

@@ -40,6 +40,15 @@ class AirClass(
     val isAnonymous
         get() = (airScope != null)
 
+    val startScope : AirClass
+        get() {
+            var scope : AirClass = this
+            while (scope.airScope != null) {
+                scope = scope.airScope!!
+            }
+            return scope
+        }
+
     fun toIr(context: RuiPluginContext): IrClass = AirClass2Ir(context, this).toIr()
 
     override fun <R, D> accept(visitor: AirElementVisitor<R, D>, data: D): R =

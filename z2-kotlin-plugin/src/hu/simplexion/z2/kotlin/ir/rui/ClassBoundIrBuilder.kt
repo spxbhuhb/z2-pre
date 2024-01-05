@@ -224,7 +224,7 @@ open class ClassBoundIrBuilder(
     // --------------------------------------------------------------------------------------------------------
 
     /**
-     * Defines a `fun ruiBuilderNNN(scope : RuiFragment<BT>) : RuiFragment<BT>` function (NNN = [startOffset])
+     * Defines a `fun ruiBuilderNNN() : RuiFragment<BT>` function (NNN = [startOffset])
      */
     fun builder(startOffset: Int): IrSimpleFunction =
         irFactory.buildFun {
@@ -235,11 +235,6 @@ open class ClassBoundIrBuilder(
 
             function.addDispatchReceiver {
                 type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Name.identifier(SCOPE_ARG_NAME)
-                type = classBoundFragmentType
             }
 
             function.parent = irClass

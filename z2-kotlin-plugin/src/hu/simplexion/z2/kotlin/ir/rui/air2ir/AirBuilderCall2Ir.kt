@@ -24,11 +24,9 @@ class AirBuilderCall2Ir(
         val symbolMap = rumCall.target.symbolMap
         val irFunction = call.irFunction
 
-        val startScope = irFunction.valueParameters[RUI_BUILDER_ARGUMENT_INDEX_START_SCOPE]
-
         irFunction.body = DeclarationIrBuilder(irContext, irFunction.symbol).irBlockBody {
 
-            val receiver = irFunction.dispatchReceiverParameter !!
+            val localScope = irFunction.dispatchReceiverParameter !! // the class this builder is member of
 
             + irReturn(
                 IrConstructorCallImpl(
@@ -42,14 +40,14 @@ class AirBuilderCall2Ir(
 
                     constructorCall.putTypeArgument(RUI_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER, irGetValue(airClass.adapter, irGet(receiver)))
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_SCOPE, irGetValue(airClass.scope, irGet(receiver)))
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_EXTERNAL_PATCH, irExternalPatchReference(startScope))
+                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER, irGetValue(airClass.adapter, irGet(localScope)))
+                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_SCOPE, irGetValue(airClass.scope, irGet(localScope)))
+                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_EXTERNAL_PATCH, irExternalPatchReference(localScope))
 
                     rumCall.valueArguments.forEachIndexed { index, ruiExpression ->
                         constructorCall.putValueArgument(
                             index + RUI_FRAGMENT_ARGUMENT_COUNT,
-                            transformStateAccess(ruiExpression, startScope.symbol)
+                            transformStateAccess(ruiExpression, localScope.symbol)
                         )
                     }
                 }
@@ -57,7 +55,7 @@ class AirBuilderCall2Ir(
         }
     }
 
-    fun irExternalPatchReference(startScope: IrValueParameter): IrExpression =
+    fun irExternalPatchReference(localScope: IrValueParameter): IrExpression =
         IrFunctionReferenceImpl.fromSymbolOwner(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             classBoundExternalPatchType,
@@ -65,6 +63,6 @@ class AirBuilderCall2Ir(
             typeArgumentsCount = 0,
             reflectionTarget = call.externalPatch.irFunction.symbol
         ).also {
-            it.dispatchReceiver = irImplicitAs(parent.irClass.defaultType,irGet(startScope))
+            it.dispatchReceiver = irImplicitAs(parent.irClass.defaultType,irGet(localScope))
         }
 }

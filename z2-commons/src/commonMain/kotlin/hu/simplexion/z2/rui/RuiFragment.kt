@@ -20,6 +20,11 @@ package hu.simplexion.z2.rui
  * is easier this way, isn't it?)
  *
  * @param BT Bridge type.
+ *
+ * @property ruiScope Parent scope of this fragment. Each original function and each
+ *                    anonymous rendering function starts a new scope. These scopes
+ *                    define a tree during runtime which is used for getting state
+ *                    variables and patching.
  */
 interface RuiFragment<BT> {
 
