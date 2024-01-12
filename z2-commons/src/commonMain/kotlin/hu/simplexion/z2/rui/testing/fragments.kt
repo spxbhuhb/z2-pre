@@ -7,10 +7,11 @@ package hu.simplexion.z2.rui.testing
 
 import hu.simplexion.z2.rui.*
 
-open class RuiTracingFragment<BT>(
+abstract class RuiTracingFragment<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
     override val ruiScope: RuiFragment<BT>?,
-    override val ruiExternalPatch: RuiExternalPathType<BT>
+    override val ruiExternalPatch: RuiExternalPathType<BT>,
+    override val ruiCallSiteDependencyMask: RuiStateVariableMask
 ) : RuiFragment<BT> {
 
     val traceName = this::class.simpleName.toString()
@@ -23,7 +24,7 @@ open class RuiTracingFragment<BT>(
         ruiAdapter.trace(traceName, "mount", "bridge:", bridge)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
         ruiAdapter.trace(traceName, "patch")
     }
 
@@ -46,12 +47,17 @@ fun T0() {
 class RuiT0<BT>(
     ruiAdapter: RuiAdapter<BT>,
     ruiScope: RuiFragment<BT>?,
-    ruiExternalPatch: RuiExternalPathType<BT>
+    ruiExternalPatch: RuiExternalPathType<BT>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask
 ) : RuiTracingFragment<BT>(
     ruiAdapter,
     ruiScope,
-    ruiExternalPatch
-)
+    ruiExternalPatch,
+    ruiCallSiteDependencyMask
+) {
+    override val ruiStateSize: Int
+        get() = 0
+}
 
 @Rui
 @Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
@@ -63,17 +69,25 @@ class RuiT1<BT>(
     ruiAdapter: RuiAdapter<BT>,
     ruiScope: RuiFragment<BT>?,
     ruiExternalPatch: RuiExternalPathType<BT>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int
 ) : RuiTracingFragment<BT>(
     ruiAdapter,
     ruiScope,
-    ruiExternalPatch
+    ruiExternalPatch,
+    ruiCallSiteDependencyMask
 ) {
 
-    var ruiDirty0 = 0L
+    val stateMask_p0 : Int
+        get() = 1
+
+    override val ruiStateSize: Int
+        get() = 1
+
+    var ruiDirty0 : RuiStateVariableMask = 0
 
     @Suppress("unused")
-    fun ruiInvalidate0(mask: Long) {
+    fun ruiInvalidate0(mask: RuiStateVariableMask) {
         ruiAdapter.trace(traceName, "invalidate", "mask:", mask, "ruiDirty0:", ruiDirty0)
         ruiDirty0 = ruiDirty0 or mask
     }
@@ -86,9 +100,9 @@ class RuiT1<BT>(
         ruiAdapter.trace(traceName, "create", "p0:", p0)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
         ruiAdapter.trace(traceName, "patch", "ruiDirty0:", ruiDirty0, "p0:", p0)
-        ruiDirty0 = 0L
+        ruiDirty0 = 0
     }
 }
 
@@ -103,8 +117,12 @@ class RuiH1(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
-    @Rui builder: (ruiAdapter: RuiAdapter<TestNode>) -> RuiFragment<TestNode>
-) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch) {
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
+    @Rui val builder: (ruiAdapter: RuiAdapter<TestNode>) -> RuiFragment<TestNode>
+) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
+
+    override val ruiStateSize: Int
+        get() = 1
 
     override val fragment0 = builder(ruiAdapter)
 
@@ -129,11 +147,29 @@ class RuiH2(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
     val i1 : Int,
-    @Rui builder: (ruiAdapter: RuiAdapter<TestNode>, arguments : Array<Any>) -> RuiFragment<TestNode>
-) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch) {
+    @Rui builder: (parentScope: RuiFragment<TestNode>) -> RuiFragment<TestNode>
+) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
 
-    override val fragment0 = builder(ruiAdapter, arrayOf(i1 + 1))
+    override val ruiStateSize: Int
+        get() = 1
+
+    override val fragment0 = ruiBuilder111(ruiScope)
+
+    fun ruiBuilder111(parentScope: RuiFragment<TestNode>?) : RuiFragment<TestNode> {
+        return RuiAnonymous(
+            ruiAdapter,
+            parentScope!!,
+            this::ruiExternalPatch111,
+            0,
+            arrayOf(i1 + 1)
+        )
+    }
+
+    fun ruiExternalPatch111(it: RuiFragment<TestNode>, scopeMask: RuiStateVariableMask) : RuiStateVariableMask {
+        return 0
+    }
 
     override fun ruiMount(bridge: RuiBridge<TestNode>) {
         super.ruiMount(bridge)
@@ -150,9 +186,10 @@ class RuiH2(
 @Suppress("unused")
 abstract class RuiC1(
     ruiAdapter: RuiAdapter<TestNode>,
-    scope: RuiFragment<TestNode>?,
-    ruiExternalPatch: RuiExternalPathType<TestNode>
-) : RuiTracingFragment<TestNode>(ruiAdapter, scope, ruiExternalPatch) {
+    ruiScope: RuiFragment<TestNode>?,
+    ruiExternalPatch: RuiExternalPathType<TestNode>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
+) : RuiTracingFragment<TestNode>(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
 
     abstract val fragment0: RuiFragment<TestNode>
 
@@ -166,9 +203,9 @@ abstract class RuiC1(
         fragment0.ruiMount(bridge)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
-        super.ruiPatch(scopeMask)
-        fragment0.ruiPatch(scopeMask)
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
+        super.ruiPatch(dirtyMaskOfScope)
+        fragment0.ruiPatch(dirtyMaskOfScope)
     }
 
     override fun ruiUnmount(bridge: RuiBridge<TestNode>) {
@@ -192,13 +229,18 @@ class RuiEH1A(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int,
     var eventHandler: (np0: Int) -> Unit,
 ) : RuiTracingFragment<TestNode>(
     ruiAdapter,
     ruiScope,
-    ruiExternalPatch
+    ruiExternalPatch,
+    ruiCallSiteDependencyMask
 ) {
+
+    override val ruiStateSize: Int
+        get() = 2
 
     init {
         ruiAdapter.trace(traceName, "init", "p0:", p0)
@@ -219,7 +261,7 @@ class RuiEH1A(
         ruiDirty0 = ruiDirty0 or mask
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
         ruiAdapter.trace(traceName, "patch", "ruiDirty0:", ruiDirty0, "p0:", p0)
         ruiDirty0 = 0L
     }
@@ -236,13 +278,18 @@ class RuiEH1B(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
+    ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int,
     var eventHandler: (np0: Int) -> Unit,
 ) : RuiTracingFragment<TestNode>(
     ruiAdapter,
     ruiScope,
-    ruiExternalPatch
+    ruiExternalPatch,
+    ruiCallSiteDependencyMask
 ) {
+
+    override val ruiStateSize: Int
+        get() = 2
 
     init {
         ruiAdapter.trace(traceName, "init", "p0:", p0)
@@ -263,7 +310,7 @@ class RuiEH1B(
         ruiDirty0 = ruiDirty0 or mask
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
         ruiAdapter.trace(traceName, "patch", "ruiDirty0:", ruiDirty0, "p0:", p0)
         ruiDirty0 = 0L
     }

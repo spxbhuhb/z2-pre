@@ -21,7 +21,7 @@ class RuiPlaceholder<BT>(
         bridge.add(this.bridge)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
 
     }
 

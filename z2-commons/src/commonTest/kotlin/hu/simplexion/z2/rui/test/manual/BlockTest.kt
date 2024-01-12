@@ -64,8 +64,8 @@ class Block(
         return scopeMask
     }
 
-    override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, dirtyMaskOfScope)
         if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }

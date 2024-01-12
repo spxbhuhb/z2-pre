@@ -26,12 +26,12 @@ the runtime Rui structure.
 
 #### higher order function
 
-A *higher-order function* is an *original function* that has a function type parameter
+A *higher-order function* is an *original function* that has a function type argument
 annotated with `@Rui`.
 
-#### parameter function
+#### anonymous function
 
-A *parameter function* is a function passed as parameter to a *higher-order function*.
+An *anonymous function* is a function passed an argument to a *higher-order function*.
 
 ### state variable
 
@@ -39,7 +39,7 @@ A *state variable* is a property of a *component*, part of the *component state*
 
 #### external state variable
 
-An *external state variable* is a *state variable* that is derived from a parameter of
+An *external state variable* is a *state variable* that is derived from an argument of
 the *original function*.
 
 #### internal state variable
@@ -61,5 +61,5 @@ of function call with the very specific arguments passed to the function at that
 ### call site dependency mask
 
 A bitmask that contains 1 for each *state variable* the given function call uses in any form: passed
-as is, used in a calculation of an argument value, used in the body of a *parameter function*.
+as is, used in a calculation of an argument value, used in the body of an *anonymous function*.
 This mask is used to decide if the *fragment* has to be patched or not.

@@ -28,10 +28,10 @@ open class RuiWhen<BT>(
         fragment?.ruiMount(placeholder)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
         val newBranch = ruiSelect()
         if (newBranch == branch) {
-            fragment?.ruiPatch(scopeMask)
+            fragment?.ruiPatch(dirtyMaskOfScope)
         } else {
             fragment?.ruiUnmount(placeholder)
             fragment?.ruiDispose()

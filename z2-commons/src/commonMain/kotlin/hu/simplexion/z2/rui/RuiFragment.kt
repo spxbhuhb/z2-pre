@@ -25,6 +25,9 @@ package hu.simplexion.z2.rui
  *                    anonymous rendering function starts a new scope. These scopes
  *                    define a tree during runtime which is used for getting state
  *                    variables and patching.
+ *
+ * @property ruiStateSize               Number of state variables in this fragment (external and internal together).
+ * @property ruiCallSiteDependencyMask  Represents the dependency of the given fragment on state variables of the scope.
  */
 interface RuiFragment<BT> {
 
@@ -32,9 +35,12 @@ interface RuiFragment<BT> {
     val ruiScope: RuiFragment<BT>?
     val ruiExternalPatch: RuiExternalPathType<BT>
 
+    val ruiStateSize : Int
+    val ruiCallSiteDependencyMask : RuiStateVariableMask
+
     fun ruiCreate()
     fun ruiMount(bridge: RuiBridge<BT>)
-    fun ruiPatch(scopeMask: Long)
+    fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask)
     fun ruiUnmount(bridge: RuiBridge<BT>)
     fun ruiDispose()
 

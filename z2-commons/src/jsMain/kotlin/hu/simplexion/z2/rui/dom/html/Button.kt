@@ -42,7 +42,7 @@ class RuiButton(
         receiver.onclick = onClick
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
         if (ruiDirty0 and 1L != 0L) {
             receiver.innerText = label
         }

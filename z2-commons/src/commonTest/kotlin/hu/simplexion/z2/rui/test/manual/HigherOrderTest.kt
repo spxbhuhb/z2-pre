@@ -95,14 +95,14 @@ class HigherOrder(
         return 0L
     }
 
-    override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, dirtyMaskOfScope)
         if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }
 
     fun ruiBuilder0(ruiAdapter: RuiAdapter<TestNode>) =
-        RuiAnonymous(ruiAdapter, this, ::ruiEpImplicit).also {
+        RuiAnonymous(ruiAdapter, this, ::ruiEpImplicit, emptyArray()).also {
             it.containedFragment = RuiT1(ruiAdapter, it, ::ruiEpT1, i)
         }
 

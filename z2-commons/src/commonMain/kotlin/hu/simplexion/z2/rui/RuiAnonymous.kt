@@ -7,20 +7,24 @@ class RuiAnonymous<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
     override val ruiScope: RuiFragment<BT>,
     override val ruiExternalPatch: RuiExternalPathType<BT>,
-    val state : Array<Any?>
+    override val ruiCallSiteDependencyMask: RuiStateVariableMask,
+    val state : Array<Any?>,
 ) : RuiGeneratedFragment<BT> {
 
     override lateinit var containedFragment: RuiFragment<BT>
 
-    var ruiDirty0 = 0L
+    override val ruiStateSize: Int
+        get() = state.size
+
+    var ruiDirty0 : RuiStateVariableMask = 0
 
     @Suppress("unused")
-    fun ruiInvalidate0(mask: Long) {
+    fun ruiInvalidate0(mask: RuiStateVariableMask) {
         ruiDirty0 = ruiDirty0 or mask
     }
 
-    override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
-        if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, dirtyMaskOfScope)
+        if (extendedScopeMask != 0) containedFragment.ruiPatch(extendedScopeMask)
     }
 }
