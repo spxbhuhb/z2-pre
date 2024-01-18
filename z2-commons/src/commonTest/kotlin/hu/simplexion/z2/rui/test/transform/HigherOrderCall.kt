@@ -39,7 +39,7 @@ class HigherOrderFun(
 
     override val containedFragment = ruiBuilder111(this)
 
-    // ----  block  --------
+    // ----  block site 111 --------
 
     val callSiteDependencyMask_111
         get() = callSiteDependencyMask222 or callSiteDependencyMask333
@@ -60,7 +60,7 @@ class HigherOrderFun(
         return CLEAR_STATE_MASK // FIXME
     }
 
-    // ----  T0  --------
+    // ----  T0 call site 222  --------
 
     val callSiteDependencyMask222: Int
         get() = 0
@@ -73,7 +73,7 @@ class HigherOrderFun(
         return CLEAR_STATE_MASK
     }
 
-    // ----  paramFun  --------
+    // ----  paramFun call site 333 --------
 
     val callSiteDependencyMask333: Int
         get() = stateMask_j
@@ -99,7 +99,7 @@ class HigherOrderFun(
         it as RuiAnonymous<TestNode>
 
         if (scopeDirtyMask.isDirtyOf(stateMask_j)) {
-            it.state[stateIndex_p] = j + 3
+            it.ruiState[stateIndex_p] = j + 3
             it.ruiInvalidate0(stateIndex_p)
         }
 
@@ -145,8 +145,7 @@ class HigherOrderCall(
 
     override val containedFragment = ruiBuilder111(this)
 
-
-    // ----  H2  --------
+    // ----  H2 call site 111 --------
 
     val callSiteDependencyMask_111: RuiStateVariableMask by lazy {
         stateMask_i or callSiteDependencyMask_222
@@ -170,7 +169,7 @@ class HigherOrderCall(
         return scopeDirtyMask.extend(it.ruiDirty0, it.ruiStateSize)
     }
 
-    // ----  Anonymous function  --------
+    // ----  Anonymous function sitr 222 --------
 
     val stateMask_222_p: RuiStateVariableMask = 0b10
 
@@ -196,7 +195,7 @@ class HigherOrderCall(
         return CLEAR_STATE_MASK // FIXME
     }
 
-    // ----  T0  --------
+    // ----  T0 call site 333 --------
 
     val callSiteDependencyMask333: Int
         get() = 0
@@ -209,7 +208,7 @@ class HigherOrderCall(
         return CLEAR_STATE_MASK
     }
 
-    // ----  T1  --------
+    // ----  T1 call site 444 --------
 
     val callSiteDependencyMask444: Int
         get() = stateMask_i or stateMask_222_p.extend()
@@ -230,7 +229,7 @@ class HigherOrderCall(
      */
     fun ruiBuilder444(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
         val p1 = parentScope as RuiAnonymous<TestNode>
-        return RuiT1(ruiAdapter, parentScope, this::ruiExternalPatch444, callSiteDependencyMask444, (p1.state[stateIndex_222_p] as Int) + this.i)
+        return RuiT1(ruiAdapter, parentScope, this::ruiExternalPatch444, callSiteDependencyMask444, (p1.ruiState[stateIndex_222_p] as Int) + this.i)
     }
 
     fun ruiExternalPatch444(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
@@ -240,7 +239,7 @@ class HigherOrderCall(
         it as RuiT1
 
         if (scopeDirtyMask.isDirtyOf(stateMask_i or stateMask_222_p)) {
-            it.p0 = (p1.state[stateIndex_222_p] as Int) + this.i
+            it.p0 = (p1.ruiState[stateIndex_222_p] as Int) + this.i
             it.ruiInvalidate0(it.stateMask_p0)
         }
 
