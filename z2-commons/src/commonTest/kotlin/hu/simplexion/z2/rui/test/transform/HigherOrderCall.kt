@@ -13,11 +13,12 @@ import hu.simplexion.z2.rui.testing.TestNode
  */
 class HigherOrderFun(
     override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiScope: RuiFragment<TestNode>?,
+    override val ruiParent: RuiFragment<TestNode>,
+    override val ruiScope: RuiFragment<TestNode>,
     override val ruiExternalPatch: RuiExternalPathType<TestNode>,
     override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     var j: Int,
-    @Rui val paramFun: (parentScope: RuiFragment<TestNode>) -> RuiFragment<TestNode>
+    @Rui val paramFun: (parent: RuiAnonymous<TestNode>) -> RuiFragment<TestNode>
 ) : RuiGeneratedFragment<TestNode> {
 
     val stateMask_j: RuiStateVariableMask = 0b1
@@ -44,10 +45,10 @@ class HigherOrderFun(
     val callSiteDependencyMask_111
         get() = callSiteDependencyMask222 or callSiteDependencyMask333
 
-    fun ruiBuilder111(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiBlock(
+    fun ruiBuilder111(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+        return RuiSequence(
             ruiAdapter,
-            parentScope,
+            parent,
             callSiteDependencyMask_111,
             this::ruiBuilder222,
             this::ruiBuilder333
@@ -55,7 +56,7 @@ class HigherOrderFun(
     }
 
     fun ruiExternalPatch111(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
-        it as RuiBlock
+        it as RuiSequence
         it.ruiPatch(scopeDirtyMask)
         return CLEAR_STATE_MASK // FIXME
     }
@@ -65,8 +66,8 @@ class HigherOrderFun(
     val callSiteDependencyMask222: Int
         get() = 0
 
-    fun ruiBuilder222(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiT0(ruiAdapter, parentScope, this::ruiExternalPatch333, callSiteDependencyMask333)
+    fun ruiBuilder222(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+        return RuiT0(ruiAdapter, parent, this, this::ruiExternalPatch333, callSiteDependencyMask333)
     }
 
     fun ruiExternalPatch222(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
@@ -81,16 +82,14 @@ class HigherOrderFun(
     val stateMask_p: RuiStateVariableMask = 0b1
     val stateIndex_p: RuiStateVariableMask = 0
 
-    fun ruiBuilder333(parentScope: RuiFragment<TestNode>?): RuiFragment<TestNode> {
+    fun ruiBuilder333(parent: RuiFragment<TestNode>?): RuiFragment<TestNode> {
         return RuiAnonymous(
             ruiAdapter,
-            parentScope !!,
+            parent,
             this::ruiExternalPatch333,
             0,
             arrayOf(j + 3)
-        ).also {
-            it.containedFragment = paramFun(parentScope)
-        }
+        ).also { paramFun(it) }
     }
 
     fun ruiExternalPatch333(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
@@ -120,7 +119,8 @@ class HigherOrderFun(
  */
 class HigherOrderCall(
     override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiScope: RuiFragment<TestNode>?,
+    override val ruiParent: RuiFragment<TestNode>,
+    override val ruiScope: RuiFragment<TestNode>,
     override val ruiExternalPatch: RuiExternalPathType<TestNode>,
     override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     var i: Int
@@ -151,8 +151,8 @@ class HigherOrderCall(
         stateMask_i or callSiteDependencyMask_222
     }
 
-    fun ruiBuilder111(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return HigherOrderFun(ruiAdapter, parentScope, this::ruiExternalPatch111, callSiteDependencyMask_111, i * 2, this::ruiBuilder222)
+    fun ruiBuilder111(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+        return HigherOrderFun(ruiAdapter, parent, this, this::ruiExternalPatch111, callSiteDependencyMask_111, i * 2, this::ruiBuilder222)
     }
 
     fun ruiExternalPatch111(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
@@ -169,7 +169,7 @@ class HigherOrderCall(
         return scopeDirtyMask.extend(it.ruiDirty0, it.ruiStateSize)
     }
 
-    // ----  Anonymous function sitr 222 --------
+    // ----  Anonymous function site 222 --------
 
     val stateMask_222_p: RuiStateVariableMask = 0b10
 
@@ -179,10 +179,10 @@ class HigherOrderCall(
 
     val callSiteDependencyMask_222: RuiStateVariableMask = callSiteDependencyMask333 or callSiteDependencyMask444
 
-    fun ruiBuilder222(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiBlock(
+    fun ruiBuilder222(parent: RuiAnonymous<TestNode>): RuiFragment<TestNode> {
+        return RuiSequence(
             ruiAdapter,
-            parentScope,
+            parent,
             callSiteDependencyMask_222,
             this::ruiBuilder333,
             this::ruiBuilder444
@@ -190,7 +190,7 @@ class HigherOrderCall(
     }
 
     fun ruiExternalPatch222(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
-        it as RuiBlock
+        it as RuiSequence
         it.ruiPatch(scopeDirtyMask)
         return CLEAR_STATE_MASK // FIXME
     }
@@ -200,8 +200,8 @@ class HigherOrderCall(
     val callSiteDependencyMask333: Int
         get() = 0
 
-    fun ruiBuilder333(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiT0(ruiAdapter, parentScope, this::ruiExternalPatch333, callSiteDependencyMask333)
+    fun ruiBuilder333(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+        return RuiT0(ruiAdapter, parent, this, this::ruiExternalPatch333, callSiteDependencyMask333)
     }
 
     fun ruiExternalPatch333(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {
@@ -211,7 +211,7 @@ class HigherOrderCall(
     // ----  T1 call site 444 --------
 
     val callSiteDependencyMask444: Int
-        get() = stateMask_i or stateMask_222_p.extend()
+        get() = stateMask_i or stateMask_222_p
 
     /**
      * The `dispatchReceiver` of this builder is the original component.
@@ -227,9 +227,9 @@ class HigherOrderCall(
      *
      * T1 depends both on `i` from the start scope and `p` from the anonymous function scope.
      */
-    fun ruiBuilder444(parentScope: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        val p1 = parentScope as RuiAnonymous<TestNode>
-        return RuiT1(ruiAdapter, parentScope, this::ruiExternalPatch444, callSiteDependencyMask444, (p1.ruiState[stateIndex_222_p] as Int) + this.i)
+    fun ruiBuilder444(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+        val p1 = parent as RuiAnonymous<TestNode>
+        return RuiT1(ruiAdapter, parent, this, this::ruiExternalPatch444, callSiteDependencyMask444, (p1.ruiState[stateIndex_222_p] as Int) + this.i)
     }
 
     fun ruiExternalPatch444(it: RuiFragment<TestNode>, scopeDirtyMask: RuiStateVariableMask): RuiStateVariableMask {

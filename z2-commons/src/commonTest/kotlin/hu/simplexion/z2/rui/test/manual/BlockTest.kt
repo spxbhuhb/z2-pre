@@ -71,7 +71,7 @@ class Block(
     }
 
     init {
-        containedFragment = RuiBlock(
+        containedFragment = RuiSequence(
             ruiAdapter,
             RuiT1(ruiAdapter, this, ::ruiEp1, v0),
             RuiT0(ruiAdapter, this) { _, _ -> 0L }

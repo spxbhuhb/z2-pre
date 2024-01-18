@@ -5,11 +5,14 @@ package hu.simplexion.z2.rui
 
 class RuiLoop<BT, IT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiParent: RuiFragment<BT>,
+    override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     val makeIterator: () -> Iterator<IT>,
     val makeFragment: () -> RuiFragment<BT>
 ) : RuiFragment<BT> {
 
     override val ruiScope = null
+    override val ruiStateSize: Int get() = 0
     override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
 
     var loopVariable: IT? = null
@@ -34,7 +37,7 @@ class RuiLoop<BT, IT>(
         }
     }
 
-    override fun ruiPatch(dirtyMaskOfScope: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
         var index = 0
         for (loopVariable in makeIterator()) {
             this.loopVariable = loopVariable
@@ -46,7 +49,7 @@ class RuiLoop<BT, IT>(
             } else {
                 fragments[index].also {
                     val extendedScopeMask = it.ruiExternalPatch(it, dirtyMaskOfScope)
-                    if (extendedScopeMask != 0L) it.ruiPatch(extendedScopeMask)
+                    if (extendedScopeMask.isClear()) it.ruiPatch(extendedScopeMask)
                 }
             }
             index++

@@ -9,6 +9,7 @@ import hu.simplexion.z2.rui.*
 
 abstract class RuiTracingFragment<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiParent: RuiFragment<BT>?,
     override val ruiScope: RuiFragment<BT>?,
     override val ruiExternalPatch: RuiExternalPathType<BT>,
     override val ruiCallSiteDependencyMask: RuiStateVariableMask
@@ -47,11 +48,13 @@ fun T0() {
 class RuiT0<BT>(
     ruiAdapter: RuiAdapter<BT>,
     ruiScope: RuiFragment<BT>?,
+    ruiParent: RuiFragment<BT>?,
     ruiExternalPatch: RuiExternalPathType<BT>,
     ruiCallSiteDependencyMask: RuiStateVariableMask
 ) : RuiTracingFragment<BT>(
     ruiAdapter,
     ruiScope,
+    ruiParent,
     ruiExternalPatch,
     ruiCallSiteDependencyMask
 ) {
@@ -68,12 +71,14 @@ fun T1(p0: Int) {
 class RuiT1<BT>(
     ruiAdapter: RuiAdapter<BT>,
     ruiScope: RuiFragment<BT>?,
+    ruiParent: RuiFragment<BT>?,
     ruiExternalPatch: RuiExternalPathType<BT>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int
 ) : RuiTracingFragment<BT>(
     ruiAdapter,
     ruiScope,
+    ruiParent,
     ruiExternalPatch,
     ruiCallSiteDependencyMask
 ) {
@@ -116,10 +121,11 @@ fun H1(@Rui builder: () -> Unit) {
 class RuiH1(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
+    ruiParent: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
     @Rui val builder: (ruiAdapter: RuiAdapter<TestNode>) -> RuiFragment<TestNode>
-) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
+) : RuiC1(ruiAdapter, ruiScope, ruiParent, ruiExternalPatch, ruiCallSiteDependencyMask) {
 
     override val ruiStateSize: Int
         get() = 1
@@ -146,24 +152,27 @@ fun H2(i1 : Int, @Rui builder: (i2 : Int) -> Unit) {
 class RuiH2(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
+    ruiParent: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
     val i1 : Int,
     @Rui builder: (parentScope: RuiFragment<TestNode>) -> RuiFragment<TestNode>
-) : RuiC1(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
+) : RuiC1(ruiAdapter, ruiScope, ruiParent, ruiExternalPatch, ruiCallSiteDependencyMask) {
 
     override val ruiStateSize: Int
         get() = 1
 
     override val fragment0 = ruiBuilder111(ruiScope)
 
-    fun ruiBuilder111(parentScope: RuiFragment<TestNode>?) : RuiFragment<TestNode> {
+    fun ruiBuilder111(parent: RuiFragment<TestNode>?) : RuiFragment<TestNode> {
         return RuiAnonymous(
             ruiAdapter,
-            parentScope!!,
+            this,
+            ruiParent!!,
             this::ruiExternalPatch111,
             0,
-            arrayOf(i1 + 1)
+            arrayOf(i1 + 1),
+            0
         )
     }
 
@@ -187,9 +196,10 @@ class RuiH2(
 abstract class RuiC1(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
+    ruiParent: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
-) : RuiTracingFragment<TestNode>(ruiAdapter, ruiScope, ruiExternalPatch, ruiCallSiteDependencyMask) {
+) : RuiTracingFragment<TestNode>(ruiAdapter, ruiScope, ruiParent, ruiExternalPatch, ruiCallSiteDependencyMask) {
 
     abstract val fragment0: RuiFragment<TestNode>
 
@@ -228,6 +238,7 @@ fun EH1A(p0: Int, eventHandler: (np0: Int) -> Unit) {
 class RuiEH1A(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
+    ruiParent: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int,
@@ -235,6 +246,7 @@ class RuiEH1A(
 ) : RuiTracingFragment<TestNode>(
     ruiAdapter,
     ruiScope,
+    ruiParent,
     ruiExternalPatch,
     ruiCallSiteDependencyMask
 ) {
@@ -277,6 +289,7 @@ fun EH1B(p0: Int, eventHandler: (np0: Int) -> Unit) {
 class RuiEH1B(
     ruiAdapter: RuiAdapter<TestNode>,
     ruiScope: RuiFragment<TestNode>?,
+    ruiParent: RuiFragment<TestNode>?,
     ruiExternalPatch: RuiExternalPathType<TestNode>,
     ruiCallSiteDependencyMask: RuiStateVariableMask,
     var p0: Int,
@@ -284,6 +297,7 @@ class RuiEH1B(
 ) : RuiTracingFragment<TestNode>(
     ruiAdapter,
     ruiScope,
+    ruiParent,
     ruiExternalPatch,
     ruiCallSiteDependencyMask
 ) {

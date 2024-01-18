@@ -111,13 +111,13 @@ class Branch(
 
     fun ruiSelect(): Int =
         when (v0) {
-            1 -> 0 // index in RuiWhen.fragments
+            1 -> 0 // index in RuiSelect.fragments
             2 -> 1
             else -> 2
         }
 
     init {
-        containedFragment = RuiWhen(
+        containedFragment = RuiSelect(
             ruiAdapter,
             ::ruiSelect,
             ::ruiBranch0,

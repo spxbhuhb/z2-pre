@@ -67,7 +67,7 @@ class ForLoop(
     fun ruiIterator0() = IntRange(0, 10).iterator()
 
     fun ruiBuilder0() =
-        RuiBlock(
+        RuiSequence(
             ruiAdapter,
             RuiT1(ruiAdapter, this, ::ruiEp1, v0),
             RuiT0(ruiAdapter, this) { _, _ -> 0L }

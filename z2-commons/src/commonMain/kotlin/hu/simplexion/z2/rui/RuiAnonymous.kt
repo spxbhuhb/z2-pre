@@ -6,11 +6,10 @@ package hu.simplexion.z2.rui
 class RuiAnonymous<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
     override val ruiParent: RuiFragment<BT>?,
-    override val ruiScope: RuiFragment<BT>,
     override val ruiExternalPatch: RuiExternalPathType<BT>,
     override val ruiCallSiteDependencyMask: RuiStateVariableMask,
+    override val ruiScope: RuiFragment<BT>? = null,
     val ruiState: Array<Any?>,
-    val ruiScopeSize: Int
 ) : RuiGeneratedFragment<BT> {
 
     override lateinit var containedFragment: RuiFragment<BT>
@@ -41,10 +40,10 @@ class RuiAnonymous<BT>(
      */
     fun collectStateComponents(): Array<RuiFragment<BT>> {
         var current = ruiParent
-        val result = arrayOfNulls<RuiFragment<BT>?>(ruiScopeSize)
-        var index = ruiScopeSize - 1
+        val result = mutableListOf<RuiFragment<BT>?>()
+        var index = 0
 
-        while (current != null && index > 0) {
+        while (current != null) {
             if (current === ruiScope) { // the start scope, this should be the first element of the array
                 result[index] = current
                 break
