@@ -108,6 +108,11 @@ The compiler plugin generates *component classes* from:
 
 A *component class* that belongs to a *root original function*.
 
+#### anonymous component class
+
+A *component class* that belongs to an *anonymous original function*. As of now this is always `RuiAnonymous`.
+This class does not contain any builder or external patch functions.
+
 #### structural class
 
 One of `RuiSequence`, `RuiSelect`, `RuiLoop` classes. Structural classes are stateless, they
@@ -122,6 +127,10 @@ An actual instance of a *component class*.
 #### root component instance
 
 An actual instance of a *root component class*.
+
+#### anonymous component instance
+
+An actual instance of an *anonymous component class*.
 
 #### structural instance
 

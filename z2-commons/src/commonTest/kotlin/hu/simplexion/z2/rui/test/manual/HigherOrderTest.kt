@@ -58,7 +58,7 @@ class HigherOrder(
     override val ruiAdapter: RuiAdapter<TestNode>
 ) : RuiGeneratedFragment<TestNode> {
 
-    override val ruiScope: RuiFragment<TestNode>? = null
+    override val ruiClosure: RuiClosure<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, scopeMask -> scopeMask }
 
     override val containedFragment: RuiFragment<TestNode>

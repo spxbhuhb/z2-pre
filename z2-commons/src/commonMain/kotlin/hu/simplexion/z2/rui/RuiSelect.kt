@@ -5,15 +5,13 @@ package hu.simplexion.z2.rui
 
 open class RuiSelect<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiClosure: RuiClosure<BT>?,
     override val ruiParent: RuiFragment<BT>,
-    override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     val ruiSelect: () -> Int,
     vararg val factories: () -> RuiFragment<BT>
 ) : RuiFragment<BT> {
 
-    override val ruiScope = null
-    override val ruiStateSize: Int get() = 0
-    override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
+    override val ruiExternalPatch: RuiExternalPathType<BT> = {  }
 
     lateinit var placeholder: RuiBridge<BT>
 
@@ -31,10 +29,13 @@ open class RuiSelect<BT>(
         fragment?.ruiMount(placeholder)
     }
 
-    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
+    override fun ruiPatch() {
         val newBranch = ruiSelect()
         if (newBranch == branch) {
-            fragment?.ruiPatch(dirtyMaskOfScope)
+            fragment?.let {
+                it.ruiExternalPatch(it)
+                it.ruiPatch()
+            }
         } else {
             fragment?.ruiUnmount(placeholder)
             fragment?.ruiDispose()

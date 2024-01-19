@@ -12,7 +12,7 @@ import hu.simplexion.z2.rui.testing.RuiT1
  */
 class SimpleCall<BT : RuiFragment<BT>>(
     override val ruiAdapter: RuiAdapter<BT>,
-    override val ruiScope: RuiFragment<BT>?,
+    override val ruiClosure: RuiClosure<BT>?,
     override val ruiExternalPatch: RuiExternalPathType<BT>,
     override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     var i: Int
@@ -59,6 +59,6 @@ class SimpleCall<BT : RuiFragment<BT>>(
         }
 
         // FIXME wrong extend of scopeDirtyMask
-        return scopeDirtyMask.extend(it.ruiDirty0, it.ruiStateSize)
+        return scopeDirtyMask.extendWith(it.ruiDirty0, it.ruiStateSize)
     }
 }

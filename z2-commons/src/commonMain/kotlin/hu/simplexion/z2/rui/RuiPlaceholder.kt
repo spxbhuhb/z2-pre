@@ -6,12 +6,10 @@ package hu.simplexion.z2.rui
 class RuiPlaceholder<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
     override val ruiParent: RuiFragment<BT>,
-    override val ruiCallSiteDependencyMask: RuiStateVariableMask
 ) : RuiFragment<BT> {
 
-    override val ruiScope = null
-    override val ruiStateSize: Int get() = 0
-    override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
+    override val ruiClosure: RuiClosure<BT>? = null
+    override val ruiExternalPatch: RuiExternalPathType<BT> = {  }
 
     val bridge = ruiAdapter.createPlaceholder()
 
@@ -23,7 +21,7 @@ class RuiPlaceholder<BT>(
         bridge.add(this.bridge)
     }
 
-    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
+    override fun ruiPatch() {
 
     }
 

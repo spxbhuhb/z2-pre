@@ -5,14 +5,12 @@ package hu.simplexion.z2.rui
 
 open class RuiSequence<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiClosure: RuiClosure<BT>?,
     override val ruiParent: RuiFragment<BT>,
-    override val ruiCallSiteDependencyMask: RuiStateVariableMask,
     vararg val builders: (parent: RuiFragment<BT>) -> RuiFragment<BT>
 ) : RuiFragment<BT> {
 
-    override val ruiScope = null
-    override val ruiStateSize: Int get() = 0
-    override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
+    override val ruiExternalPatch: RuiExternalPathType<BT> = {  }
 
     val fragments = builders.map { it.invoke(ruiParent) }
 
@@ -28,10 +26,10 @@ open class RuiSequence<BT>(
         }
     }
 
-    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
+    override fun ruiPatch() {
         for (fragment in fragments) {
-            val extendedScopeMask = fragment.ruiExternalPatch(fragment, dirtyMaskOfScope)
-            if (extendedScopeMask != 0) fragment.ruiPatch(extendedScopeMask)
+            fragment.ruiExternalPatch(fragment)
+            fragment.ruiPatch()
         }
     }
 

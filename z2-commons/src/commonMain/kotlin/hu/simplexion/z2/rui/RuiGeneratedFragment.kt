@@ -17,7 +17,7 @@ interface RuiGeneratedFragment<BT> : RuiFragment<BT> {
      * - a structural fragment such as block, when or a loop
      * - direct call to another rui function
      *
-     * Set to [RuiFragment.ruiScope] by the initializer of the class
+     * Set to [RuiFragment.ruiClosure] by the initializer of the class
      * that implements [RuiGeneratedFragment].
      */
     val containedFragment: RuiFragment<BT>

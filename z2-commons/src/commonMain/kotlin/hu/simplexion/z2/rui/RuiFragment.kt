@@ -22,27 +22,22 @@ package hu.simplexion.z2.rui
  * @param BT Bridge type.
  *
  * @property ruiParent The direct parent of this fragment in the Rui fragment tree.
- * @property ruiScope For `RuiAnonymous` instances the fragment that is the *start scope*.
+ * @property ruiClosure For `RuiAnonymous` instances the fragment that is the *start scope*.
  *                    For everything else it is null.
- *
- * @property ruiStateSize               Number of state variables in this fragment (external and internal together).
- * @property ruiCallSiteDependencyMask  Represents the dependency of the given fragment on state variables of the scope.
  */
 interface RuiFragment<BT> {
 
     val ruiAdapter: RuiAdapter<BT>
 
     val ruiParent: RuiFragment<BT>?
-    val ruiScope: RuiFragment<BT>?
+
+    val ruiClosure: RuiClosure<BT>?
 
     val ruiExternalPatch: RuiExternalPathType<BT>
 
-    val ruiStateSize: Int
-    val ruiCallSiteDependencyMask: RuiStateVariableMask
-
     fun ruiCreate()
     fun ruiMount(bridge: RuiBridge<BT>)
-    fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask)
+    fun ruiPatch()
     fun ruiUnmount(bridge: RuiBridge<BT>)
     fun ruiDispose()
 

@@ -62,7 +62,7 @@ class Branch(
     override val ruiAdapter: RuiAdapter<TestNode>
 ) : RuiGeneratedFragment<TestNode> {
 
-    override val ruiScope: RuiFragment<TestNode>? = null
+    override val ruiClosure: RuiClosure<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, _ -> 0L }
 
     override val containedFragment: RuiFragment<TestNode>

@@ -5,59 +5,31 @@ package hu.simplexion.z2.rui
 
 class RuiAnonymous<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiClosure: RuiClosure<BT>,
     override val ruiParent: RuiFragment<BT>?,
     override val ruiExternalPatch: RuiExternalPathType<BT>,
-    override val ruiCallSiteDependencyMask: RuiStateVariableMask,
-    override val ruiScope: RuiFragment<BT>? = null,
     val ruiState: Array<Any?>,
 ) : RuiGeneratedFragment<BT> {
 
     override lateinit var containedFragment: RuiFragment<BT>
 
-    override val ruiStateSize: Int
-        get() = ruiState.size
+    val extendedClosure = ruiClosure.extendWith(this)
 
     /**
-     * Components that store state variables of this scope.
+     * Invalidate a state variable of this *anonymous component instance*.
+     *
+     * @param  stateVariableIndex  The index of the state variable in [ruiState]. It shall not take
+     *                             [ruiClosure] into account, it is relative to `this`.
      */
-    val ruiScopeComponents = collectStateComponents()
-
-    var ruiDirty0: RuiStateVariableMask = 0
-
-    @Suppress("unused")
-    fun ruiInvalidate0(mask: RuiStateVariableMask) {
-        ruiDirty0 = ruiDirty0 or mask
+    fun ruiInvalidate(stateVariableIndex: Int) {
+        extendedClosure.invalidate(ruiClosure.closureSize + stateVariableIndex)
     }
 
-    override fun ruiPatch(dirtyMaskOfScope: RuiStateVariableMask) {
-        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, dirtyMaskOfScope)
-        if (extendedScopeMask != 0) containedFragment.ruiPatch(extendedScopeMask)
+    override fun ruiPatch() {
+        extendedClosure.copyFrom(ruiClosure)
+        containedFragment.ruiExternalPatch(containedFragment)
+        containedFragment.ruiPatch()
+        extendedClosure.clear()
     }
 
-    /**
-     * Traverses up the Rui fragment tree and collects all fragments that store state variables
-     * of this scope. The returned array is used by [ruiPatch] when updating [containedFragment].
-     */
-    fun collectStateComponents(): Array<RuiFragment<BT>> {
-        var current = ruiParent
-        val result = mutableListOf<RuiFragment<BT>?>()
-        var index = 0
-
-        while (current != null) {
-            if (current === ruiScope) { // the start scope, this should be the first element of the array
-                result[index] = current
-                break
-            }
-            if (current.ruiScope == ruiScope) {
-                result[index] = current
-                index --
-            }
-            current = current.ruiParent
-        }
-
-        check(index == 0) { "invalid Rui tree" }
-
-        @Suppress("UNCHECKED_CAST")
-        return result as Array<RuiFragment<BT>>
-    }
 }

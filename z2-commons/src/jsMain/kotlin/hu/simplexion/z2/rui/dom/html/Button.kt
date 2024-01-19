@@ -29,7 +29,7 @@ class RuiButton(
 
     var ruiDirty0 = 0L
 
-    override val ruiScope: RuiFragment<Node>
+    override val ruiClosure: RuiClosure<Node>?
         get() = TODO("Not yet implemented")
 
     @RuiPublicApi
