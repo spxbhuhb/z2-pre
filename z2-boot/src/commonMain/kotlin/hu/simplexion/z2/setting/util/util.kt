@@ -4,7 +4,7 @@ import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.setting.model.Setting
 
 /**
- * Decode the values from [settings] into this schematic. Set any values not present
+ * Decodes the values from [settings] into this schematic. Sets any values not present
  * in [settings] to their schematic default.
  *
  * @param  [basePath]  The path to put before any field name to get the setting path.
@@ -24,8 +24,7 @@ fun <T : Schematic<T>> T.decodeFromSettings(basePath: String, settings: List<Set
 }
 
 /**
- * Encode the schematic into a list of settings. Fields with value that equals
- * their schematic default are not added to the result list.
+ * Encode the schematic into a list of settings.
  *
  * As of now, this function uses a simple `value.toString()`, so it is not
  * suitable for non-primitive data types.
@@ -40,7 +39,8 @@ fun <T : Schematic<T>> T.encodeToSettings(basePath: String): List<Setting> {
     for (field in schematicSchema.fields) {
         if (field.name == "uuid") continue
         val value = schematicCompanion.getFieldValue(this, field.name)
-        if (field.definitionDefault == value) continue
+        // this causes trouble when trying to set back to default value
+        // if (field.definitionDefault == value) continue
         result += Setting().also {
             it.path = "$basePath/${field.name}"
             it.value = field.encodeToString(this)
