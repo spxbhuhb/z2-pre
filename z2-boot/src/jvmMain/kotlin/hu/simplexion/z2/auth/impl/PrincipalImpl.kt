@@ -122,9 +122,9 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
 
     override suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean) {
         ensureAny(*updateRoles)
-        securityHistory(baseStrings.account, baseStrings.setActivated, uuid, true)
+        securityHistory(baseStrings.account, baseStrings.setActivated, uuid, activated)
 
-        principalTable.setActivated(uuid, true)
+        principalTable.setActivated(uuid, activated)
     }
 
     override suspend fun setLocked(uuid: UUID<Principal>, locked: Boolean) {
