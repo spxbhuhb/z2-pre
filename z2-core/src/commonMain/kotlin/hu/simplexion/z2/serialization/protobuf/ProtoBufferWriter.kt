@@ -1,8 +1,8 @@
 package hu.simplexion.z2.serialization.protobuf
 
+import hu.simplexion.z2.serialization.buffer.BufferWriter
 import hu.simplexion.z2.util.UUID
 import kotlin.experimental.or
-import kotlin.math.max
 
 /**
  * A low level protobuf writer to write information into a list of ByteArrays
@@ -16,38 +16,14 @@ import kotlin.math.max
  */
 @Suppress("SpellCheckingInspection")
 class ProtoBufferWriter(
-    val initialBufferSize: Int = 200,
-    val additionalBufferSize: Int = 10_000,
-    val maximumBufferSize: Int = 5_000_000 + initialBufferSize
-) {
+    initialBufferSize: Int = 200,
+    additionalBufferSize: Int = 10_000,
+    maximumBufferSize: Int = 5_000_000 + initialBufferSize
+) : BufferWriter(initialBufferSize, additionalBufferSize, maximumBufferSize) {
 
     // ------------------------------------------------------------------------
     // Public interface
     // ------------------------------------------------------------------------
-
-    /**
-     * Number of bytes written.
-     */
-    val size
-        get() = pastBufferByteCount + writeOffset
-
-    /**
-     * Pack all the buffers into one.
-     */
-    fun pack(): ByteArray {
-        val data = ByteArray(size)
-        var offset = 0
-        val last = buffers.last()
-        for (buffer in buffers) {
-            if (buffer !== last) {
-                buffer.copyInto(data, offset)
-            } else {
-                buffer.copyInto(data, offset, 0, writeOffset)
-            }
-            offset += buffer.size
-        }
-        return data
-    }
 
     fun bool(fieldNumber: Int, value: Boolean) {
         tag(fieldNumber, VARINT)
@@ -127,7 +103,7 @@ class ProtoBufferWriter(
         put(value.encodeToByteArray())
     }
 
-    fun uuid(fieldNumber : Int, value : UUID<*>) {
+    fun uuid(fieldNumber: Int, value: UUID<*>) {
         tag(fieldNumber, LEN)
         string(value.toString())
     }
@@ -153,7 +129,7 @@ class ProtoBufferWriter(
         put(value.encodeToByteArray())
     }
 
-    internal fun uuid(value : UUID<*>) {
+    internal fun uuid(value: UUID<*>) {
         string(value.toString())
     }
 
@@ -202,72 +178,13 @@ class ProtoBufferWriter(
     }
 
     // ------------------------------------------------------------------------
-    // Buffer management
-    // ------------------------------------------------------------------------
-
-    /**
-     * Sum of valuable byte counts in all buffers but the last.
-     */
-    private var pastBufferByteCount = 0
-
-    /**
-     * Write offset in the current buffer.
-     */
-    private var writeOffset = 0
-
-    private val buffers = mutableListOf(ByteArray(initialBufferSize))
-
-    private var buffer = buffers.last()
-
-    private fun put(byte: Byte) {
-        if (writeOffset == buffer.size) {
-            addBuffer()
-        }
-
-        buffer[writeOffset++] = byte
-    }
-
-    /**
-     * If [byteArray] fits into the current buffer, copy it into the current
-     * buffer.
-     *
-     * If [byteArray] does not fit into the current buffer, fill all the available
-     * part and then allocate a new buffer. The new buffer will be big enough (if
-     * [maximumBufferSize] allows) to hold all the remaining data.
-     */
-    private fun put(byteArray: ByteArray) {
-        varint(byteArray.size.toULong())
-
-        val availableSpace = buffer.size - writeOffset
-        var copyOffset = 0
-        val length = byteArray.size
-
-        if (length > availableSpace) {
-            byteArray.copyInto(buffer, writeOffset, 0, availableSpace)
-            copyOffset = availableSpace
-            addBuffer(max(additionalBufferSize, length - availableSpace))
-        }
-
-        byteArray.copyInto(buffer, writeOffset, copyOffset, length)
-        writeOffset += length - copyOffset
-    }
-
-    /**
-     * Add a new buffer to the list of buffers and set it as the current buffer.
-     */
-    private fun addBuffer(requestedSize: Int = additionalBufferSize) {
-        pastBufferByteCount += buffer.size
-
-        check(pastBufferByteCount + requestedSize < maximumBufferSize) { "ProtoBufferWriter buffer overflow" }
-
-        buffer = ByteArray(requestedSize)
-        buffers.add(buffer)
-        writeOffset = 0
-    }
-
-    // ------------------------------------------------------------------------
     // Constants for the wire format
     // ------------------------------------------------------------------------
+
+    override fun put(byteArray: ByteArray) {
+        varint(byteArray.size.toULong())
+        super.put(byteArray)
+    }
 
     companion object {
         const val continuation = 0x80.toByte()

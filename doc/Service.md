@@ -355,8 +355,8 @@ called `Hello`, the class name will be `Hello$Consumer`.
 ```kotlin
 package hu.simplexion.z2.services.runtime
 
-import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.commons.protobuf.ProtoOneString
+import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.protobuf.ProtoOneString
 
 class Hello$Consumer : Hello {
 
@@ -395,8 +395,8 @@ When a class implements `ServiceImpl`, the plugin:
 ```kotlin
 package hu.simplexion.z2.services.runtime
 
-import hu.simplexion.z2.commons.protobuf.ProtoMessage
-import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.services.runtime.ServiceContext
 import hu.simplexion.z2.services.runtime.ServiceImpl
 

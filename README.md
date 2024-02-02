@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-boot)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-boot)
+[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-lib)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-lib)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Libraries for Kotlin Multiplatform (mostly browser + JVM backend) development.
@@ -11,31 +11,21 @@ Status: **initial development**
 
 **Gradle dependencies do not work yet as the library is not published on Maven Central and on Gradle Plugin Repo.**
 
-## Motivation
-
-Z2 has born from the motivation to write strict and natural code in Kotlin.
-
-* Whatever can be done automatically by the compiler, should be done automatically by the compiler.
-* Emphasis on code readability:
-  * Whenever possible we avoid extra delimiter characters.
-  * Use boilerplate only when it is absolutely necessary.
-* Dependency minimum.
-
 ## Structure
 
 Z2 has three major parts:
 
 | Library | Purpose                                                      |
 |---------|--------------------------------------------------------------|
-| Lib     | Application level code built on `Base` with use of `Plugin`. |
-| Plugin  | The compiler plugin that makes use of the `Base` natural.    |
-| Base    | Fundamental parts of the library.                            |
+| Lib     | Application level code built on `Core` with use of `Plugin`. |
+| Plugin  | The compiler plugin that makes use of the `Core` natural.    |
+| Core    | Fundamental parts of the library.                            |
 
 In addition, the `Site` contains the code of the documentation site.
 
 ## Gradle Dependency
 
-You have to add the plugin and the `base` or the `lib` dependency to your `build.gradle.kts`:
+You have to add the plugin and the `core` **OR** the `lib` dependency to your `build.gradle.kts`:
 
 Plugin:
 
@@ -54,11 +44,11 @@ sourceSets["commonMain"].dependencies {
 }
 ```
 
-Base dependency (includes only the fundamentals)
+Core dependency (includes only the fundamentals)
 
 ```kotlin
 sourceSets["commonMain"].dependencies {
-    implementation("hu.simplexion.z2:z2-base:$z2_version")
+    implementation("hu.simplexion.z2:z2-core:$z2_version")
 }
 ```
 
@@ -66,10 +56,10 @@ sourceSets["commonMain"].dependencies {
 
 ### Base
 
-* [Services] - client-server communication with simple function calls defined in an interface
+* [Adaptive] - reactive, Svelte-like UI components
 * [Schematic] - schema based data definitions for automatic UI building, serialization, validation etc.
+* [Services] - client-server communication with simple function calls defined in an interface
 * [Localization] - multi-language support
-* [Reactive UI] - reactive, Svelte-like UI components
 
 ### Lib
 

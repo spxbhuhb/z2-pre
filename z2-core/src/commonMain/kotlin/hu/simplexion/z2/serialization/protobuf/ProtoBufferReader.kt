@@ -17,7 +17,9 @@ import hu.simplexion.z2.util.toUuid
  *                     in the buffer, but the reader does not read over the length.
  */
 class ProtoBufferReader(
-    val buffer: ByteArray, val offset: Int = 0, val length: Int = buffer.size
+    val buffer: ByteArray,
+    val offset: Int = 0,
+    val length: Int = buffer.size
 ) {
 
     constructor(record: LenProtoRecord) : this(record.byteArray, record.offset, record.length)

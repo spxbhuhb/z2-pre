@@ -9,7 +9,7 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.button.filledButton
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
-import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.util.UUID
 import mainRouter
 
 @Suppress("unused")

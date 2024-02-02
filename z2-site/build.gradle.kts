@@ -3,7 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2") version "2023.10.11-SNAPSHOT"
+    id("hu.simplexion.z2") version "2024.02.02"
 
     java
     application
@@ -14,8 +14,6 @@ group = "hu.simplexion.z2"
 val baseName = "z2-site"
 val pomName = "Z2 Site"
 val scmPath = "spxbhuhb/z2"
-
-val z2_boot_version: String by project
 
 val ktor_version: String by project
 val logback_version: String by project
@@ -61,12 +59,11 @@ kotlin {
     }
 
     sourceSets["commonMain"].dependencies {
-        implementation("hu.simplexion.z2:z2-commons:$z2_boot_version")
-        implementation("hu.simplexion.z2:z2-boot:$z2_boot_version")
+        implementation("hu.simplexion.z2:z2-core:$version")
+        implementation("hu.simplexion.z2:z2-lib:$version")
     }
     sourceSets["jsMain"].dependencies {
         implementation("io.ktor:ktor-client-websockets:$ktor_version")
-        implementation("hu.simplexion.z2:z2-browser:$z2_boot_version")
     }
     sourceSets["jvmMain"].dependencies {
         implementation("io.ktor:ktor-server-core-jvm:$ktor_version")

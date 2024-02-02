@@ -7,6 +7,5 @@ pluginManagement {
     includeBuild("../z2-gradle-plugin")
 }
 
-includeBuild("../z2-boot")
-includeBuild("../z2-browser")
-includeBuild("../z2-commons")
+includeBuild("../z2-lib")
+includeBuild("../z2-core")
