@@ -21,20 +21,23 @@ package hu.simplexion.z2.rui
  *
  * @param BT Bridge type.
  *
- * @property ruiScope Parent scope of this fragment. Each original function and each
- *                    anonymous rendering function starts a new scope. These scopes
- *                    define a tree during runtime which is used for getting state
- *                    variables and patching.
+ * @property ruiParent The direct parent of this fragment in the Rui fragment tree.
+ * @property ruiClosure For `RuiAnonymous` instances the fragment that is the *start scope*.
+ *                    For everything else it is null.
  */
 interface RuiFragment<BT> {
 
     val ruiAdapter: RuiAdapter<BT>
-    val ruiScope: RuiFragment<BT>?
+
+    val ruiParent: RuiFragment<BT>?
+
+    val ruiClosure: RuiClosure<BT>?
+
     val ruiExternalPatch: RuiExternalPathType<BT>
 
     fun ruiCreate()
     fun ruiMount(bridge: RuiBridge<BT>)
-    fun ruiPatch(scopeMask: Long)
+    fun ruiPatch()
     fun ruiUnmount(bridge: RuiBridge<BT>)
     fun ruiDispose()
 

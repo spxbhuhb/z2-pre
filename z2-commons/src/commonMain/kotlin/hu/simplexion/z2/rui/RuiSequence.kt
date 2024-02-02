@@ -3,13 +3,16 @@
  */
 package hu.simplexion.z2.rui
 
-open class RuiBlock<BT>(
+open class RuiSequence<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
-    vararg val fragments: RuiFragment<BT>
+    override val ruiClosure: RuiClosure<BT>?,
+    override val ruiParent: RuiFragment<BT>,
+    vararg val builders: (parent: RuiFragment<BT>) -> RuiFragment<BT>
 ) : RuiFragment<BT> {
 
-    override val ruiScope = null
-    override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
+    override val ruiExternalPatch: RuiExternalPathType<BT> = {  }
+
+    val fragments = builders.map { it.invoke(ruiParent) }
 
     override fun ruiCreate() {
         for (i in fragments.indices) {
@@ -23,10 +26,10 @@ open class RuiBlock<BT>(
         }
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch() {
         for (fragment in fragments) {
-            val extendedScopeMask = fragment.ruiExternalPatch(fragment, scopeMask)
-            if (extendedScopeMask != 0L) fragment.ruiPatch(extendedScopeMask)
+            fragment.ruiExternalPatch(fragment)
+            fragment.ruiPatch()
         }
     }
 

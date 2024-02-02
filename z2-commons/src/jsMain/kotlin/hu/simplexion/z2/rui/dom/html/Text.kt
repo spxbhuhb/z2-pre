@@ -25,7 +25,7 @@ class RuiText(
 
     var ruiDirty0 = 0L
 
-    override val ruiScope: RuiFragment<Node>
+    override val ruiClosure: RuiClosure<Node>?
         get() = TODO("Not yet implemented")
 
     @RuiPublicApi
@@ -37,7 +37,7 @@ class RuiText(
         receiver.data = content
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
         if (ruiDirty0 and 1L != 0L) {
             receiver.data = content
         }

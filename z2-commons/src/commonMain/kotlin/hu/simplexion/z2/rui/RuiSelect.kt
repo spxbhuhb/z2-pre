@@ -3,19 +3,20 @@
  */
 package hu.simplexion.z2.rui
 
-open class RuiWhen<BT>(
+open class RuiSelect<BT>(
     override val ruiAdapter: RuiAdapter<BT>,
+    override val ruiClosure: RuiClosure<BT>?,
+    override val ruiParent: RuiFragment<BT>,
     val ruiSelect: () -> Int,
     vararg val factories: () -> RuiFragment<BT>
 ) : RuiFragment<BT> {
 
-    override val ruiScope = null
-    override val ruiExternalPatch: RuiExternalPathType<BT> = { _, scopeMask -> scopeMask }
+    override val ruiExternalPatch: RuiExternalPathType<BT> = {  }
 
     lateinit var placeholder: RuiBridge<BT>
 
     var branch = ruiSelect()
-    var fragment: RuiFragment<BT>? = if (branch == -1) null else factories[branch]()
+    var fragment: RuiFragment<BT>? = if (branch == - 1) null else factories[branch]()
 
     override fun ruiCreate() {
         fragment?.ruiCreate()
@@ -28,15 +29,18 @@ open class RuiWhen<BT>(
         fragment?.ruiMount(placeholder)
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch() {
         val newBranch = ruiSelect()
         if (newBranch == branch) {
-            fragment?.ruiPatch(scopeMask)
+            fragment?.let {
+                it.ruiExternalPatch(it)
+                it.ruiPatch()
+            }
         } else {
             fragment?.ruiUnmount(placeholder)
             fragment?.ruiDispose()
             branch = newBranch
-            fragment = if (branch == -1) null else factories[branch]()
+            fragment = if (branch == - 1) null else factories[branch]()
             fragment?.ruiCreate()
             fragment?.ruiMount(placeholder)
         }

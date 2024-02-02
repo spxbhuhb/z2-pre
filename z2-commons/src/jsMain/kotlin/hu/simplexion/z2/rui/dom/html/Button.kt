@@ -29,7 +29,7 @@ class RuiButton(
 
     var ruiDirty0 = 0L
 
-    override val ruiScope: RuiFragment<Node>
+    override val ruiClosure: RuiClosure<Node>?
         get() = TODO("Not yet implemented")
 
     @RuiPublicApi
@@ -42,7 +42,7 @@ class RuiButton(
         receiver.onclick = onClick
     }
 
-    override fun ruiPatch(scopeMask: Long) {
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
         if (ruiDirty0 and 1L != 0L) {
             receiver.innerText = label
         }

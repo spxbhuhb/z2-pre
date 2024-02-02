@@ -33,7 +33,7 @@ class ForLoop(
     override val ruiAdapter: RuiAdapter<TestNode>
 ) : RuiGeneratedFragment<TestNode> {
 
-    override val ruiScope: RuiFragment<TestNode>? = null
+    override val ruiClosure: RuiClosure<TestNode>? = null
     override val ruiExternalPatch: RuiExternalPathType<TestNode> = { _, _ -> 0L }
 
     override val containedFragment: RuiFragment<TestNode>
@@ -58,8 +58,8 @@ class ForLoop(
         return scopeMask
     }
 
-    override fun ruiPatch(scopeMask: Long) {
-        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, scopeMask)
+    override fun ruiPatch(dirtyMaskOfScope: Long) {
+        val extendedScopeMask = containedFragment.ruiExternalPatch(containedFragment, dirtyMaskOfScope)
         if (extendedScopeMask != 0L) containedFragment.ruiPatch(extendedScopeMask)
         ruiDirty0 = 0L
     }
@@ -67,7 +67,7 @@ class ForLoop(
     fun ruiIterator0() = IntRange(0, 10).iterator()
 
     fun ruiBuilder0() =
-        RuiBlock(
+        RuiSequence(
             ruiAdapter,
             RuiT1(ruiAdapter, this, ::ruiEp1, v0),
             RuiT0(ruiAdapter, this) { _, _ -> 0L }
