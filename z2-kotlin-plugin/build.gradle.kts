@@ -14,7 +14,6 @@ group = "hu.simplexion.z2"
 val scmPath = "spxbhuhb/z2"
 
 val kotlin_version: String by project.properties
-val z2_commons_version: String by project.properties
 
 repositories {
     mavenLocal()

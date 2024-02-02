@@ -1,6 +1,6 @@
 package foo.bar
 
-import hu.simplexion.z2.commons.util.UUID
+import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.schematic.Schematic
 
 class Test : Schematic<Test>() {

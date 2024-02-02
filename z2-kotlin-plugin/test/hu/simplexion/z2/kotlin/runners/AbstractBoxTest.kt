@@ -43,7 +43,7 @@ open class AbstractBoxTest : BaseTestRunner(), RunnerWithTargetBackendForTestGen
 
         val dumps = false
 
-        useCustomRuntimeClasspathProviders(AbstractBoxTest::commonsRuntimeClassPathProvider)
+        useCustomRuntimeClasspathProviders(AbstractBoxTest::coreRuntimeClassPathProvider)
 
         configureFirParser(FirParser.Psi)
 
@@ -71,7 +71,7 @@ open class AbstractBoxTest : BaseTestRunner(), RunnerWithTargetBackendForTestGen
         useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
     }
 
-    class commonsRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
+    class coreRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
         override fun runtimeClassPaths(module: TestModule): List<File> = runtimeClassPath()
     }
 }

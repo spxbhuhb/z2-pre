@@ -320,7 +320,7 @@ Gradle plugin dependency (build.gradle.kts):
 
 ```kotlin
 plugin {
-    id("hu.simplexion.z2.service") version "<z2-service-version>"
+    id("hu.simplexion.z2.services") version "<z2-service-version>"
 }
 ```
 
@@ -353,7 +353,7 @@ For each interface that extends `Service` the compiler plugin generates a class.
 called `Hello`, the class name will be `Hello$Consumer`.
 
 ```kotlin
-package hu.simplexion.z2.service.runtime
+package hu.simplexion.z2.services.runtime
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.commons.protobuf.ProtoOneString
@@ -393,12 +393,12 @@ When a class implements `ServiceImpl`, the plugin:
 * replaces the code of the original constructor, so it calls the new one with `null` as service context
 
 ```kotlin
-package hu.simplexion.z2.service.runtime
+package hu.simplexion.z2.services.runtime
 
 import hu.simplexion.z2.commons.protobuf.ProtoMessage
 import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.service.runtime.ServiceContext
-import hu.simplexion.z2.service.runtime.ServiceImpl
+import hu.simplexion.z2.services.runtime.ServiceContext
+import hu.simplexion.z2.services.runtime.ServiceImpl
 
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 

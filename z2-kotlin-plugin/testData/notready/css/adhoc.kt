@@ -1,6 +1,6 @@
 package a.b.c
 
-import hu.simplexion.z2.commons.browser.CssClass
+import hu.simplexion.z2.adaptive.browser.CssClass
 
 val pt4 = CssClass("pt4-not-used")
 val pt8 = CssClass("pt8-not-used")

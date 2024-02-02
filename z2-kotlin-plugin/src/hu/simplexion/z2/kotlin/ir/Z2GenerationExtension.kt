@@ -12,10 +12,10 @@ import hu.simplexion.z2.kotlin.ir.rui.RuiGenerationExtension
 import hu.simplexion.z2.kotlin.ir.schematic.SchematicPluginContext
 import hu.simplexion.z2.kotlin.ir.schematic.access.SchematicAccessTransform
 import hu.simplexion.z2.kotlin.ir.schematic.klass.SchematicModuleTransform
-import hu.simplexion.z2.kotlin.ir.service.ServiceModuleTransform
-import hu.simplexion.z2.kotlin.ir.service.ServicePluginContext
-import hu.simplexion.z2.kotlin.ir.service.consumer.GetConsumerTransform
-import hu.simplexion.z2.kotlin.ir.service.proto.ProtoCompanionVisitor
+import hu.simplexion.z2.kotlin.ir.services.ServiceModuleTransform
+import hu.simplexion.z2.kotlin.ir.services.ServicePluginContext
+import hu.simplexion.z2.kotlin.ir.services.consumer.GetConsumerTransform
+import hu.simplexion.z2.kotlin.ir.services.proto.ProtoCompanionVisitor
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment

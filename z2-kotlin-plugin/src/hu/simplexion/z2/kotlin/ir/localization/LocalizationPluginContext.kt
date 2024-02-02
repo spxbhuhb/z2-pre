@@ -37,7 +37,7 @@ class LocalizationPluginContext(
 
     fun String.runtimeClass(pkg: String) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons\" is missing."
+            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-core\" is missing."
         }
 
     // ----------------------------------------------------------------------------------

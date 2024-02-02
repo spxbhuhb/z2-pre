@@ -1,8 +1,8 @@
 package foo.bar
 
-import hu.simplexion.z2.commons.protobuf.ProtoMessage
-import hu.simplexion.z2.commons.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.commons.protobuf.dumpProto
+import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.protobuf.dumpProto
 import hu.simplexion.z2.schematic.Schematic
 
 class Test : Schematic<Test>() {

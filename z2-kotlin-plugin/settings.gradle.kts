@@ -7,4 +7,4 @@ pluginManagement {
     }
 }
 
-includeBuild("../z2-commons")
+includeBuild("../z2-core")

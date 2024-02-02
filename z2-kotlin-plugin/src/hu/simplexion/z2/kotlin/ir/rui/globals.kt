@@ -23,17 +23,17 @@ const val OPTION_NAME_IMPORT_STATE = "import-state"
 const val OPTION_NAME_PRINT_DUMPS = "print-dumps"
 const val OPTION_NAME_PLUGIN_LOG_DIR = "plugin-log-dir"
 
-const val RUI_ANNOTATION = "hu.simplexion.z2.rui.Rui"
+const val RUI_ANNOTATION = "hu.simplexion.z2.adaptive.Rui"
 
-val RUI_FRAGMENT_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiFragment")
-val RUI_GENERATED_FRAGMENT_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiGeneratedFragment")
-val RUI_ADAPTER_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiAdapter")
-val RUI_BRIDGE_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiBridge")
-val RUI_BLOCK_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiBlock")
-val RUI_WHEN_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiWhen")
-val RUI_FOR_LOOP_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiForLoop")
-val RUI_ENTRY_FUNCTION = listOf("hu", "simplexion", "z2", "rui", "rui")
-val RUI_ANONYMOUS_CLASS = listOf("hu", "simplexion", "z2", "rui", "RuiAnonymous")
+val RUI_FRAGMENT_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiFragment")
+val RUI_GENERATED_FRAGMENT_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiGeneratedFragment")
+val RUI_ADAPTER_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiAdapter")
+val RUI_BRIDGE_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiBridge")
+val RUI_BLOCK_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiSequence")
+val RUI_WHEN_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiWhen")
+val RUI_FOR_LOOP_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiForLoop")
+val RUI_ENTRY_FUNCTION = listOf("hu", "simplexion", "z2", "adaptive", "rui")
+val RUI_ANONYMOUS_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiAnonymous")
 
 /**
  * Number of Rui related constructor arguments.

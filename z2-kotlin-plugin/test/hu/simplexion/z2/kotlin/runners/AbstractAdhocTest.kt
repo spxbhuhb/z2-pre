@@ -43,7 +43,7 @@ open class AbstractAdhocTest : BaseTestRunner(), RunnerWithTargetBackendForTestG
 
         val dumps = false
 
-        useCustomRuntimeClasspathProviders(AbstractAdhocTest::commonsRuntimeClassPathProvider)
+        useCustomRuntimeClasspathProviders(AbstractAdhocTest::coreRuntimeClassPathProvider)
 
         configureFirParser(FirParser.Psi)
 
@@ -70,7 +70,7 @@ open class AbstractAdhocTest : BaseTestRunner(), RunnerWithTargetBackendForTestG
         useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
     }
 
-    class commonsRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
+    class coreRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {
         override fun runtimeClassPaths(module: TestModule): List<File> = runtimeClassPath()
     }
 }

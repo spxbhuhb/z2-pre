@@ -52,7 +52,7 @@ const val SET_COMPANION = "setCompanion"
 const val RUNTIME_CONTEXT_PACKAGE = "hu.simplexion.z2.schematic.access"
 const val SCHEMATIC_ACCESS_CONTEXT = "SchematicAccessContext"
 
-const val PROTO_PACKAGE = "hu.simplexion.z2.commons.protobuf"
+const val PROTO_PACKAGE = "hu.simplexion.z2.serialization.protobuf"
 
 const val PROTO_MESSAGE_CLASS = "ProtoMessage"
 

@@ -45,40 +45,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/rui")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Rui {
-        @Test
-        public void testAllFilesPresentInRui() throws Exception {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/rui"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-        }
-
-        @Test
-        @TestMetadata("Basic.kt")
-        public void testBasic() throws Exception {
-            runTest("testData/box/rui/Basic.kt");
-        }
-
-        @Test
-        @TestMetadata("Empty.kt")
-        public void testEmpty() throws Exception {
-            runTest("testData/box/rui/Empty.kt");
-        }
-
-        @Test
-        @TestMetadata("Sequence.kt")
-        public void testSequence() throws Exception {
-            runTest("testData/box/rui/Sequence.kt");
-        }
-
-        @Test
-        @TestMetadata("Variables.kt")
-        public void testVariables() throws Exception {
-            runTest("testData/box/rui/Variables.kt");
-        }
-    }
-
-    @Nested
     @TestMetadata("testData/box/schematic")
     @TestDataPath("$PROJECT_ROOT")
     public class Schematic {
@@ -155,48 +121,48 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/service")
+    @TestMetadata("testData/box/services")
     @TestDataPath("$PROJECT_ROOT")
-    public class Service {
+    public class Services {
         @Test
-        public void testAllFilesPresentInService() throws Exception {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/service"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        public void testAllFilesPresentInServices() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/services"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
         }
 
         @Test
         @TestMetadata("basic.kt")
         public void testBasic() throws Exception {
-            runTest("testData/box/service/basic.kt");
+            runTest("testData/box/services/basic.kt");
         }
 
         @Test
         @TestMetadata("context.kt")
         public void testContext() throws Exception {
-            runTest("testData/box/service/context.kt");
+            runTest("testData/box/services/context.kt");
         }
 
         @Test
         @TestMetadata("direct.kt")
         public void testDirect() throws Exception {
-            runTest("testData/box/service/direct.kt");
+            runTest("testData/box/services/direct.kt");
         }
 
         @Test
         @TestMetadata("local.kt")
         public void testLocal() throws Exception {
-            runTest("testData/box/service/local.kt");
+            runTest("testData/box/services/local.kt");
         }
 
         @Test
         @TestMetadata("serviceName.kt")
         public void testServiceName() throws Exception {
-            runTest("testData/box/service/serviceName.kt");
+            runTest("testData/box/services/serviceName.kt");
         }
 
         @Test
         @TestMetadata("types.kt")
         public void testTypes() throws Exception {
-            runTest("testData/box/service/types.kt");
+            runTest("testData/box/services/types.kt");
         }
     }
 }

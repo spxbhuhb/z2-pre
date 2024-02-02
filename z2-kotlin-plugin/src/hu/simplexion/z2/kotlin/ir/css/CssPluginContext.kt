@@ -15,14 +15,14 @@ class CssPluginContext(
 ) {
 
     companion object {
-        const val COMMON_PACKAGE = "hu.simplexion.z2.commons.browser"
+        const val BROWSER_PACKAGE = "hu.simplexion.z2.adaptive.browser"
     }
 
-    val cssClass = "CssClass".runtimeClass(COMMON_PACKAGE)
+    val cssClass = "CssClass".runtimeClass(BROWSER_PACKAGE)
 
     fun String.runtimeClass(pkg: String) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-commons\" is missing."
+            "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-core\" is missing."
         }
 
 }

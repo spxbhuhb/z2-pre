@@ -1,12 +1,12 @@
 /*
  * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.kotlin.rui.success
+package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.rui.Rui
-import hu.simplexion.z2.rui.rui
-import hu.simplexion.z2.rui.RuiAdapterRegistry
-import hu.simplexion.z2.rui.testing.*
+import hu.simplexion.z2.adaptive.Rui
+import hu.simplexion.z2.adaptive.rui
+import hu.simplexion.z2.adaptive.RuiAdapterRegistry
+import hu.simplexion.z2.adaptive.testing.*
 
 @Rui
 fun Call() {
