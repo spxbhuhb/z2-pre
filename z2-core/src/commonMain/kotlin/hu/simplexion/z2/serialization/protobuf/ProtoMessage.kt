@@ -1,5 +1,7 @@
 package hu.simplexion.z2.serialization.protobuf
 
+import hu.simplexion.z2.serialization.InstanceDecoder
+import hu.simplexion.z2.serialization.Message
 import hu.simplexion.z2.util.UUID
 
 /**
@@ -12,7 +14,7 @@ class ProtoMessage(
     wireFormat: ByteArray,
     offset: Int = 0,
     length: Int = wireFormat.size
-) {
+) : Message {
 
     val records: List<ProtoRecord> = ProtoBufferReader(wireFormat, offset, length).records()
 
@@ -22,111 +24,111 @@ class ProtoMessage(
     // Boolean
     // -----------------------------------------------------------------------------------------
 
-    fun boolean(fieldNumber: Int): Boolean = get(fieldNumber)?.let { it.value == 1UL } ?: false
+    override fun boolean(fieldNumber: Int, fieldName: String): Boolean = get(fieldNumber)?.let { it.value == 1UL } ?: false
 
-    fun booleanOrNull(fieldNumber: Int, nullFieldNumber: Int): Boolean? =
-        if (get(nullFieldNumber) != null) null else boolean(fieldNumber)
+    override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
+        if (get(fieldNumber + 1) != null) null else boolean(fieldNumber, fieldName)
 
-    fun booleanList(fieldNumber: Int) = scalarList(fieldNumber, { value.bool() }, { varint().bool() })
+    override fun booleanList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.bool() }, { varint().bool() })
 
-    fun booleanListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<Boolean>? =
-        if (get(nullFieldNumber) != null) null else booleanList(fieldNumber)
+    override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
+        if (get(fieldNumber + 1) != null) null else booleanList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Int
     // -----------------------------------------------------------------------------------------
 
-    fun int(fieldNumber: Int): Int = get(fieldNumber)?.value?.sint32() ?: 0
+    override fun int(fieldNumber: Int, fieldName: String): Int = get(fieldNumber)?.value?.sint32() ?: 0
 
-    fun intOrNull(fieldNumber: Int, nullFieldNumber: Int): Int? =
-        if (get(nullFieldNumber) != null) null else int(fieldNumber)
+    override fun intOrNull(fieldNumber: Int, fieldName: String): Int? =
+        if (get(fieldNumber + 1) != null) null else int(fieldNumber, fieldName)
 
-    fun intList(fieldNumber: Int) = scalarList(fieldNumber, { value.sint32() }, { varint().sint32() })
+    override fun intList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.sint32() }, { varint().sint32() })
 
-    fun intListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<Int>? =
-        if (get(nullFieldNumber) != null) null else intList(fieldNumber)
+    override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
+        if (get(fieldNumber + 1) != null) null else intList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Long
     // -----------------------------------------------------------------------------------------
 
-    fun long(fieldNumber: Int): Long = get(fieldNumber)?.value?.sint64() ?: 0L
+    override fun long(fieldNumber: Int, fieldName: String): Long = get(fieldNumber)?.value?.sint64() ?: 0L
 
-    fun longOrNull(fieldNumber: Int, nullFieldNumber: Int): Long? =
-        if (get(nullFieldNumber) != null) null else long(fieldNumber)
+    override fun longOrNull(fieldNumber: Int, fieldName: String): Long? =
+        if (get(fieldNumber + 1) != null) null else long(fieldNumber, fieldName)
 
-    fun longList(fieldNumber: Int) = scalarList(fieldNumber, { value.sint64() }, { varint().sint64() })
+    override fun longList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.sint64() }, { varint().sint64() })
 
-    fun longListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<Long>? =
-        if (get(nullFieldNumber) != null) null else longList(fieldNumber)
+    override fun longListOrNull(fieldNumber: Int, fieldName: String): List<Long>? =
+        if (get(fieldNumber + 1) != null) null else longList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // String
     // -----------------------------------------------------------------------------------------
 
-    fun string(fieldNumber: Int): String = get(fieldNumber)?.string() ?: ""
+    override fun string(fieldNumber: Int, fieldName: String): String = get(fieldNumber)?.string() ?: ""
 
-    fun stringOrNull(fieldNumber: Int, nullFieldNumber: Int): String? =
-        if (get(nullFieldNumber) != null) null else string(fieldNumber)
+    override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
+        if (get(fieldNumber + 1) != null) null else string(fieldNumber, fieldName)
 
-    fun stringList(fieldNumber: Int) = scalarList(fieldNumber, { string() }, { string() })
+    override fun stringList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { string() }, { string() })
 
-    fun stringListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<String>? =
-        if (get(nullFieldNumber) != null) null else stringList(fieldNumber)
+    override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
+        if (get(fieldNumber + 1) != null) null else stringList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
     // -----------------------------------------------------------------------------------------
 
-    fun byteArray(fieldNumber: Int): ByteArray = get(fieldNumber)?.bytes() ?: ByteArray(0)
+    override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray = get(fieldNumber)?.bytes() ?: ByteArray(0)
 
-    fun byteArrayOrNull(fieldNumber: Int, nullFieldNumber: Int): ByteArray? =
-        if (get(nullFieldNumber) != null) null else byteArray(fieldNumber)
+    override fun byteArrayOrNull(fieldNumber: Int, fieldName: String): ByteArray? =
+        if (get(fieldNumber + 1) != null) null else byteArray(fieldNumber, fieldName)
 
-    fun byteArrayList(fieldNumber: Int) = scalarList(fieldNumber, { bytes() }, { bytes() })
+    override fun byteArrayList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { bytes() }, { bytes() })
 
-    fun byteArrayListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<ByteArray>? =
-        if (get(nullFieldNumber) != null) null else byteArrayList(fieldNumber)
+    override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String): List<ByteArray>? =
+        if (get(fieldNumber + 1) != null) null else byteArrayList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // UUID
     // -----------------------------------------------------------------------------------------
 
-    fun <T> uuid(fieldNumber: Int): UUID<T> = get(fieldNumber)?.uuid() ?: UUID.nil()
+    override fun <T> uuid(fieldNumber: Int, fieldName: String): UUID<T> = get(fieldNumber)?.uuid() ?: UUID.nil()
 
-    fun <T> uuidOrNull(fieldNumber: Int, nullFieldNumber: Int): UUID<T>? =
-        if (get(nullFieldNumber) != null) null else uuid(fieldNumber)
+    override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
+        if (get(fieldNumber + 1) != null) null else uuid(fieldNumber, fieldName)
 
-    fun <T> uuidList(fieldNumber: Int): List<UUID<T>> = scalarList(fieldNumber, { uuid() }, { uuid() })
+    override fun <T> uuidList(fieldNumber: Int, fieldName: String): List<UUID<T>> = scalarList(fieldNumber, { uuid() }, { uuid() })
 
-    fun <T> uuidListOrNull(fieldNumber: Int, nullFieldNumber: Int): List<UUID<T>>? =
-        if (get(nullFieldNumber) != null) null else uuidList(fieldNumber)
+    override fun <T> uuidListOrNull(fieldNumber: Int, fieldName: String): List<UUID<T>>? =
+        if (get(fieldNumber + 1) != null) null else uuidList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Instance
     // -----------------------------------------------------------------------------------------
 
-    fun <T> instance(fieldNumber: Int, decoder: ProtoDecoder<T>): T {
-        val record = get(fieldNumber) ?: return decoder.decodeProto(null)
+    override fun <T> instance(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): T {
+        val record = get(fieldNumber) ?: return decoder.decodeInstance(null)
         check(record is LenProtoRecord)
-        return decoder.decodeProto(record.message())
+        return decoder.decodeInstance(record.message())
     }
 
-    fun <T> instanceOrNull(fieldNumber: Int, nullFieldNumber: Int, decoder: ProtoDecoder<T>): T? =
-        if (get(nullFieldNumber) != null) null else instance(fieldNumber, decoder)
+    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): T? =
+        if (get(fieldNumber + 1) != null) null else instance(fieldNumber, fieldName, decoder)
 
-    fun <T> instanceList(fieldNumber: Int, decoder: ProtoDecoder<T>): MutableList<T> {
+    override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): MutableList<T> {
         val list = mutableListOf<T>()
         for (record in records) {
             if (record.fieldNumber != fieldNumber) continue
             check(record is LenProtoRecord)
-            list += decoder.decodeProto(record.message())
+            list += decoder.decodeInstance(record.message())
         }
         return list
     }
 
-    fun <T> instanceListOrNull(fieldNumber: Int, nullFieldNumber: Int, decoder: ProtoDecoder<T>): List<T>? =
-        if (get(nullFieldNumber) != null) null else instanceList(fieldNumber, decoder)
+    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): List<T>? =
+        if (get(fieldNumber + 1) != null) null else instanceList(fieldNumber, fieldName, decoder)
 
     // --------------------------------------------------------------------------------------
     // Helpers

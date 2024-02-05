@@ -6,7 +6,7 @@ import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.schema.validation.fail
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
-import hu.simplexion.z2.serialization.protobuf.ProtoLocalDateTime
+import hu.simplexion.z2.serialization.builtin.LocalDateTimeCoder
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import kotlinx.datetime.LocalDateTime
@@ -42,11 +42,11 @@ open class LocalDateTimeSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, ProtoLocalDateTime, value)
+        builder.instance(fieldNumber, LocalDateTimeCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, ProtoLocalDateTime)
+        val value = message.instance(fieldNumber, LocalDateTimeCoder)
         schematic.schematicValues[name] = value
     }
 
@@ -78,11 +78,11 @@ open class NullableLocalDateTimeSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoLocalDateTime, value)
+        builder.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateTimeCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoLocalDateTime)
+        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateTimeCoder)
         schematic.schematicValues[name] = value
     }
 

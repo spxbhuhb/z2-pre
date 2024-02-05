@@ -6,7 +6,7 @@ import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.schema.validation.fail
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
-import hu.simplexion.z2.serialization.protobuf.ProtoLocalDate
+import hu.simplexion.z2.serialization.builtin.LocalDateCoder
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import kotlinx.datetime.LocalDate
@@ -40,11 +40,11 @@ open class LocalDateSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, ProtoLocalDate, value)
+        builder.instance(fieldNumber, LocalDateCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, ProtoLocalDate)
+        val value = message.instance(fieldNumber, LocalDateCoder)
         schematic.schematicValues[name] = value
     }
 
@@ -76,11 +76,11 @@ open class NullableLocalDateSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoLocalDate, value)
+        builder.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoLocalDate)
+        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateCoder)
         schematic.schematicValues[name] = value
     }
 

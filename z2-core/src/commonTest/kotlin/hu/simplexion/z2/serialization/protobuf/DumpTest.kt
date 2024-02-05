@@ -1,7 +1,6 @@
 package hu.simplexion.z2.serialization.protobuf
 
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
-import hu.simplexion.z2.serialization.protobuf.dumpProto
+import hu.simplexion.z2.serialization.A
 import kotlin.test.Test
 
 class DumpTest {

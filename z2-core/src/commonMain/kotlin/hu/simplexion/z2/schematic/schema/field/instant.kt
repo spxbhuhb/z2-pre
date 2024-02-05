@@ -6,7 +6,7 @@ import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.schema.validation.fail
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
-import hu.simplexion.z2.serialization.protobuf.ProtoInstant
+import hu.simplexion.z2.serialization.builtin.InstantCoder
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import kotlinx.datetime.Clock
@@ -43,11 +43,11 @@ open class InstantSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, ProtoInstant, value)
+        builder.instance(fieldNumber, InstantCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, ProtoInstant)
+        val value = message.instance(fieldNumber, InstantCoder)
         schematic.schematicValues[name] = value
     }
 
@@ -79,11 +79,11 @@ open class NullableInstantSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, ProtoInstant, value)
+        builder.instanceOrNull(fieldNumber, fieldNumber + 1, InstantCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, ProtoInstant)
+        val value = message.instance(fieldNumber, InstantCoder)
         schematic.schematicValues[name] = value
     }
 

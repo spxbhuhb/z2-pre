@@ -35,7 +35,7 @@ class JsonBufferWriter(
 
     fun string(fieldName: String, value: String?) {
         fieldName(fieldName)
-        string(value)
+        quotedString(value)
     }
 
     fun uuid(fieldName: String, value: UUID<*>?) {
@@ -103,8 +103,9 @@ class JsonBufferWriter(
         string(value.toString())
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     internal fun bytes(value: ByteArray) {
-        put(value)
+        string(value.toHexString())
     }
 
     // ------------------------------------------------------------------------
@@ -130,22 +131,24 @@ class JsonBufferWriter(
     private fun putEscaped(input: String) {
         for (char in input) {
             when (char) {
-                '\"' -> put(0x22)
+                '\"' -> {
+                    put(0x5c); put(0x22)
+                }
+
                 '\\' -> {
                     put(0x5c); put(0x5c)
                 }
 
-                '\u000C' -> put(0x13)
                 '\n' -> {
-                    put(0x5c); put(0x0a)
+                    put(0x5c); put(110)
                 }
 
                 '\r' -> {
-                    put(0x5c); put(0x0d)
+                    put(0x5c); put(114)
                 }
 
                 '\t' -> {
-                    put(0x5c); put(0x09)
+                    put(0x5c); put(116)
                 }
 
                 else -> {
@@ -161,6 +164,7 @@ class JsonBufferWriter(
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    fun Char.escape() = "\\u" + code.toHexString().padStart(4, '0')
+    // TODO us a hex encode with better performance
+    fun Char.escape() = "\\u" + code.toHexString().padStart(4, '0').takeLast(4)
 
 }

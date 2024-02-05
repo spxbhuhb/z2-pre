@@ -1,9 +1,7 @@
 package hu.simplexion.z2.serialization.protobuf
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
-import hu.simplexion.z2.serialization.protobuf.ProtoEncoder
-import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.A
+import hu.simplexion.z2.serialization.B
 import hu.simplexion.z2.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertContentEquals

@@ -1,4 +1,4 @@
-package hu.simplexion.z2.serialization.protobuf
+package hu.simplexion.z2.serialization
 
 import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
 import hu.simplexion.z2.serialization.protobuf.ProtoEncoder

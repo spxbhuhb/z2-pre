@@ -4,18 +4,24 @@ import hu.simplexion.z2.util.UUID
 
 interface JsonElement {
 
-    val asInt : Int
+    val asBoolean: Boolean
         get() = throw IllegalStateException()
 
-    val asLong : Long
+    val asInt: Int
         get() = throw IllegalStateException()
 
-    val asString : String
+    val asIntList: MutableList<Int>
         get() = throw IllegalStateException()
 
-    val asByteArray : ByteArray
+    val asLong: Long
         get() = throw IllegalStateException()
 
-    val asUuid : UUID<*>
+    val asString: String
+        get() = throw IllegalStateException()
+
+    val asByteArray: ByteArray
+        get() = throw IllegalStateException()
+
+    val asUuid: UUID<*>
         get() = throw IllegalStateException()
 }

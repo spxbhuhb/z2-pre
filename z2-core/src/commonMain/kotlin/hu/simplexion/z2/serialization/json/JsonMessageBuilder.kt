@@ -1,5 +1,7 @@
 package hu.simplexion.z2.serialization.json
 
+import hu.simplexion.z2.serialization.InstanceEncoder
+import hu.simplexion.z2.serialization.MessageBuilder
 import hu.simplexion.z2.util.UUID
 
 /**
@@ -8,33 +10,33 @@ import hu.simplexion.z2.util.UUID
  * Use the type-specific functions to add records and then use [pack] to get
  * the wire format message.
  */
-class JsonMessageBuilder {
+class JsonMessageBuilder : MessageBuilder {
 
     val writer = JsonBufferWriter()
 
-    fun pack() = writer.pack()
+    override fun pack() = writer.pack()
 
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
 
-    fun boolean(fieldName: String, value: Boolean): JsonMessageBuilder {
+    override fun boolean(fieldNumber: Int, fieldName: String, value: Boolean): JsonMessageBuilder {
         writer.bool(fieldName, value)
         return this
     }
 
-    fun booleanOrNull(fieldName: String, value: Boolean?): JsonMessageBuilder {
+    override fun booleanOrNull(fieldNumber: Int, fieldName: String, value: Boolean?): JsonMessageBuilder {
         writer.bool(fieldName, value)
         return this
     }
 
-    fun booleanList(fieldName: String, values: List<Boolean>): JsonMessageBuilder {
-        booleanListOrNull(fieldName, values)
+    override fun booleanList(fieldNumber: Int, fieldName: String, values: List<Boolean>): JsonMessageBuilder {
+        booleanListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun booleanListOrNull(fieldName: String, values: List<Boolean>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.bool(v[i]) }
+    override fun booleanListOrNull(fieldNumber: Int, fieldName: String, values: List<Boolean>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.bool(v[i]) }
         return this
     }
 
@@ -42,23 +44,23 @@ class JsonMessageBuilder {
     // Int
     // ----------------------------------------------------------------------------
 
-    fun int(fieldName: String, value: Int): JsonMessageBuilder {
+    override fun int(fieldNumber: Int, fieldName: String, value: Int): JsonMessageBuilder {
         writer.number(fieldName, value)
         return this
     }
 
-    fun intOrNull(fieldName: String, value: Int?): JsonMessageBuilder {
+    override fun intOrNull(fieldNumber: Int, fieldName: String, value: Int?): JsonMessageBuilder {
         writer.number(fieldName, value)
         return this
     }
 
-    fun intList(fieldName: String, values: List<Int>): JsonMessageBuilder {
-        intListOrNull(fieldName, values)
+    override fun intList(fieldNumber: Int, fieldName: String, values: List<Int>): JsonMessageBuilder {
+        intListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun intListOrNull(fieldName: String, values: List<Int>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.number(v[i]) }
         return this
     }
 
@@ -66,23 +68,23 @@ class JsonMessageBuilder {
     // Long
     // ----------------------------------------------------------------------------
 
-    fun long(fieldName: String, value: Long): JsonMessageBuilder {
+    override fun long(fieldNumber: Int, fieldName: String, value: Long): JsonMessageBuilder {
         writer.number(fieldName, value)
         return this
     }
 
-    fun longOrNull(fieldName: String, value: Long?): JsonMessageBuilder {
+    override fun longOrNull(fieldNumber: Int, fieldName: String, value: Long?): JsonMessageBuilder {
         writer.number(fieldName, value)
         return this
     }
 
-    fun longList(fieldName: String, values: List<Long>): JsonMessageBuilder {
-        longListOrNull(fieldName, values)
+    override fun longList(fieldNumber: Int, fieldName: String, values: List<Long>): JsonMessageBuilder {
+        longListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun longListOrNull(fieldName: String, values: List<Long>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun longListOrNull(fieldNumber: Int, fieldName: String, values: List<Long>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.number(v[i]) }
         return this
     }
 
@@ -90,23 +92,23 @@ class JsonMessageBuilder {
     // String
     // ----------------------------------------------------------------------------
 
-    fun string(fieldName: String, value: String): JsonMessageBuilder {
+    override fun string(fieldNumber: Int, fieldName: String, value: String): JsonMessageBuilder {
         writer.string(fieldName, value)
         return this
     }
 
-    fun stringOrNull(fieldName: String, value: String?): JsonMessageBuilder {
+    override fun stringOrNull(fieldNumber: Int, fieldName: String, value: String?): JsonMessageBuilder {
         writer.string(fieldName, value)
         return this
     }
 
-    fun stringList(fieldName: String, values: List<String>): JsonMessageBuilder {
-        stringListOrNull(fieldName, values)
+    override fun stringList(fieldNumber: Int, fieldName: String, values: List<String>): JsonMessageBuilder {
+        stringListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun stringListOrNull(fieldName: String, values: List<String>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.string(v[i]) }
+    override fun stringListOrNull(fieldNumber: Int, fieldName: String, values: List<String>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.string(v[i]) }
         return this
     }
 
@@ -115,23 +117,23 @@ class JsonMessageBuilder {
     // ByteArray
     // ----------------------------------------------------------------------------
 
-    fun byteArray(fieldName: String, value: ByteArray): JsonMessageBuilder {
+    override fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): JsonMessageBuilder {
         writer.bytes(fieldName, value)
         return this
     }
 
-    fun byteArrayOrNull(fieldName: String, value: ByteArray?): JsonMessageBuilder {
+    override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): JsonMessageBuilder {
         writer.bytes(fieldName, value)
         return this
     }
 
-    fun byteArrayList(fieldName: String, values: List<ByteArray>): JsonMessageBuilder {
-        byteArrayListOrNull(fieldName, values)
+    override fun byteArrayList(fieldNumber: Int, fieldName: String, values: List<ByteArray>): JsonMessageBuilder {
+        byteArrayListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun byteArrayListOrNull(fieldName: String, values: List<ByteArray>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.bytes(v[i]) }
+    override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String, values: List<ByteArray>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.bytes(v[i]) }
         return this
     }
 
@@ -144,12 +146,12 @@ class JsonMessageBuilder {
      * Add a UUID to the message. Uses `bytes` to store the 16 raw bytes of
      * the UUID.
      */
-    fun uuid(fieldName: String, value: UUID<*>): JsonMessageBuilder {
+    override fun uuid(fieldNumber: Int, fieldName: String, value: UUID<*>): JsonMessageBuilder {
         writer.bytes(fieldName, value.toByteArray())
         return this
     }
 
-    fun uuidOrNull(fieldName: String, value: UUID<*>?): JsonMessageBuilder {
+    override fun uuidOrNull(fieldNumber: Int, fieldName: String, value: UUID<*>?): JsonMessageBuilder {
         writer.bytes(fieldName, value?.toByteArray())
         return this
     }
@@ -158,57 +160,50 @@ class JsonMessageBuilder {
      * Add a list of UUIDs to the message. Uses packed `bytes` to store the
      * 16 raw bytes of the UUID.
      */
-    fun uuidList(fieldName: String, values: List<UUID<*>>): JsonMessageBuilder {
-        uuidListOrNull(fieldName, values)
+    override fun uuidList(fieldNumber: Int, fieldName: String, values: List<UUID<*>>): JsonMessageBuilder {
+        uuidListOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    fun uuidListOrNull(fieldName: String, values: List<UUID<*>>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.uuid(v[i]) }
+    override fun uuidListOrNull(fieldNumber: Int, fieldName: String, values: List<UUID<*>>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> writer.uuid(v[i]) }
         return this
     }
 
 
     // ----------------------------------------------------------------------------
-    // Non-Scalar List
+    // Instance
     // ----------------------------------------------------------------------------
 
-    fun <T> instanceList(fieldName: String, encoder: JsonEncoder<T>, values: List<T>): JsonMessageBuilder {
-        instanceListOrNull(fieldName, encoder, values)
+    override fun <T> instance(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, value: T): JsonMessageBuilder {
+        instanceOrNull(fieldNumber, fieldName, encoder, value)
         return this
     }
 
-    fun <T> instanceListOrNull(
-        fieldName: String,
-        encoder: JsonEncoder<T>,
-        values: List<T>?
-    ): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> encoder.encodeJson(writer, v[i]) }
+    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, value: T?): JsonMessageBuilder {
+        if (value == null) {
+            writer.nullValue(fieldName)
+        } else {
+            writer.fieldName(fieldName)
+            encoder.encodeInstance(this, value)
+        }
+        return this
+    }
+    
+    override fun <T> instanceList(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>): JsonMessageBuilder {
+        instanceListOrNull(fieldNumber, fieldName, encoder, values)
+        return this
+    }
+
+    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>?): JsonMessageBuilder {
+        array(fieldName,  values) { v, i -> encoder.encodeInstance(this, v[i]) }
         return this
     }
 
     // ----------------------------------------------------------------------------
     // Non-Primitive
     // ----------------------------------------------------------------------------
-
-    fun <T> instance(fieldName: String, encoder: JsonEncoder<T>, value: T): JsonMessageBuilder {
-        instanceOrNull(fieldName, encoder, value)
-        return this
-    }
-
-    fun <T> instanceOrNull(
-        fieldName: String,
-        encoder: JsonEncoder<T>,
-        value: T?
-    ): JsonMessageBuilder {
-        if (value == null) {
-            writer.nullValue(fieldName)
-        } else {
-            writer.fieldName(fieldName)
-            encoder.encodeJson(writer, value)
-        }
-        return this
-    }
+    
 
     // ----------------------------------------------------------------------------
     // Utility
@@ -229,4 +224,7 @@ class JsonMessageBuilder {
         }
         writer.closeArray()
     }
+
+    override fun subBuilder(): MessageBuilder =
+        this
 }
