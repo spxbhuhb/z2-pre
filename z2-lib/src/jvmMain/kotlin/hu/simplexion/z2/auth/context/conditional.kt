@@ -3,8 +3,10 @@ package hu.simplexion.z2.auth.context
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.services.ServiceContext
+import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 enum class ContextCheckResult {
     Allow,
@@ -56,7 +58,6 @@ fun ServiceContext.isLoggedIn(): ContextCheckResult {
     if (session.principal == null) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
-
 
 /**
  * Allow when the role is in [Session.roles].
@@ -132,3 +133,17 @@ val ServiceContext.principal
  */
 val ServiceContext.principalOrNull
     get() = getSessionOrNull()?.principal
+
+/**
+ * True when [Session.principal] is [principal], false otherwise.
+ */
+fun ServiceImpl<*>.isSelf(principal : UUID<*>) : Boolean {
+    return serviceContext.principalOrNull == principal
+}
+
+/**
+ * True when the session has [securityOfficerRole].
+ */
+val ServiceImpl<*>.isSecurityOfficer
+    get() = serviceContext.has(securityOfficerRole).isAllowed
+
