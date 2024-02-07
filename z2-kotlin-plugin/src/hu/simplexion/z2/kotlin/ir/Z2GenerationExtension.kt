@@ -8,7 +8,6 @@ import hu.simplexion.z2.kotlin.ir.css.CssPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.ModuleTransform
 import hu.simplexion.z2.kotlin.ir.localization.export.ExportResources
-import hu.simplexion.z2.kotlin.ir.rui.RuiGenerationExtension
 import hu.simplexion.z2.kotlin.ir.schematic.SchematicPluginContext
 import hu.simplexion.z2.kotlin.ir.schematic.access.SchematicAccessTransform
 import hu.simplexion.z2.kotlin.ir.schematic.klass.SchematicModuleTransform
@@ -29,7 +28,7 @@ internal class Z2GenerationExtension(
         schematic(moduleFragment, pluginContext)
         service(moduleFragment, pluginContext)
         // css(moduleFragment, pluginContext)
-        RuiGenerationExtension(options).generate(moduleFragment, pluginContext)
+        //RuiGenerationExtension(options).generate(moduleFragment, pluginContext)
     }
 
     fun localization(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {

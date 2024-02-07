@@ -19,6 +19,18 @@ fun String.toCamelCaseWords() : String {
     return out.toCharArray().concatToString()
 }
 
+fun String.toCamelCase(lowerCaseFirstChar: Boolean = false): String {
+    val out = mutableListOf<Char>()
+    for (char in toCharArray()) {
+        when {
+            out.isEmpty() -> out += if (lowerCaseFirstChar) char.lowercaseChar() else char.uppercaseChar()
+            char.isUpperCase() -> out += char
+            else -> out += char
+        }
+    }
+    return out.toCharArray().concatToString()
+}
+
 /**
  * Convert a [ByteArray] into a string, replacing all non-printable and non-ASCII
  * characters with a dot.
@@ -154,4 +166,31 @@ fun randomBase64String256Bit(): String {
         random[i].encodeInto(key, i * 4)
     }
     return encode(key)
+}
+
+fun String.toSnakeCase(): String {
+    val out = mutableListOf<Char>()
+    var inNumber = false
+    for (char in toCharArray()) {
+
+        when {
+            char.isUpperCase() -> {
+                out += '-'
+                out += char.lowercaseChar()
+                inNumber = false
+            }
+
+            char.isDigit() -> {
+                if (!inNumber) out += '-'
+                out += char
+                inNumber = true
+            }
+
+            else -> {
+                out += char
+                inNumber = false
+            }
+        }
+    }
+    return out.toCharArray().concatToString()
 }
