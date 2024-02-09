@@ -40,13 +40,14 @@ kotlin {
 
         val targetDirectory = file("$buildDir/processedResources/js/main/")
 
-        tasks.register("z2BrowserExtract") {
+        tasks.register("z2CssExtract") {
             doLast {
                 targetDirectory.mkdirs()
                 compilations["main"].runtimeDependencyFiles.firstOrNull {
-                    "z2-browser" in it.name
+                    "z2-lib" in it.name
                 }?.let {
                     copy {
+                        include("**/*.css")
                         from(zipTree(it))
                         into(targetDirectory)
                         duplicatesStrategy = DuplicatesStrategy.WARN
@@ -55,7 +56,7 @@ kotlin {
             }
         }
 
-        tasks["jsBrowserDistribution"].dependsOn("z2BrowserExtract")
+        tasks["jsBrowserDistribution"].dependsOn("z2CssExtract")
     }
 
     sourceSets["commonMain"].dependencies {
