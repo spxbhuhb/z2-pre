@@ -20,6 +20,10 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 sourceSets {
     main {
         java.setSrcDirs(listOf("src"))
