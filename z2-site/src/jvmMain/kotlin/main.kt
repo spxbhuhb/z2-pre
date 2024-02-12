@@ -4,9 +4,17 @@ import hu.simplexion.z2.browser.demo.strings
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
+import hu.simplexion.z2.setting.persistence.SettingTable
+import hu.simplexion.z2.setting.util.settings
 import hu.simplexion.z2.site.boot.bootJvm
 
 fun main() {
+
+    settings {
+        environment { "Z2_" }
+        propertyFile { "./etc/z2.properties" }
+        sql { SettingTable.settingTable }
+    }
 
     commonStrings = strings
     dateTimeStrings = strings

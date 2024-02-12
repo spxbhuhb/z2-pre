@@ -2,9 +2,9 @@ package hu.simplexion.z2.setting.util
 
 import hu.simplexion.z2.auth.context.principal
 import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.schematic.Schematic
-import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
+import hu.simplexion.z2.setting.provider.SqlSettingProvider.Companion.settingImpl
+import hu.simplexion.z2.util.UUID
 
 object CommonSettings {
 

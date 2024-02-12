@@ -1,10 +1,10 @@
-package hu.simplexion.z2.setting.table
+package hu.simplexion.z2.setting.persistence
 
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.setting.model.Setting
+import hu.simplexion.z2.util.UUID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.like

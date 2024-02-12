@@ -7,7 +7,7 @@ import hu.simplexion.z2.auth.context.publicAccess
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
 import hu.simplexion.z2.services.ServiceImpl
-import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
+import hu.simplexion.z2.setting.provider.SqlSettingProvider.Companion.settingImpl
 import hu.simplexion.z2.site.api.SiteApi
 import hu.simplexion.z2.site.model.SiteSettings
 

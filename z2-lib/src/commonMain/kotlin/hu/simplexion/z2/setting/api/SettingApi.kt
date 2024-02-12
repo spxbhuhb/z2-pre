@@ -1,12 +1,9 @@
 package hu.simplexion.z2.setting.api
 
 import hu.simplexion.z2.auth.model.Principal
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.services.Service
 import hu.simplexion.z2.setting.model.Setting
-import hu.simplexion.z2.setting.util.decodeFromSettings
-import hu.simplexion.z2.setting.util.encodeToSettings
+import hu.simplexion.z2.util.UUID
 
 interface SettingApi : Service {
 
@@ -27,30 +24,23 @@ interface SettingApi : Service {
      *   a/b    45
      * ```
      *
-     * @param  owner  The owner of the setting. Using different owner than the
-     *                caller requires `securityOfficer` role.
+     * @param  owner  The owner of the setting. Using different scope than the
+     *                UUID of the caller requires `securityOfficer` role.
      */
-    suspend fun put(owner : UUID<Principal>, path : String, value : String)
+    suspend fun put(owner : UUID<Principal>, path : String, value : String?)
 
     /**
      * Put the [settings] into the setting database.
+     *
+     * @param  owner  The owner of the setting. Using different scope than the
+     *                UUID of the caller requires `securityOfficer` role.
      */
     suspend fun put(owner : UUID<Principal>, settings : List<Setting>)
 
     /**
-     * Save all the non-default fields of [schematic] as an individual setting.
-     *
-     * @param  [basePath]  The path to put before any field name to get the setting path.
-     *                     For any given field the setting path is : `$basePath/${field.name}`
-     */
-    suspend fun <T : Schematic<T>> put(owner : UUID<Principal>, basePath : String, schematic : T) {
-        put(owner, schematic.encodeToSettings(basePath))
-    }
-
-    /**
      * Get the settings that belongs to the [path].
      *
-     * @param  owner       The owner of the setting. Using different owner than the
+     * @param  scope       The owner of the setting. Using different owner than the
      *                     caller requires `securityOfficer` role.
      *
      * @param  children    Include all subsequent settings. For example, [path]
@@ -58,16 +48,5 @@ interface SettingApi : Service {
      *                     with `a/bc`.
      */
     suspend fun get(owner: UUID<Principal>, path : String, children : Boolean = true) : List<Setting>
-
-    /**
-     * Set the fields of [schematic] from settings.
-     *
-     * @param  [basePath]  The path to put before any field name to get the setting path.
-     *                     For any given field the setting path is : `$basePath/${field.name}`
-     */
-    suspend fun <T : Schematic<T>> get(owner: UUID<Principal>, basePath: String, schematic : T) : T {
-        schematic.decodeFromSettings(basePath, get(owner, basePath, true))
-        return schematic
-    }
 
 }

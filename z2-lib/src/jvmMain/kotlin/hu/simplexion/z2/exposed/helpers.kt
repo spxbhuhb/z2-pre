@@ -4,10 +4,10 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.defaultServiceImplFactory
 import hu.simplexion.z2.setting.util.mandatoryEnvString
+import hu.simplexion.z2.util.UUID
 import org.apache.logging.log4j.core.config.Configurator
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
@@ -16,6 +16,8 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+
+var isSqlInitialized = false
 
 fun dbFromEnvironment() {
     val config = HikariConfig().apply {
@@ -28,6 +30,8 @@ fun dbFromEnvironment() {
 
     val dataSource = HikariDataSource(config)
     Database.connect(dataSource)
+
+    isSqlInitialized = true
 }
 
 fun h2Test(vararg tables: Table) {

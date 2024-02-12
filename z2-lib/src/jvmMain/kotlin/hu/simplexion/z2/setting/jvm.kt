@@ -2,8 +2,10 @@ package hu.simplexion.z2.setting
 
 import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables
-import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
-import hu.simplexion.z2.setting.table.SettingTable.Companion.settingTable
+import hu.simplexion.z2.setting.implementation.SettingImpl
+import hu.simplexion.z2.setting.persistence.SettingTable.Companion.settingTable
+
+val settingImpl = SettingImpl()
 
 fun settingJvm() {
     settingCommon()

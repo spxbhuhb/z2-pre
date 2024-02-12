@@ -1,4 +1,4 @@
-package hu.simplexion.z2.setting.impl
+package hu.simplexion.z2.setting.implementation
 
 import hu.simplexion.z2.schematic.Schematic
 

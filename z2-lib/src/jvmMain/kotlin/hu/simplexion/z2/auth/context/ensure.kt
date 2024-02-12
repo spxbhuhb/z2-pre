@@ -3,9 +3,9 @@ package hu.simplexion.z2.auth.context
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
+import hu.simplexion.z2.util.UUID
 
 var technicalAdminRoles = arrayOf(securityOfficerRole)
 
@@ -27,6 +27,16 @@ fun ServiceImpl<*>.ensureInternal() {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
+    ensureAll(securityOfficerRole)
+}
+
+/**
+ * Ensures that the principal has the security officer role.
+ *
+ * @throws   AccessDenied  The principal does not have the security officer role.
+ */
+fun ServiceImpl<*>.ensureSecurityOfficerOrInternal() {
+    if (serviceContext.isInternal() == ContextCheckResult.Allow) return
     ensureAll(securityOfficerRole)
 }
 
@@ -131,4 +141,13 @@ fun ServiceImpl<*>.ensureSelfOrTechnicalAdmin(principal: UUID<Principal>) {
  */
 suspend fun ServiceImpl<*>.ensureTest() {
     if (!siteImpl(serviceContext).isTest()) throw AccessDenied()
+}
+
+/**
+ * Ensure that this code fails with NotImplementedError.
+ *
+ * @throws  AccessDenied
+ */
+fun ensureFailNotImplemented(message : () -> String) {
+    throw NotImplementedError(message())
 }
