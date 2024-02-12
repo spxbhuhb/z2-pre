@@ -12,9 +12,11 @@ import hu.simplexion.z2.util.UUID
  * @property environmentVariablePrefix A string to add to property names as a prefix. Default is 'Z2_' which
  *                                     means that each name is prefixed like `Z2_SOME_NAME`. Set to empty string
  *                                     to disable use any prefixing.
+ * @property  owner  The owner of the settings stored in the environment variables with the given prefix.
  */
 class EnvironmentSettingProvider(
-    val environmentVariablePrefix : String = "Z2_"
+    val environmentVariablePrefix : String,
+    val owner : UUID<Principal>
 ) : SettingProvider {
 
     override val isReadOnly: Boolean
@@ -25,6 +27,8 @@ class EnvironmentSettingProvider(
     }
 
     override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
+        if (owner != this.owner) return emptyList()
+
         val value = System.getenv("$environmentVariablePrefix$this")
         return if (value == null) {
             emptyList()

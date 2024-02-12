@@ -34,7 +34,7 @@ email.user=jdbc:postgresql://127.0.0.1/z2site
 In a database:
 
 ```sql
-insert into z2_settings(null, 'EMAIL_USER', 'a@b.com', false)
+insert into z2_settings(null, 'EMAIL_USER', 'a@b.com')
 ```
 
 ## Encoded Settings

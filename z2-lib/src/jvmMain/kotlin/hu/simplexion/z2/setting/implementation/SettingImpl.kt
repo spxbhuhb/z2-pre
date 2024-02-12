@@ -1,5 +1,7 @@
 package hu.simplexion.z2.setting.implementation
 
+import hu.simplexion.z2.auth.context.ensureInternal
+import hu.simplexion.z2.auth.context.ensureSecurityOfficerOrInternal
 import hu.simplexion.z2.auth.context.ensureSelfOrSecurityOfficer
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.baseStrings

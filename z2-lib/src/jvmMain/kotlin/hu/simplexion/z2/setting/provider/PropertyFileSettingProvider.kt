@@ -13,9 +13,13 @@ import kotlin.io.path.inputStream
 /**
  * Get settings from a property file. Supports only [get], [put] throws an
  * exception. Must be security officer or internal call.
+ *
+ * @property  path  The file system path to the property file.
+ * @property  owner  The owner of the settings in this property file.
  */
 class PropertyFileSettingProvider(
-    val path: Path
+    val path: Path,
+    val owner : UUID<Principal>
 ) : SettingProvider {
 
     override val isReadOnly: Boolean
@@ -35,6 +39,8 @@ class PropertyFileSettingProvider(
     }
 
     override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
+        if (owner != this.owner) return emptyList()
+
         val value = prop.getProperty(path)
 
         return if (value != null) {

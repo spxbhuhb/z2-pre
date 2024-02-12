@@ -25,24 +25,25 @@ class DelegatingSettingProvider : SettingProvider {
     operator fun plusAssign(provider: SettingProvider) {
         lock.use {
             providers = listOf(provider) + providers
-            if (! provider.isReadOnly) isReadOnly = false
+            if (!provider.isReadOnly) isReadOnly = false
         }
     }
 
     override fun put(owner: UUID<Principal>, path: String, value: String?) {
-        check(! isReadOnly) { "settings in this application are read-only" }
+        check(!isReadOnly) { "settings in this application are read-only" }
 
-        lock.use {
-            for (provider in providers) {
-                if (provider.isReadOnly) continue
-                provider.put(owner, path, value)
-                return
-            }
+        for (provider in lock.use { providers }) {
+            if (provider.isReadOnly) continue
+            provider.put(owner, path, value)
+            return
         }
     }
 
     override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
-        return settingTable.get(owner, path, children)
+        for (provider in lock.use { providers }) {
+            val result = provider.get(owner, path, children)
+            if (result.isNotEmpty()) return result
+        }
+        return emptyList()
     }
-
 }
