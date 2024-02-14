@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.routing
 
+import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
@@ -19,7 +20,7 @@ interface RoutingTarget<R> {
 
     val loggedIn : Boolean
 
-    val roles : List<String>
+    val roles : List<UUID<Role>>
 
     fun accepts(path: List<String>): Boolean {
         return path.first() == relativePath

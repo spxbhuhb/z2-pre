@@ -1,0 +1,34 @@
+.elevated-card-container {
+    position: relative;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface-container-low);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-sys-elevation-level-1);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.filled-card-container {
+    position: relative;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.outlined-card-container {
+    position: relative;
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.card-headline {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    grid-template-rows: 32px;
+    padding-bottom: 32px;
+}

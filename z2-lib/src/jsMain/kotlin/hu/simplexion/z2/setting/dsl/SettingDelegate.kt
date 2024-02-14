@@ -1,10 +1,10 @@
 package hu.simplexion.z2.setting.dsl
 
 import hu.simplexion.z2.auth.model.Principal
-import hu.simplexion.z2.setting.implementation.SettingImpl
 import hu.simplexion.z2.util.UUID
 import kotlin.reflect.KProperty
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class SettingDelegate<T>(
     actual val path: String,
     actual val owner: UUID<Principal>?,
@@ -14,9 +14,7 @@ actual class SettingDelegate<T>(
 
     actual var sensitive: Boolean = false
     actual var writable: Boolean = true
-
-    // FIXME settings default mess
-    var default : T? = null
+    var initialized : Boolean = false
 
     actual var valueOrNull: T? = null
 
@@ -25,17 +23,15 @@ actual class SettingDelegate<T>(
         set(value) { valueOrNull = value }
 
     actual operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        valueOrNull = SettingImpl.rootProvider.get(owner, path).firstOrNull()?.value?.let { decoder(it) }
-        return requireNotNull(valueOrNull ?: default) { "missing setting: path=$path owner=$owner" }
+        return value
     }
 
     actual operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         this.value = value
-        SettingImpl.rootProvider.put(owner, path, encoder(value))
     }
 
     actual infix fun default(value : T) : SettingDelegate<T> {
-        this.default = value
+        this.value = value
         return this
     }
 

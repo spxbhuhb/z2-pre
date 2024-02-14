@@ -1,0 +1,25 @@
+.select-none {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+input::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+input.input-error::placeholder {
+    color: var(--md-sys-color-error);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

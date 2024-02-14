@@ -30,7 +30,7 @@ var session = Session()
     set(value) {
         field = value
         isLoggedIn = (session.principal != null)
-        effectiveRoles = value.roles.map { it.programmaticName }
+        effectiveRoles = value.roles
     }
 
 suspend fun bootJs(
@@ -62,5 +62,5 @@ suspend fun bootJs(
     sessionService.getSession()?.let { session = it }
 
     isLoggedIn = (session.principal != null)
-    effectiveRoles = session.roles.map { it.programmaticName }
+    effectiveRoles = session.roles
 }

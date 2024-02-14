@@ -1,5 +1,6 @@
 package hu.simplexion.z2.browser.routing
 
+import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
@@ -10,7 +11,7 @@ abstract class Router<R>(
     override val label: LocalizedText? = null,
     override val icon: LocalizedIcon? = null,
     override val loggedIn : Boolean = true,
-    override val roles : List<String> = emptyList()
+    override val roles : List<UUID<Role>> = emptyList()
 ) : RoutingTarget<R> {
 
     override var parent: Router<R>? = null
@@ -80,7 +81,7 @@ abstract class Router<R>(
         label: LocalizedText? = null,
         icon: LocalizedIcon? = null,
         loggedIn: Boolean = false,
-        roles: List<String> = emptyList(),
+        roles: List<UUID<Role>> = emptyList(),
         actionFun: () -> Unit
     ): RoutedAction<R> {
         return RoutedAction(label, icon, loggedIn, roles, actionFun)
@@ -90,7 +91,7 @@ abstract class Router<R>(
         label: LocalizedText? = null,
         icon: LocalizedIcon? = null,
         loggedIn: Boolean = false,
-        roles: List<String> = emptyList(),
+        roles: List<UUID<Role>> = emptyList(),
         renderFun: R.() -> Unit
     ): RoutedRenderer<R> {
         return RoutedRenderer(label, icon, loggedIn, roles, renderFun)

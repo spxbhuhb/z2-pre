@@ -8,8 +8,8 @@ interface SettingProvider {
 
     val isReadOnly : Boolean
 
-    fun put(owner : UUID<Principal>, path : String, value : String?)
+    fun put(owner : UUID<Principal>?, path : String, value : String?)
 
-    fun get(owner: UUID<Principal>, path : String, children : Boolean = true) : List<Setting>
+    fun get(owner: UUID<Principal>?, path : String, children : Boolean = true) : List<Setting>
 
 }

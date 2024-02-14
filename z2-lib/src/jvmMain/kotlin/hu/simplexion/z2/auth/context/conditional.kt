@@ -1,9 +1,9 @@
 package hu.simplexion.z2.auth.context
 
+import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.util.UUID
@@ -66,7 +66,18 @@ fun ServiceContext.isLoggedIn(): ContextCheckResult {
  */
 fun ServiceContext.has(role: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
-    if (! session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Deny
+    if (! session.roles.any { it == role.uuid }) return ContextCheckResult.Deny
+    return ContextCheckResult.Allow
+}
+
+/**
+ * Allow when the role is in [Session.roles].
+ *
+ * Deny otherwise.
+ */
+fun ServiceContext.has(roleUuid: UUID<Role>): ContextCheckResult {
+    val session = getSessionOrNull() ?: return ContextCheckResult.Deny
+    if (! session.roles.any { it == roleUuid }) return ContextCheckResult.Deny
     return ContextCheckResult.Allow
 }
 
@@ -78,7 +89,7 @@ fun ServiceContext.has(role: Role): ContextCheckResult {
 fun ServiceContext.hasAll(vararg roles: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
-        if (! session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Deny
+        if (! session.roles.any { it == role.uuid }) return ContextCheckResult.Deny
     }
     return ContextCheckResult.Allow
 }
@@ -91,7 +102,7 @@ fun ServiceContext.hasAll(vararg roles: Role): ContextCheckResult {
 fun ServiceContext.hasAll(vararg roles: UUID<Role>): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
-        if (! session.roles.any { it.uuid == role }) return ContextCheckResult.Deny
+        if (! session.roles.any { it == role }) return ContextCheckResult.Deny
     }
     return ContextCheckResult.Allow
 }
@@ -105,7 +116,7 @@ fun ServiceContext.hasAll(vararg roles: UUID<Role>): ContextCheckResult {
 fun ServiceContext.hasAny(vararg roles: Role): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
-        if (session.roles.any { it.uuid == role.uuid }) return ContextCheckResult.Allow
+        if (session.roles.any { it == role.uuid }) return ContextCheckResult.Allow
     }
     return ContextCheckResult.Deny
 }
@@ -118,7 +129,7 @@ fun ServiceContext.hasAny(vararg roles: Role): ContextCheckResult {
 fun ServiceContext.hasAny(vararg roles: UUID<Role>): ContextCheckResult {
     val session = getSessionOrNull() ?: return ContextCheckResult.Deny
     for (role in roles) {
-        if (session.roles.any { it.uuid == role }) return ContextCheckResult.Allow
+        if (session.roles.any { it == role }) return ContextCheckResult.Allow
     }
     return ContextCheckResult.Deny
 }
@@ -156,8 +167,8 @@ fun ServiceImpl<*>.isSelf(principal : UUID<*>) : Boolean {
 }
 
 /**
- * True when the session has [securityOfficerRole].
+ * True when the session has [ApplicationSettings.securityOfficerRoleUuid].
  */
 val ServiceImpl<*>.isSecurityOfficer
-    get() = serviceContext.has(securityOfficerRole).isAllowed
+    get() = serviceContext.has(ApplicationSettings.securityOfficerRoleUuid).isAllowed
 

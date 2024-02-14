@@ -1,7 +1,6 @@
 package hu.simplexion.z2.auth
 
-import hu.simplexion.z2.application.SECURITY_OFFICER_PRINCIPAL_NAME
-import hu.simplexion.z2.application.SECURITY_OFFICER_ROLE_UUID
+import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
 import hu.simplexion.z2.auth.impl.PrincipalImpl.Companion.principalImpl
 import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
@@ -14,40 +13,51 @@ import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
-import hu.simplexion.z2.auth.table.RoleTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.BCrypt
-import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.exposed.implementations
-import hu.simplexion.z2.exposed.tables
-import hu.simplexion.z2.history.util.securityHistory
-import hu.simplexion.z2.localization.text.commonStrings
+import hu.simplexion.z2.exposed.*
 import hu.simplexion.z2.util.UUID
 import org.jetbrains.exposed.sql.transactions.transaction
 
-lateinit var securityOfficerRole: Role
-lateinit var securityOfficerUuid: UUID<Principal>
-lateinit var anonymousUuid: UUID<Principal>
-
-const val anonymousPrincipalName = "anonymous"
-
 fun authJvm() {
 
-    tables(
-        principalTable,
-        credentialsTable,
-        roleTable,
-        roleGrantTable,
-        roleGroupTable,
-        sessionTable
+    val firstTimeInit = isAllEmpty(
+        *tables(
+            principalTable,
+            credentialsTable,
+            roleTable,
+            roleGrantTable,
+            roleGroupTable,
+            sessionTable
+        )
     )
 
-    securityOfficerRole = getOrMakeSecurityOfficerRole()
-    securityOfficerUuid = getOrMakePrincipal(SECURITY_OFFICER_PRINCIPAL_NAME, "so")
-    anonymousUuid = getOrMakePrincipal(anonymousPrincipalName)
+    transaction {
+        with(ApplicationSettings) {
+            if (firstTimeInit) {
+                makePrincipal(securityOfficerUuid, securityOfficerName, password = securityOfficerName)
 
-    grantRole(securityOfficerRole, securityOfficerUuid)
+                makeRole(securityOfficerRoleUuid, securityOfficerRoleName)
+                makeRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
+
+                makeRole(technicalAdminRoleUuid, technicalAdminRoleName)
+                makeRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
+
+                makePrincipal(anonymousUuid, anonymousName)
+            } else {
+                validatePrincipal(securityOfficerUuid)
+
+                validateRole(securityOfficerRoleUuid, securityOfficerRoleName)
+                validateRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
+
+                validateRole(technicalAdminRoleUuid, technicalAdminRoleName)
+                // technical admin may be revoked from the security officer
+
+                validatePrincipal(anonymousUuid, locked = true)
+            }
+        }
+    }
 
     implementations(
         principalImpl,
@@ -57,62 +67,58 @@ fun authJvm() {
     )
 }
 
-private fun getOrMakeSecurityOfficerRole(): Role {
-    val roleTable = RoleTable()
-
-    val role = transaction { roleTable.getOrNull(SECURITY_OFFICER_ROLE_UUID) } ?: Role()
-
-    if (role.uuid == UUID.NIL) {
-        transaction {
-            role.uuid = SECURITY_OFFICER_ROLE_UUID
-            role.programmaticName = "security-officer"
-            role.displayName = "Security Officer"
-            roleTable.insertWithId(role)
+private fun makeRole(inUuid: UUID<Role>, inName: String) {
+    roleTable.insertWithId(
+        Role().apply {
+            uuid = inUuid
+            programmaticName = inName
+            displayName = inName
         }
-    }
-
-    return role
+    )
 }
 
-internal fun getOrMakePrincipal(
-    name: String,
-    password: String? = null
-): UUID<Principal> {
-    val principal = transaction {
-        principalTable.getByNameOrNull(name)
-    }
-    if (principal != null) return principal.uuid
+private fun validateRole(inUuid: UUID<Role>, inName: String) {
+    requireNotNull(roleTable.getOrNull(inUuid)) { "missing mandatory role: uuid=$inUuid name=$inName" }
+}
 
-    return transaction {
+internal fun makePrincipal(inUuid: UUID<Principal>, inName: String, password: String? = null) {
+    principalTable.insertWithId(
+        Principal().also {
+            it.uuid = inUuid
+            it.name = inName
+            it.activated = true
+            it.locked = (password == null)
+        }
+    )
 
-        val principalId = principalTable.insert(
-            Principal().also {
-                it.name = name
-                it.activated = true
-                it.locked = (password == null)
+    if (password != null) {
+        credentialsTable.insert(
+            Credentials().also {
+                it.principal = inUuid
+                it.type = CredentialType.PASSWORD
+                it.value = BCrypt.hashpw(password, BCrypt.gensalt())
             }
         )
-
-        if (password != null) {
-            credentialsTable.insert(
-                Credentials().also {
-                    it.principal = principalId
-                    it.type = CredentialType.PASSWORD
-                    it.value = BCrypt.hashpw(password, BCrypt.gensalt())
-                }
-            )
-        }
-
-        securityHistory(principalId, baseStrings.account, commonStrings.add, principalId, name)
-
-        return@transaction principalId
     }
 }
 
-private fun grantRole(role: Role, principal: UUID<Principal>) {
-    transaction {
-        if (role.uuid in roleGrantTable.rolesOf(principal, null).map { it.uuid }) return@transaction
-        roleGrantTable.insert(role.uuid, principal, null)
-        securityHistory(securityOfficerUuid, baseStrings.role, baseStrings.grantRole, securityOfficerUuid, principal, role.uuid, role.programmaticName, role.displayName)
-    }
+
+internal fun validatePrincipal(inUuid: UUID<Principal>, locked: Boolean? = null) {
+    val principal = principalTable[inUuid]
+    if (locked == true) check(principal.locked) { "principal shall be locked: name=${principal.name} uuid=$inUuid" }
+}
+
+
+private fun makeRoleGrant(role: UUID<Role>, principal: UUID<Principal>) {
+    roleGrantTable.insert(role, principal, null)
+}
+
+private fun validateRoleGrant(role: UUID<Role>, principal: UUID<Principal>) {
+    check(
+        roleGrantTable.hasRole(
+            role,
+            principal,
+            null
+        )
+    ) { "principal $principal does not have the mandatory role $role" }
 }

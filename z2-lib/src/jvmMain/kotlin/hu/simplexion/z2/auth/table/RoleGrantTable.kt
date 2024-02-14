@@ -71,6 +71,22 @@ open class RoleGrantTable(
             }
     }
 
+    fun rolesUuidsOf(inPrincipal: UUID<Principal>, inContext: String?): List<UUID<Role>> {
+
+        val condition = if (inContext == null) {
+            Op.build { principal eq inPrincipal.jvm }
+        } else {
+            Op.build { (principal eq inPrincipal.jvm) and (context eq inContext) }
+        }
+
+        return select(condition).map { it[role].value.z2() }
+    }
+
+    fun hasRole(inRole: UUID<Role>, inPrincipal: UUID<Principal>, inContext: String?): Boolean =
+        select { (principal eq inPrincipal.jvm) and (role eq inRole.jvm) and (context eq inContext) }
+            .empty()
+            .not()
+
     fun grantedTo(inRole: UUID<Role>, inContext: String?): List<Grant> {
         val condition = if (inContext == null) {
             Op.build { role eq inRole.jvm }

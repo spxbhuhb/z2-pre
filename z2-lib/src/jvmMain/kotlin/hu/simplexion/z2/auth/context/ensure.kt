@@ -1,14 +1,13 @@
 package hu.simplexion.z2.auth.context
 
-import hu.simplexion.z2.application.SECURITY_OFFICER_ROLE_UUID
+import hu.simplexion.z2.application.ApplicationSettings
+import hu.simplexion.z2.application.ApplicationSettings.securityOfficerRoleUuid
+import hu.simplexion.z2.application.ApplicationSettings.technicalAdminRoleUuid
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 import hu.simplexion.z2.util.UUID
-
-var technicalAdminRoles = arrayOf(securityOfficerRole)
 
 /**
  * Ensures there is no service context for the call.
@@ -28,7 +27,16 @@ fun ServiceImpl<*>.ensureInternal() {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
-    ensureAll(SECURITY_OFFICER_ROLE_UUID)
+    ensureHas(securityOfficerRoleUuid)
+}
+
+/**
+ * Ensures that the principal has one of the roles listed in [technicalAdminRoles].
+ *
+ * @throws   AccessDenied  The principal does not have any of the roles listed in [technicalAdminRoles].
+ */
+fun ServiceImpl<*>.ensureTechnicalAdmin() {
+    ensureHas(technicalAdminRoleUuid)
 }
 
 /**
@@ -42,21 +50,21 @@ fun ServiceImpl<*>.ensureSecurityOfficerOrInternal() {
 }
 
 /**
- * Ensures that the principal has one of the roles listed in [technicalAdminRoles].
- *
- * @throws   AccessDenied  The principal does not have any of the roles listed in [technicalAdminRoles].
- */
-fun ServiceImpl<*>.ensureTechnicalAdmin() {
-    ensureAny(*technicalAdminRoles)
-}
-
-/**
  * Ensures that there is a principal in the context (Session.principal != null).
  *
  * @throws   AccessDenied  There is no principal in the context.
  */
 fun ServiceImpl<*>.ensureLoggedIn() {
     if (serviceContext.isLoggedIn() != ContextCheckResult.Allow) throw AccessDenied()
+}
+
+/**
+ * Ensures that the context has the specified role.
+ *
+ * @throws   AccessDenied  At least one of the roles is not in the context.
+ */
+fun ServiceImpl<*>.ensureHas(roleUuid: UUID<Role>) {
+    if (serviceContext.has(roleUuid) != ContextCheckResult.Allow) throw AccessDenied()
 }
 
 /**
@@ -87,6 +95,16 @@ fun ServiceImpl<*>.ensureAll(vararg roles: UUID<Role>) {
  */
 fun ServiceImpl<*>.ensureAny(vararg roles: Role) {
     if (serviceContext.hasAny(*roles) != ContextCheckResult.Allow) throw AccessDenied()
+}
+
+/**
+ * Ensures that the block runs only when there context contains **ANY**
+ * of the specified roles.
+ *
+ * @throws   AccessDenied  None of the roles are in the context.
+ */
+fun ServiceImpl<*>.ensureAny(vararg roleUuids: UUID<Role>) {
+    if (serviceContext.hasAny(*roleUuids) != ContextCheckResult.Allow) throw AccessDenied()
 }
 
 /**
@@ -133,7 +151,7 @@ fun ServiceImpl<*>.ensureSelf(principal: UUID<Principal>) {
  * in the name of a security officer.
  */
 fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
-    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(securityOfficerRole))
+    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(ApplicationSettings.securityOfficerRoleUuid))
 }
 
 /**
@@ -141,7 +159,7 @@ fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
  * in the name of technical admin.
  */
 fun ServiceImpl<*>.ensureSelfOrTechnicalAdmin(principal: UUID<Principal>) {
-    ensure(serviceContext.isPrincipal(principal) or serviceContext.hasAny(*technicalAdminRoles))
+    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(technicalAdminRoleUuid))
 }
 
 /**

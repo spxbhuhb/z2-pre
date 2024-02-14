@@ -1,5 +1,6 @@
 package hu.simplexion.z2.setting.provider
 
+import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.context.ensureFailNotImplemented
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.setting.model.Setting
@@ -21,8 +22,7 @@ import kotlin.io.path.inputStream
  */
 class PropertyFileSettingProvider(
     val path: Path,
-    val optional: Boolean,
-    val owner: UUID<Principal>
+    val optional: Boolean
 ) : SettingProvider {
 
     override val isReadOnly: Boolean
@@ -39,12 +39,12 @@ class PropertyFileSettingProvider(
         }
     }
 
-    override fun put(owner: UUID<Principal>, path: String, value: String?) {
+    override fun put(owner: UUID<Principal>?, path: String, value: String?) {
         ensureFailNotImplemented { "property file settings are read-only" }
     }
 
-    override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
-        if (owner != this.owner) return emptyList()
+    override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> {
+        if (owner != null && owner != ApplicationSettings.applicationUuid) return emptyList()
 
         val value = prop.getProperty(path)
 

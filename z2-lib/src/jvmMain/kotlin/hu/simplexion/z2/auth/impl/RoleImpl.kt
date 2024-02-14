@@ -5,7 +5,6 @@ import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.Grant
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
@@ -65,36 +64,36 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     }
 
     override suspend fun grant(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         securityHistory(baseStrings.role, baseStrings.grantRole, principal, role, context)
 
         roleGrantTable.insert(role, principal, context)
     }
 
     override suspend fun revoke(role: UUID<Role>, principal: UUID<Principal>, context : String?) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         securityHistory(baseStrings.role, baseStrings.revokeRole, principal, role, context)
 
         roleGrantTable.remove(role, principal, context)
     }
 
     override suspend fun rolesOf(principal: UUID<Principal>, context: String?): List<Role> {
-        ensure(serviceContext.has(securityOfficerRole) or serviceContext.isPrincipal(principal))
+        ensureSelfOrSecurityOfficer(principal)
         return roleGrantTable.rolesOf(principal, context)
     }
 
     override suspend fun grantedTo(role: UUID<Role>, context : String?): List<Grant> {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         return roleGrantTable.grantedTo(role, context)
     }
 
     override suspend fun addToGroup(role: UUID<Role>, group: UUID<Role>) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         roleGroupTable.add(role, group)
     }
 
     override suspend fun removeFromGroup(role: UUID<Role>, group: UUID<Role>) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         roleGroupTable.remove(role, group)
     }
 

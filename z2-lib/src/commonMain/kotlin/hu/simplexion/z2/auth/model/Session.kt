@@ -12,7 +12,7 @@ class Session : Schematic<Session>() {
     var vmCreatedAt by long()
     var lastActivity by long()
     var principal by uuid<Principal>().nullable()
-    var roles by schematicList<Role>()
+    var roles by uuidList<Role>()
 
     companion object {
         val SESSION_TOKEN_UUID = UUID<Session>("7fdd494f-e542-4d5b-870b-7cab83dc3197")

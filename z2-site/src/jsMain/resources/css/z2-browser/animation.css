@@ -1,0 +1,49 @@
+/**
+ * credit: https://www.geeksforgeeks.org/how-to-create-a-ripple-effect-on-click-the-button/
+ */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+
+    animation: ripple-animation 1s;
+    opacity: 0;
+}
+
+@keyframes ripple-animation {
+    from {
+        opacity: 1;
+        transform: scale(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
+
+.scale-up-width {
+    width: 100%;
+    animation: scale-up-width-animation 300ms;
+}
+
+@keyframes scale-up-width-animation {
+    from {
+        left: 0;
+        width: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right-width: 0;
+    }
+    to {
+        width: 100%;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right-width: 0;
+    }
+}

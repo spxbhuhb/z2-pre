@@ -33,11 +33,23 @@ val UUID<*>.jvm: java.util.UUID
  * Call [SchemaUtils.createMissingTablesAndColumns] to create and/or update the tables
  * passed as parameters.
  */
-fun tables(vararg tables: Table) {
+fun tables(vararg tables: Table): Array<out Table> {
     transaction {
         SchemaUtils.createMissingTablesAndColumns(*tables)
     }
+    return tables
 }
+
+/**
+ * Returns with true if all the [tables] are empty, false otherwise.
+ */
+fun isAllEmpty(vararg tables: Table): Boolean =
+    transaction {
+        for (table in tables) {
+            if (table.isNotEmpty()) return@transaction false
+        }
+        true
+    }
 
 fun implementations(vararg implementations: ServiceImpl<*>) {
     for (implementation in implementations) {

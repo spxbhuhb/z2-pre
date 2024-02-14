@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.auth.anonymousUuid
+import hu.simplexion.z2.application.ApplicationSettings.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -113,7 +113,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         return serviceContext.getSessionOrNull()?.principal
     }
 
-    override suspend fun roles(): List<Role> {
+    override suspend fun roles(): List<UUID<Role>> {
         ensuredByLogic("Session owner gets own roles.")
         return serviceContext.getSessionOrNull()?.roles ?: emptyList()
     }
@@ -138,7 +138,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             it.principal = principal.uuid
             it.vmCreatedAt = vmNowSecond()
             it.lastActivity = it.vmCreatedAt
-            it.roles = roleGrantTable.rolesOf(principal.uuid, null)
+            it.roles = roleGrantTable.rolesUuidsOf(principal.uuid, null)
         }
 
         session.history(baseStrings.created)

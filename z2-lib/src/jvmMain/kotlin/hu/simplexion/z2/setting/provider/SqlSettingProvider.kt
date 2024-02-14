@@ -18,14 +18,13 @@ class SqlSettingProvider(
     override val isReadOnly: Boolean
         get() = false
 
-    override fun put(owner: UUID<Principal>, path: String, value: String?) {
+    override fun put(owner: UUID<Principal>?, path: String, value: String?) {
+        require(owner != null) { "SQL setting provider requires an owner" }
         table.put(owner, path, value)
     }
 
-    override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> =
+    override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> =
         transaction {
-            table.get(owner, path, children)
+            if(owner == null) emptyList() else table.get(owner, path, children)
         }
-
-
 }

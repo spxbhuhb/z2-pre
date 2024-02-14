@@ -29,7 +29,7 @@ class DelegatingSettingProvider : SettingProvider {
         }
     }
 
-    override fun put(owner: UUID<Principal>, path: String, value: String?) {
+    override fun put(owner: UUID<Principal>?, path: String, value: String?) {
         check(!isReadOnly) { "settings in this application are read-only" }
 
         for (provider in lock.use { providers }) {
@@ -39,7 +39,7 @@ class DelegatingSettingProvider : SettingProvider {
         }
     }
 
-    override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
+    override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> {
         for (provider in lock.use { providers }) {
             val result = provider.get(owner, path, children)
             if (result.isNotEmpty()) return result

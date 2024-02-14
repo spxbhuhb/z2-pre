@@ -1,0 +1,38 @@
+.tooltip {
+    position: relative;
+}
+
+.tooltip .plain-tooltip {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    visibility: hidden;
+
+    min-height: 24px;
+
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translate(-50%);
+
+    background-color: var(--md-sys-color-inverse-surface);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    color: var(--md-sys-color-inverse-on-surface);
+
+    white-space: nowrap;
+    padding: 0 8px;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+
+    opacity: 0;
+}
+
+.tooltip:hover .plain-tooltip {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity  0s linear 0.5s;
+    z-index: 100;
+}

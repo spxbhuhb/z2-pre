@@ -1,5 +1,6 @@
 package hu.simplexion.z2.setting.provider
 
+import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.context.ensureFailNotImplemented
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.setting.model.Setting
@@ -15,19 +16,18 @@ import hu.simplexion.z2.util.UUID
  * @property  owner  The owner of the settings stored in the environment variables with the given prefix.
  */
 class EnvironmentSettingProvider(
-    val environmentVariablePrefix : String,
-    val owner : UUID<Principal>
+    val environmentVariablePrefix : String
 ) : SettingProvider {
 
     override val isReadOnly: Boolean
         get() = true
 
-    override fun put(owner: UUID<Principal>, path: String, value: String?) {
+    override fun put(owner: UUID<Principal>?, path: String, value: String?) {
         ensureFailNotImplemented { "environment variable settings are read-only" }
     }
 
-    override fun get(owner: UUID<Principal>, path: String, children: Boolean): List<Setting> {
-        if (owner != this.owner) return emptyList()
+    override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> {
+        if (owner != null && owner != ApplicationSettings.applicationUuid) return emptyList()
 
         val value = System.getenv("$environmentVariablePrefix$this")
         return if (value == null) {
