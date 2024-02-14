@@ -8,6 +8,7 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 
 /**
@@ -15,11 +16,13 @@ import kotlin.io.path.inputStream
  * exception. Must be security officer or internal call.
  *
  * @property  path  The file system path to the property file.
+ * @property  optional  When true a missing file is treated as empty
  * @property  owner  The owner of the settings in this property file.
  */
 class PropertyFileSettingProvider(
     val path: Path,
-    val owner : UUID<Principal>
+    val optional: Boolean,
+    val owner: UUID<Principal>
 ) : SettingProvider {
 
     override val isReadOnly: Boolean
@@ -29,8 +32,10 @@ class PropertyFileSettingProvider(
 
     init {
         prop.clear()
-        path.inputStream().use {
-            prop.load(InputStreamReader(it, StandardCharsets.UTF_8))
+        if (path.exists() || ! optional) {
+            path.inputStream().use {
+                prop.load(InputStreamReader(it, StandardCharsets.UTF_8))
+            }
         }
     }
 

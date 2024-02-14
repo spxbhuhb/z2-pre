@@ -9,7 +9,7 @@ import hu.simplexion.z2.auth.securityOfficerUuid
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.services.ServiceImpl
-import hu.simplexion.z2.setting.provider.SqlSettingProvider.Companion.settingImpl
+import hu.simplexion.z2.setting.settingImpl
 
 class AuthAdminImpl : AuthAdminApi, ServiceImpl<AuthAdminImpl> {
 

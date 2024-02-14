@@ -1,15 +1,14 @@
 package hu.simplexion.z2.localization.impl
 
-import hu.simplexion.z2.auth.context.ensureAll
+import hu.simplexion.z2.auth.context.ensureSecurityOfficer
 import hu.simplexion.z2.auth.context.ensuredByLogic
-import hu.simplexion.z2.auth.securityOfficerRole
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.localization.api.TranslationApi
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.model.Translation
 import hu.simplexion.z2.localization.table.LocaleTable.Companion.localeTable
 import hu.simplexion.z2.localization.table.TranslationTable.Companion.translationTable
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
 
@@ -23,7 +22,7 @@ class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
     }
 
     override suspend fun put(translation: Translation) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         translationTable.put(translation)
     }
 

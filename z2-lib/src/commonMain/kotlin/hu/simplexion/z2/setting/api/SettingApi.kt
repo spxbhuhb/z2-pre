@@ -37,6 +37,17 @@ interface SettingApi : Service {
      */
     suspend fun put(owner : UUID<Principal>, settings : List<Setting>)
 
+
+//    /**
+//     * Save all the non-default fields of [schematic] as an individual setting.
+//     *
+//     * @param  [basePath]  The path to put before any field name to get the setting path.
+//     *                     For any given field the setting path is : `$basePath/${field.name}`
+//     */
+//    suspend fun <T : Schematic<T>> put(owner : UUID<Principal>, basePath : String, schematic : T) {
+//        put(owner, schematic.encodeToSettings(basePath))
+//    }
+
     /**
      * Get the settings that belongs to the [path].
      *
@@ -48,5 +59,16 @@ interface SettingApi : Service {
      *                     with `a/bc`.
      */
     suspend fun get(owner: UUID<Principal>, path : String, children : Boolean = true) : List<Setting>
+
+//    /**
+//     * Set the fields of [schematic] from settings.
+//     *
+//     * @param  [basePath]  The path to put before any field name to get the setting path.
+//     *                     For any given field the setting path is : `$basePath/${field.name}`
+//     */
+//    suspend fun <T : Schematic<T>> get(owner: UUID<Principal>, basePath: String, schematic : T) : T {
+//        schematic.decodeFromSettings(basePath, get(owner, basePath, true))
+//        return schematic
+//    }
 
 }

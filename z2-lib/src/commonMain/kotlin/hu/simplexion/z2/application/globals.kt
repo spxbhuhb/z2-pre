@@ -15,6 +15,16 @@ import hu.simplexion.z2.util.UUID
  */
 var APPLICATION_UUID = UUID<Principal>("065ca04c-cd6d-7775-8000-5fa6142b4b7b")
 
+
+/**
+ * The principal name of the built-in security officer user.
+ *
+ * It is safe to change this **before** you call any Z2 functions. This value is used
+ * during the first time setup of the database, therefore you must keep it the same
+ * over separate application runs.
+ */
+var SECURITY_OFFICER_PRINCIPAL_NAME = "so"
+
 /**
  * The UUID of the built-in security officer user.
  *

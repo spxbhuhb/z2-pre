@@ -8,7 +8,6 @@ import hu.simplexion.z2.auth.model.*
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.Session.Companion.LOGOUT_TOKEN_UUID
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -16,14 +15,14 @@ import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.fourRandomInt
-import hu.simplexion.z2.util.vmNowSecond
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.site.boot.housekeepingScope
+import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.util.fourRandomInt
+import hu.simplexion.z2.util.vmNowSecond
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -188,12 +187,12 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     }
 
     override suspend fun logout(session: UUID<Session>) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         // TODO forced logout
     }
 
     override suspend fun list(): List<Session> {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         return sessionTable.query()
     }
 

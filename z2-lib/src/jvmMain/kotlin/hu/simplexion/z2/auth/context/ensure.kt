@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth.context
 
+import hu.simplexion.z2.application.SECURITY_OFFICER_ROLE_UUID
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.securityOfficerRole
@@ -27,7 +28,7 @@ fun ServiceImpl<*>.ensureInternal() {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
-    ensureAll(securityOfficerRole)
+    ensureAll(SECURITY_OFFICER_ROLE_UUID)
 }
 
 /**
@@ -37,7 +38,7 @@ fun ServiceImpl<*>.ensureSecurityOfficer() {
  */
 fun ServiceImpl<*>.ensureSecurityOfficerOrInternal() {
     if (serviceContext.isInternal() == ContextCheckResult.Allow) return
-    ensureAll(securityOfficerRole)
+    ensureSecurityOfficer()
 }
 
 /**
@@ -65,6 +66,16 @@ fun ServiceImpl<*>.ensureLoggedIn() {
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
 fun ServiceImpl<*>.ensureAll(vararg roles: Role) {
+    if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
+}
+
+/**
+ * Ensures that the block runs only when there context contains **ALL**
+ * of the specified roles.
+ *
+ * @throws   AccessDenied  At least one of the roles is not in the context.
+ */
+fun ServiceImpl<*>.ensureAll(vararg roles: UUID<Role>) {
     if (serviceContext.hasAll(*roles) != ContextCheckResult.Allow) throw AccessDenied()
 }
 

@@ -1,15 +1,14 @@
 package hu.simplexion.z2.history.impl
 
-import hu.simplexion.z2.auth.context.ensureAll
+import hu.simplexion.z2.auth.context.ensureSecurityOfficer
 import hu.simplexion.z2.auth.model.Principal
-import hu.simplexion.z2.auth.securityOfficerRole
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.history.api.HistoryApi
 import hu.simplexion.z2.history.model.HistoryEntry
 import hu.simplexion.z2.history.model.HistoryFlags
 import hu.simplexion.z2.history.table.HistoryEntryTable.Companion.historyEntryTable
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import org.slf4j.LoggerFactory
@@ -27,7 +26,7 @@ class HistoryImpl : HistoryApi, ServiceImpl<HistoryImpl> {
     }
 
     override suspend fun list(flags: Int, start: Instant, end: Instant, limit: Int): List<HistoryEntry> {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         return historyEntryTable.list(flags, start, end, limit)
     }
 

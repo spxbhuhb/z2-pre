@@ -1,5 +1,7 @@
 package hu.simplexion.z2.auth
 
+import hu.simplexion.z2.application.SECURITY_OFFICER_PRINCIPAL_NAME
+import hu.simplexion.z2.application.SECURITY_OFFICER_ROLE_UUID
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
 import hu.simplexion.z2.auth.impl.PrincipalImpl.Companion.principalImpl
 import hu.simplexion.z2.auth.impl.RoleImpl.Companion.roleImpl
@@ -17,23 +19,20 @@ import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.exposed.implementations
 import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.commonStrings
-import hu.simplexion.z2.setting.util.fromEnvironment
+import hu.simplexion.z2.util.UUID
 import org.jetbrains.exposed.sql.transactions.transaction
 
 lateinit var securityOfficerRole: Role
 lateinit var securityOfficerUuid: UUID<Principal>
 lateinit var anonymousUuid: UUID<Principal>
 
-const val securityOfficerRoleName = "security-officer"
-const val securityOfficerPrincipalName = "so"
 const val anonymousPrincipalName = "anonymous"
 
-fun authJvm(initialSoPassword: String = "INITIAL_SO_PASSWORD".fromEnvironment ?: "so") {
+fun authJvm() {
 
     tables(
         principalTable,
@@ -45,7 +44,7 @@ fun authJvm(initialSoPassword: String = "INITIAL_SO_PASSWORD".fromEnvironment ?:
     )
 
     securityOfficerRole = getOrMakeSecurityOfficerRole()
-    securityOfficerUuid = getOrMakePrincipal(securityOfficerPrincipalName, initialSoPassword)
+    securityOfficerUuid = getOrMakePrincipal(SECURITY_OFFICER_PRINCIPAL_NAME, "so")
     anonymousUuid = getOrMakePrincipal(anonymousPrincipalName)
 
     grantRole(securityOfficerRole, securityOfficerUuid)
@@ -61,15 +60,14 @@ fun authJvm(initialSoPassword: String = "INITIAL_SO_PASSWORD".fromEnvironment ?:
 private fun getOrMakeSecurityOfficerRole(): Role {
     val roleTable = RoleTable()
 
-    val role = transaction {
-        roleTable.list().firstOrNull { it.programmaticName == securityOfficerRoleName }
-    } ?: Role()
+    val role = transaction { roleTable.getOrNull(SECURITY_OFFICER_ROLE_UUID) } ?: Role()
 
     if (role.uuid == UUID.NIL) {
         transaction {
+            role.uuid = SECURITY_OFFICER_ROLE_UUID
             role.programmaticName = "security-officer"
             role.displayName = "Security Officer"
-            role.uuid = roleTable.insert(role)
+            roleTable.insertWithId(role)
         }
     }
 
