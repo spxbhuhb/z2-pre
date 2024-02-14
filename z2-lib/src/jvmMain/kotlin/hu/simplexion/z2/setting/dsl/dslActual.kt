@@ -1,7 +1,5 @@
 package hu.simplexion.z2.setting.dsl
 
-import hu.simplexion.z2.application.ApplicationSettings.applicationUuid
-import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.setting.implementation.SettingImpl
 import hu.simplexion.z2.setting.persistence.SettingTable
@@ -34,29 +32,21 @@ actual fun <T : Any> setting(kClass: KClass<T>, path: String): SettingDelegate<T
 // Setting provider builders
 // ---------------------------------------------------------------------
 
-fun settings(builder: SettingProviderBuilder.() -> Unit) {
-    SettingProviderBuilder().builder()
+fun settingsFromEnvironment(prefix: () -> String) {
+    SettingImpl.rootProvider += EnvironmentSettingProvider(prefix())
 }
 
-class SettingProviderBuilder {
+fun settingsFromPropertyFile(optional: Boolean = true, path: () -> String) {
+    SettingImpl.rootProvider += PropertyFileSettingProvider(Paths.get(path()), optional)
+}
 
-    fun environment(prefix: () -> String) {
-        SettingImpl.rootProvider += EnvironmentSettingProvider(prefix())
+/**
+ * Add an [SqlSettingProvider] that uses the table returned by [table].
+ * Calls [tables] to create and/or update the table if necessary.
+ */
+fun settingsFromSqlTable(table: () -> SettingTable) {
+    table().also {
+        tables(it)
+        SettingImpl.rootProvider += SqlSettingProvider(it)
     }
-
-    fun propertyFile(optional: Boolean = true, path: () -> String) {
-        SettingImpl.rootProvider += PropertyFileSettingProvider(Paths.get(path()), optional)
-    }
-
-    /**
-     * Add an [SqlSettingProvider] that uses the table returned by [table].
-     * Calls [tables] to create and/or update the table if necessary.
-     */
-    fun sql(table: () -> SettingTable) {
-        table().also {
-            tables(it)
-            SettingImpl.rootProvider += SqlSettingProvider(it)
-        }
-    }
-
 }
