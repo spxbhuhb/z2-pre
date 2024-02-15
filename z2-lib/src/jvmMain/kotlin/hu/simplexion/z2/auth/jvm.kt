@@ -16,7 +16,9 @@ import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.BCrypt
-import hu.simplexion.z2.exposed.*
+import hu.simplexion.z2.exposed.implementations
+import hu.simplexion.z2.exposed.isAllEmpty
+import hu.simplexion.z2.exposed.tables
 import hu.simplexion.z2.util.UUID
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -104,7 +106,8 @@ internal fun makePrincipal(inUuid: UUID<Principal>, inName: String, password: St
 
 
 internal fun validatePrincipal(inUuid: UUID<Principal>, locked: Boolean? = null) {
-    val principal = principalTable[inUuid]
+    val principal = principalTable.getOrNull(inUuid)
+    requireNotNull(principal) { "missing mandatory principal uuid=$inUuid"}
     if (locked == true) check(principal.locked) { "principal shall be locked: name=${principal.name} uuid=$inUuid" }
 }
 
