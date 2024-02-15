@@ -48,10 +48,8 @@ class RadioButtonGroup<T>(
 
     fun update() {
         clear()
-        if (config.style == FieldStyle.Outlined) {
-            scrolledBoxWithLabel((state.label ?: "").localized) { renderItems() }
-        } else {
-            this.renderItems()
+        scrolledBoxWithLabel((state.label ?: "").localized, border = (config.style == FieldStyle.Outlined)) {
+            renderItems()
         }
     }
 

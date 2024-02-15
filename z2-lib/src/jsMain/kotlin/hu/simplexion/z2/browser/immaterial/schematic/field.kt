@@ -108,7 +108,7 @@ private fun <T : Enum<T>> Z2.enumField(context: SchematicAccessContext, label: L
         field as EnumSchemaFieldCommon<T>
 
         // FIXME supporting text handling
-        radioButtonGroup(value, field.entries.toList(), { + it.localized }) {
+        radioButtonGroup(value, field.entries.toList(), label = label, style = defaultFieldStyle, { + it.localized }) {
             context.schematic.schematicChange(context.field, it)
         }
     }
