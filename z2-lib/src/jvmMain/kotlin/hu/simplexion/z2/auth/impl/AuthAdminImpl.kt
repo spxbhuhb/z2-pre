@@ -4,7 +4,6 @@ import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.api.AuthAdminApi
 import hu.simplexion.z2.auth.context.ensureAny
 import hu.simplexion.z2.auth.context.publicAccess
-import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.SecurityPolicy
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.schematic.ensureValid
@@ -18,8 +17,7 @@ class AuthAdminImpl : AuthAdminApi, ServiceImpl<AuthAdminImpl> {
 
         val KEY = "securityPolicy"
 
-        var policySetRoles = emptyArray<Role>()
-
+        var policySetRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
     }
 
     override suspend fun getPolicy(): SecurityPolicy {

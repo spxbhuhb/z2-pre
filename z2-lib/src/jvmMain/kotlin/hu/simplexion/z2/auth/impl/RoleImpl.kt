@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
+import hu.simplexion.z2.application.ApplicationSettings
 import hu.simplexion.z2.auth.api.RoleApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.Grant
@@ -9,25 +10,25 @@ import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.table.RoleGroupTable.Companion.roleGroupTable
 import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
 
     companion object {
         val roleImpl = RoleImpl().internal
 
-        var addRoles = emptyArray<Role>()
-        var getRoles = emptyArray<Role>()
-        var updateRoles = emptyArray<Role>()
+        var addRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
+        var getRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
+        var updateRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
     }
 
     override suspend fun query(): List<Role> {
         ensureAny(*getRoles)
-        return roleTable.list()
+        return roleTable.query()
     }
 
     override suspend fun add(role: Role) : UUID<Role> {

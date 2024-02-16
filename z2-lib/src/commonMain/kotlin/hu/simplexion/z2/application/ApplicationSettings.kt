@@ -38,7 +38,7 @@ object ApplicationSettings {
      * - The initialization sequence creates this role if there are no roles at the time the application starts.
      * - If there are roles but this one is missing, the application stops.
      */
-    val securityOfficerRoleUuid by setting<UUID<Role>> { "SECURITY_OFFICER_ROLE_UUID" } default UUID<Role>("065ca04e-095c-713b-8000-beb6c07f18cd")
+    val securityOfficerRoleUuid by setting<UUID<Role>> { "SECURITY_OFFICER_ROLE_UUID" } default UUID("065ca04e-095c-713b-8000-beb6c07f18cd")
 
     /**
      * The programmatic name of the built-in security officer role.
@@ -70,7 +70,7 @@ object ApplicationSettings {
      * - The initialization sequence creates this role if there are no roles at the time the application starts.
      * - If there are roles but this one is missing, the application stops.
      */
-    val technicalAdminRoleUuid by setting<UUID<Role>> { "TECHNICAL_ADMIN_ROLE_UUID" } default UUID<Role>("065cca1e-9785-79b6-8000-143a52a8d7e3")
+    val technicalAdminRoleUuid by setting<UUID<Role>> { "TECHNICAL_ADMIN_ROLE_UUID" } default UUID("065cca1e-9785-79b6-8000-143a52a8d7e3")
 
     /**
      * The programmatic name of the built-in security officer role.
