@@ -3,6 +3,7 @@ package hu.simplexion.z2.browser.immaterial.schematic
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.stereotype.*
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.immaterial.datetimepicker.dateTimePicker
 import hu.simplexion.z2.browser.material.datepicker.datePicker
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
 import hu.simplexion.z2.browser.material.switch.SwitchConfig
@@ -24,6 +25,8 @@ import hu.simplexion.z2.schematic.schema.field.EnumSchemaFieldCommon
 import hu.simplexion.z2.schematic.schema.field.NullableEnumSchemaField
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on
@@ -46,7 +49,7 @@ fun <T> Z2.field(context: SchematicAccessContext? = null, @Suppress("UNUSED_PARA
             SchemaFieldType.Instant -> instantField(context, label) as BoundField<T>
             SchemaFieldType.Int -> intField(context, label) as BoundField<T>
             SchemaFieldType.LocalDate -> localDateField(context, label) as BoundField<T>
-            //SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
+            SchemaFieldType.LocalDateTime -> localDateTimeField(context, label) as BoundField<T>
             SchemaFieldType.LocalTime -> localTimeField(context, label) as BoundField<T>
             SchemaFieldType.Long -> longField(context, label) as BoundField<T>
             SchemaFieldType.PhoneNumber -> phoneNumberField(context, label) as BoundField<T>
@@ -175,18 +178,22 @@ private fun Z2.localDateField(context: SchematicAccessContext, label: LocalizedT
         }
     }
 
-//private fun Z2.localDateTimeField(context: SchematicAccessContext, label: LocalizedText) =
-//    BoundField(this, context) {
-//        dateTimePicker(label = label, supportText = commonStrings.localDateSupportText) {
-//            context.schematic.schematicChange(context.field, it)
-//        }.main()
-//    }
+private fun Z2.localDateTimeField(context: SchematicAccessContext, label: LocalizedText) =
+    BoundField(this, context) {
+        dateTimePicker(label = label) {
+            context.schematic.schematicChange(context.field, it)
+        }.main().also {
+            it.valueOrNull = context.field.getValue(context.schematic) as LocalDateTime?
+        }
+    }
 
 private fun Z2.localTimeField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
         timePicker(label = label) {
             context.schematic.schematicChange(context.field, it)
-        }.main()
+        }.main().also {
+            context.field.getValue(context.schematic) as LocalTime?
+        }
     }
 
 private fun Z2.phoneNumberField(context: SchematicAccessContext, label: LocalizedText) =

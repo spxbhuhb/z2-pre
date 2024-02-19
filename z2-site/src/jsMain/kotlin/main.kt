@@ -10,6 +10,7 @@ import hu.simplexion.z2.browser.demo.calendar.calendarDemo
 import hu.simplexion.z2.browser.demo.components.select.selectDemo
 import hu.simplexion.z2.browser.demo.field.stereotype.decimalDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
+import hu.simplexion.z2.browser.demo.immaterial.dateTimePickerDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
 import hu.simplexion.z2.browser.demo.pages.loginDemo
@@ -27,11 +28,11 @@ import hu.simplexion.z2.browser.material.searchbar.searchBar
 import hu.simplexion.z2.browser.routing.BrowserRouter
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
-import hu.simplexion.z2.util.localLaunch
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.site.boot.bootJs
+import hu.simplexion.z2.util.localLaunch
 
 fun main() {
     localLaunch {
@@ -79,6 +80,7 @@ object componentRouter : NavRouter(loggedIn = false) {
     val card             by render(strings.card)             { cardDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
+    val dateTimePicker   by render(strings.datetimepicker)   { dateTimePickerDemo() }
     val decimal          by render(strings.decimal)          { decimalDemo() }
     val enum             by render(strings.enum)             { enumDemo() }
     val form             by render(strings.form)             { formDemo() }

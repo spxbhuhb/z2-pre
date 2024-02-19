@@ -43,6 +43,7 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val container = static("Container")
     val decimal = static("decimal")
     val datepicker = static("Date Picker")
+    val datetimepicker = static("Date Time Picker")
     val navigationDrawer = static("Navigation Drawer")
     val inbox = static("Inbox")
     val outbox = static("Outbox")
