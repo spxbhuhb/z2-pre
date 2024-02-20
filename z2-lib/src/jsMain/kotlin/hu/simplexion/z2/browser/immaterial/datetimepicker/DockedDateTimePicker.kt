@@ -30,6 +30,7 @@ class DockedDateTimePicker(
     override var valueOrNull: LocalDateTime? = hereAndNow()
         set(value) {
             field = value
+
             if (::datePicker.isInitialized) datePicker.valueOrNull = value?.date
             if (::timePicker.isInitialized) timePicker.valueOrNull = value?.time
         }
@@ -46,7 +47,7 @@ class DockedDateTimePicker(
                 DatePickerConfig().also {
                     it.onChange = { date ->
                         with(this@DockedDateTimePicker) {
-                            value = LocalDateTime(date, value.time)
+                            value = LocalDateTime(date, valueOrNull?.time ?: hereAndNow().time)
                             config.onChange?.invoke(this, value)
                         }
                     }
@@ -64,7 +65,7 @@ class DockedDateTimePicker(
                 TimePickerConfig().also {
                     it.onChange = { time ->
                         with(this@DockedDateTimePicker) {
-                            value = LocalDateTime(value.date, time)
+                            value = LocalDateTime(valueOrNull?.date ?: hereAndNow().date, time)
                             config.onChange?.invoke(this, value)
                         }
                     }
