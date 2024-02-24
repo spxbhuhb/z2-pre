@@ -25,6 +25,7 @@ class CompanionTransform(
 
     lateinit var companionClass: IrClass
     lateinit var companionSchematicSchemaGetter: IrFunctionSymbol
+    lateinit var companionSchematicFqNameGetter: IrFunctionSymbol
 
     /**
      * Arguments for the schema that contains the fields.
@@ -44,6 +45,7 @@ class CompanionTransform(
         }
 
         SchematicSchemaProperty(pluginContext, this).build()
+        SchematicFqNameProperty(pluginContext, this).build()
         NewInstance(pluginContext, this).build()
         ProtoEncode(pluginContext, this).build()
         ProtoDecode(pluginContext, this).build()

@@ -50,7 +50,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
      */
     @NonLocalized
     open val schematicFqName: String
-        get() = this::class.simpleName.toString()
+        get() = schematicCompanion.schematicFqName
 
     /**
      * Get the companion object of this schematic.
