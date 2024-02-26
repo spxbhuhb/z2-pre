@@ -1,9 +1,13 @@
 package hu.simplexion.z2.browser.css
 
-import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.browser.html.Z2
 import kotlinx.dom.hasClass
 import org.w3c.dom.Element
+
+val desktopContentWidth = CssClass("desktop-content-width")
+val mobileContentWidth = CssClass("mobile-content-width")
+var contentWidth = desktopContentWidth
 
 infix fun Z2.css(className: String): Z2 {
     addClass(className)

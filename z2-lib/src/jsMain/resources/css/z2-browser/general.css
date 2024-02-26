@@ -23,3 +23,11 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.desktop-content-width {
+    max-width: 800px;
+}
+
+.mobile-content-width {
+    max-width: 100vw;
+}
