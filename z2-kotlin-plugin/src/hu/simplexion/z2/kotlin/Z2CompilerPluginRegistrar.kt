@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin
 
 import hu.simplexion.z2.kotlin.ir.Z2GenerationExtension
-import hu.simplexion.z2.kotlin.ir.Z2Options
+import hu.simplexion.z2.kotlin.services.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
@@ -20,12 +20,15 @@ class Z2CompilerPluginRegistrar : CompilerPluginRegistrar() {
     override val supportsK2 = true
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
+
         val options = Z2Options(
             resourceOutputDir = configuration.get(Z2Options.CONFIG_KEY_RESOURCE_DIR)!!
         )
 
-        IrGenerationExtension.registerExtension(Z2GenerationExtension(options))
         FirExtensionRegistrarAdapter.registerExtension(Z2PluginRegistrar())
+
+        IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
+        IrGenerationExtension.registerExtension(Z2GenerationExtension(options))
     }
 
 }

@@ -7,12 +7,6 @@ import hu.simplexion.z2.services.*
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 interface TestService : Service {
 

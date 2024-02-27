@@ -154,12 +154,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
-        @TestMetadata("local.kt")
-        public void testLocal() throws Exception {
-            runTest("testData/box/services/local.kt");
-        }
-
-        @Test
         @TestMetadata("serviceName.kt")
         public void testServiceName() throws Exception {
             runTest("testData/box/services/serviceName.kt");

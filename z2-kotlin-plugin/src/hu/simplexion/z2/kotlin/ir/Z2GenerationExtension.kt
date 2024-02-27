@@ -3,18 +3,15 @@
  */
 package hu.simplexion.z2.kotlin.ir
 
+import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.ir.css.CssModuleTransform
 import hu.simplexion.z2.kotlin.ir.css.CssPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.ModuleTransform
 import hu.simplexion.z2.kotlin.ir.localization.export.ExportResources
-import hu.simplexion.z2.kotlin.ir.schematic.SchematicPluginContext
-import hu.simplexion.z2.kotlin.ir.schematic.access.SchematicAccessTransform
-import hu.simplexion.z2.kotlin.ir.schematic.klass.SchematicModuleTransform
-import hu.simplexion.z2.kotlin.ir.services.ServiceModuleTransform
-import hu.simplexion.z2.kotlin.ir.services.ServicePluginContext
-import hu.simplexion.z2.kotlin.ir.services.consumer.GetConsumerTransform
-import hu.simplexion.z2.kotlin.ir.services.proto.ProtoCompanionVisitor
+import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
+import hu.simplexion.z2.kotlin.schematic.ir.access.SchematicAccessTransform
+import hu.simplexion.z2.kotlin.schematic.ir.klass.SchematicModuleTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -26,7 +23,6 @@ internal class Z2GenerationExtension(
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         localization(moduleFragment, pluginContext)
         schematic(moduleFragment, pluginContext)
-        service(moduleFragment, pluginContext)
         // css(moduleFragment, pluginContext)
         //RuiGenerationExtension(options).generate(moduleFragment, pluginContext)
     }
@@ -49,20 +45,6 @@ internal class Z2GenerationExtension(
             }
 
             moduleFragment.accept(SchematicAccessTransform(this), null)
-        }
-    }
-
-    fun service(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        ServicePluginContext(pluginContext).apply {
-
-//            debug("service") { "====  START  ==".padEnd(80, '=') }
-
-            moduleFragment.accept(ProtoCompanionVisitor(this, protoCache), null)
-            moduleFragment.accept(ServiceModuleTransform(this), null)
-            moduleFragment.accept(GetConsumerTransform(this), null)
-
-//            debug("service") { moduleFragment.dump() }
-//            debug("service") { "====  END  ====".padEnd(80, '=') }
         }
     }
 

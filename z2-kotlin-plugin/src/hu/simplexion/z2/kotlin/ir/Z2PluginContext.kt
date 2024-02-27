@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin.ir
 
-import hu.simplexion.z2.kotlin.ir.schematic.RUNTIME_PACKAGE
+import hu.simplexion.z2.kotlin.schematic.RUNTIME_PACKAGE
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment

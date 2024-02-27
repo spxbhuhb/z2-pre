@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.ir.localization
 
-import hu.simplexion.z2.kotlin.ir.Z2Options
+import hu.simplexion.z2.kotlin.Z2Options
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName

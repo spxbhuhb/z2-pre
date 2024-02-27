@@ -3,7 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.ir
 
-import hu.simplexion.z2.kotlin.ir.Z2Options.Companion.OPTION_RESOURCE_DIR
+import hu.simplexion.z2.kotlin.Z2Options
+import hu.simplexion.z2.kotlin.Z2Options.Companion.OPTION_RESOURCE_DIR
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOptionProcessingException
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor

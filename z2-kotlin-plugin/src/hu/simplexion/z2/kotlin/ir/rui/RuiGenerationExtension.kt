@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.ir.rui
 
-import hu.simplexion.z2.kotlin.ir.Z2Options
+import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.ir.rui.ir2rum.EntryPointTransform
 import hu.simplexion.z2.kotlin.ir.rui.ir2rum.OriginalFunctionTransform
 import hu.simplexion.z2.kotlin.ir.rui.plugin.RuiDumpPoint
