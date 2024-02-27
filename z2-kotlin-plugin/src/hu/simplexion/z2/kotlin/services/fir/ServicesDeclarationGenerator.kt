@@ -1,10 +1,10 @@
 package hu.simplexion.z2.kotlin.services.fir
 
+import hu.simplexion.z2.kotlin.services.ServicesPluginKey
 import hu.simplexion.z2.kotlin.services.ir.SERVICE_INTERFACE_FULL
 import hu.simplexion.z2.kotlin.services.ir.SERVICE_INTERFACE_SHORT
 import hu.simplexion.z2.kotlin.services.ir.SERVICE_NAME_PROPERTY
 import hu.simplexion.z2.kotlin.services.ir.serviceConsumerName
-import org.jetbrains.kotlin.GeneratedDeclarationKey
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
@@ -33,8 +33,6 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val serviceInterfaceNames = listOf(SERVICE_INTERFACE_SHORT.asString, SERVICE_INTERFACE_FULL.asString)
 
         val serviceConsumerClasses = mutableMapOf<ClassId, ServiceConsumerClass>()
-
-        object Key : GeneratedDeclarationKey()
     }
 
     class ServiceConsumerClass(
@@ -44,7 +42,6 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     @OptIn(SymbolInternals::class)
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
-
         if (classSymbol.fir.classKind != ClassKind.INTERFACE) return emptySet()
 
         if (classSymbol.fir.superTypeRefs.none { it.source.text?.trim() in serviceInterfaceNames }) return emptySet()
@@ -68,7 +65,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
         if (name != owner.name.serviceConsumerName) return null
 
-        val firClass = createNestedClass(owner, name, Key) {
+        val firClass = createNestedClass(owner, name, ServicesPluginKey) {
             superType(owner.defaultType())
         }
 
@@ -86,7 +83,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         return listOf(
-            createConstructor(context.owner, Key, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
+            createConstructor(context.owner, ServicesPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
         )
     }
 
@@ -95,7 +92,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (callableId.callableName != SERVICE_NAME_PROPERTY.asName) return emptyList()
 
         return listOf(
-            createMemberProperty(context !!.owner, Key, callableId.callableName, session.builtinTypes.stringType.coneType, isVal = false).symbol
+            createMemberProperty(context !!.owner, ServicesPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType, isVal = false).symbol
         )
     }
 
@@ -108,7 +105,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val interfaceFunctions = session.symbolProvider.getClassDeclaredFunctionSymbols(serviceConsumerClasses.serviceInterface, functionName)
 
         return interfaceFunctions.map { interfaceFunction ->
-            createMemberFunction(context !!.owner, Key, callableId.callableName, interfaceFunction.resolvedReturnType) {
+            createMemberFunction(context !!.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {
                 status {
                     isSuspend = true
                 }
@@ -125,7 +122,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     fun isThisPlugin(context: MemberGenerationContext?): Boolean {
         val owner = context?.owner ?: return false
         val ownerKey = (owner.origin as? FirDeclarationOrigin.Plugin)?.key ?: return false
-        return ownerKey == Key
+        return ownerKey == ServicesPluginKey
     }
 
 }

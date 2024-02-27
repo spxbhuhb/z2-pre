@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.consumer
 
+import hu.simplexion.z2.kotlin.services.ServicesPluginKey
 import hu.simplexion.z2.kotlin.services.ir.*
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoMessageBuilderIrBuilder
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoOneIrBuilder
@@ -13,6 +14,7 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -30,7 +32,11 @@ class ConsumerClassTransform(
     val interfaceClass: IrClass
 ) : IrElementVisitorVoid, ServiceBuilder, IrClassBaseBuilder {
 
-    val consumerClass = interfaceClass.declarations.first { it is IrClass && it.name == interfaceClass.name.serviceConsumerName } as IrClass
+    val consumerClass = interfaceClass.declarations.let {
+        requireNotNull(interfaceClass.declarations.firstOrNull { it is IrClass && it.name == interfaceClass.name.serviceConsumerName }) {
+            "missing consumer class for ${interfaceClass.classId}"
+        } as IrClass
+    }
 
     override val overriddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
 
@@ -39,27 +45,26 @@ class ConsumerClassTransform(
     override lateinit var serviceNameGetter: IrSimpleFunctionSymbol
 
     fun build() {
-        collectServiceFunctions(consumerClass)
+        collectServiceFunctions(interfaceClass)
 
         addServiceNameInitializer()
 
         for (serviceFunction in consumerClass.functions) {
             transformServiceFunction(serviceFunction)
         }
-
-        pluginContext.consumerCache.add(interfaceClass.defaultType, consumerClass)
     }
 
     private fun addServiceNameInitializer() {
         val property = requireNotNull(consumerClass.properties.firstOrNull { it.name == SERVICE_NAME_PROPERTY.asName })
         val backingField = requireNotNull(property.backingField)
 
-        backingField.initializer = irFactory.createExpressionBody(irConst(serviceNames.first()))
+        backingField.initializer = irFactory.createExpressionBody(irConst(interfaceClass.kotlinFqName.asString()))
         serviceNameGetter = property.getter !!.symbol
     }
 
     private fun transformServiceFunction(function: IrSimpleFunction) {
-        if (function.overriddenSymbols.none { it in overriddenServiceFunctions }) return
+        val origin = function.origin as? IrDeclarationOrigin.GeneratedByPlugin ?: return
+        if (origin.pluginKey != ServicesPluginKey) return
 
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
             + irReturn(

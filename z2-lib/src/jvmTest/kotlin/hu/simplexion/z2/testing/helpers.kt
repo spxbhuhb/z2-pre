@@ -1,15 +1,15 @@
 package hu.simplexion.z2.testing
 
 import hu.simplexion.z2.auth.authJvm
-import hu.simplexion.z2.auth.getOrMakePrincipal
 import hu.simplexion.z2.auth.impl.SessionImpl.Companion.sessionImpl
+import hu.simplexion.z2.auth.makePrincipal
 import hu.simplexion.z2.email.emailJvm
-import hu.simplexion.z2.exposed.debugExposed
 import hu.simplexion.z2.exposed.h2Test
 import hu.simplexion.z2.history.historyJvm
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.setting.settingJvm
+import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.worker.workerJvm
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,7 +21,6 @@ fun integrated(
     testFun: suspend (context: ServiceContext) -> Unit
 ) {
     runBlocking {
-        debugExposed(debugExposed)
         h2Test()
         historyJvm()
         settingJvm()
@@ -29,7 +28,7 @@ fun integrated(
         workerJvm()
         emailJvm()
 
-        getOrMakePrincipal("test", "test")
+        makePrincipal(UUID(), "test", "test")
 
         val context = BasicServiceContext()
 

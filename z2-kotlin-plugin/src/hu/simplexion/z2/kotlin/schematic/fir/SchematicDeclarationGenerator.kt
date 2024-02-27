@@ -1,10 +1,6 @@
 package hu.simplexion.z2.kotlin.schematic.fir
 
-import hu.simplexion.z2.kotlin.schematic.RUNTIME_PACKAGE
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_CLASS
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_COMPANION_CLASS
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_FQNAME_PROPERTY
-import org.jetbrains.kotlin.GeneratedDeclarationKey
+import hu.simplexion.z2.kotlin.schematic.*
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
@@ -31,8 +27,6 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
         val SCHEMATIC_COMPANION_CLASS_ID = ClassId(FqName(RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_COMPANION_CLASS))
 
         val SCHEMATIC_FQNAME_NAME = Name.identifier(SCHEMATIC_FQNAME_PROPERTY)
-
-        object Key : GeneratedDeclarationKey()
     }
 
     @OptIn(SymbolInternals::class)
@@ -74,14 +68,14 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
 
         if (callableId.callableName != SCHEMATIC_FQNAME_NAME) return emptyList()
 
-        val property = createMemberProperty(context.owner, Key, SCHEMATIC_FQNAME_NAME, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = true)
+        val property = createMemberProperty(context.owner, SchematicPluginKey, SCHEMATIC_FQNAME_NAME, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = true)
 
         return listOf(property.symbol)
     }
 
     private fun generateCompanionDeclaration(owner: FirRegularClassSymbol): FirRegularClassSymbol? {
         if (owner.companionObjectSymbol != null || owner.isCompanion) return null
-        val companion = createCompanionObject(owner, Key) {
+        val companion = createCompanionObject(owner, SchematicPluginKey) {
             superType(SCHEMATIC_COMPANION_CLASS_ID.constructClassLikeType(arrayOf(owner.defaultType()), false))
         }
         return companion.symbol
@@ -89,7 +83,7 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         if (!context.isSchematicCompanion) return emptyList()
-        val constructor = createConstructor(context.owner, Key, isPrimary = true, generateDelegatedNoArgConstructorCall = true)
+        val constructor = createConstructor(context.owner, SchematicPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true)
         return listOf(constructor.symbol)
     }
 

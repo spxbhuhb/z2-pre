@@ -5,7 +5,6 @@ package hu.simplexion.z2.kotlin.services.ir
 
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoCache
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoEnum
-import hu.simplexion.z2.kotlin.services.ir.util.ConsumerCache
 import hu.simplexion.z2.kotlin.services.ir.util.ServiceFunctionCache
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
@@ -51,6 +50,5 @@ class ServicesPluginContext(
     val serviceFunctionCache = ServiceFunctionCache()
     val protoCache = ProtoCache(this)
     val protoEnum = ProtoEnum(this)
-    val consumerCache = ConsumerCache(this)
 
 }

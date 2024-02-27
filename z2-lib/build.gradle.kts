@@ -3,7 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2") version "2024.02.02"
+    id("hu.simplexion.z2") version "2024.02.27"
     java
     signing
     `maven-publish`
@@ -37,8 +37,14 @@ kotlin {
         browser()
         binaries.library()
     }
-    sourceSets {
 
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
+
+    sourceSets {
         commonMain {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
