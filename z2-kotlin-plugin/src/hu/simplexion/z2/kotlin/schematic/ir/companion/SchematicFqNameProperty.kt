@@ -7,19 +7,10 @@ import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_FQNAME_PROPERTY
 import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
 import hu.simplexion.z2.kotlin.schematic.ir.util.IrBuilder
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.descriptors.Modality
-import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
-import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.impl.IrGetFieldImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.properties
-import org.jetbrains.kotlin.name.Name
 
 /**
  * Transform the `schematicFqName` property of the companion. The property
@@ -36,80 +27,23 @@ class SchematicFqNameProperty(
 
     val companionClass = companionTransform.companionClass
 
-    lateinit var property: IrProperty
+    var property = companionClass.properties.first { it.name.identifier == SCHEMATIC_FQNAME_PROPERTY }
 
     fun build() {
-        val existing = companionClass.properties.firstOrNull { it.name.identifier == SCHEMATIC_FQNAME_PROPERTY }
-
-        when {
-            existing == null -> add()
-            existing.origin is IrDeclarationOrigin.GeneratedByPlugin -> transformExisting(existing, existing.origin)
-            existing.isFakeOverride -> transformExisting(existing, null)
-            else -> property = existing
-        }
-
+        transform()
         companionTransform.companionSchematicFqNameGetter = checkNotNull(property.getter?.symbol)
     }
 
-    fun add() {
-        property = companionClass.addIrProperty(
-            Name.identifier(SCHEMATIC_FQNAME_PROPERTY),
-            pluginContext.irContext.irBuiltIns.stringType,
-            inIsVar = false,
-            buildFqNameExpression(),
-            listOf(pluginContext.schematicCompanionSchematicSchema)
-        ).also {
-            it.modality = Modality.FINAL
-        }
-    }
-
-    fun transformExisting(declaration: IrProperty, generatedOrigin: IrDeclarationOrigin?) {
-        property = declaration
-
+    fun transform() {
         check(! property.isVar) { "schematicFqName must be immutable" }
 
-        property.isFakeOverride = false
-        property.origin = generatedOrigin ?: IrDeclarationOrigin.DEFINED
+        val getter = requireNotNull(property.getter)
 
-        val irField = irFactory.buildField {
-            name = Name.identifier(SCHEMATIC_FQNAME_PROPERTY)
-            type = pluginContext.irContext.irBuiltIns.stringType
-            origin = IrDeclarationOrigin.PROPERTY_BACKING_FIELD
-            visibility = DescriptorVisibilities.PRIVATE
-        }.apply {
-            parent = companionClass
-            initializer = irFactory.createExpressionBody(buildFqNameExpression())
-            correspondingPropertySymbol = property.symbol
-        }
-
-        property.backingField = irField
-
-        transformFakeGetter(property.getter !!, irField)
-    }
-
-    fun transformFakeGetter(declaration: IrFunction, field: IrField) {
-        check(declaration is IrSimpleFunction)
-
-        declaration.origin = IrDeclarationOrigin.GENERATED_SETTER_GETTER
-        declaration.isFakeOverride = false
-
-        declaration.body = DeclarationIrBuilder(irContext, declaration.symbol).irBlockBody {
+        getter.body = DeclarationIrBuilder(irContext, getter.symbol).irBlockBody {
             + irReturn(
-                IrGetFieldImpl(
-                    UNDEFINED_OFFSET, UNDEFINED_OFFSET,
-                    field.symbol,
-                    field.type,
-                    IrGetValueImpl(
-                        UNDEFINED_OFFSET, UNDEFINED_OFFSET,
-                        declaration.dispatchReceiverParameter !!.type,
-                        declaration.dispatchReceiverParameter !!.symbol
-                    )
-                )
+                irConst(companionTransform.classTransform.transformedClass.kotlinFqName.asString())
             )
         }
     }
-
-    fun buildFqNameExpression(): IrExpression =
-        irConst(companionTransform.classTransform.transformedClass.kotlinFqName.asString())
 
 }

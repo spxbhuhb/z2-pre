@@ -68,7 +68,7 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
 
         if (callableId.callableName != SCHEMATIC_FQNAME_NAME) return emptyList()
 
-        val property = createMemberProperty(context.owner, SchematicPluginKey, SCHEMATIC_FQNAME_NAME, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = true)
+        val property = createMemberProperty(context.owner, SchematicPluginKey, SCHEMATIC_FQNAME_NAME, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = false)
 
         return listOf(property.symbol)
     }
