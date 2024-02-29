@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin.services.ir.impl
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
@@ -15,7 +15,7 @@ class ServiceContextPropertyTransform(
     override val pluginContext: ServicesPluginContext,
     val implClassTransform: ImplClassTransform,
     var property: IrProperty
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     fun build() {
         if (! property.isFakeOverride) return

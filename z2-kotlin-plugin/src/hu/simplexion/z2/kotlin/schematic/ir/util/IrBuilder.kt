@@ -344,6 +344,7 @@ interface IrBuilder {
     // Companion
     // --------------------------------------------------------------------------------------------------------
 
+    @Deprecated("should be handled by FIR")
     fun IrClass.addCompanionIfMissing(): IrClass {
         val declaration = this
 

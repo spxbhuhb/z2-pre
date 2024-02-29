@@ -15,7 +15,6 @@ import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.nextHandle
 import hu.simplexion.z2.util.placeholder
-import hu.simplexion.z2.util.stringPlaceholder
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -156,20 +155,18 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
 
         fun phoneNumber(blank: Boolean? = null) = PhoneNumberSchemaField(blank)
 
-        fun <RT> reference(
+        fun <RT : SchematicEntity<RT>> reference(
             validForCreate: Boolean = false,
             default: UUID<RT>? = null,
-            nil: Boolean? = null,
-            entityFqName : String = stringPlaceholder
-        ) = ReferenceSchemaField(default, nil, validForCreate, entityFqName)
+            nil: Boolean? = null
+        ) = ReferenceSchemaField(default, nil, validForCreate)
 
-        fun <RT> referenceList(
+        fun <RT : SchematicEntity<RT>> referenceList(
             default: MutableList<UUID<RT>>? = null,
             nil: Boolean? = null
-        ) = ReferenceListSchemaField(default, nil, stringPlaceholder)
+        ) = ReferenceListSchemaField(default, nil)
 
-        @Suppress("UnusedReceiverParameter") // it is used by the syntax checker
-        fun <ST : SchematicEntity<ST>> ST.self() = ReferenceSchemaField<ST>(null, null, true, stringPlaceholder)
+        fun <ST : SchematicEntity<ST>> self() = UuidSchemaField<ST>(null, null, true)
 
         fun secret(
             default: String? = null,

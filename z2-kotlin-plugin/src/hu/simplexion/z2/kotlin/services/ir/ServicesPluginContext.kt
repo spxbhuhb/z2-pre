@@ -25,7 +25,7 @@ class ServicesPluginContext(
 
     val serviceClass = SERVICE_CLASS.runtimeClass()
     val serviceType = serviceClass.defaultType
-    val serviceName = serviceClass.owner.properties.first { it.name == SERVICE_NAME_PROPERTY.asName }
+    val serviceName = serviceClass.owner.properties.first { it.name == Names.SERVICE_NAME_PROPERTY }
 
     val serviceImplClass = SERVICE_IMPL_CLASS.runtimeClass()
     val serviceImplType = SERVICE_IMPL_CLASS.runtimeClass().defaultType

@@ -3,9 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir.klass
 
+import hu.simplexion.z2.kotlin.schematic.Names
 import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_CHANGE
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_COMPANION_PROPERTY
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_SCHEMA_PROPERTY
 import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_VALUES_PROPERTY
 import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
 import hu.simplexion.z2.kotlin.schematic.ir.companion.CompanionTransform
@@ -95,13 +94,13 @@ class SchematicClassTransform(
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
 
-        val name = declaration.name.identifier
+        val name = declaration.name
 
-        if (name == SCHEMATIC_SCHEMA_PROPERTY) {
+        if (name == Names.SCHEMATIC_SCHEMA_PROPERTY) {
             return declaration.accept(SchematicSchemaPropertyTransform(pluginContext, this), null) as IrStatement
         }
 
-        if (name == SCHEMATIC_COMPANION_PROPERTY) {
+        if (name == Names.SCHEMATIC_COMPANION_PROPERTY) {
             return declaration.accept(SchematicCompanionPropertyTransform(pluginContext, this), null) as IrStatement
         }
 

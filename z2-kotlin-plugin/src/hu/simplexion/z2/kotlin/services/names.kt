@@ -10,10 +10,12 @@ import org.jetbrains.kotlin.name.Name
 object Strings {
     const val SERVICE_INTERFACE = "Service"
     const val SERVICE_INTERFACE_FQ = "hu.simplexion.z2.services.Service"
+    const val SERVICE_NAME_PROPERTY = "serviceName"
 }
 
 object Names {
     val SERVICE_INTERFACE = Name.identifier(Strings.SERVICE_INTERFACE)
+    val SERVICE_NAME_PROPERTY = Name.identifier(Strings.SERVICE_NAME_PROPERTY)
 }
 
 object FqNames {
@@ -21,8 +23,6 @@ object FqNames {
 }
 
 val Name.serviceConsumerName get() = Name.identifier("${this.identifier}\$Consumer")
-
-val SERVICE_NAME_PROPERTY = LocalName("serviceName")
 
 // before reorg 2024.02.26
 

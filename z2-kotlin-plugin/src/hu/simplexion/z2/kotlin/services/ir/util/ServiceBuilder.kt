@@ -1,6 +1,8 @@
 package hu.simplexion.z2.kotlin.services.ir.util
 
 import hu.simplexion.z2.kotlin.services.SERVICE_IMPL_FQ_NAME
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
@@ -10,7 +12,9 @@ import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 
-interface ServiceBuilder : IrBuilder {
+interface ServiceBuilder : AbstractIrBuilder {
+
+    override val pluginContext: ServicesPluginContext
 
     var serviceNameGetter: IrSimpleFunctionSymbol
 

@@ -51,7 +51,15 @@ class SchematicFieldVisitor(
         var fieldBuildCall = checkNotNull(backingField.initializer?.expression) { "missing backing field expression: $codePoint" }
         check(fieldBuildCall is IrCall) { "backing field expression is not a call: $codePoint" }
 
+        // replace the field builder call with one that sets the companion of the referenced class
+        // FROM:  val a by schematic<A>()
+        // TO:    val a by schematic<A>().setCompanion(A.Companion)
+
         fieldBuildCall = setCompanionWhenSchematic(fieldBuildCall)
+
+        // replace the field builder call with one that sets the field name:
+        // FROM:  val a by string()
+        // TO:    val a by string().setFieldName("a")
 
         schemaField = irCall(
             pluginContext.schemaFieldSetName,
@@ -67,6 +75,10 @@ class SchematicFieldVisitor(
 
         return with (pluginContext) {
             when {
+                schemaFieldType.isSubtypeOfClass(referenceSchemaFieldClass) -> setCompanion(fieldBuildCall, referenceSchemaFieldSetCompanion)
+                schemaFieldType.isSubtypeOfClass(nullableReferenceSchemaFieldClass) -> setCompanion(fieldBuildCall, nullableReferenceSchemaFieldSetCompanion)
+                schemaFieldType.isSubtypeOfClass(referenceListSchemaFieldClass) -> setCompanion(fieldBuildCall, referenceListSchemaFieldClassSetCompanion)
+
                 schemaFieldType.isSubtypeOfClass(schematicSchemaFieldClass) -> setCompanion(fieldBuildCall, schematicSchemaFieldSetCompanion)
                 schemaFieldType.isSubtypeOfClass(nullableSchematicSchemaFieldClass) -> setCompanion(fieldBuildCall, nullableSchematicSchemaFieldSetCompanion)
                 schemaFieldType.isSubtypeOfClass(schematicListSchemaFieldClass) -> setCompanion(fieldBuildCall, schematicListSchemaFieldClassSetCompanion)

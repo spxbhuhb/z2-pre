@@ -4,8 +4,8 @@
 package hu.simplexion.z2.kotlin.services.ir.consumer
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
 import hu.simplexion.z2.kotlin.services.serviceConsumerName
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.name.parentOrNull
  */
 class GetConsumerTransform(
     override val pluginContext: ServicesPluginContext
-) : IrElementTransformerVoidWithContext(), IrBuilder {
+) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitCall(expression: IrCall): IrExpression {
         if (expression.symbol == pluginContext.getService) {

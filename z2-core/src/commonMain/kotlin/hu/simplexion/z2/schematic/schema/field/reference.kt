@@ -1,7 +1,9 @@
 package hu.simplexion.z2.schematic.schema.field
 
 import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.schematic.SchematicList
+import hu.simplexion.z2.schematic.entity.SchematicEntity
 import hu.simplexion.z2.schematic.schema.ListSchemaField
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
@@ -12,8 +14,10 @@ import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.util.UUID
 
-interface ReferenceSchemaFieldCommon<T> {
+interface ReferenceSchemaFieldCommon<T : SchematicEntity<T>> {
     var nil : Boolean?
+
+    var companion: SchematicCompanion<T>
 
     @Suppress("UNCHECKED_CAST")
     fun toTypedValueCommon(anyValue: Any?, fails: MutableList<ValidationFailInfo>): UUID<T>? {
@@ -32,18 +36,26 @@ interface ReferenceSchemaFieldCommon<T> {
     }
 }
 
-open class ReferenceSchemaField<T>(
+open class ReferenceSchemaField<T : SchematicEntity<T>>(
     override var definitionDefault: UUID<T>?,
     override var nil : Boolean?,
-    override val validForCreate : Boolean,
-    val entityFqName : String
+    override val validForCreate : Boolean
 ) : SchemaField<UUID<T>>, ReferenceSchemaFieldCommon<T> {
 
-    override val type: SchemaFieldType get() = SchemaFieldType.UUID
+    override val type: SchemaFieldType get() = SchemaFieldType.Reference
     override val isNullable: Boolean = false
     override val naturalDefault = UUID.nil<T>()
 
     override var name: String = ""
+
+    // set by the compiler plugin
+    override lateinit var companion: SchematicCompanion<T>
+
+    // called by the compiler plugin to set the companion
+    fun setCompanion(companion: SchematicCompanion<T>) : ReferenceSchemaField<T> {
+        this.companion = companion
+        return this
+    }
 
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): UUID<T>? {
         return toTypedValueCommon(anyValue, fails)
@@ -74,22 +86,30 @@ open class ReferenceSchemaField<T>(
     }
 
     fun nullable() : NullableReferenceSchemaField<T> {
-        return NullableReferenceSchemaField(definitionDefault, nil, entityFqName)
+        return NullableReferenceSchemaField(definitionDefault, nil)
     }
 
 }
 
-open class NullableReferenceSchemaField<T>(
+open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
     override var definitionDefault: UUID<T>?,
     override var nil : Boolean?,
-    val entityFqName : String
 ) : SchemaField<UUID<T>?>, ReferenceSchemaFieldCommon<T> {
 
-    override val type: SchemaFieldType get() = SchemaFieldType.UUID
+    override val type: SchemaFieldType get() = SchemaFieldType.Reference
     override val isNullable: Boolean = true
     override val naturalDefault = null
 
     override var name: String = ""
+
+    // set by the compiler plugin
+    override lateinit var companion: SchematicCompanion<T>
+
+    // called by the compiler plugin to set the companion
+    fun setCompanion(companion: SchematicCompanion<T>) : NullableReferenceSchemaField<T> {
+        this.companion = companion
+        return this
+    }
 
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): UUID<T>? {
         if (anyValue == null) return null
@@ -127,17 +147,22 @@ open class NullableReferenceSchemaField<T>(
 
 }
 
-class ReferenceListSchemaField<T>(
+class ReferenceListSchemaField<T : SchematicEntity<T>>(
     definitionDefault: MutableList<UUID<T>>?,
-    nil: Boolean?,
-    val entityFqName : String
+    nil: Boolean?
 ) : ListSchemaField<UUID<T>> {
 
     override var name: String = ""
 
-    override val itemSchemaField = UuidSchemaField<T>(null, nil, false)
+    override val itemSchemaField = ReferenceSchemaField<T>(null, nil, false)
 
     override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+
+    // called by the compiler plugin to set the companion
+    fun setCompanion(companion: SchematicCompanion<T>) : ReferenceListSchemaField<T> {
+        itemSchemaField.companion = companion
+        return this
+    }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return

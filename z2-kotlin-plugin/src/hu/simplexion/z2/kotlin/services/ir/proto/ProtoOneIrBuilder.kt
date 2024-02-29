@@ -1,7 +1,7 @@
 package hu.simplexion.z2.kotlin.services.ir.proto
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
 class ProtoOneIrBuilder(
     override val pluginContext: ServicesPluginContext,
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     val protoCache = pluginContext.protoCache
     val protoEnum = pluginContext.protoEnum

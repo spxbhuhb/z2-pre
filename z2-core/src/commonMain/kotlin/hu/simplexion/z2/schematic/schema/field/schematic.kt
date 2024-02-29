@@ -3,6 +3,7 @@ package hu.simplexion.z2.schematic.schema.field
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.schematic.SchematicList
+import hu.simplexion.z2.schematic.schema.ListSchemaField
 import hu.simplexion.z2.schematic.schema.Schema
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
@@ -161,7 +162,7 @@ open class NullableSchematicSchemaField<T : Schematic<T>>(
 
 class SchematicListSchemaField<T : Schematic<T>>(
     definitionDefault : MutableList<T>?
-) : hu.simplexion.z2.schematic.schema.ListSchemaField<T> {
+) : ListSchemaField<T> {
 
     override var name: String = ""
 

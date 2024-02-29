@@ -1,5 +1,6 @@
 package hu.simplexion.z2.kotlin.services.ir.util
 
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.declarations.IrClassBuilder
@@ -17,7 +18,7 @@ import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.name.SpecialNames
 
-interface IrClassBaseBuilder : IrBuilder {
+interface IrClassBaseBuilder : AbstractIrBuilder {
 
     fun buildClassBase(customizer: IrClassBuilder.() -> Unit) =
         irFactory.buildClass {

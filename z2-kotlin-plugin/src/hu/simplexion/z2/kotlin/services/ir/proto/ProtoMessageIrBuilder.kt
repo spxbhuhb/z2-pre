@@ -1,7 +1,7 @@
 package hu.simplexion.z2.kotlin.services.ir.proto
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.ir.util.getPropertyGetter
 class ProtoMessageIrBuilder(
     override val pluginContext: ServicesPluginContext,
     val dispatchReceiver: () -> IrExpression
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     var current: IrExpression? = null
 

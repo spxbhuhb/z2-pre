@@ -14,6 +14,7 @@ enum class SchemaFieldType {
     LocalTime,
     Long,
     PhoneNumber,
+    Reference,
     Schematic,
     Secret,
     String,

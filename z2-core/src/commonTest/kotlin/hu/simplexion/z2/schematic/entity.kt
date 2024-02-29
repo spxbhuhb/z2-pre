@@ -8,7 +8,7 @@ import hu.simplexion.z2.schematic.schema.field.ReferenceListSchemaField
 import hu.simplexion.z2.schematic.schema.field.ReferenceSchemaField
 
 class TestEntity : SchematicEntity<TestEntity>() {
-    override var uuid by self()
+    override var uuid by self<TestEntity>()
     override var name by string()
 
     var child by reference<TestEntity2>()
@@ -17,7 +17,7 @@ class TestEntity : SchematicEntity<TestEntity>() {
 }
 
 class TestEntity2 : SchematicEntity<TestEntity2>() {
-    override var uuid by self()
+    override var uuid by self<TestEntity2>()
     override var name by string()
 }
 
@@ -26,19 +26,19 @@ fun testEntityBox(): String {
 
     val uuid = schema.getField("uuid")
     if (uuid !is ReferenceSchemaField<*>) return "fail: uuid !is ReferenceSchemaField<*>"
-    if (uuid.entityFqName != "foo.bar.TestEntity") return "fail: uuid.entityFqName != \"foo.bar.TestEntity\""
+    if (uuid.companion.schematicFqName != "foo.bar.TestEntity") return "fail: uuid.entityFqName != \"foo.bar.TestEntity\""
 
     val child = schema.getField("child")
     if (child !is ReferenceSchemaField<*>) return "fail: child !is ReferenceSchemaField<*>"
-    if (child.entityFqName != "foo.bar.TestEntity2") return "fail: child.entityFqName != \"foo.bar.TestEntity2\""
+    if (child.companion.schematicFqName != "foo.bar.TestEntity2") return "fail: child.entityFqName != \"foo.bar.TestEntity2\""
 
     val optChild = schema.getField("optChild")
     if (optChild !is NullableReferenceSchemaField<*>) return "fail: optChild !is NullableReferenceSchemaField<*>"
-    if (optChild.entityFqName != "foo.bar.TestEntity2") return "fail: optChild.entityFqName != \"foo.bar.TestEntity2\""
+    if (optChild.companion.schematicFqName != "foo.bar.TestEntity2") return "fail: optChild.entityFqName != \"foo.bar.TestEntity2\""
 
     val children = schema.getField("children")
     if (children !is ReferenceListSchemaField<*>) return "fail: children !is ReferenceListSchemaField<*>"
-    if (children.entityFqName != "foo.bar.TestEntity2") return "fail: children.entityFqName != \"foo.bar.TestEntity2\""
+    if (children.itemSchemaField.companion.schematicFqName != "foo.bar.TestEntity2") return "fail: children.entityFqName != \"foo.bar.TestEntity2\""
 
     return "OK"
 }

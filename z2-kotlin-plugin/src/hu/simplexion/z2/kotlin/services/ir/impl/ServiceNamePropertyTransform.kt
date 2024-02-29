@@ -4,8 +4,8 @@
 package hu.simplexion.z2.kotlin.services.ir.impl
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
 import hu.simplexion.z2.kotlin.services.ir.util.ServiceBuilder
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -22,7 +22,7 @@ class ServiceNamePropertyTransform(
     val serviceBuilder: ServiceBuilder,
     val transformedClass: IrClass,
     var property: IrProperty
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     fun build() {
         if (! property.isFakeOverride) return

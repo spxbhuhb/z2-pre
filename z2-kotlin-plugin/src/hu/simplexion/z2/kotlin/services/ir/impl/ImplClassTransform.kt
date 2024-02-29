@@ -51,7 +51,7 @@ class ImplClassTransform(
         if (::transformedClass.isInitialized) return declaration
 
         transformedClass = declaration
-        serviceNameGetter = checkNotNull(declaration.getPropertyGetter(SERVICE_NAME_PROPERTY.asString))
+        serviceNameGetter = checkNotNull(declaration.getPropertyGetter(Strings.SERVICE_NAME_PROPERTY))
         serviceContextGetter = checkNotNull(declaration.getPropertyGetter(SERVICE_CONTEXT_PROPERTY.asString))
 
         transformConstructor()
@@ -68,7 +68,7 @@ class ImplClassTransform(
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         when (declaration.name) {
-            SERVICE_NAME_PROPERTY.asName -> ServiceNamePropertyTransform(pluginContext, this, transformedClass, declaration).build()
+            Names.SERVICE_NAME_PROPERTY -> ServiceNamePropertyTransform(pluginContext, this, transformedClass, declaration).build()
             SERVICE_CONTEXT_PROPERTY.asName -> ServiceContextPropertyTransform(pluginContext, this, declaration).build()
         }
 

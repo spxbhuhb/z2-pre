@@ -10,19 +10,32 @@ object Strings {
     const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
     const val SCHEMATIC_PREFIX = "Schematic<"
     const val SCHEMATIC_ENTITY_PREFIX = "SchematicEntity<"
+    const val SCHEMATIC_SCHEMA_PROPERTY = "schematicSchema"
+    const val SCHEMATIC_COMPANION_PROPERTY = "schematicCompanion"
+
+    const val SCHEMATIC_SCHEMA_PACKAGE = "hu.simplexion.z2.schematic.schema"
+    const val SCHEMATIC_SCHEMA_CLASS = "Schema"
+
+    const val SCHEMATIC_ENTITY_PACKAGE = "hu.simplexion.z2.schematic.entity"
+    const val SCHEMATIC_ENTITY_CLASS = "SchematicEntity"
 }
 
 object Names {
     val SCHEMATIC_FQNAME_PROPERTY = Name.identifier(Strings.SCHEMATIC_FQNAME_PROPERTY)
     val SCHEMATIC_COMPANION_CLASS = Name.identifier(Strings.SCHEMATIC_COMPANION_CLASS)
+    val SCHEMATIC_SCHEMA_PROPERTY = Name.identifier(Strings.SCHEMATIC_SCHEMA_PROPERTY)
+    val SCHEMATIC_COMPANION_PROPERTY = Name.identifier(Strings.SCHEMATIC_COMPANION_PROPERTY)
+    val SCHEMATIC_SCHEMA_CLASS = Name.identifier(Strings.SCHEMATIC_SCHEMA_CLASS)
 }
 
 object FqNames {
     val SCHEMATIC_RUNTIME_PACKAGE = FqName(Strings.SCHEMATIC_RUNTIME_PACKAGE)
+    val SCHEMATIC_SCHEMA_PACKAGE = FqName(Strings.SCHEMATIC_SCHEMA_PACKAGE)
 }
 
 object ClassIds {
     val SCHEMATIC_COMPANION = ClassId(FqNames.SCHEMATIC_RUNTIME_PACKAGE, Names.SCHEMATIC_COMPANION_CLASS)
+    val SCHEMATIC_SCHEMA = ClassId(FqNames.SCHEMATIC_SCHEMA_PACKAGE, Names.SCHEMATIC_SCHEMA_CLASS)
 }
 
 const val SCHEMATIC_CLASS = "Schematic"
@@ -35,8 +48,6 @@ const val SCHEMA_FIELD_IS_IMMUTABLE = "SchemaFieldIsImmutable"
 
 const val SCHEMATIC_VALUES_PROPERTY = "schematicValues"
 const val SCHEMATIC_CHANGE = "schematicChange"
-const val SCHEMATIC_SCHEMA_PROPERTY = "schematicSchema"
-const val SCHEMATIC_COMPANION_PROPERTY = "schematicCompanion"
 const val SCHEMATIC_COMPANION_NAME = "Companion"
 const val SCHEMATIC_COMPANION_NEW_INSTANCE = "newInstance"
 const val SCHEMATIC_COMPANION_SET_FIELD_VALUE = "setFieldValue"
@@ -56,8 +67,6 @@ const val FIELD_CONSTRUCTOR_NAME_INDEX = 0
 const val FIELD_CONSTRUCTOR_NULLABLE_INDEX = 1
 const val FIELD_CONSTRUCTOR_VARARG_INDEX = 2
 
-const val RUNTIME_SCHEMA_PACKAGE = "hu.simplexion.z2.schematic.schema"
-const val SCHEMA_CLASS = "Schema"
 const val SCHEMA_FIELD_CLASS = "SchemaField"
 const val SCHEMA_FIELD_SET_FIELD_NAME = "setFieldName"
 

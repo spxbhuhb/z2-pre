@@ -2,6 +2,7 @@ package hu.simplexion.z2.kotlin.services.ir.util
 
 import hu.simplexion.z2.kotlin.services.*
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
@@ -20,7 +21,7 @@ import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 class FunctionSignature(
     override val pluginContext: ServicesPluginContext,
     val function: IrSimpleFunction
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     fun signature(): String {
         val parts = mutableListOf<String>()

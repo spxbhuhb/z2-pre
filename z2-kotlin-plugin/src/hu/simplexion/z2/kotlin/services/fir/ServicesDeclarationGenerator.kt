@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin.services.fir
 
-import hu.simplexion.z2.kotlin.services.SERVICE_NAME_PROPERTY
+import hu.simplexion.z2.kotlin.services.Names
 import hu.simplexion.z2.kotlin.services.ServicesPluginKey
 import hu.simplexion.z2.kotlin.services.Strings
 import hu.simplexion.z2.kotlin.services.serviceConsumerName
@@ -84,7 +84,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val declarations = serviceConsumerClasses[classSymbol.classId] ?: return emptySet()
 
         return setOf(
-            SERVICE_NAME_PROPERTY.asName,
+            Names.SERVICE_NAME_PROPERTY,
             SpecialNames.INIT
         ) + declarations.functionNames
     }
@@ -97,7 +97,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
         if (! isThisPlugin(context)) return emptyList()
-        if (callableId.callableName != SERVICE_NAME_PROPERTY.asName) return emptyList()
+        if (callableId.callableName != Names.SERVICE_NAME_PROPERTY) return emptyList()
 
         return listOf(
             createMemberProperty(context !!.owner, ServicesPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType, isVal = false).symbol

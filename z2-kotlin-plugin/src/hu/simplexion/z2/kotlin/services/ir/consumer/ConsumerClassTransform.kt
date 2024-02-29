@@ -10,6 +10,7 @@ import hu.simplexion.z2.kotlin.services.ir.proto.ProtoOneIrBuilder
 import hu.simplexion.z2.kotlin.services.ir.util.FunctionSignature
 import hu.simplexion.z2.kotlin.services.ir.util.IrClassBaseBuilder
 import hu.simplexion.z2.kotlin.services.ir.util.ServiceBuilder
+import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -55,7 +56,7 @@ class ConsumerClassTransform(
     }
 
     private fun addServiceNameInitializer() {
-        val property = requireNotNull(consumerClass.properties.firstOrNull { it.name == SERVICE_NAME_PROPERTY.asName })
+        val property = consumerClass.property(Names.SERVICE_NAME_PROPERTY)
         val backingField = requireNotNull(property.backingField)
 
         backingField.initializer = irFactory.createExpressionBody(irConst(interfaceClass.kotlinFqName.asString()))

@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin.services.ir.impl
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
+import hu.simplexion.z2.kotlin.util.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
@@ -25,7 +25,7 @@ abstract class AbstractFun(
     val implClassTransform: ImplClassTransform,
     val funName: String,
     val funOverridden: IrSimpleFunctionSymbol
-) : IrBuilder {
+) : AbstractIrBuilder {
 
     val transformedClass = implClassTransform.transformedClass
 

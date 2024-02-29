@@ -18,7 +18,10 @@ class SchematicModuleTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
 
-        if (declaration.superTypes.contains(pluginContext.schematicClass.typeWith(declaration.defaultType))) {
+        val schematic = declaration.superTypes.contains(pluginContext.schematicClass.typeWith(declaration.defaultType))
+        val schematicEntity = declaration.superTypes.contains(pluginContext.schematicEntityClass.typeWith(declaration.defaultType))
+
+        if (schematic || schematicEntity) {
             SchematicClassTransform(pluginContext).also {
                 it.initialize(declaration)
                 classTransforms += it
