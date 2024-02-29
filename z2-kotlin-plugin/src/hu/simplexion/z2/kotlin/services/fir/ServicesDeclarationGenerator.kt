@@ -1,6 +1,10 @@
 package hu.simplexion.z2.kotlin.services.fir
 
-import hu.simplexion.z2.kotlin.services.*
+import hu.simplexion.z2.kotlin.services.SERVICE_NAME_PROPERTY
+import hu.simplexion.z2.kotlin.services.ServicesPluginKey
+import hu.simplexion.z2.kotlin.services.Strings
+import hu.simplexion.z2.kotlin.services.serviceConsumerName
+import hu.simplexion.z2.kotlin.util.superTypeContains
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
@@ -21,13 +25,19 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
-import org.jetbrains.kotlin.text
 
+/**
+ * Add declarations for service interfaces (interfaces that extend `Service`).
+ *
+ * - a nested class with name `<service-interface-name>$Consumer`:
+ *   - implements the service interface (added as supertype)
+ *   - has an empty constructor
+ *   - has a `serviceFqName : String` property
+ *   - has overrides for all functions defined in the service interface
+ */
 class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     companion object {
-        val serviceInterfaceNames = listOf(SERVICE_INTERFACE_SHORT.asString, SERVICE_INTERFACE_FULL.asString)
-
         val serviceConsumerClasses = mutableMapOf<ClassId, ServiceConsumerClass>()
     }
 
@@ -40,7 +50,9 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
         if (classSymbol.fir.classKind != ClassKind.INTERFACE) return emptySet()
 
-        if (classSymbol.fir.superTypeRefs.none { it.source.text?.trim() in serviceInterfaceNames }) return emptySet()
+        if (!classSymbol.superTypeContains(Strings.SERVICE_INTERFACE, Strings.SERVICE_INTERFACE_FQ)) {
+            return emptySet()
+        }
 
         val consumerName = classSymbol.name.serviceConsumerName
         val classId = classSymbol.classId.createNestedClassId(consumerName)

@@ -1,6 +1,10 @@
 package hu.simplexion.z2.kotlin.schematic.fir
 
-import hu.simplexion.z2.kotlin.schematic.*
+import hu.simplexion.z2.kotlin.schematic.ClassIds
+import hu.simplexion.z2.kotlin.schematic.Names
+import hu.simplexion.z2.kotlin.schematic.SchematicPluginKey
+import hu.simplexion.z2.kotlin.schematic.Strings
+import hu.simplexion.z2.kotlin.util.superTypeContains
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
@@ -16,27 +20,28 @@ import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.FirTypeRef
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
-import org.jetbrains.kotlin.name.*
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.text
 
+/**
+ * Add declarations for schematic classes (classes that extend `Schematic` or `SchematicEntity`).
+ *
+ * - a companion object
+ *   - implements `SchematicCompanion<T>` where `T` is the schematic class (added as supertype)
+ *   - has an empty constructor
+ *   - has a `schematicFqName : String` property
+ */
 class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    companion object {
-        val SCHEMATIC_CLASS_ID = ClassId(FqName(SCHEMATIC_RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_CLASS))
+    override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> =
 
-        val SCHEMATIC_COMPANION_CLASS_ID = ClassId(FqName(SCHEMATIC_RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_COMPANION_CLASS))
-
-        val SCHEMATIC_FQNAME_NAME = Name.identifier(SCHEMATIC_FQNAME_PROPERTY)
-    }
-
-    @OptIn(SymbolInternals::class)
-    override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
-        val result = mutableSetOf<Name>()
-        if (classSymbol.fir.superTypeRefs.any { it.source.text?.contains("Schematic<") == true }) {
-            result += SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
+        if (classSymbol.superTypeContains(Strings.SCHEMATIC_PREFIX, Strings.SCHEMATIC_ENTITY_PREFIX)) {
+            setOf(SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT)
+        } else {
+            emptySet()
         }
-        return result
-    }
 
     override fun generateNestedClassLikeDeclaration(
         owner: FirClassSymbol<*>,
@@ -50,25 +55,24 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
         }
     }
 
-    @OptIn(SymbolInternals::class)
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         if (! classSymbol.isCompanion) return emptySet()
 
         val result = mutableSetOf<Name>()
         if (classSymbol.isSchematicCompanion) {
             result += SpecialNames.INIT
-            result += SCHEMATIC_FQNAME_NAME
+            result += Names.SCHEMATIC_FQNAME_PROPERTY
         }
         return result
     }
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
-        if (!context.isSchematicCompanion) return emptyList()
+        if (! context.isSchematicCompanion) return emptyList()
         checkNotNull(context)
 
-        if (callableId.callableName != SCHEMATIC_FQNAME_NAME) return emptyList()
+        if (callableId.callableName != Names.SCHEMATIC_FQNAME_PROPERTY) return emptyList()
 
-        val property = createMemberProperty(context.owner, SchematicPluginKey, SCHEMATIC_FQNAME_NAME, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = false)
+        val property = createMemberProperty(context.owner, SchematicPluginKey, Names.SCHEMATIC_FQNAME_PROPERTY, session.builtinTypes.stringType.coneType, isVal = true, hasBackingField = false)
 
         return listOf(property.symbol)
     }
@@ -76,13 +80,13 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
     private fun generateCompanionDeclaration(owner: FirRegularClassSymbol): FirRegularClassSymbol? {
         if (owner.companionObjectSymbol != null || owner.isCompanion) return null
         val companion = createCompanionObject(owner, SchematicPluginKey) {
-            superType(SCHEMATIC_COMPANION_CLASS_ID.constructClassLikeType(arrayOf(owner.defaultType()), false))
+            superType(ClassIds.SCHEMATIC_COMPANION.constructClassLikeType(arrayOf(owner.defaultType()), false))
         }
         return companion.symbol
     }
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
-        if (!context.isSchematicCompanion) return emptyList()
+        if (! context.isSchematicCompanion) return emptyList()
         val constructor = createConstructor(context.owner, SchematicPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true)
         return listOf(constructor.symbol)
     }

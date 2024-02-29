@@ -4,12 +4,21 @@
 package hu.simplexion.z2.kotlin.services
 
 import hu.simplexion.z2.kotlin.util.LocalName
-import hu.simplexion.z2.kotlin.util.QualifiedName
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
-val SERVICE_INTERFACE_SHORT = LocalName("Service")
-val SERVICE_INTERFACE_FULL = QualifiedName("hu.simplexion.z2.services.Service")
+object Strings {
+    const val SERVICE_INTERFACE = "Service"
+    const val SERVICE_INTERFACE_FQ = "hu.simplexion.z2.services.Service"
+}
+
+object Names {
+    val SERVICE_INTERFACE = Name.identifier(Strings.SERVICE_INTERFACE)
+}
+
+object FqNames {
+    val SERVICE_INTERFACE = FqName.fromSegments(Strings.SERVICE_INTERFACE_FQ.split('.'))
+}
 
 val Name.serviceConsumerName get() = Name.identifier("${this.identifier}\$Consumer")
 

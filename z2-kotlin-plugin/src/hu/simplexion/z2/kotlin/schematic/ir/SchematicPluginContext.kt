@@ -17,7 +17,7 @@ class SchematicPluginContext(
     override val irContext: IrPluginContext,
 ) : AbstractPluginContext() {
 
-    override val runtimePackage = SCHEMATIC_RUNTIME_PACKAGE
+    override val runtimePackage = Strings.SCHEMATIC_RUNTIME_PACKAGE
 
     // TODO globals.kt and inline names here got a bit confused, clear it up
     val schematicClass = SCHEMATIC_CLASS.runtimeClass()
@@ -46,7 +46,7 @@ class SchematicPluginContext(
     val schematicListSchemaFieldClass = "SchematicListSchemaField".runtimeClass(RUNTIME_SCHEMA_FIELD_PACKAGE)
     val schematicListSchemaFieldClassSetCompanion = schematicListSchemaFieldClass.functionByName("setCompanion")
 
-    val schematicCompanionClass = SCHEMATIC_COMPANION_CLASS.runtimeClass()
+    val schematicCompanionClass = Strings.SCHEMATIC_COMPANION_CLASS.runtimeClass()
     val schematicCompanionSchematicSchema = schematicCompanionClass.propertySymbol(SCHEMATIC_SCHEMA_PROPERTY)
     val schematicCompanionEncodeProto = schematicCompanionClass.functionByName(ENCODE_PROTO)
     val schematicCompanionDecodeProto = schematicCompanionClass.functionByName(DECODE_PROTO)

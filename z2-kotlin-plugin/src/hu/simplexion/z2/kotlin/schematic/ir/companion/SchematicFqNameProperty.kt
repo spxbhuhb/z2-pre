@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir.companion
 
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_FQNAME_PROPERTY
+import hu.simplexion.z2.kotlin.schematic.Names
 import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
 import hu.simplexion.z2.kotlin.schematic.ir.util.IrBuilder
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -27,7 +27,7 @@ class SchematicFqNameProperty(
 
     val companionClass = companionTransform.companionClass
 
-    var property = companionClass.properties.first { it.name.identifier == SCHEMATIC_FQNAME_PROPERTY }
+    var property = companionClass.properties.first { it.name == Names.SCHEMATIC_FQNAME_PROPERTY }
 
     fun build() {
         transform()

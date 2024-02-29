@@ -74,6 +74,7 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         languageVersion = "2.0"
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
+        freeCompilerArgs += "-Xcontext-receivers"
     }
 }
 

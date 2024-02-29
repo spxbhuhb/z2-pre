@@ -1,19 +1,41 @@
 package hu.simplexion.z2.kotlin.schematic
 
-const val SCHEMATIC_RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
+
+object Strings {
+    const val SCHEMATIC_RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
+    const val SCHEMATIC_FQNAME_PROPERTY = "schematicFqName"
+    const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
+    const val SCHEMATIC_PREFIX = "Schematic<"
+    const val SCHEMATIC_ENTITY_PREFIX = "SchematicEntity<"
+}
+
+object Names {
+    val SCHEMATIC_FQNAME_PROPERTY = Name.identifier(Strings.SCHEMATIC_FQNAME_PROPERTY)
+    val SCHEMATIC_COMPANION_CLASS = Name.identifier(Strings.SCHEMATIC_COMPANION_CLASS)
+}
+
+object FqNames {
+    val SCHEMATIC_RUNTIME_PACKAGE = FqName(Strings.SCHEMATIC_RUNTIME_PACKAGE)
+}
+
+object ClassIds {
+    val SCHEMATIC_COMPANION = ClassId(FqNames.SCHEMATIC_RUNTIME_PACKAGE, Names.SCHEMATIC_COMPANION_CLASS)
+}
+
 const val SCHEMATIC_CLASS = "Schematic"
 
 const val FIELD_DEFINITION_FUNCTION_CLASS = "FieldDefinitionFunction"
 const val DEFINITION_TRANSFORM_FUNCTION_CLASS = "DefinitionTransformFunction"
 const val SCHEMATIC_ACCESS_FUNCTION_CLASS = "SchematicAccessFunction"
-const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
 const val SCHEMA_FIELD_NOT_FOUND_CLASS = "SchemaFieldNotFound"
 const val SCHEMA_FIELD_IS_IMMUTABLE = "SchemaFieldIsImmutable"
 
 const val SCHEMATIC_VALUES_PROPERTY = "schematicValues"
 const val SCHEMATIC_CHANGE = "schematicChange"
 const val SCHEMATIC_SCHEMA_PROPERTY = "schematicSchema"
-const val SCHEMATIC_FQNAME_PROPERTY = "schematicFqName"
 const val SCHEMATIC_COMPANION_PROPERTY = "schematicCompanion"
 const val SCHEMATIC_COMPANION_NAME = "Companion"
 const val SCHEMATIC_COMPANION_NEW_INSTANCE = "newInstance"

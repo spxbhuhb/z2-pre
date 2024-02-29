@@ -54,6 +54,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("companion.kt")
+        public void testCompanion() throws Exception {
+            runTest("testData/box/schematic/companion.kt");
+        }
+
+        @Test
         @TestMetadata("defaults.kt")
         public void testDefaults() throws Exception {
             runTest("testData/box/schematic/defaults.kt");

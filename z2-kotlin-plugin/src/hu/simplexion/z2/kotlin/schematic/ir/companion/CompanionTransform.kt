@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir.companion
 
-import hu.simplexion.z2.kotlin.schematic.SCHEMATIC_COMPANION_CLASS
+import hu.simplexion.z2.kotlin.schematic.Names
 import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
 import hu.simplexion.z2.kotlin.schematic.ir.klass.SchematicClassTransform
 import hu.simplexion.z2.kotlin.schematic.ir.util.IrBuilder
@@ -40,7 +40,7 @@ class CompanionTransform(
         companionClass = transformedClass.addCompanionIfMissing()
 
         // add the SchematicCompanion interface if it is missing
-        if (companionClass.superTypes.firstOrNull { it.classFqName?.shortName()?.identifier == SCHEMATIC_COMPANION_CLASS } == null) {
+        if (companionClass.superTypes.firstOrNull { it.classFqName?.shortName() == Names.SCHEMATIC_COMPANION_CLASS } == null) {
             companionClass.superTypes += listOf(pluginContext.schematicCompanionClass.typeWith(transformedClass.defaultType))
         }
 
