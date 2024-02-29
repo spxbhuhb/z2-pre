@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.services.ir
 
+import hu.simplexion.z2.kotlin.services.*
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoCache
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoEnum
 import hu.simplexion.z2.kotlin.services.ir.util.ServiceFunctionCache
@@ -20,6 +21,8 @@ class ServicesPluginContext(
     override val irContext: IrPluginContext
 ) : AbstractPluginContext() {
 
+    override val runtimePackage = RUNTIME_PACKAGE
+
     val serviceClass = SERVICE_CLASS.runtimeClass()
     val serviceType = serviceClass.defaultType
     val serviceName = serviceClass.owner.properties.first { it.name == SERVICE_NAME_PROPERTY.asName }
@@ -33,13 +36,13 @@ class ServicesPluginContext(
 
     val defaultServiceCallTransport = checkNotNull(
         irContext
-            .referenceProperties(CallableId(FqName(RUNTIME_PACKAGE),Name.identifier(DEFAULT_SERVICE_CALL_TRANSPORT)))
+            .referenceProperties(CallableId(FqName(RUNTIME_PACKAGE), Name.identifier(DEFAULT_SERVICE_CALL_TRANSPORT)))
             .first().owner.getter?.symbol
     ) { "Missing $GLOBALS_CLASS, is the plugin added to gradle?" }
 
     val getService = checkNotNull(
         irContext
-            .referenceFunctions(CallableId(FqName(RUNTIME_PACKAGE),Name.identifier(GET_SERVICE)))
+            .referenceFunctions(CallableId(FqName(RUNTIME_PACKAGE), Name.identifier(GET_SERVICE)))
             .first()
     ) { "Missing $GLOBALS_CLASS, is the plugin added to gradle?" }
 

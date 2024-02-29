@@ -22,9 +22,9 @@ import org.jetbrains.kotlin.text
 class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     companion object {
-        val SCHEMATIC_CLASS_ID = ClassId(FqName(RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_CLASS))
+        val SCHEMATIC_CLASS_ID = ClassId(FqName(SCHEMATIC_RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_CLASS))
 
-        val SCHEMATIC_COMPANION_CLASS_ID = ClassId(FqName(RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_COMPANION_CLASS))
+        val SCHEMATIC_COMPANION_CLASS_ID = ClassId(FqName(SCHEMATIC_RUNTIME_PACKAGE), Name.identifier(SCHEMATIC_COMPANION_CLASS))
 
         val SCHEMATIC_FQNAME_NAME = Name.identifier(SCHEMATIC_FQNAME_PROPERTY)
     }

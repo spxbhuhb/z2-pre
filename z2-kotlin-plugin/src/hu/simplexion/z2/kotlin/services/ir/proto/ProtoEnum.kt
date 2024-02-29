@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin.services.ir.proto
 
-import hu.simplexion.z2.kotlin.services.ir.PROTO_PACKAGE
+import hu.simplexion.z2.kotlin.services.PROTO_PACKAGE
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions

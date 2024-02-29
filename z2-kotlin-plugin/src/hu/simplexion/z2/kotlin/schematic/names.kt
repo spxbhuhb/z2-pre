@@ -1,13 +1,12 @@
 package hu.simplexion.z2.kotlin.schematic
 
-const val RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
+const val SCHEMATIC_RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
 const val SCHEMATIC_CLASS = "Schematic"
 
 const val FIELD_DEFINITION_FUNCTION_CLASS = "FieldDefinitionFunction"
 const val DEFINITION_TRANSFORM_FUNCTION_CLASS = "DefinitionTransformFunction"
 const val SCHEMATIC_ACCESS_FUNCTION_CLASS = "SchematicAccessFunction"
 const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
-const val COMPANION_OBJECT_NAME = "Companion"
 const val SCHEMA_FIELD_NOT_FOUND_CLASS = "SchemaFieldNotFound"
 const val SCHEMA_FIELD_IS_IMMUTABLE = "SchemaFieldIsImmutable"
 

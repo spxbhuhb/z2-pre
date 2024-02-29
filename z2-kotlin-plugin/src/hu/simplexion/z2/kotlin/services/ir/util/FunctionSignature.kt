@@ -1,6 +1,7 @@
 package hu.simplexion.z2.kotlin.services.ir.util
 
-import hu.simplexion.z2.kotlin.services.ir.*
+import hu.simplexion.z2.kotlin.services.*
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
@@ -23,7 +24,7 @@ class FunctionSignature(
 
     fun signature(): String {
         val parts = mutableListOf<String>()
-        parts += "${function.name.identifier}${SIGNATURE_DELIMITER}"
+        parts += "${function.name.identifier}$SIGNATURE_DELIMITER"
         function.valueParameters.mapTo(parts) { it.type.signature() }
         return parts.joinToString("")
     }
@@ -69,7 +70,7 @@ class FunctionSignature(
 
     fun instance(type: IrType): String? {
         if (pluginContext.protoCache[type]?.symbol==null) return null
-        return "${SIGNATURE_INSTANCE}${type.classFqName?.asString()}${SIGNATURE_DELIMITER}"
+        return "$SIGNATURE_INSTANCE${type.classFqName?.asString()}$SIGNATURE_DELIMITER"
     }
 
     fun instanceList(type: IrType): String? {
@@ -78,13 +79,13 @@ class FunctionSignature(
         // FIXME hackish list item type retrieval
         val itemType = (type as IrSimpleTypeImpl).arguments.first() as IrType
 
-        return "${SIGNATURE_LIST}${itemType.signature()}"
+        return "$SIGNATURE_LIST${itemType.signature()}"
     }
 
 
     fun enum(type: IrType): String? {
         if (! type.isSubtypeOfClass(pluginContext.protoEnum.enumClass)) return null
-        return "${SIGNATURE_INSTANCE}${type.classFqName?.asString()}${SIGNATURE_DELIMITER}"
+        return "$SIGNATURE_INSTANCE${type.classFqName?.asString()}$SIGNATURE_DELIMITER"
     }
 
     fun enumList(type: IrType): String? {
@@ -94,6 +95,6 @@ class FunctionSignature(
         val itemType = (type as IrSimpleTypeImpl).arguments.first() as IrType
         if (! itemType.isSubtypeOfClass(pluginContext.protoEnum.enumClass)) return null
 
-        return "${SIGNATURE_LIST}${itemType.signature()}"
+        return "$SIGNATURE_LIST${itemType.signature()}"
     }
 }

@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin.services.ir.util
 
-import hu.simplexion.z2.kotlin.services.ir.SERVICE_IMPL_FQ_NAME
+import hu.simplexion.z2.kotlin.services.SERVICE_IMPL_FQ_NAME
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction

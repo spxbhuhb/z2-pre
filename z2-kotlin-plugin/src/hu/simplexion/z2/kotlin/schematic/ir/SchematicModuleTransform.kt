@@ -1,9 +1,9 @@
 /*
  * Copyright © 2022-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.kotlin.schematic.ir.klass
+package hu.simplexion.z2.kotlin.schematic.ir
 
-import hu.simplexion.z2.kotlin.schematic.ir.SchematicPluginContext
+import hu.simplexion.z2.kotlin.schematic.ir.klass.SchematicClassTransform
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass

@@ -1,13 +1,13 @@
 package hu.simplexion.z2.schematic.schema
 
 import hu.simplexion.z2.schematic.Schematic
-import hu.simplexion.z2.schematic.placeholder
 import hu.simplexion.z2.schematic.schema.validation.FieldValidationResult
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.schema.validation.fail
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.util.placeholder
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

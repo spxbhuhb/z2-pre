@@ -4,8 +4,8 @@
 package hu.simplexion.z2.kotlin.services.ir.consumer
 
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.serviceConsumerName
 import hu.simplexion.z2.kotlin.services.ir.util.IrBuilder
+import hu.simplexion.z2.kotlin.services.serviceConsumerName
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression

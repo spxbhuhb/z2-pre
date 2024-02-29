@@ -1,7 +1,7 @@
 /*
  * Copyright © 2022-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.kotlin.services.ir
+package hu.simplexion.z2.kotlin.services
 
 import hu.simplexion.z2.kotlin.util.LocalName
 import hu.simplexion.z2.kotlin.util.QualifiedName
@@ -94,14 +94,4 @@ const val PROTO_DURATION = "ProtoDuration"
 const val PROTO_INSTANT = "ProtoInstant"
 const val PROTO_LOCAL_DATE = "ProtoLocalDate"
 const val PROTO_LOCAL_DATE_TIME = "ProtoLocalDateTime"
-
-const val UTIL_PACKAGE = "hu.simplexion.z2.util"
-const val UUID = "UUID"
-
-const val COMPANION_OBJECT_NAME = "Companion"
-
-const val KOTLIN = "kotlin"
-const val KOTLIN_COLLECTIONS = "kotlin.collections"
-const val LIST = "List"
-const val NOT_IMPLEMENTED_ERROR = "NotImplementedError"
 

@@ -1,6 +1,8 @@
 package hu.simplexion.z2.kotlin.services.ir.proto
 
-import hu.simplexion.z2.kotlin.services.ir.*
+import hu.simplexion.z2.kotlin.services.*
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
+import hu.simplexion.z2.kotlin.util.COMPANION_OBJECT_NAME
 import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol

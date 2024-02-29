@@ -1,10 +1,6 @@
 package hu.simplexion.z2.kotlin.services.fir
 
-import hu.simplexion.z2.kotlin.services.ServicesPluginKey
-import hu.simplexion.z2.kotlin.services.ir.SERVICE_INTERFACE_FULL
-import hu.simplexion.z2.kotlin.services.ir.SERVICE_INTERFACE_SHORT
-import hu.simplexion.z2.kotlin.services.ir.SERVICE_NAME_PROPERTY
-import hu.simplexion.z2.kotlin.services.ir.serviceConsumerName
+import hu.simplexion.z2.kotlin.services.*
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin

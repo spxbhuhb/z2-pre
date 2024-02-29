@@ -5,21 +5,20 @@ package hu.simplexion.z2.kotlin.schematic.ir
 
 import hu.simplexion.z2.kotlin.schematic.*
 import hu.simplexion.z2.kotlin.schematic.ir.util.SchematicFunctionCache
+import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName
-import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
-import org.jetbrains.kotlin.ir.util.properties
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
 
 class SchematicPluginContext(
-    val irContext: IrPluginContext,
-) {
+    override val irContext: IrPluginContext,
+) : AbstractPluginContext() {
+
+    override val runtimePackage = SCHEMATIC_RUNTIME_PACKAGE
+
     // TODO globals.kt and inline names here got a bit confused, clear it up
     val schematicClass = SCHEMATIC_CLASS.runtimeClass()
     val schematicToAccessContext = checkNotNull(schematicClass.getSimpleFunction(SCHEMATIC_TO_ACCESS_CONTEXT)) { "missing Schematic.toSchematicAccessContext"}
@@ -63,17 +62,4 @@ class SchematicPluginContext(
 
     val protoMessageType = PROTO_MESSAGE_CLASS.runtimeClass(PROTO_PACKAGE).defaultType
 
-    fun String.runtimeClass(pkg: String = RUNTIME_PACKAGE) =
-        checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
-            "Missing runtime class: $pkg.$this. Maybe the gradle dependency on \"hu.simplexion.z2:z2-core\" is missing."
-        }
-
-    fun IrClassSymbol.propertySymbol(name : String) =
-        owner.properties.first { it.name.identifier == name }.symbol
-
-    @Suppress("UNUSED_PARAMETER")
-    fun debug(label : String, message : () -> Any?) {
-//        val paddedLabel = "[$label]".padEnd(20)
-//        Files.write(Paths.get("/Users/tiz/Desktop/plugin.txt"), "$paddedLabel  ${message()}\n".encodeToByteArray(), StandardOpenOption.APPEND, StandardOpenOption.CREATE)
-    }
 }

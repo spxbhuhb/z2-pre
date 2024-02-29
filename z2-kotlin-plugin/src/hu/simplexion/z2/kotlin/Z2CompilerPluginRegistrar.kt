@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin
 
 import hu.simplexion.z2.kotlin.ir.Z2GenerationExtension
+import hu.simplexion.z2.kotlin.schematic.ir.SchematicGenerationExtension
 import hu.simplexion.z2.kotlin.services.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
@@ -27,6 +28,8 @@ class Z2CompilerPluginRegistrar : CompilerPluginRegistrar() {
 
         FirExtensionRegistrarAdapter.registerExtension(Z2PluginRegistrar())
 
+        // if you add something here, add also to ExtensionRegistrarConfigurator for tests
+        IrGenerationExtension.registerExtension(SchematicGenerationExtension(options))
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
         IrGenerationExtension.registerExtension(Z2GenerationExtension(options))
     }

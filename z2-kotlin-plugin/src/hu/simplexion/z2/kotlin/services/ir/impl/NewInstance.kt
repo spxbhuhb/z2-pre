@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.impl
 
-import hu.simplexion.z2.kotlin.services.ir.SERVICE_IMPL_NEW_INSTANCE
+import hu.simplexion.z2.kotlin.services.SERVICE_IMPL_NEW_INSTANCE
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter

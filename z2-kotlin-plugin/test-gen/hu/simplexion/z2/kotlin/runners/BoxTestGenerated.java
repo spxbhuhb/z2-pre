@@ -60,6 +60,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("entity.kt")
+        public void testEntity() throws Exception {
+            runTest("testData/box/schematic/entity.kt");
+        }
+
+        @Test
         @TestMetadata("fqName.kt")
         public void testFqName() throws Exception {
             runTest("testData/box/schematic/fqName.kt");

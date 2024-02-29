@@ -1,6 +1,6 @@
 package hu.simplexion.z2.kotlin.services.ir.util
 
-import hu.simplexion.z2.kotlin.services.ir.FUN_NAMES_TO_SKIP
+import hu.simplexion.z2.kotlin.services.FUN_NAMES_TO_SKIP
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.IrType

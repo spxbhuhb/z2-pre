@@ -4,6 +4,7 @@ import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.NonLocalized
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.entity.SchematicEntity
 import hu.simplexion.z2.schematic.schema.Schema
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.field.*
@@ -13,6 +14,8 @@ import hu.simplexion.z2.schematic.schema.field.stereotype.SecretSchemaField
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.nextHandle
+import hu.simplexion.z2.util.placeholder
+import hu.simplexion.z2.util.stringPlaceholder
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -152,6 +155,21 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
         fun <VT : Schematic<VT>> schematicList(default: MutableList<VT>? = null) = SchematicListSchemaField(default)
 
         fun phoneNumber(blank: Boolean? = null) = PhoneNumberSchemaField(blank)
+
+        fun <RT> reference(
+            validForCreate: Boolean = false,
+            default: UUID<RT>? = null,
+            nil: Boolean? = null,
+            entityFqName : String = stringPlaceholder
+        ) = ReferenceSchemaField(default, nil, validForCreate, entityFqName)
+
+        fun <RT> referenceList(
+            default: MutableList<UUID<RT>>? = null,
+            nil: Boolean? = null
+        ) = ReferenceListSchemaField(default, nil, stringPlaceholder)
+
+        @Suppress("UnusedReceiverParameter") // it is used by the syntax checker
+        fun <ST : SchematicEntity<ST>> ST.self() = ReferenceSchemaField<ST>(null, null, true, stringPlaceholder)
 
         fun secret(
             default: String? = null,

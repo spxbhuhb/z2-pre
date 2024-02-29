@@ -3,8 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.consumer
 
-import hu.simplexion.z2.kotlin.services.ServicesPluginKey
-import hu.simplexion.z2.kotlin.services.ir.*
+import hu.simplexion.z2.kotlin.services.*
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoMessageBuilderIrBuilder
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoOneIrBuilder
 import hu.simplexion.z2.kotlin.services.ir.util.FunctionSignature
