@@ -5,6 +5,6 @@ import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 
 fun <T> Z2.table(
     builder: TableBuilder<T>.() -> Unit
-) = Table(this, builder)
+) = Table(this) { TableBuilder(it).apply { builder() } }
 
 

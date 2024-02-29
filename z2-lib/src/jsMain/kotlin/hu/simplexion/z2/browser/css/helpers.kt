@@ -6,8 +6,11 @@ import kotlinx.dom.hasClass
 import org.w3c.dom.Element
 
 val desktopContentWidth = CssClass("desktop-content-width")
+val desktopHalfContentWidth = CssClass("desktop-half-content-width")
 val mobileContentWidth = CssClass("mobile-content-width")
+val mobileHalfContentWidth = CssClass("mobile-half-content-width")
 var contentWidth = desktopContentWidth
+var halfContentWidth = desktopHalfContentWidth
 
 infix fun Z2.css(className: String): Z2 {
     addClass(className)
