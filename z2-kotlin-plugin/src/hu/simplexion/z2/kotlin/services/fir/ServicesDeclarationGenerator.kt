@@ -4,10 +4,10 @@ import hu.simplexion.z2.kotlin.services.Names
 import hu.simplexion.z2.kotlin.services.ServicesPluginKey
 import hu.simplexion.z2.kotlin.services.Strings
 import hu.simplexion.z2.kotlin.services.serviceConsumerName
+import hu.simplexion.z2.kotlin.util.isFromPlugin
 import hu.simplexion.z2.kotlin.util.superTypeContains
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
@@ -50,7 +50,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
         if (classSymbol.fir.classKind != ClassKind.INTERFACE) return emptySet()
 
-        if (!classSymbol.superTypeContains(Strings.SERVICE_INTERFACE, Strings.SERVICE_INTERFACE_FQ)) {
+        if (! classSymbol.superTypeContains(Strings.SERVICE_INTERFACE, Strings.SERVICE_INTERFACE_FQ)) {
             return emptySet()
         }
 
@@ -96,7 +96,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
-        if (! isThisPlugin(context)) return emptyList()
+        if (context.isForeign) return emptyList()
         if (callableId.callableName != Names.SERVICE_NAME_PROPERTY) return emptyList()
 
         return listOf(
@@ -105,7 +105,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
-        if (! isThisPlugin(context)) return emptyList()
+        if (context.isForeign) return emptyList()
 
         val serviceConsumerClasses = serviceConsumerClasses[callableId.classId] ?: return emptyList()
 
@@ -127,10 +127,6 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         }
     }
 
-    fun isThisPlugin(context: MemberGenerationContext?): Boolean {
-        val owner = context?.owner ?: return false
-        val ownerKey = (owner.origin as? FirDeclarationOrigin.Plugin)?.key ?: return false
-        return ownerKey == ServicesPluginKey
-    }
-
+    val MemberGenerationContext?.isForeign
+        get() = ! isFromPlugin(ServicesPluginKey)
 }

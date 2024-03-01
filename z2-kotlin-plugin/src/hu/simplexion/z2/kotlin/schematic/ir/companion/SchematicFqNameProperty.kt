@@ -13,12 +13,7 @@ import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.properties
 
 /**
- * Transform the `schematicFqName` property of the companion. The property
- * may be:
- *
- * - missing, when the companion class is created by the plugin - add
- * - fake override, when the companion is declared but the property is not overridden - convert
- * - override, when there is an actual implementation - do not touch
+ * Transform the `schematicFqName` property of the companion.
  */
 class SchematicFqNameProperty(
     override val pluginContext: SchematicPluginContext,

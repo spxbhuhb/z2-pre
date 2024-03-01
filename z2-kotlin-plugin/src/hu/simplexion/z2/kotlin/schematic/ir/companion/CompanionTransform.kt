@@ -38,6 +38,7 @@ class CompanionTransform(
     fun addOrGetCompanionClass() {
         SchematicSchemaProperty(pluginContext, this).build()
         SchematicFqNameProperty(pluginContext, this).build()
+        SchematicStoreProperty(pluginContext, this).build()
         NewInstance(pluginContext, this).build()
         ProtoEncode(pluginContext, this).build()
         ProtoDecode(pluginContext, this).build()

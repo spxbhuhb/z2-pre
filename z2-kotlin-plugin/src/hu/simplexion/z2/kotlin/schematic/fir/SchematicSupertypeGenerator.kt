@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.fir.types.constructType
 
 /*
- * Add `SchematicCompanion<T>` to supertypes of the companion object.
+ * Add `SchematicCompanion<T>` or `SchematicEntityCompanion<T> to supertypes of the companion object.
  */
 class SchematicSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtension(session) {
 
@@ -25,24 +25,44 @@ class SchematicSupertypeGenerator(session: FirSession) : FirSupertypeGenerationE
         classLikeDeclaration: FirClassLikeDeclaration,
         resolvedSupertypes: List<FirResolvedTypeRef>
     ): List<FirResolvedTypeRef> {
-        if (resolvedSupertypes.any { it.type.classId == ClassIds.SCHEMATIC_COMPANION }) return emptyList()
+
+        val hasEntityCompanion = resolvedSupertypes.any { it.type.classId == ClassIds.SCHEMATIC_ENTITY_COMPANION }
+        if (hasEntityCompanion) return emptyList() // means that it has SchematicCompanion as well
 
         val schematicClass = classLikeDeclaration.getContainingDeclaration(session) ?: return emptyList()
         val schematicClassType = schematicClass.symbol.constructType(emptyArray(), false)
 
-        return listOf(
-            buildResolvedTypeRef {
-                type = ClassIds.SCHEMATIC_COMPANION.constructClassLikeType(arrayOf(schematicClassType), isNullable = false)
+        val needEntityCompanion = schematicClass.anyOf(Strings.SCHEMATIC_ENTITY_PATTERN)
+
+        val needSchematicCompanion = if (needEntityCompanion) false else resolvedSupertypes.none { it.type.classId == ClassIds.SCHEMATIC_COMPANION }
+
+        val result = mutableListOf<FirResolvedTypeRef>()
+
+        when {
+            needEntityCompanion -> {
+                result += buildResolvedTypeRef {
+                    type = ClassIds.SCHEMATIC_ENTITY_COMPANION.constructClassLikeType(arrayOf(schematicClassType), isNullable = false)
+                }
             }
-        )
+
+            needSchematicCompanion -> {
+                result += buildResolvedTypeRef {
+                        type = ClassIds.SCHEMATIC_COMPANION.constructClassLikeType(arrayOf(schematicClassType), isNullable = false)
+                    }
+            }
+        }
+
+        return result
     }
 
     override fun needTransformSupertypes(declaration: FirClassLikeDeclaration): Boolean {
-        if (!declaration.symbol.isCompanion) return false
-
+        if (! declaration.symbol.isCompanion) return false
         val containingDeclaration = declaration.getContainingDeclaration(session) ?: return false
-        val symbol = containingDeclaration.symbol as? FirClassSymbol<*> ?: return false
-        return symbol.superTypeContains(Strings.SCHEMATIC_PREFIX, Strings.SCHEMATIC_ENTITY_PREFIX)
+        return containingDeclaration.anyOf(Strings.SCHEMATIC_PATTERN, Strings.SCHEMATIC_ENTITY_PATTERN)
     }
 
+    fun FirClassLikeDeclaration.anyOf(vararg supertypes : String) : Boolean {
+        val symbol = symbol as? FirClassSymbol<*> ?: return false
+        return symbol.superTypeContains(*supertypes)
+    }
 }

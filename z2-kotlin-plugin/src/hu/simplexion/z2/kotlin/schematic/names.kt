@@ -6,10 +6,12 @@ import org.jetbrains.kotlin.name.Name
 
 object Strings {
     const val SCHEMATIC_RUNTIME_PACKAGE = "hu.simplexion.z2.schematic"
+
+    const val SCHEMATIC_CLASS = "Schematic"
+
+
     const val SCHEMATIC_FQNAME_PROPERTY = "schematicFqName"
     const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
-    const val SCHEMATIC_PREFIX = "Schematic<"
-    const val SCHEMATIC_ENTITY_PREFIX = "SchematicEntity<"
     const val SCHEMATIC_SCHEMA_PROPERTY = "schematicSchema"
     const val SCHEMATIC_COMPANION_PROPERTY = "schematicCompanion"
 
@@ -18,27 +20,41 @@ object Strings {
 
     const val SCHEMATIC_ENTITY_PACKAGE = "hu.simplexion.z2.schematic.entity"
     const val SCHEMATIC_ENTITY_CLASS = "SchematicEntity"
+    const val SCHEMATIC_ENTITY_STORE_CLASS = "SchematicEntityStore"
+    const val SCHEMATIC_ENTITY_COMPANION_CLASS = "SchematicEntityCompanion"
+    const val SCHEMATIC_STORE_PROPERTY = "schematicStore"
+
+    const val SCHEMATIC_PATTERN= "$SCHEMATIC_CLASS<"
+    const val SCHEMATIC_ENTITY_PATTERN = "$SCHEMATIC_ENTITY_CLASS<"
+    const val SCHEMATIC_COMPANION_PATTERN = "$SCHEMATIC_COMPANION_CLASS<"
+    const val SCHEMATIC_ENTITY_COMPANION_PATTERN = "$SCHEMATIC_ENTITY_COMPANION_CLASS<"
 }
 
 object Names {
     val SCHEMATIC_FQNAME_PROPERTY = Name.identifier(Strings.SCHEMATIC_FQNAME_PROPERTY)
-    val SCHEMATIC_COMPANION_CLASS = Name.identifier(Strings.SCHEMATIC_COMPANION_CLASS)
     val SCHEMATIC_SCHEMA_PROPERTY = Name.identifier(Strings.SCHEMATIC_SCHEMA_PROPERTY)
+    val SCHEMATIC_STORE_PROPERTY = Name.identifier(Strings.SCHEMATIC_STORE_PROPERTY)
     val SCHEMATIC_COMPANION_PROPERTY = Name.identifier(Strings.SCHEMATIC_COMPANION_PROPERTY)
+
     val SCHEMATIC_SCHEMA_CLASS = Name.identifier(Strings.SCHEMATIC_SCHEMA_CLASS)
+    val SCHEMATIC_COMPANION_CLASS = Name.identifier(Strings.SCHEMATIC_COMPANION_CLASS)
+    val SCHEMATIC_ENTITY_COMPANION_CLASS = Name.identifier(Strings.SCHEMATIC_ENTITY_COMPANION_CLASS)
+    val SCHEMATIC_ENTITY_STORE_CLASS = Name.identifier(Strings.SCHEMATIC_ENTITY_STORE_CLASS)
 }
 
 object FqNames {
     val SCHEMATIC_RUNTIME_PACKAGE = FqName(Strings.SCHEMATIC_RUNTIME_PACKAGE)
     val SCHEMATIC_SCHEMA_PACKAGE = FqName(Strings.SCHEMATIC_SCHEMA_PACKAGE)
+    val SCHEMATIC_ENTITY_PACKAGE = FqName(Strings.SCHEMATIC_ENTITY_PACKAGE)
+
 }
 
 object ClassIds {
-    val SCHEMATIC_COMPANION = ClassId(FqNames.SCHEMATIC_RUNTIME_PACKAGE, Names.SCHEMATIC_COMPANION_CLASS)
     val SCHEMATIC_SCHEMA = ClassId(FqNames.SCHEMATIC_SCHEMA_PACKAGE, Names.SCHEMATIC_SCHEMA_CLASS)
+    val SCHEMATIC_COMPANION = ClassId(FqNames.SCHEMATIC_RUNTIME_PACKAGE, Names.SCHEMATIC_COMPANION_CLASS)
+    val SCHEMATIC_ENTITY_COMPANION = ClassId(FqNames.SCHEMATIC_ENTITY_PACKAGE, Names.SCHEMATIC_ENTITY_COMPANION_CLASS)
+    val SCHEMATIC_ENTITY_STORE_CLASS = ClassId(FqNames.SCHEMATIC_ENTITY_PACKAGE, Names.SCHEMATIC_ENTITY_STORE_CLASS)
 }
-
-const val SCHEMATIC_CLASS = "Schematic"
 
 const val FIELD_DEFINITION_FUNCTION_CLASS = "FieldDefinitionFunction"
 const val DEFINITION_TRANSFORM_FUNCTION_CLASS = "DefinitionTransformFunction"
