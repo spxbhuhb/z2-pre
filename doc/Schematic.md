@@ -39,7 +39,7 @@ Schematic entities are schematic classes with a few additional features:
 - mandatory `uuid` field
 - mandatory `name` field
 - `SchematicEntityCompanion` companion interface
-- `SchematicEntityCompanion.entityStore` field
+- `SchematicEntityCompanion.schematicEntityStore` field
 - `SchematicEntityStore` API
 - `reference` schematic field type
 
@@ -51,10 +51,10 @@ is designed to follow the syntax of `Map`.
 ```kotlin
 interface SchematicEntityStore<T : SchematicEntity<T>> {
     
-    val entityCompanion : SchematicEntityCompanion<T> 
+    val schematicEntityCompanion : SchematicEntityCompanion<T> 
         get() = placeholder() // replaced by the compiler plugin
   
-    fun new(): T = entityCompanion.newInstance()
+    fun new(): T = schematicEntityCompanion.newInstance()
   
     suspend fun put(entity: T): UUID<T>
   
@@ -82,7 +82,7 @@ The compiler plugin adds the `SchematicEntityCompanion` interface to the compani
 
 ```kotlin
 interface SchematicEntityCompanion<T : SchematicEntity<T>> : SchematicCompanion<T> {
-    var schematicStore: SchematicEntityStore<T>
+    var schematicEntityStore: SchematicEntityStore<T>
 }
 ```
 
@@ -92,7 +92,7 @@ itself in the companion object of the entity
 ```kotlin
 val bookService = getService<BookApi>()
 
-val newBook = Book.schematicStore.new() // same as bookService.new()
+val newBook = Book.schematicEntityStore.new() // same as bookService.new()
 ```
 
 ### References
@@ -122,7 +122,7 @@ referenced objects without knowing their respective services:
 
 ```kotlin
 val book = bookService.values().first()
-val publisher = Book.getReferenceCompanion("publisher").store.get(book.publisher)
+val publisher = Book.getReferenceCompanion("publisher").schematicEntityStore.get(book.publisher)
 ```
 
 This might look as much ado about nothing, but it let us write this:
@@ -144,9 +144,6 @@ And this is where the all the above exists:
 - from the companion it can get the store of the entity
 - from the store it can load the entity and display the selected value
 - also from the store it can query the values and display the possible choices for the user
-
-
-
 
 # Old Stuff
 

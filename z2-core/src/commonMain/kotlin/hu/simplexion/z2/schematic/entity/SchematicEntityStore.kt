@@ -22,14 +22,14 @@ interface SchematicEntityStore<T : SchematicEntity<T>> {
     /**
      * The companion object of [T]. Set by the compiler plugin.
      */
-    val entityCompanion : SchematicCompanion<T>
+    val schematicEntityCompanion : SchematicCompanion<T>
         get() = placeholder()
 
     /**
      * Get a new instance of [T] with all properties initialized to their default value
      * This instance is not in the store yet, call [put] to add it.
      */
-    fun new(): T = entityCompanion.newInstance()
+    fun new(): T = schematicEntityCompanion.newInstance()
 
     suspend fun put(entity: T): UUID<T>
 

@@ -18,7 +18,7 @@ class SchematicStoreProperty(
 
     val companionClass = companionTransform.companionClass
 
-    val property = companionClass.properties.firstOrNull { it.name == Names.SCHEMATIC_STORE_PROPERTY}
+    val property = companionClass.properties.firstOrNull { it.name == Names.SCHEMATIC_ENTITY_STORE_PROPERTY}
 
     fun build() {
         if (property == null) return // not an entity

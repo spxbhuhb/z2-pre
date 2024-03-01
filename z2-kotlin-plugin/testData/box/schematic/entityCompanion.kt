@@ -4,13 +4,13 @@ import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.schematic.entity.SchematicEntity
 import hu.simplexion.z2.schematic.entity.SchematicEntityCompanion
 
-class NoCompanion : SchematicEntity<NoCompanion>() {
-    override var uuid by self<NoCompanion>()
+class EntityNoCompanion : SchematicEntity<EntityNoCompanion>() {
+    override var uuid by self<EntityNoCompanion>()
     override var name by string()
 }
 
-class NoSupertype : SchematicEntity<NoSupertype>() {
-    override var uuid by self<NoSupertype>()
+class EntityNoSuperType : SchematicEntity<EntityNoSuperType>() {
+    override var uuid by self<EntityNoSuperType>()
     override var name by string()
 
     companion object {
@@ -38,12 +38,12 @@ class CompanionWithEntitySupertype : SchematicEntity<CompanionWithEntitySupertyp
 
 @Suppress("USELESS_IS_CHECK")
 fun box(): String {
-    if (NoCompanion !is SchematicEntityCompanion<*>) return "Fail: NoCompanion is not SchematicEntityCompanion"
-    if (NoCompanion.schematicFqName != "foo.bar.NoCompanion") return "Fail: NoCompanion.schematicFqName"
+    if (EntityNoCompanion !is SchematicEntityCompanion<*>) return "Fail: EntityNoCompanion is not SchematicEntityCompanion"
+    if (EntityNoCompanion.schematicFqName != "foo.bar.EntityNoCompanion") return "Fail: EntityNoCompanion.schematicFqName"
 
-    if (NoSupertype !is SchematicEntityCompanion<*>) return "Fail: NoSupertype is not SchematicEntityCompanion"
-    if (NoSupertype.schematicFqName != "foo.bar.NoSupertype") return "Fail: NoSupertype.schematicFqName"
-    if (NoSupertype.a != 12) return "Fail: NoSupertype.a != 12"
+    if (EntityNoSuperType !is SchematicEntityCompanion<*>) return "Fail: EntityNoSuperType is not SchematicEntityCompanion"
+    if (EntityNoSuperType.schematicFqName != "foo.bar.EntityNoSuperType") return "Fail: EntityNoSuperType.schematicFqName"
+    if (EntityNoSuperType.a != 12) return "Fail: EntityNoSuperType.a != 12"
 
     if (CompanionWithSchematicSupertype !is SchematicEntityCompanion<*>) return "Fail: CompanionWithSchematicSupertype is not SchematicEntityCompanion"
     if (CompanionWithSchematicSupertype.schematicFqName != "foo.bar.CompanionWithSchematicSupertype") return "Fail: CompanionWithSupertype.schematicFqName"

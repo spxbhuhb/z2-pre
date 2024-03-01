@@ -3,11 +3,15 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir
 
+import hu.simplexion.z2.kotlin.schematic.ClassIds
 import hu.simplexion.z2.kotlin.schematic.ir.klass.SchematicClassTransform
+import hu.simplexion.z2.kotlin.schematic.ir.store.SchematicEntityStoreTransform
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.ir.util.defaultType
 
 class SchematicModuleTransform(
@@ -26,6 +30,15 @@ class SchematicModuleTransform(
                 it.initialize(declaration)
                 classTransforms += it
             }
+
+            return declaration
+        }
+
+        val schematicEntityStore = declaration.superTypes.any { it.classOrNull?.owner?.classId == ClassIds.SCHEMATIC_ENTITY_STORE }
+
+        if (schematicEntityStore) {
+            declaration.accept(SchematicEntityStoreTransform(pluginContext), null)
+            return declaration
         }
 
         return declaration

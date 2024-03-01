@@ -100,7 +100,14 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (callableId.callableName != Names.SERVICE_NAME_PROPERTY) return emptyList()
 
         return listOf(
-            createMemberProperty(context !!.owner, ServicesPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType, isVal = false).symbol
+            createMemberProperty(
+                context !!.owner,
+                ServicesPluginKey,
+                Names.SERVICE_NAME_PROPERTY,
+                session.builtinTypes.stringType.coneType,
+                isVal = false,
+                hasBackingField = true
+            ).symbol
         )
     }
 

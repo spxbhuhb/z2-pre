@@ -57,7 +57,7 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
         val schemaType = ClassIds.SCHEMATIC_SCHEMA.constructClassLikeType(arrayOf(classSymbol.defaultType()), false)
 
         val storeType = if (isEntity) {
-            ClassIds.SCHEMATIC_ENTITY_STORE_CLASS.constructClassLikeType(arrayOf(classSymbol.defaultType()), false)
+            ClassIds.SCHEMATIC_ENTITY_STORE.constructClassLikeType(arrayOf(classSymbol.defaultType()), false)
         } else {
             null
         }
@@ -108,7 +108,7 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
         result += Names.SCHEMATIC_FQNAME_PROPERTY
         result += Names.SCHEMATIC_SCHEMA_PROPERTY
 
-        if (classData.entity) result += Names.SCHEMATIC_STORE_PROPERTY
+        if (classData.entity) result += Names.SCHEMATIC_ENTITY_STORE_PROPERTY
 
         return result
     }
@@ -145,12 +145,12 @@ class SchematicDeclarationGenerator(session: FirSession) : FirDeclarationGenerat
                 )
             }
 
-            Names.SCHEMATIC_STORE_PROPERTY -> {
+            Names.SCHEMATIC_ENTITY_STORE_PROPERTY -> {
                 listOf(
                     createMemberProperty(
                         context.owner,
                         SchematicPluginKey,
-                        Names.SCHEMATIC_STORE_PROPERTY,
+                        Names.SCHEMATIC_ENTITY_STORE_PROPERTY,
                         classData.storeType!!,
                         isVal = false,
                         hasBackingField = true

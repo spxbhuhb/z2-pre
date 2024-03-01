@@ -5,7 +5,7 @@ import hu.simplexion.z2.util.placeholder
 
 interface SchematicEntityCompanion<T : SchematicEntity<T>> : SchematicCompanion<T> {
 
-    var schematicStore: SchematicEntityStore<T>
+    var schematicEntityStore: SchematicEntityStore<T>
         get() = placeholder()
         set(value) = placeholder()
 

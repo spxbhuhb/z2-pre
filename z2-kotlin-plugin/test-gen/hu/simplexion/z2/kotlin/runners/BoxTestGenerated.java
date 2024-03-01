@@ -72,6 +72,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("entityReference.kt")
+        public void testEntityReference() throws Exception {
+            runTest("testData/box/schematic/entityReference.kt");
+        }
+
+        @Test
+        @TestMetadata("entityStore.kt")
+        public void testEntityStore() throws Exception {
+            runTest("testData/box/schematic/entityStore.kt");
+        }
+
+        @Test
         @TestMetadata("fqName.kt")
         public void testFqName() throws Exception {
             runTest("testData/box/schematic/fqName.kt");
@@ -99,12 +111,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
         @TestMetadata("proto.kt")
         public void testProto() throws Exception {
             runTest("testData/box/schematic/proto.kt");
-        }
-
-        @Test
-        @TestMetadata("reference.kt")
-        public void testReference() throws Exception {
-            runTest("testData/box/schematic/reference.kt");
         }
 
         @Test
