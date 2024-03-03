@@ -127,11 +127,11 @@ open class NullableUuidSchemaField<T>(
 class UuidListSchemaField<T>(
     definitionDefault: MutableList<UUID<T>>?,
     nil: Boolean?,
-) : hu.simplexion.z2.schematic.schema.ListSchemaField<UUID<T>> {
+) : ListSchemaField<UUID<T>, UuidSchemaField<T>>(
+    UuidSchemaField<T>(null, nil, false)
+) {
 
     override var name: String = ""
-
-    override val itemSchemaField = UuidSchemaField<T>(null, nil, false)
 
     override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
 

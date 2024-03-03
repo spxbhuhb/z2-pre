@@ -41,7 +41,7 @@ class SchematicPropertyTransform(
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         property = declaration
-        type = checkNotNull(property.getter) { "missing return type" }.returnType
+        type = checkNotNull(property.getter) { "missing property getter" }.returnType
 
         property.isDelegated = false
         property.backingField = null

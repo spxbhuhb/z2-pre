@@ -20,7 +20,7 @@ interface SchematicNode {
     var schematicParent : SchematicNode?
 
     /**
-     * When not null the schematic will create events on data changes
+     * When not zero the schematic will create events on data changes
      * and also run validation after each data change. Incremented and
      * decremented by [attach] and [detach] respectively.
      */

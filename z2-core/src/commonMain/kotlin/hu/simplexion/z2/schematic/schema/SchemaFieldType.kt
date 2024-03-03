@@ -6,6 +6,7 @@ enum class SchemaFieldType {
     Duration,
     Enum,
     Email,
+    Generic,
     Instant,
     Int,
     List,

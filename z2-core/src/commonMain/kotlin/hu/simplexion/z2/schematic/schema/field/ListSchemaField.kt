@@ -1,23 +1,33 @@
-package hu.simplexion.z2.schematic.schema
+package hu.simplexion.z2.schematic.schema.field
 
+import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicList
+import hu.simplexion.z2.schematic.schema.SchemaField
+import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.validation.FieldValidationResult
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.schematic.schema.validation.fail
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
+import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 
-interface ListSchemaField<VT> : hu.simplexion.z2.schematic.schema.SchemaField<List<VT>> {
+open class ListSchemaField<VT, FT : SchemaField<*>>(
+    val itemSchemaField: FT
+) : SchemaField<List<VT>> {
 
-    override val type: hu.simplexion.z2.schematic.schema.SchemaFieldType
-        get() = hu.simplexion.z2.schematic.schema.SchemaFieldType.List
+    override var name: String = ""
+
+    override val type: SchemaFieldType
+        get() = SchemaFieldType.List
 
     override val isNullable: Boolean
         get() = false
 
+    override val definitionDefault : SchematicList<VT>?
+        get() = naturalDefault
+
     override val naturalDefault: SchematicList<VT>
         get() = SchematicList(null, mutableListOf(), this)
-
-    val itemSchemaField: hu.simplexion.z2.schematic.schema.SchemaField<VT>
 
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): SchematicList<VT>? {
         when (anyValue) {
@@ -65,8 +75,16 @@ interface ListSchemaField<VT> : hu.simplexion.z2.schematic.schema.SchemaField<Li
         )
     }
 
+    override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
+        TODO("Not yet implemented")
+    }
+
+    override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
+        TODO("Not yet implemented")
+    }
+
     @Suppress("UNCHECKED_CAST")
-    override fun copy(value: Any?): List<VT>? {
+    override fun copy(value: Any?): SchematicList<VT>? {
         if (value == null) return null
 
         value as SchematicList<VT>

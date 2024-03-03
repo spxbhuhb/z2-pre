@@ -22,6 +22,7 @@ class SchematicPluginContext(
     // TODO globals.kt and inline names here got a bit confused, clear it up
     val schematicClass = Strings.SCHEMATIC_CLASS.runtimeClass()
     val schematicEntityClass = Strings.SCHEMATIC_ENTITY_CLASS.runtimeClass(pkg = Strings.SCHEMATIC_ENTITY_PACKAGE)
+    val schematicEntityStoreClass = Strings.SCHEMATIC_ENTITY_STORE_CLASS.runtimeClass(pkg = Strings.SCHEMATIC_ENTITY_PACKAGE)
     val schematicToAccessContext = checkNotNull(schematicClass.getSimpleFunction(SCHEMATIC_TO_ACCESS_CONTEXT)) { "missing Schematic.toSchematicAccessContext"}
 
     val schemaClass = Strings.SCHEMATIC_SCHEMA_CLASS.runtimeClass(Strings.SCHEMATIC_SCHEMA_PACKAGE)

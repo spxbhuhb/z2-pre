@@ -90,6 +90,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("generic.kt")
+        public void testGeneric() throws Exception {
+            runTest("testData/box/schematic/generic.kt");
+        }
+
+        @Test
         @TestMetadata("getAndSet.kt")
         public void testGetAndSet() throws Exception {
             runTest("testData/box/schematic/getAndSet.kt");
@@ -99,6 +105,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
         @TestMetadata("infix.kt")
         public void testInfix() throws Exception {
             runTest("testData/box/schematic/infix.kt");
+        }
+
+        @Test
+        @TestMetadata("list.kt")
+        public void testList() throws Exception {
+            runTest("testData/box/schematic/list.kt");
+        }
+
+        @Test
+        @TestMetadata("listGeneric.kt")
+        public void testListGeneric() throws Exception {
+            runTest("testData/box/schematic/listGeneric.kt");
         }
 
         @Test

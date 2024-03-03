@@ -1,12 +1,13 @@
 package hu.simplexion.z2.schematic
 
 import hu.simplexion.z2.schematic.schema.SchemaField
+import hu.simplexion.z2.schematic.schema.field.ListSchemaField
 import hu.simplexion.z2.util.nextHandle
 
 class SchematicList<ST>(
     override var schematicParent: SchematicNode?,
     val backingList : MutableList<ST>,
-    val field: hu.simplexion.z2.schematic.schema.ListSchemaField<ST>
+    val field: ListSchemaField<ST, *>
 ) : MutableList<ST>, SchematicNode {
 
     override val schematicHandle = nextHandle()

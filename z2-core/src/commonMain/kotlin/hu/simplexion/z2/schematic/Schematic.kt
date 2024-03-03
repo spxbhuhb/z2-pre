@@ -86,7 +86,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
     /**
      * Changes the value of a field if it can be converted to the given data type.
      * Throws exception if the conversion fails.
-     * If there are any listeners (that is, [listenerCount] is not 0), validates
+     * If there are any listeners (that is, [schematicListenerCount] is not 0), validates
      * the schematic and fires a [SchematicFieldEvent].
      */
     fun schematicChange(field: SchemaField<*>, value: Any?) {
@@ -202,6 +202,9 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
             nil: Boolean? = null
         ) = UuidListSchemaField(default, nil)
 
+        fun <GT> generic() = GenericSchemaField<GT>()
+
+        fun <LT> list() = ListSchemaField<LT, GenericSchemaField<LT>>(GenericSchemaField())
     }
 
     // -----------------------------------------------------------------------------------

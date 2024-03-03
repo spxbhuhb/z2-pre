@@ -51,6 +51,8 @@ class SchematicFieldVisitor(
         var fieldBuildCall = checkNotNull(backingField.initializer?.expression) { "missing backing field expression: $codePoint" }
         check(fieldBuildCall is IrCall) { "backing field expression is not a call: $codePoint" }
 
+        // replace the field builder parameter if the field is a ListSchemaField
+
         // replace the field builder call with one that sets the companion of the referenced class
         // FROM:  val a by schematic<A>()
         // TO:    val a by schematic<A>().setCompanion(A.Companion)

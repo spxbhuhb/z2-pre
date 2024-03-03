@@ -3,16 +3,12 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir
 
-import hu.simplexion.z2.kotlin.schematic.ClassIds
 import hu.simplexion.z2.kotlin.schematic.ir.klass.SchematicClassTransform
 import hu.simplexion.z2.kotlin.schematic.ir.store.SchematicEntityStoreTransform
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.classId
-import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.isSubclassOf
 
 class SchematicModuleTransform(
     private val pluginContext: SchematicPluginContext
@@ -22,8 +18,8 @@ class SchematicModuleTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
 
-        val schematic = declaration.superTypes.contains(pluginContext.schematicClass.typeWith(declaration.defaultType))
-        val schematicEntity = declaration.superTypes.contains(pluginContext.schematicEntityClass.typeWith(declaration.defaultType))
+        val schematic = declaration.isSubclassOf(pluginContext.schematicClass.owner)
+        val schematicEntity = declaration.isSubclassOf(pluginContext.schematicEntityClass.owner)
 
         if (schematic || schematicEntity) {
             SchematicClassTransform(pluginContext).also {
@@ -34,7 +30,7 @@ class SchematicModuleTransform(
             return declaration
         }
 
-        val schematicEntityStore = declaration.superTypes.any { it.classOrNull?.owner?.classId == ClassIds.SCHEMATIC_ENTITY_STORE }
+        val schematicEntityStore = declaration.isSubclassOf(pluginContext.schematicEntityStoreClass.owner)
 
         if (schematicEntityStore) {
             declaration.accept(SchematicEntityStoreTransform(pluginContext), null)

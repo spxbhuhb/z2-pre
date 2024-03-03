@@ -4,7 +4,6 @@ import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.schematic.SchematicList
 import hu.simplexion.z2.schematic.entity.SchematicEntity
-import hu.simplexion.z2.schematic.schema.ListSchemaField
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
@@ -150,11 +149,11 @@ open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
 class ReferenceListSchemaField<T : SchematicEntity<T>>(
     definitionDefault: MutableList<UUID<T>>?,
     nil: Boolean?
-) : ListSchemaField<UUID<T>> {
+) : ListSchemaField<UUID<T>, ReferenceSchemaField<T>>(
+    ReferenceSchemaField(null, nil, false)
+) {
 
     override var name: String = ""
-
-    override val itemSchemaField = ReferenceSchemaField<T>(null, nil, false)
 
     override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
 
@@ -179,8 +178,4 @@ class ReferenceListSchemaField<T : SchematicEntity<T>>(
         return this
     }
 
-    infix fun nil(value: Boolean): ReferenceListSchemaField<T> {
-        itemSchemaField.nil = value
-        return this
-    }
 }
