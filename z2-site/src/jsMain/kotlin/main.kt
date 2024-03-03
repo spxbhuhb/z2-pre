@@ -2,6 +2,7 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.adaptive.field.text.demo.textFieldPlayground
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
@@ -57,6 +58,7 @@ object mainRouter : BrowserRouter() {
 
     // @formatter:off
     val components       by componentRouter
+    val adaptive         by adaptiveRouter
     val pages            by pagesRouter
     val other            by otherRouter
     // @formatter:on
@@ -96,6 +98,16 @@ object componentRouter : NavRouter(loggedIn = false) {
     val table            by render(strings.table)            { tableDemo() }
     val timepicker       by render(strings.timepicker)       { timepickerDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }
+    // @formatter:on
+}
+
+
+@Suppress("unused")
+object adaptiveRouter : NavRouter(loggedIn = false) {
+    override val label = strings.adaptive
+
+    // @formatter:off
+    val adaptive         by render(strings.textField)         { textFieldPlayground() }
     // @formatter:on
 }
 
