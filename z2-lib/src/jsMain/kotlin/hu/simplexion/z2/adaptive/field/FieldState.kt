@@ -2,19 +2,7 @@ package hu.simplexion.z2.adaptive.field
 
 import hu.simplexion.z2.schematic.Schematic
 
-class FieldState<T> : Schematic<FieldState<T>>() {
-
-    /**
-     * The current value of the field. If there is no value (for example a select
-     * with no options selected yet) getting [value] throws a [IllegalStateException].
-     */
-    var value by generic<T>()
-
-    /**
-     * The current value of the field or null if there is no value (for example a select
-     * with no options selected yet).
-     */
-    var valueOrNull by generic<T?>()
+class FieldState : Schematic<FieldState>() {
 
     /**
      * True when the field has the focus.

@@ -32,8 +32,8 @@ class FilledRenderer : AbstractTextRenderer() {
         }
     }
 
-    override fun updateLeading() {
-        super.updateLeading()
+    override fun patchLeading() {
+        super.patchLeading()
 
         if (isEmpty && ! hasFocus) {
             input.removeCss(pt20)

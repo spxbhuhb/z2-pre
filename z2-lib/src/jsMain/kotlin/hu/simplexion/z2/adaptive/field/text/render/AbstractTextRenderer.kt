@@ -2,16 +2,17 @@ package hu.simplexion.z2.adaptive.field.text.render
 
 import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.adaptive.event.EventCentral
+import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.EnterKeyEvent
 import hu.simplexion.z2.adaptive.field.EscapeKeyEvent
-import hu.simplexion.z2.adaptive.field.FieldConfig
-import hu.simplexion.z2.adaptive.field.FieldState
+import hu.simplexion.z2.adaptive.field.FieldRenderer
+import hu.simplexion.z2.adaptive.field.RequestBlurEvent
 import hu.simplexion.z2.adaptive.field.text.TextField
-import hu.simplexion.z2.adaptive.field.text.TextRenderer
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.schematic.SchematicEvent
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLInputElement
@@ -24,15 +25,9 @@ import org.w3c.dom.HTMLInputElement
  * - [FilledRenderer]
  * - [OutlinedRenderer]
  */
-abstract class AbstractTextRenderer : TextRenderer {
+abstract class AbstractTextRenderer : FieldRenderer<TextField, String> {
 
-    lateinit var field: TextField
-
-    val fieldState: FieldState<String>
-        get() = this.field.fieldState
-
-    val fieldConfig: FieldConfig
-        get() = this.field.fieldConfig
+    override lateinit var field: TextField
 
     lateinit var mainContainer: Z2
     lateinit var inputContainer: Z2
@@ -46,26 +41,12 @@ abstract class AbstractTextRenderer : TextRenderer {
     val inputElement
         get() = input.htmlElement as HTMLInputElement
 
-    val hasFocus
-        get() = fieldState.hasFocus
-
-    val error
-        get() = fieldState.touched && (fieldState.error || fieldState.invalidInput)
-
-    val readOnly
-        get() = fieldConfig.readOnly
-
     val isEmpty
-        get() = fieldState.valueOrNull.isNullOrEmpty()
+        get() = fieldValue.valueOrNull.isNullOrEmpty()
 
     open val baseHeight = 56.px
 
     override fun render(field: TextField) {
-        if (::field.isInitialized) {
-            update()
-            return
-        }
-
         this.field = field
 
         with(field) {
@@ -79,7 +60,14 @@ abstract class AbstractTextRenderer : TextRenderer {
             support()
         }
 
-        update()
+        patch()
+    }
+    
+    override fun patch(event : Z2Event) {
+        when (event) {
+            is SchematicEvent -> patch()
+            is RequestBlurEvent -> inputElement.blur()
+        }
     }
 
     // ---- Main Container --------------------------------------------------------------
@@ -189,8 +177,7 @@ abstract class AbstractTextRenderer : TextRenderer {
 
     open fun onInput() {
         if (! readOnly) {
-            fieldState.valueOrNull = inputElement.value
-            fieldState.value = inputElement.value
+            fieldValue.valueOrNull = inputElement.value
             fieldState.touched = true
         }
     }
@@ -200,26 +187,26 @@ abstract class AbstractTextRenderer : TextRenderer {
             support = this
         }
 
-    open fun update() {
-        updateMainContainer()
-        updateAnimation()
-        updateSupport()
+    open fun patch() {
+        patchMainContainer()
+        patchAnimation()
+        patchSupport()
     }
 
-    open fun updateMainContainer() {
+    open fun patchMainContainer() {
         when {
             error -> mainContainer.replaceCss(borderColorOutline, borderColorPrimary, borderColorError)
             hasFocus -> mainContainer.replaceCss(borderColorError, borderColorOutline, borderColorPrimary)
             else -> mainContainer.replaceCss(borderColorError, borderColorPrimary, borderColorOutline)
         }
 
-        updateLabel()
-        updateLeading()
-        updateInput()
-        updateTrailing()
+        patchLabel()
+        patchLeading()
+        patchInput()
+        patchTrailing()
     }
 
-    open fun updateLabel() {
+    open fun patchLabel() {
         if (isEmpty && ! hasFocus && ! readOnly) {
             hideLabel()
         } else {
@@ -249,7 +236,7 @@ abstract class AbstractTextRenderer : TextRenderer {
         label.htmlElement.innerText = (fieldConfig.label ?: "")
     }
 
-    open fun updateLeading() {
+    open fun patchLeading() {
         leading.clear()
 
         val li = fieldConfig.leadingIcon
@@ -261,11 +248,11 @@ abstract class AbstractTextRenderer : TextRenderer {
         }
     }
 
-    open fun updateInput() {
+    open fun patchInput() {
         inputElement.readOnly = readOnly
         inputElement.placeholder = if (hasFocus || readOnly) "" else fieldConfig.label ?: ""
 
-        val value = fieldState.valueOrNull ?: ""
+        val value = fieldValue.valueOrNull ?: ""
         if (inputElement.value != value) inputElement.value = value
 
         if (error) {
@@ -275,7 +262,7 @@ abstract class AbstractTextRenderer : TextRenderer {
         }
     }
 
-    fun updateTrailing() {
+    fun patchTrailing() {
         trailing.clear()
         if (error) {
             fieldConfig.errorIcon?.let { trailing.icon(it, fill = 1).addCss(errorText) }
@@ -284,7 +271,7 @@ abstract class AbstractTextRenderer : TextRenderer {
         }
     }
 
-    fun updateAnimation() {
+    fun patchAnimation() {
         if (error) {
             animation.replaceCss(borderColorPrimary, borderColorError)
         } else {
@@ -292,7 +279,7 @@ abstract class AbstractTextRenderer : TextRenderer {
         }
     }
 
-    fun updateSupport() {
+    fun patchSupport() {
         support.clear()
 
         if (fieldConfig.supportEnabled) {

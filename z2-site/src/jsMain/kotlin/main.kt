@@ -2,6 +2,7 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.adaptive.field.select.demo.selectFieldPlayground
 import hu.simplexion.z2.adaptive.field.text.demo.textFieldPlayground
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserIcons
@@ -107,7 +108,8 @@ object adaptiveRouter : NavRouter(loggedIn = false) {
     override val label = strings.adaptive
 
     // @formatter:off
-    val adaptive         by render(strings.textField)         { textFieldPlayground() }
+    val text         by render(strings.textField)         { textFieldPlayground() }
+    val select       by render(strings.select)            { selectFieldPlayground() }
     // @formatter:on
 }
 

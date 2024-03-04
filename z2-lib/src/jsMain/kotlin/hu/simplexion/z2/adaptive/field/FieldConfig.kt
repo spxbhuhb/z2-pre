@@ -27,4 +27,5 @@ class FieldConfig : Schematic<FieldConfig>() {
     var trailingIcon by generic<LocalizedIcon?>()
 
     var errorIcon by generic<LocalizedIcon?>()
+
 }
