@@ -1,9 +1,6 @@
 package hu.simplexion.z2.kotlin.services.fir
 
-import hu.simplexion.z2.kotlin.services.Names
-import hu.simplexion.z2.kotlin.services.ServicesPluginKey
-import hu.simplexion.z2.kotlin.services.Strings
-import hu.simplexion.z2.kotlin.services.serviceConsumerName
+import hu.simplexion.z2.kotlin.services.*
 import hu.simplexion.z2.kotlin.util.isFromPlugin
 import hu.simplexion.z2.kotlin.util.superTypeContains
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -21,6 +18,7 @@ import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.types.coneType
+import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.Name
@@ -45,6 +43,10 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val serviceInterface: ClassId,
         val functionNames: List<Name>
     )
+
+    val serviceCallTransportType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT)!!.constructType(emptyArray(), true)
+    }
 
     @OptIn(SymbolInternals::class)
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
@@ -85,6 +87,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
         return setOf(
             Names.SERVICE_NAME_PROPERTY,
+            Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
         ) + declarations.functionNames
     }
@@ -97,27 +100,45 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
         if (context.isForeign) return emptyList()
-        if (callableId.callableName != Names.SERVICE_NAME_PROPERTY) return emptyList()
 
-        return listOf(
-            createMemberProperty(
-                context !!.owner,
-                ServicesPluginKey,
-                Names.SERVICE_NAME_PROPERTY,
-                session.builtinTypes.stringType.coneType,
-                isVal = false,
-                hasBackingField = true
-            ).symbol
-        )
+        return when (callableId.callableName) {
+            Names.SERVICE_NAME_PROPERTY -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        ServicesPluginKey,
+                        Names.SERVICE_NAME_PROPERTY,
+                        session.builtinTypes.stringType.coneType,
+                        isVal = false,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
+            Names.SERVICE_CALL_TRANSPORT_PROPERTY -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        ServicesPluginKey,
+                        Names.SERVICE_CALL_TRANSPORT_PROPERTY,
+                        serviceCallTransportType,
+                        isVal = false,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
+            else -> emptyList()
+        }
     }
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
         if (context.isForeign) return emptyList()
 
-        val serviceConsumerClasses = serviceConsumerClasses[callableId.classId] ?: return emptyList()
+        val serviceConsumerClass = serviceConsumerClasses[callableId.classId] ?: return emptyList()
 
         val functionName = callableId.callableName
-        val interfaceFunctions = session.symbolProvider.getClassDeclaredFunctionSymbols(serviceConsumerClasses.serviceInterface, functionName)
+        val interfaceFunctions = session.symbolProvider.getClassDeclaredFunctionSymbols(serviceConsumerClass.serviceInterface, functionName)
 
         return interfaceFunctions.map { interfaceFunction ->
             createMemberFunction(context !!.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {

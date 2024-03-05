@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.getClass
@@ -49,6 +48,7 @@ class ConsumerClassTransform(
         collectServiceFunctions(interfaceClass)
 
         addServiceNameInitializer()
+        addServiceCallTransportInitializer()
 
         for (serviceFunction in consumerClass.functions) {
             transformServiceFunction(serviceFunction)
@@ -63,6 +63,13 @@ class ConsumerClassTransform(
         serviceNameGetter = property.getter !!.symbol
     }
 
+    private fun addServiceCallTransportInitializer() {
+        val property = consumerClass.property(Names.SERVICE_CALL_TRANSPORT_PROPERTY)
+        val backingField = requireNotNull(property.backingField)
+
+        backingField.initializer = irFactory.createExpressionBody(irNull())
+    }
+
     private fun transformServiceFunction(function: IrSimpleFunction) {
         val origin = function.origin as? IrDeclarationOrigin.GeneratedByPlugin ?: return
         if (origin.pluginKey != ServicesPluginKey) return
@@ -71,7 +78,7 @@ class ConsumerClassTransform(
             + irReturn(
                 irCall(
                     pluginContext.callFunction,
-                    dispatchReceiver = getServiceTransport()
+                    dispatchReceiver = getServiceCallTransport(irGet(function.dispatchReceiverParameter!!))
                 ).also {
                     it.type = function.returnType
                     it.putTypeArgument(CALL_TYPE_INDEX, function.returnType)
@@ -84,10 +91,10 @@ class ConsumerClassTransform(
         }
     }
 
-    fun getServiceTransport(): IrCallImpl =
+    fun getServiceCallTransport(dispatchReceiver : IrExpression): IrCallImpl =
         irCall(
-            pluginContext.defaultServiceCallTransport,
-            IrStatementOrigin.GET_PROPERTY
+            consumerClass.functions.firstOrNull { it.name == Names.SERVICE_CALL_TRANSPORT_OR_DEFAULT }!!.symbol,
+            dispatchReceiver = dispatchReceiver
         )
 
     fun buildPayload(function: IrSimpleFunction): IrExpression {

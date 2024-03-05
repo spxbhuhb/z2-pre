@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin.services
 
 import hu.simplexion.z2.kotlin.util.LocalName
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
@@ -11,15 +12,27 @@ object Strings {
     const val SERVICE_INTERFACE = "Service"
     const val SERVICE_INTERFACE_FQ = "hu.simplexion.z2.services.Service"
     const val SERVICE_NAME_PROPERTY = "serviceName"
+    const val SERVICE_CALL_TRANSPORT_OR_DEFAULT = "serviceCallTransportOrDefault"
+    const val SERVICE_CALL_TRANSPORT_PROPERTY = "serviceCallTransport"
+    const val SERVICE_CALL_TRANSPORT = "ServiceCallTransport"
+    const val SERVICES_TRANSPORT_PACKAGE = "hu.simplexion.z2.services.transport"
 }
 
 object Names {
     val SERVICE_INTERFACE = Name.identifier(Strings.SERVICE_INTERFACE)
     val SERVICE_NAME_PROPERTY = Name.identifier(Strings.SERVICE_NAME_PROPERTY)
+    val SERVICE_CALL_TRANSPORT_OR_DEFAULT = Name.identifier(Strings.SERVICE_CALL_TRANSPORT_OR_DEFAULT)
+    val SERVICE_CALL_TRANSPORT_PROPERTY = Name.identifier(Strings.SERVICE_CALL_TRANSPORT_PROPERTY)
+    val SERVICE_CALL_TRANSPORT = Name.identifier(Strings.SERVICE_CALL_TRANSPORT)
 }
 
 object FqNames {
     val SERVICE_INTERFACE = FqName.fromSegments(Strings.SERVICE_INTERFACE_FQ.split('.'))
+    val SERVICES_TRANSPORT_PACKAGE = FqName.fromSegments(Strings.SERVICES_TRANSPORT_PACKAGE.split('.'))
+}
+
+object ClassIds {
+    val SERVICE_CALL_TRANSPORT = ClassId(FqNames.SERVICES_TRANSPORT_PACKAGE, Names.SERVICE_CALL_TRANSPORT)
 }
 
 val Name.serviceConsumerName get() = Name.identifier("${this.identifier}\$Consumer")
@@ -43,7 +56,7 @@ const val GET_SERVICE = "getService"
 const val SERVICE_IMPL_NEW_INSTANCE = "newInstance"
 
 
-val FUN_NAMES_TO_SKIP = listOf("service", "equals", "hashCode", "toString")
+val FUN_NAMES_TO_SKIP = listOf("equals", "hashCode", "toString", Strings.SERVICE_CALL_TRANSPORT_OR_DEFAULT)
 val SERVICE_CONTEXT_PROPERTY = LocalName("serviceContext")
 const val SERVICE_CONTEXT_ARG_NAME = "serviceContext"
 const val SERVICE_CONTEXT_CLASS = "ServiceContext"

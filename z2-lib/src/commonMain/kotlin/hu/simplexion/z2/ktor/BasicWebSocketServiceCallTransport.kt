@@ -2,17 +2,11 @@ package hu.simplexion.z2.ktor
 
 import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.services.transport.*
 import hu.simplexion.z2.util.Lock
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.use
 import hu.simplexion.z2.util.vmNowMicro
-import hu.simplexion.z2.services.transport.ServiceErrorHandler
-import hu.simplexion.z2.services.transport.ServiceResultException
-import hu.simplexion.z2.services.transport.ServiceTimeoutException
-import hu.simplexion.z2.services.transport.RequestEnvelope
-import hu.simplexion.z2.services.transport.ResponseEnvelope
-import hu.simplexion.z2.services.transport.ServiceCallStatus
-import hu.simplexion.z2.services.transport.ServiceCallTransport
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
@@ -20,7 +14,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.collections.set
 
-open class BasicWebSocketServiceTransport(
+open class BasicWebSocketServiceCallTransport(
     val path: String = "/z2/service",
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,

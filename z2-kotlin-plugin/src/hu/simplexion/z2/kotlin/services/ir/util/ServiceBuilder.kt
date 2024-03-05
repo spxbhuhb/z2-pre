@@ -22,14 +22,6 @@ interface ServiceBuilder : AbstractIrBuilder {
 
     val serviceNames : MutableList<String>
 
-    fun collectServiceNames(klass : IrClass) {
-        for (superType in klass.superTypes) {
-            if (superType.isSubtypeOfClass(pluginContext.serviceClass) && superType.classFqName != SERVICE_IMPL_FQ_NAME) {
-                serviceNames += superType.classFqName!!.asString()
-            }
-        }
-    }
-
     fun collectServiceFunctions(klass : IrClass) {
         for (superType in klass.superTypes) {
             if (superType.isSubtypeOfClass(pluginContext.serviceClass) && superType.classFqName != SERVICE_IMPL_FQ_NAME) {
