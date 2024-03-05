@@ -55,8 +55,8 @@ const val DEFAULT_SERVICE_CALL_TRANSPORT = "defaultServiceCallTransport"
 const val GET_SERVICE = "getService"
 const val SERVICE_IMPL_NEW_INSTANCE = "newInstance"
 
-
-val FUN_NAMES_TO_SKIP = listOf("equals", "hashCode", "toString", Strings.SERVICE_CALL_TRANSPORT_OR_DEFAULT)
+// FIXME service API function new should not be directly skipped
+val FUN_NAMES_TO_SKIP = listOf("new", "equals", "hashCode", "toString", Strings.SERVICE_CALL_TRANSPORT_OR_DEFAULT)
 val SERVICE_CONTEXT_PROPERTY = LocalName("serviceContext")
 const val SERVICE_CONTEXT_ARG_NAME = "serviceContext"
 const val SERVICE_CONTEXT_CLASS = "ServiceContext"
