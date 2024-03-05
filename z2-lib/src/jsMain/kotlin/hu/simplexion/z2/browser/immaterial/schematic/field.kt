@@ -225,9 +225,8 @@ private fun Z2.secretField(context: SchematicAccessContext, label: LocalizedText
 private fun Z2.stringField(context: SchematicAccessContext, label: LocalizedText) =
     BoundField(this, context) {
         val field = context.field
-        val value = field.getValue(context.schematic) as String
 
-        textField(value, defaultFieldStyle, label, label.support) {
+        textField(context.value as? String ?: "", defaultFieldStyle, label, label.support) {
             context.schematic.schematicChange(field, it.value)
         }
     }

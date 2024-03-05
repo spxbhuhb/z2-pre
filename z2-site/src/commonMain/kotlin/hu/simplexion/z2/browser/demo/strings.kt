@@ -22,6 +22,7 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val segment2 = static("Segment 2")
     val segment3 = static("Segment 3")
     val textField = static("Text Field")
+    val entitySelect = static("entity select")
     val label = static("Label")
     val supportingText = static("Supporting Text")
     val modal = static("Modal")

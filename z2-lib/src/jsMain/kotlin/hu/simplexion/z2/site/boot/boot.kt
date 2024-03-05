@@ -12,7 +12,7 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.default
 import hu.simplexion.z2.browser.routing.effectiveRoles
 import hu.simplexion.z2.browser.routing.isLoggedIn
 import hu.simplexion.z2.history.historyJs
-import hu.simplexion.z2.ktor.BasicWebSocketServiceTransport
+import hu.simplexion.z2.ktor.BasicWebSocketServiceCallTransport
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.localeJs
 import hu.simplexion.z2.localization.text.ICommonStrings
@@ -39,7 +39,7 @@ suspend fun bootJs(
 ) {
     fetch("/z2/session").await()
 
-    defaultServiceCallTransport = BasicWebSocketServiceTransport(
+    defaultServiceCallTransport = BasicWebSocketServiceCallTransport(
         window.location.origin.replace("http", "ws") + "/z2/services",
         SnackbarServiceErrorHandler(),
         false
