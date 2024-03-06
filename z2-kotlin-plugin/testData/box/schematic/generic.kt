@@ -2,7 +2,7 @@ package foo.bar
 
 import hu.simplexion.z2.schematic.Schematic
 
-class Test<T> : Schematic<Test<*>>() {
+class Test<T> : Schematic<Test<T>>() {
 
     var genericField by generic<T>()
 

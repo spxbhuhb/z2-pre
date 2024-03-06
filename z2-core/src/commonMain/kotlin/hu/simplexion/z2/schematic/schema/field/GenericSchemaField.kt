@@ -11,7 +11,6 @@ import hu.simplexion.z2.util.placeholder
 /**
  * Generic field type for list.
  */
-@Suppress("RedundantNullableReturnType")
 class GenericSchemaField<T> : SchemaField<T> {
 
     override var name: String = ""

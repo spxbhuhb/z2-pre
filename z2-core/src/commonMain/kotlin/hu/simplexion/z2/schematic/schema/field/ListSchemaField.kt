@@ -27,7 +27,7 @@ open class ListSchemaField<VT, FT : SchemaField<*>>(
         get() = naturalDefault
 
     override val naturalDefault: SchematicList<VT>
-        get() = SchematicList(null, mutableListOf(), this)
+        get() = SchematicList(mutableListOf(), this)
 
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): SchematicList<VT>? {
         when (anyValue) {
@@ -38,12 +38,12 @@ open class ListSchemaField<VT, FT : SchemaField<*>>(
 
             is SchematicList<*> -> {
                 @Suppress("UNCHECKED_CAST") // TODO think about schematic list assignment
-                return SchematicList(null, anyValue.backingList as MutableList<VT>, this)
+                return SchematicList(anyValue.backingList as MutableList<VT>, this)
             }
 
             is Collection<*> -> {
                 @Suppress("UNCHECKED_CAST") // TODO think about schematic list assignment
-                return SchematicList(null, anyValue.toMutableList() as MutableList<VT>, this)
+                return SchematicList(anyValue.toMutableList() as MutableList<VT>, this)
             }
 
             else -> {
@@ -90,7 +90,6 @@ open class ListSchemaField<VT, FT : SchemaField<*>>(
         value as SchematicList<VT>
 
         return SchematicList(
-            null,
             value.map { itemSchemaField.copy(it) }.toMutableList() as MutableList<VT>,
             this
         )

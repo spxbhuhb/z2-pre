@@ -6,7 +6,7 @@ import hu.simplexion.z2.schematic.SchematicEvent
 import hu.simplexion.z2.schematic.SchematicNode
 
 fun Z2.attachListener(schematicNode: SchematicNode, listenerFun : (event : SchematicEvent) -> Unit) {
-    AnonymousEventListener(schematicNode.schematicHandle) {
+    AnonymousEventListener(schematicNode.schematicState.handle) {
         if (it !is SchematicEvent) return@AnonymousEventListener
         listenerFun(it)
     }

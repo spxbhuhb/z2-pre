@@ -14,7 +14,7 @@ import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.util.UUID
 
 interface ReferenceSchemaFieldCommon<T : SchematicEntity<T>> {
-    var nil : Boolean?
+    var nil: Boolean?
 
     var companion: SchematicCompanion<T>
 
@@ -37,8 +37,8 @@ interface ReferenceSchemaFieldCommon<T : SchematicEntity<T>> {
 
 open class ReferenceSchemaField<T : SchematicEntity<T>>(
     override var definitionDefault: UUID<T>?,
-    override var nil : Boolean?,
-    override val validForCreate : Boolean
+    override var nil: Boolean?,
+    override val validForCreate: Boolean
 ) : SchemaField<UUID<T>>, ReferenceSchemaFieldCommon<T> {
 
     override val type: SchemaFieldType get() = SchemaFieldType.Reference
@@ -51,7 +51,7 @@ open class ReferenceSchemaField<T : SchematicEntity<T>>(
     override lateinit var companion: SchematicCompanion<T>
 
     // called by the compiler plugin to set the companion
-    fun setCompanion(companion: SchematicCompanion<T>) : ReferenceSchemaField<T> {
+    fun setCompanion(companion: SchematicCompanion<T>): ReferenceSchemaField<T> {
         this.companion = companion
         return this
     }
@@ -84,7 +84,7 @@ open class ReferenceSchemaField<T : SchematicEntity<T>>(
         return this
     }
 
-    fun nullable() : NullableReferenceSchemaField<T> {
+    fun nullable(): NullableReferenceSchemaField<T> {
         return NullableReferenceSchemaField(definitionDefault, nil)
     }
 
@@ -92,7 +92,7 @@ open class ReferenceSchemaField<T : SchematicEntity<T>>(
 
 open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
     override var definitionDefault: UUID<T>?,
-    override var nil : Boolean?,
+    override var nil: Boolean?,
 ) : SchemaField<UUID<T>?>, ReferenceSchemaFieldCommon<T> {
 
     override val type: SchemaFieldType get() = SchemaFieldType.Reference
@@ -105,7 +105,7 @@ open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
     override lateinit var companion: SchematicCompanion<T>
 
     // called by the compiler plugin to set the companion
-    fun setCompanion(companion: SchematicCompanion<T>) : NullableReferenceSchemaField<T> {
+    fun setCompanion(companion: SchematicCompanion<T>): NullableReferenceSchemaField<T> {
         this.companion = companion
         return this
     }
@@ -140,7 +140,7 @@ open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
         return this
     }
 
-    fun nullable() : NullableReferenceSchemaField<T> {
+    fun nullable(): NullableReferenceSchemaField<T> {
         return this
     }
 
@@ -155,10 +155,10 @@ class ReferenceListSchemaField<T : SchematicEntity<T>>(
 
     override var name: String = ""
 
-    override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+    override var definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
 
     // called by the compiler plugin to set the companion
-    fun setCompanion(companion: SchematicCompanion<T>) : ReferenceListSchemaField<T> {
+    fun setCompanion(companion: SchematicCompanion<T>): ReferenceListSchemaField<T> {
         itemSchemaField.companion = companion
         return this
     }
@@ -170,11 +170,11 @@ class ReferenceListSchemaField<T : SchematicEntity<T>>(
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.uuidList<T>(fieldNumber).toMutableList()
-        schematic.schematicValues[name] = SchematicList(schematic, value, this)
+        schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 
     infix fun default(value: MutableList<UUID<T>>?): ReferenceListSchemaField<T> {
-        definitionDefault = value?.let { SchematicList(null, it, this) }
+        definitionDefault = value?.let { SchematicList(it, this) }
         return this
     }
 

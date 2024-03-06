@@ -3,7 +3,6 @@ package hu.simplexion.z2.schematic
 import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.adaptive.event.Z2EventListener
 import hu.simplexion.z2.schematic.schema.SchemaField
-import hu.simplexion.z2.util.Z2Handle
 
 /**
  * Schematic nodes may be organized into a tree like DOM. This provides
@@ -11,41 +10,28 @@ import hu.simplexion.z2.util.Z2Handle
  */
 interface SchematicNode {
 
-    /**
-     * The unique handle of this node. All instances must use
-     * `nextHandle` to get their own handle.
-     */
-    val schematicHandle : Z2Handle
-
-    var schematicParent : SchematicNode?
-
-    /**
-     * When not zero the schematic will create events on data changes
-     * and also run validation after each data change. Incremented and
-     * decremented by [attach] and [detach] respectively.
-     */
-    var schematicListenerCount : Int
+    val schematicState: SchematicState
 
     fun fireEvent(field: SchemaField<*>)
 
     /**
      * Attach a listener to this schematic. Calls [EventCentral.attach]
-     * and increments [schematicListenerCount].
+     * and increments [schematicState].listenerCount.
      *
      * This method is **NOT** thread safe.
      */
     fun attach(listener: Z2EventListener) {
         EventCentral.attach(listener)
-        schematicListenerCount ++
+        schematicState.listenerCount++
     }
 
     /**
-     * Detach a previously attached listener and decrement [schematicListenerCount].
+     * Detach a previously attached listener and decrement [schematicState].listenerCount.
      *
      * This method is **NOT** thread safe.
      */
     fun detach(listener: Z2EventListener) {
-        schematicListenerCount --
+        schematicState.listenerCount--
         EventCentral.detach(listener)
     }
 }

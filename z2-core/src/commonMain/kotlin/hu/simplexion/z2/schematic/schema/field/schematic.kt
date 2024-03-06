@@ -167,7 +167,7 @@ class SchematicListSchemaField<T : Schematic<T>>(
 
     override var name: String = ""
 
-    override val definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+    override val definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
 
     // called by the compiler plugin to set the companion
     fun setCompanion(companion: SchematicCompanion<T>) : SchematicListSchemaField<T> {
@@ -182,6 +182,6 @@ class SchematicListSchemaField<T : Schematic<T>>(
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.instanceList(fieldNumber, itemSchemaField.companion)
-        schematic.schematicValues[name] = SchematicList(schematic, value, this)
+        schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 }

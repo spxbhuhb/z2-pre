@@ -2,17 +2,20 @@ package hu.simplexion.z2.schematic
 
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.field.ListSchemaField
-import hu.simplexion.z2.util.nextHandle
 
 class SchematicList<ST>(
-    override var schematicParent: SchematicNode?,
     val backingList : MutableList<ST>,
     val field: ListSchemaField<ST, *>
 ) : MutableList<ST>, SchematicNode {
 
-    override val schematicHandle = nextHandle()
+    var schematicStateOrNull: SchematicState? = null
 
-    override var schematicListenerCount: Int = 0
+    /**
+     * The state of this schematic list instance. The state is created on-demand, typically
+     * when a listener is attached to the schematic.
+     */
+    override val schematicState: SchematicState
+        get() = schematicStateOrNull ?: SchematicState(this).also { schematicStateOrNull = it }
 
     override fun fireEvent(field: SchemaField<*>) {
         TODO("schematic list events")
@@ -22,12 +25,12 @@ class SchematicList<ST>(
         get() = backingList.size
 
     fun <T> T.fire(): T {
-        schematicParent?.fireEvent(field)
+        schematicState.parent?.fireEvent(field)
         return this
     }
 
     fun Boolean.fireOnCondition(): Boolean {
-        if (this) schematicParent?.fireEvent(field)
+        if (this) schematicState.parent?.fireEvent(field)
         return this
     }
 

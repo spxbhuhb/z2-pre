@@ -133,7 +133,7 @@ class UuidListSchemaField<T>(
 
     override var name: String = ""
 
-    override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+    override var definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
@@ -142,11 +142,11 @@ class UuidListSchemaField<T>(
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.uuidList<T>(fieldNumber).toMutableList()
-        schematic.schematicValues[name] = SchematicList(schematic, value, this)
+        schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 
     infix fun default(value: MutableList<UUID<T>>?): UuidListSchemaField<T> {
-        definitionDefault = value?.let { SchematicList(null, it, this) }
+        definitionDefault = value?.let { SchematicList(it, this) }
         return this
     }
 
