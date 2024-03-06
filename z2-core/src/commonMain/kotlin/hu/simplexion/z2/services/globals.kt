@@ -1,5 +1,8 @@
 package hu.simplexion.z2.services
 
+import hu.simplexion.z2.schematic.entity.SchematicEntity
+import hu.simplexion.z2.schematic.entity.SchematicEntityCompanion
+import hu.simplexion.z2.schematic.entity.SchematicEntityStore
 import hu.simplexion.z2.services.factory.BasicServiceImplFactory
 import hu.simplexion.z2.services.factory.ServiceImplFactory
 import hu.simplexion.z2.services.transport.LocalServiceCallTransport
@@ -20,7 +23,21 @@ val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
  * ```
  */
 fun <T : Service> getService(consumer: T? = null): T {
-    return checkNotNull(consumer)
+    checkNotNull(consumer)
+    if (consumer is SchematicEntityStore<*>) {
+        consumer.schematicEntityCompanion.setSchematicEntityStore(consumer)
+    }
+    return consumer
+}
+
+/**
+ * This function is here `getService` has no way to do the proper cast without
+ * the type information.
+ */
+private fun <T : SchematicEntity<T>> SchematicEntityCompanion<T>.setSchematicEntityStore(store : SchematicEntityStore<*>) {
+    check(store.schematicEntityCompanion == this)
+    @Suppress("UNCHECKED_CAST") // the check above ensures that the cast is right
+    schematicEntityStore = store as SchematicEntityStore<T>
 }
 
 /**

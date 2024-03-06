@@ -56,13 +56,15 @@ val testService = getService<TestApi>().also { it.serviceCallTransport = DirectS
 
 class TestImpl : ServiceImpl<TestImpl>, TestApi {
 
-    val store = mutableMapOf<UUID<TestEntity>, TestEntity>(
-        TestEntity().let {
-            it.uuid = UUID()
-            it.name = "${it.uuid}"
-            it.uuid to it
-        }
-    )
+    companion object {
+        val store = mutableMapOf(
+            TestEntity().let {
+                it.uuid = UUID()
+                it.name = "Name of ${it.uuid.toShort()}"
+                it.uuid to it
+            }
+        )
+    }
 
     override suspend fun put(entity: TestEntity): UUID<TestEntity> {
         entity.uuid = UUID()

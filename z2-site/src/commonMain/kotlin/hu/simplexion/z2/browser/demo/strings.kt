@@ -28,6 +28,7 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val modal = static("Modal")
     val confirmDialog = static("Confirm Dialog")
     val confirmMessage = static("Nothing happens, whichever button you click.")
+    val chart = static("Chart")
     val card = static("Card")
     val loremShort = static("Lorem ipsum dolor sit amet, consectetur adipiscing elit")
     val lorem =

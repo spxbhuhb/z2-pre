@@ -39,12 +39,17 @@ class SelectField<VT, OT>(
         selectConfig.renderer.patch(event)
     }
 
-    fun runQuery(value: String) {
-        if (! selectConfig.remote) return
+    fun runGet() {
+        val value = fieldValue.valueOrNull ?: return
+        localLaunch {
+            selectState.options = listOf(selectConfig.get.get(this@SelectField, value))
+        }
+    }
 
+    fun runQuery(value: String) {
         val inputRevision = ++ revision
 
-        if (value.isEmpty() || value.length < selectConfig.minimumFilterLength) {
+        if (value.length < selectConfig.minimumFilterLength) {
             selectState.running = false
             selectState.options = emptyList()
             return

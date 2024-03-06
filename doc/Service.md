@@ -128,7 +128,7 @@ class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
 
 Register the service implementation during application startup, so the server knows that they are available.
 
-Use [defaultServiceImplFactory](./z2-service-runtime/src/commonMain/kotlin/hu/simplexion/z2/service/runtime/globals.kt)
+Use [defaultServiceImplFactory](/z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/globals.kt)
 or implement your own way to store the services. These factories are used by the transports to find the service.
 
 ```kotlin

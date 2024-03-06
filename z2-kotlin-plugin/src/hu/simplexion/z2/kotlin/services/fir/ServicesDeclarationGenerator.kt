@@ -5,6 +5,10 @@ import hu.simplexion.z2.kotlin.util.isFromPlugin
 import hu.simplexion.z2.kotlin.util.superTypeContains
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.expandedClass
+import org.jetbrains.kotlin.fir.analysis.checkers.getContainingDeclarationSymbol
+import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
+import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
 import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
@@ -35,17 +39,8 @@ import org.jetbrains.kotlin.name.SpecialNames
  */
 class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    companion object {
-        val serviceConsumerClasses = mutableMapOf<ClassId, ServiceConsumerClass>()
-    }
-
-    class ServiceConsumerClass(
-        val serviceInterface: ClassId,
-        val functionNames: List<Name>
-    )
-
     val serviceCallTransportType by lazy {
-        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT)!!.constructType(emptyArray(), true)
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT) !!.constructType(emptyArray(), true)
     }
 
     @OptIn(SymbolInternals::class)
@@ -56,15 +51,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             return emptySet()
         }
 
-        val consumerName = classSymbol.name.serviceConsumerName
-        val classId = classSymbol.classId.createNestedClassId(consumerName)
-
-        serviceConsumerClasses[classId] = ServiceConsumerClass(
-            classSymbol.classId,
-            classSymbol.declarationSymbols.filterIsInstance<FirNamedFunctionSymbol>().map { it.name }
-        )
-
-        return setOf(consumerName)
+        return setOf(classSymbol.name.serviceConsumerName)
     }
 
     override fun generateNestedClassLikeDeclaration(
@@ -83,13 +70,33 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
-        val declarations = serviceConsumerClasses[classSymbol.classId] ?: return emptySet()
+        if (context.isForeign) return emptySet()
 
         return setOf(
             Names.SERVICE_NAME_PROPERTY,
             Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
-        ) + declarations.functionNames
+        ) + collectFunctions(classSymbol.getContainingDeclarationSymbol(session) !!.classId)
+    }
+
+    private fun collectFunctions(classId: ClassId) =
+        collectFunctions(session.symbolProvider.getClassLikeSymbolByClassId(classId) !!)
+
+    private fun collectFunctions(classLikeSymbol: FirClassLikeSymbol<*>): Set<Name> {
+        val expandedClass = classLikeSymbol.expandedClass(session) !!
+
+        val symbols = expandedClass
+            .declarationSymbols
+            .filterIsInstance<FirNamedFunctionSymbol>()
+            .filter { it.isSuspend }
+            .map { it.name }
+            .toMutableSet()
+
+        expandedClass.resolvedSuperTypeRefs.forEach {
+            symbols += collectFunctions(it.toClassLikeSymbol(session) !!)
+        }
+
+        return symbols
     }
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
@@ -134,14 +141,16 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
         if (context.isForeign) return emptyList()
-
-        val serviceConsumerClass = serviceConsumerClasses[callableId.classId] ?: return emptyList()
+        requireNotNull(context)
 
         val functionName = callableId.callableName
-        val interfaceFunctions = session.symbolProvider.getClassDeclaredFunctionSymbols(serviceConsumerClass.serviceInterface, functionName)
+
+        val interfaceFunctions = context.owner.resolvedSuperTypeRefs
+            .map { session.symbolProvider.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
+            .flatten()
 
         return interfaceFunctions.map { interfaceFunction ->
-            createMemberFunction(context !!.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {
+            createMemberFunction(context.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {
                 status {
                     isSuspend = true
                 }

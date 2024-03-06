@@ -9,7 +9,6 @@ object Strings {
 
     const val SCHEMATIC_CLASS = "Schematic"
 
-
     const val SCHEMATIC_FQNAME_PROPERTY = "schematicFqName"
     const val SCHEMATIC_COMPANION_CLASS = "SchematicCompanion"
     const val SCHEMATIC_SCHEMA_PROPERTY = "schematicSchema"

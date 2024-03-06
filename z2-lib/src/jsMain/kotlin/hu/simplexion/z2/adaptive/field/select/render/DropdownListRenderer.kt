@@ -41,7 +41,8 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
     override fun render(field: SelectField<VT, OT>) {
         this.field = field
 
-        field.fieldConfig.trailingIcon = browserIcons.down
+        fieldState.loading = true
+        fieldConfig.trailingIcon = browserIcons.down
 
         textField = TextField(
             field,
@@ -54,6 +55,12 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
         ).main()
 
         field.attach(textValue)
+
+        if (selectConfig.eager) {
+            field.runQuery("")
+        } else {
+            field.runGet()
+        }
     }
 
     override fun patch(event: Z2Event) {
@@ -64,16 +71,26 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
             itemContainer = null
         }
 
-        if (!hasFocus && event.isOf(fieldState)) {
-            textValue.valueOrNull = if (fieldValue.valueOrNull == null) "" else selectConfig.valueToString(field, fieldValue.value)
+        if (! hasFocus && event.isOf(fieldState)) {
+            textValue.valueOrNull =
+                if (fieldValue.valueOrNull == null) "" else selectConfig.valueToString(field, fieldValue.value)
         }
 
         if (event.isOf(fieldValue)) {
             textValue.valueOrNull = selectConfig.valueToString(field, fieldValue.value)
         }
+
+        if (event.isOf(textValue)) {
+            if (selectConfig.remote) {
+                val filter = (textValue.valueOrNull ?: "")
+                if (filter.length >= selectConfig.minimumFilterLength) {
+                    field.runQuery(filter)
+                }
+            }
+        }
     }
 
-    fun itemSelected(option : OT) {
+    fun itemSelected(option: OT) {
         EventCentral.fire(RequestBlurEvent(fieldState.schematicHandle))
 
         val value = selectConfig.optionToValue(field, option)

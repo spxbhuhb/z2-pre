@@ -5,6 +5,13 @@ import hu.simplexion.z2.schematic.Schematic
 class FieldState : Schematic<FieldState>() {
 
     /**
+     * When true, the field is waiting for some data to arrive. This should be
+     * shown on the screen to let the user know that there is something the fields
+     * is waiting for,
+     */
+    var loading by boolean()
+
+    /**
      * True when the field has the focus.
      */
     var hasFocus by boolean()

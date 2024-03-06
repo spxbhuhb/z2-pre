@@ -1,6 +1,5 @@
 package hu.simplexion.z2.schematic.entity
 
-import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.placeholder
 
@@ -22,7 +21,7 @@ interface SchematicEntityStore<T : SchematicEntity<T>> {
     /**
      * The companion object of [T]. Set by the compiler plugin.
      */
-    val schematicEntityCompanion : SchematicCompanion<T>
+    val schematicEntityCompanion : SchematicEntityCompanion<T>
         get() = placeholder()
 
     /**

@@ -11,7 +11,9 @@ import hu.simplexion.z2.kotlin.services.ir.util.FunctionSignature
 import hu.simplexion.z2.kotlin.services.ir.util.IrClassBaseBuilder
 import hu.simplexion.z2.kotlin.services.ir.util.ServiceBuilder
 import hu.simplexion.z2.kotlin.util.property
+import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -71,9 +73,25 @@ class ConsumerClassTransform(
     }
 
     private fun transformServiceFunction(function: IrSimpleFunction) {
-        val origin = function.origin as? IrDeclarationOrigin.GeneratedByPlugin ?: return
-        if (origin.pluginKey != ServicesPluginKey) return
+        val origin = function.origin as? IrDeclarationOrigin.GeneratedByPlugin
 
+        when {
+            function.isFakeOverride && function.isSuspend -> transformFakeOverrideFunction(function)
+            origin?.pluginKey == ServicesPluginKey -> transformDeclaredFunction(function)
+        }
+    }
+
+    private fun transformFakeOverrideFunction(function: IrSimpleFunction) {
+        function.isFakeOverride = false
+        function.origin = IrDeclarationOrigin.GeneratedByPlugin(ServicesPluginKey)
+        function.modality = Modality.FINAL
+        function.addDispatchReceiver {// replace the interface in the dispatcher with the class
+            type = consumerClass.defaultType
+        }
+        transformDeclaredFunction(function)
+    }
+
+    fun transformDeclaredFunction(function: IrSimpleFunction) {
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
             + irReturn(
                 irCall(

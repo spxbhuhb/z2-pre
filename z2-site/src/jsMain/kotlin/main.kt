@@ -10,6 +10,7 @@ import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
+import hu.simplexion.z2.browser.demo.chart.chartDemo
 import hu.simplexion.z2.browser.demo.components.select.selectDemo
 import hu.simplexion.z2.browser.demo.field.stereotype.decimalDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
@@ -82,6 +83,7 @@ object componentRouter : NavRouter(loggedIn = false) {
     val button           by render(strings.button)           { buttonDemo() }
     val calendar         by render(strings.calendar)         { calendarDemo() }
     val card             by render(strings.card)             { cardDemo() }
+    val chart            by render(strings.chart)            { chartDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
     val dateTimePicker   by render(strings.datetimepicker)   { dateTimePickerDemo() }
