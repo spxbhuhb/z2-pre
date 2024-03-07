@@ -1,5 +1,6 @@
 package hu.simplexion.z2.adaptive.field
 
+import hu.simplexion.z2.adaptive.impl.AdaptiveImplFactory
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.schematic.Schematic
 
@@ -27,5 +28,7 @@ class FieldConfig : Schematic<FieldConfig>() {
     var trailingIcon by generic<LocalizedIcon?>()
 
     var errorIcon by generic<LocalizedIcon?>()
+
+    var impl by uuid<AdaptiveImplFactory>()
 
 }

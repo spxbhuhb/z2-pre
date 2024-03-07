@@ -5,6 +5,7 @@ import hu.simplexion.z2.adaptive.event.AnonymousEventListener
 import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.event.Z2EventListener
+import hu.simplexion.z2.adaptive.impl.AdaptiveImpl
 import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.material.icon.icon
@@ -22,7 +23,7 @@ open class Z2(
     val htmlElement: HTMLElement = document.createElement("div") as HTMLElement,
     classes: Array<out CssClass>? = null,
     val builder: (Z2.() -> Unit)? = null,
-) {
+) : AdaptiveImpl {
     val style
         get() = htmlElement.style
 

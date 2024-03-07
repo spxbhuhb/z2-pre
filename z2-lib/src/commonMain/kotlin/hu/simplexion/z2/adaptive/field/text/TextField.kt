@@ -7,7 +7,7 @@ import hu.simplexion.z2.adaptive.field.FieldValue
 import hu.simplexion.z2.schematic.Schematic
 
 class TextField : Schematic<TextField>(), AdaptiveField<String> {
-    override val fieldValue by schematic<FieldValue<String>>()
-    override val fieldState by schematic<FieldState>()
-    override val fieldConfig by schematic<FieldConfig>()
+    override var fieldValue by schematic<FieldValue<String>>()
+    override var fieldState by schematic<FieldState>()
+    override var fieldConfig by schematic<FieldConfig>()
 }

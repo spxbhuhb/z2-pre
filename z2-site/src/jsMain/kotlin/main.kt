@@ -2,6 +2,7 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.adaptive.field.registerFieldImpl
 import hu.simplexion.z2.adaptive.field.select.demo.entitySelectDemo
 import hu.simplexion.z2.adaptive.field.select.demo.selectFieldPlayground
 import hu.simplexion.z2.adaptive.field.text.demo.textFieldPlayground
@@ -41,6 +42,8 @@ import hu.simplexion.z2.util.localLaunch
 fun main() {
     localLaunch {
         bootJs()
+
+        registerFieldImpl()
 
         commonStrings = strings
         dateTimeStrings = strings

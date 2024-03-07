@@ -8,6 +8,7 @@ import hu.simplexion.z2.adaptive.field.EscapeKeyEvent
 import hu.simplexion.z2.adaptive.field.FieldRenderer
 import hu.simplexion.z2.adaptive.field.RequestBlurEvent
 import hu.simplexion.z2.adaptive.field.text.TextField
+import hu.simplexion.z2.adaptive.impl.AdaptiveImpl
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
@@ -27,8 +28,9 @@ import org.w3c.dom.HTMLInputElement
  */
 abstract class AbstractTextImpl(
     parent: Z2,
-    override val field: TextField
-) : Z2(parent), FieldRenderer<TextField, String> {
+) : Z2(parent), FieldRenderer<TextField, String>, AdaptiveImpl {
+
+    override lateinit var field: TextField
 
     lateinit var mainContainer: Z2
     lateinit var inputContainer: Z2

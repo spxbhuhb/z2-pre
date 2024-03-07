@@ -1,11 +1,14 @@
 package hu.simplexion.z2.adaptive.field.text.demo
 
 import hu.simplexion.z2.adaptive.event.Z2Event
-import hu.simplexion.z2.adaptive.field.*
+import hu.simplexion.z2.adaptive.field.FieldConfig
+import hu.simplexion.z2.adaptive.field.FieldState
+import hu.simplexion.z2.adaptive.field.FieldValue
+import hu.simplexion.z2.adaptive.field.isOf
 import hu.simplexion.z2.adaptive.field.text.TextField
-import hu.simplexion.z2.adaptive.field.text.impl.BorderBottomTextImpl
-import hu.simplexion.z2.adaptive.field.text.impl.ChipTextImpl
-import hu.simplexion.z2.adaptive.field.text.impl.FilledTextImpl
+import hu.simplexion.z2.adaptive.field.text.impl.*
+import hu.simplexion.z2.adaptive.impl.AdaptiveImplFactory
+import hu.simplexion.z2.adaptive.impl.adaptiveImplFactories
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.css.gridGap16
 import hu.simplexion.z2.browser.css.gridGap24
@@ -17,13 +20,14 @@ import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.schematic.Schematic
 
 fun Z2.textFieldPlayground() {
-    val textField = TextField()
+    val textField = TextField().also { it.fieldConfig.impl = OutlinedTextImpl.uuid }
+
     val settings = TextFieldSettings()
 
     grid("400px 400px", "1fr", gridGap24) {
 
         val container = div()
-
+        container.textField(textField)
 
         grid("1fr", null, gridGap16) {
             gridAutoRows = "min-content"
@@ -50,12 +54,12 @@ fun Z2.textFieldPlayground() {
 }
 
 enum class Renderer(
-    val factory: () -> FieldRenderer<TextField, String>
+    val impl: AdaptiveImplFactory
 ) {
-    Outlined({  }),
-    Filled({ FilledTextImpl() }),
-    Border({ BorderBottomTextImpl() }),
-    Chip({ ChipTextImpl() })
+    Outlined(OutlinedTextImpl),
+    Filled(FilledTextImpl),
+    Border(BorderBottomTextImpl),
+    Chip(ChipTextImpl)
 }
 
 class TextFieldSettings : Schematic<TextFieldSettings>() {
@@ -63,6 +67,13 @@ class TextFieldSettings : Schematic<TextFieldSettings>() {
     val leadingIcon by boolean()
     val trailingIcon by boolean()
     val errorIcon by boolean()
+}
+
+fun Z2.textField(field: TextField) {
+    (adaptiveImplFactories[field.fieldConfig.impl]!!.new(this) as AbstractTextImpl).also {
+        it.field = field
+        it.main()
+    }
 }
 
 class Support(
@@ -92,11 +103,12 @@ class Support(
             fieldConfig.trailingIcon = if (settings.trailingIcon) browserIcons.settings else null
             fieldConfig.errorIcon = if (settings.errorIcon) browserIcons.error else null
 
-            val renderer = settings.renderer.factory()
-            if (renderer::class != textConfig.renderer::class) {
+            val renderer = settings.renderer
+            if (renderer.impl.uuid != fieldConfig.impl) {
+                fieldConfig.impl = renderer.impl.uuid
+
                 container.clear()
-                textConfig.renderer = renderer
-                TextField(container, fieldValue, fieldState, fieldConfig, textConfig).main()
+                container.textField(field)
             }
         }
     }

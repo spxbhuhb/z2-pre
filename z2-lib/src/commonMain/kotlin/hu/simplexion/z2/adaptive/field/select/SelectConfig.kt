@@ -1,5 +1,6 @@
 package hu.simplexion.z2.adaptive.field.select
 
+import hu.simplexion.z2.adaptive.impl.AdaptiveImplFactory
 import hu.simplexion.z2.schematic.Schematic
 
 class SelectConfig<VT,OT> : Schematic<SelectConfig<VT, OT>>() {
@@ -34,5 +35,7 @@ class SelectConfig<VT,OT> : Schematic<SelectConfig<VT, OT>>() {
     var optionToValue by generic<(field : SelectField<VT, OT>, option : OT) -> VT>()
 
     var optionToString by generic<(field : SelectField<VT, OT>, option : OT) -> String>()
+
+    var impl by uuid<AdaptiveImplFactory>()
 
 }

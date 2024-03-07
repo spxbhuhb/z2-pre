@@ -8,6 +8,7 @@ import hu.simplexion.z2.adaptive.field.RequestBlurEvent
 import hu.simplexion.z2.adaptive.field.isOf
 import hu.simplexion.z2.adaptive.field.select.SelectField
 import hu.simplexion.z2.adaptive.field.text.TextField
+import hu.simplexion.z2.adaptive.impl.AdaptiveImpl
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
@@ -19,9 +20,10 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 
 abstract class AbstractDropdownListImpl<VT, OT>(
-    parent : Z2,
-    override val field: SelectField<VT,OT>
-) : Z2(parent), FieldRenderer<SelectField<VT, OT>, VT> {
+    parent: Z2
+) : Z2(parent), FieldRenderer<SelectField<VT, OT>, VT>, AdaptiveImpl {
+
+    override lateinit var field: SelectField<VT, OT>
 
     val selectState
         get() = field.selectState
@@ -43,11 +45,11 @@ abstract class AbstractDropdownListImpl<VT, OT>(
         fieldState.loading = true
         fieldConfig.trailingIcon = browserIcons.down
 
-        textField = TextField(
-            textValue,
-            field.fieldState,
-            field.fieldConfig,
-        )
+        textField = TextField().also {
+            it.fieldValue = textValue
+            it.fieldState = field.fieldState
+            it.fieldConfig = field.fieldConfig
+        }
 
         attach(textValue)
 
