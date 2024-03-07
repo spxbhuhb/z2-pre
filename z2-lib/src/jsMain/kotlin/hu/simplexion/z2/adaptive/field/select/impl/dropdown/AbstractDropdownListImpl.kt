@@ -1,4 +1,4 @@
-package hu.simplexion.z2.adaptive.field.select.render
+package hu.simplexion.z2.adaptive.field.select.impl.dropdown
 
 import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.adaptive.event.Z2Event
@@ -7,9 +7,7 @@ import hu.simplexion.z2.adaptive.field.FieldValue
 import hu.simplexion.z2.adaptive.field.RequestBlurEvent
 import hu.simplexion.z2.adaptive.field.isOf
 import hu.simplexion.z2.adaptive.field.select.SelectField
-import hu.simplexion.z2.adaptive.field.text.TextConfig
 import hu.simplexion.z2.adaptive.field.text.TextField
-import hu.simplexion.z2.adaptive.field.text.render.OutlinedRenderer
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
@@ -20,9 +18,10 @@ import hu.simplexion.z2.browser.material.stateLayer
 import kotlinx.browser.document
 import kotlinx.browser.window
 
-open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT> {
-
-    override lateinit var field: SelectField<VT, OT>
+abstract class AbstractDropdownListImpl<VT, OT>(
+    parent : Z2,
+    override val field: SelectField<VT,OT>
+) : Z2(parent), FieldRenderer<SelectField<VT, OT>, VT> {
 
     val selectState
         get() = field.selectState
@@ -38,32 +37,33 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
 
     val items = mutableListOf<Z2>()
 
-    override fun render(field: SelectField<VT, OT>) {
-        this.field = field
+    override fun main() : AbstractDropdownListImpl<VT, OT> {
+        attach(fieldValue, fieldState, fieldConfig, selectState, selectConfig)
 
         fieldState.loading = true
         fieldConfig.trailingIcon = browserIcons.down
 
         textField = TextField(
-            field,
             textValue,
             field.fieldState,
             field.fieldConfig,
-            TextConfig().also {
-                it.renderer = selectConfig.textFieldRenderer ?: OutlinedRenderer()
-            }
-        ).main()
+        )
 
-        field.attach(textValue)
+        attach(textValue)
+
+        textImpl()
 
         if (selectConfig.eager) {
             field.runQuery("")
         } else {
             field.runGet()
         }
+
+        return this
     }
 
-    override fun patch(event: Z2Event) {
+    override fun onSchematicEvent(event: Z2Event) {
+
         if (hasFocus && ! readOnly) {
             showItemContainer()
         } else {
@@ -90,6 +90,8 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
         }
     }
 
+    abstract fun Z2.textImpl()
+
     fun itemSelected(option: OT) {
         EventCentral.fire(RequestBlurEvent(fieldState.schematicHandle))
 
@@ -103,7 +105,7 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
 
     fun showItemContainer() {
 
-        val br = field.htmlElement.getBoundingClientRect()
+        val br = htmlElement.getBoundingClientRect()
         val wh = window.innerHeight
 
         val spaceAbove = br.top
@@ -196,8 +198,8 @@ open class DropdownListRenderer<VT, OT> : FieldRenderer<SelectField<VT, OT>, VT>
             }
         }
 
-    open fun Z2.renderItemValue(value: OT) {
-        selectConfig.renderItem.invoke(this, field, value)
+    open fun Z2.renderItemValue(option: OT) {
+        text { selectConfig.optionToString(field, option) }
     }
 
 }

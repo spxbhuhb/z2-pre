@@ -7,8 +7,8 @@ import hu.simplexion.z2.adaptive.field.FieldValue
 import hu.simplexion.z2.adaptive.field.select.SelectConfig
 import hu.simplexion.z2.adaptive.field.select.SelectField
 import hu.simplexion.z2.adaptive.field.select.SelectState
-import hu.simplexion.z2.adaptive.field.select.render.DropdownListRenderer
-import hu.simplexion.z2.adaptive.field.text.render.FilledRenderer
+import hu.simplexion.z2.adaptive.field.select.impl.dropdown.AbstractDropdownListImpl
+import hu.simplexion.z2.adaptive.field.text.impl.FilledTextImpl
 import hu.simplexion.z2.browser.css.gridGap16
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.html.Z2
@@ -25,11 +25,11 @@ fun Z2.selectFieldPlayground() {
         it.options = listOf(Data(12, "abc"), Data(34, "cde"), Data(56, "efg"))
     }
     val selectConfig = SelectConfig<Int, Data>().apply {
-        renderer = DropdownListRenderer()
+        renderer = AbstractDropdownListImpl()
         optionToValue = { _, option -> option.id }
         valueToString = { field, value -> field.selectState.options.first { it.id == value}.name }
         renderItem = { _, option -> text { option.name } }
-        textFieldRenderer = FilledRenderer()
+        textFieldRenderer = FilledTextImpl()
     }
 
     grid("400px 400px", "1fr", gridGap24) {

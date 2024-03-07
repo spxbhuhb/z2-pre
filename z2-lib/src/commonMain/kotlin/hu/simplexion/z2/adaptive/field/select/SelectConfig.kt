@@ -1,8 +1,5 @@
 package hu.simplexion.z2.adaptive.field.select
 
-import hu.simplexion.z2.adaptive.field.FieldRenderer
-import hu.simplexion.z2.adaptive.field.text.TextField
-import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.schematic.Schematic
 
 class SelectConfig<VT,OT> : Schematic<SelectConfig<VT, OT>>() {
@@ -32,14 +29,10 @@ class SelectConfig<VT,OT> : Schematic<SelectConfig<VT, OT>>() {
 
     var get by generic<SelectGet<VT, OT>>()
 
-    var renderer by generic<FieldRenderer<SelectField<VT, OT>,VT>>()
+    var valueToString by generic<(field : SelectField<VT, OT>, value : VT) -> String>()
 
-    var optionToValue by generic<(field : SelectField<VT,OT>, option : OT) -> VT>()
+    var optionToValue by generic<(field : SelectField<VT, OT>, option : OT) -> VT>()
 
-    var valueToString by generic<(field : SelectField<VT,OT>, value : VT) -> String>()
-
-    var renderItem by generic<Z2.(field : SelectField<VT,OT>, option : OT) -> Unit>()
-
-    var textFieldRenderer by generic<FieldRenderer<TextField,String>?>()
+    var optionToString by generic<(field : SelectField<VT, OT>, option : OT) -> String>()
 
 }

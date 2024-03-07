@@ -1,9 +1,14 @@
-package hu.simplexion.z2.adaptive.field.text.render
+package hu.simplexion.z2.adaptive.field.text.impl
 
+import hu.simplexion.z2.adaptive.field.text.TextField
 import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.px
 
-class FilledRenderer : AbstractTextRenderer() {
+class FilledTextImpl(
+    parent : Z2,
+    field : TextField
+) : AbstractTextImpl(parent, field) {
 
     override fun mainContainerStyles() {
         mainContainer.addCss(

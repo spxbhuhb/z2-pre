@@ -10,16 +10,22 @@ interface SchematicEvent : Z2Event {
     val schematic: Schematic<*>
 }
 
-class SchematicFieldEvent(
+open class SchematicFieldEvent(
     override val busHandle: Z2Handle,
     override val schematic: Schematic<*>,
-    val field: SchemaField<*>,
+    open val field: SchemaField<*>,
     val validationResult: SchematicValidationResult
 ) : SchematicEvent
 
 class SchematicListFieldEvent(
+    busHandle: Z2Handle,
+    schematic: Schematic<*>,
+    override val field: ListSchemaField<*, *>,
+    validationResult: SchematicValidationResult
+) : SchematicFieldEvent(busHandle, schematic, field, validationResult)
+
+class SchematicValidation(
     override val busHandle: Z2Handle,
     override val schematic: Schematic<*>,
-    val field: ListSchemaField<*, *>,
     val validationResult: SchematicValidationResult
 ) : SchematicEvent

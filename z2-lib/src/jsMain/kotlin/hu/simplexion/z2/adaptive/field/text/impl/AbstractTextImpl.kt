@@ -1,4 +1,4 @@
-package hu.simplexion.z2.adaptive.field.text.render
+package hu.simplexion.z2.adaptive.field.text.impl
 
 import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.adaptive.event.EventCentral
@@ -20,14 +20,15 @@ import org.w3c.dom.HTMLInputElement
 /**
  * Common code for the these text renderers:
  *
- * - [BorderBottomRenderer]
- * - [ChipRenderer]
- * - [FilledRenderer]
- * - [OutlinedRenderer]
+ * - [BorderBottomTextImpl]
+ * - [ChipTextImpl]
+ * - [FilledTextImpl]
+ * - [OutlinedTextImpl]
  */
-abstract class AbstractTextRenderer : FieldRenderer<TextField, String> {
-
-    override lateinit var field: TextField
+abstract class AbstractTextImpl(
+    parent: Z2,
+    override val field: TextField
+) : Z2(parent), FieldRenderer<TextField, String> {
 
     lateinit var mainContainer: Z2
     lateinit var inputContainer: Z2
@@ -46,24 +47,23 @@ abstract class AbstractTextRenderer : FieldRenderer<TextField, String> {
 
     open val baseHeight = 56.px
 
-    override fun render(field: TextField) {
-        this.field = field
+    override fun main(): AbstractTextImpl {
+        attach(fieldValue, fieldState, fieldConfig)
 
-        with(field) {
-            addCss(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
+        addCss(displayGrid, minWidth0, boxSizingBorderBox, positionRelative)
 
-            gridTemplateColumns = "minmax(0,1fr)"
-            gridTemplateRows = "$baseHeight min-content"
+        gridTemplateColumns = "minmax(0,1fr)"
+        gridTemplateRows = "$baseHeight min-content"
 
-            mainContainer()
-            animation()
-            support()
-        }
+        mainContainer()
+        animation()
+        support()
 
         patch()
+        return this
     }
-    
-    override fun patch(event : Z2Event) {
+
+    override fun onSchematicEvent(event: Z2Event) {
         when (event) {
             is SchematicEvent -> patch()
             is RequestBlurEvent -> inputElement.blur()
@@ -165,7 +165,7 @@ abstract class AbstractTextRenderer : FieldRenderer<TextField, String> {
             }
 
             onInput {
-                this@AbstractTextRenderer.onInput()
+                this@AbstractTextImpl.onInput()
             }
         }
     }

@@ -7,8 +7,8 @@ import hu.simplexion.z2.adaptive.field.select.SelectConfig
 import hu.simplexion.z2.adaptive.field.select.SelectField
 import hu.simplexion.z2.adaptive.field.select.SelectQuery
 import hu.simplexion.z2.adaptive.field.select.SelectState
-import hu.simplexion.z2.adaptive.field.select.render.DropdownListRenderer
-import hu.simplexion.z2.adaptive.field.text.render.OutlinedRenderer
+import hu.simplexion.z2.adaptive.field.select.impl.dropdown.AbstractDropdownListImpl
+import hu.simplexion.z2.adaptive.field.text.impl.OutlinedTextImpl
 import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
@@ -30,11 +30,11 @@ fun Z2.entitySelectDemo() {
     val selectConfig = SelectConfig<UUID<TestEntity>, TestEntity>().apply {
         remote = true
         query = SelectQuery { _,_ -> TestEntity.schematicEntityStore.values() }
-        renderer = DropdownListRenderer()
+        renderer = AbstractDropdownListImpl()
         optionToValue = { _, option -> option.uuid }
         valueToString = { field, value -> field.selectState.options.first { it.uuid == value }.name }
         renderItem = { _, option -> text { option.name } }
-        textFieldRenderer = OutlinedRenderer()
+        textFieldRenderer = OutlinedTextImpl()
     }
 
     grid("400px 400px", "1fr", gridGap24) {

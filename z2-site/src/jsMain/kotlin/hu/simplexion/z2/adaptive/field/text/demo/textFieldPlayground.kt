@@ -2,12 +2,10 @@ package hu.simplexion.z2.adaptive.field.text.demo
 
 import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.*
-import hu.simplexion.z2.adaptive.field.text.TextConfig
 import hu.simplexion.z2.adaptive.field.text.TextField
-import hu.simplexion.z2.adaptive.field.text.render.BorderBottomRenderer
-import hu.simplexion.z2.adaptive.field.text.render.ChipRenderer
-import hu.simplexion.z2.adaptive.field.text.render.FilledRenderer
-import hu.simplexion.z2.adaptive.field.text.render.OutlinedRenderer
+import hu.simplexion.z2.adaptive.field.text.impl.BorderBottomTextImpl
+import hu.simplexion.z2.adaptive.field.text.impl.ChipTextImpl
+import hu.simplexion.z2.adaptive.field.text.impl.FilledTextImpl
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.css.gridGap16
 import hu.simplexion.z2.browser.css.gridGap24
@@ -19,31 +17,28 @@ import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.schematic.Schematic
 
 fun Z2.textFieldPlayground() {
-    val fieldValue = FieldValue<String>()
-    val fieldState = FieldState()
-    val fieldConfig = FieldConfig()
-    val textConfig = TextConfig().also { it.renderer = OutlinedRenderer() }
+    val textField = TextField()
     val settings = TextFieldSettings()
 
     grid("400px 400px", "1fr", gridGap24) {
 
         val container = div()
-        TextField(container, fieldValue, fieldState, fieldConfig, textConfig).main()
+
 
         grid("1fr", null, gridGap16) {
             gridAutoRows = "min-content"
 
-            Support(this, container, fieldValue, fieldState, fieldConfig, textConfig, settings)
+            Support(this, container, textField, settings)
 
-            field { fieldState.error }
-            field { fieldState.errorText }
-            field { fieldState.hasFocus }
-            field { fieldState.invalidInput }
-            field { fieldState.touched }
+            field { textField.fieldState.error }
+            field { textField.fieldState.errorText }
+            field { textField.fieldState.hasFocus }
+            field { textField.fieldState.invalidInput }
+            field { textField.fieldState.touched }
 
-            field { fieldConfig.label }
-            field { fieldConfig.supportEnabled }
-            field { fieldConfig.supportText }
+            field { textField.fieldConfig.label }
+            field { textField.fieldConfig.supportEnabled }
+            field { textField.fieldConfig.supportText }
 
             field { settings.renderer }
             field { settings.leadingIcon }
@@ -55,12 +50,12 @@ fun Z2.textFieldPlayground() {
 }
 
 enum class Renderer(
-    val factory: () -> FieldRenderer<TextField,String>
+    val factory: () -> FieldRenderer<TextField, String>
 ) {
-    Outlined({ OutlinedRenderer() }),
-    Filled({ FilledRenderer() }),
-    Border({ BorderBottomRenderer() }),
-    Chip({ ChipRenderer() })
+    Outlined({  }),
+    Filled({ FilledTextImpl() }),
+    Border({ BorderBottomTextImpl() }),
+    Chip({ ChipTextImpl() })
 }
 
 class TextFieldSettings : Schematic<TextFieldSettings>() {
@@ -70,18 +65,19 @@ class TextFieldSettings : Schematic<TextFieldSettings>() {
     val errorIcon by boolean()
 }
 
-
 class Support(
     parent: Z2,
     val container : Z2,
-    val fieldValue: FieldValue<String>,
-    val fieldState: FieldState,
-    val fieldConfig: FieldConfig,
-    val textConfig: TextConfig,
+    val field : TextField,
     val settings: TextFieldSettings
 ) : Z2(
     parent
 ) {
+
+    val fieldValue: FieldValue<String> = field.fieldValue
+    val fieldState: FieldState = field.fieldState
+    val fieldConfig: FieldConfig = field.fieldConfig
+
     init {
         attach(fieldValue, fieldState, settings)
         text { "Value: >${fieldValue.valueOrNull}<" }
