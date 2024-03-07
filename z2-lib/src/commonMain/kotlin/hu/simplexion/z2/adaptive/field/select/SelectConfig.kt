@@ -38,4 +38,6 @@ class SelectConfig<VT,OT> : Schematic<SelectConfig<VT, OT>>() {
 
     var impl by uuid<AdaptiveImplFactory>()
 
+    var valueImpl by uuid<AdaptiveImplFactory>()
+
 }

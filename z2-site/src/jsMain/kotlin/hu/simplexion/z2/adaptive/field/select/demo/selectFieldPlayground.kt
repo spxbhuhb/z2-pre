@@ -3,50 +3,58 @@ package hu.simplexion.z2.adaptive.field.select.demo
 import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.FieldState
 import hu.simplexion.z2.adaptive.field.FieldValue
+import hu.simplexion.z2.adaptive.field.select.SelectField
+import hu.simplexion.z2.adaptive.field.select.impl.DropdownListImpl
+import hu.simplexion.z2.adaptive.field.select.impl.selectField
+import hu.simplexion.z2.adaptive.field.text.impl.OutlinedTextImpl
+import hu.simplexion.z2.browser.css.gridGap16
+import hu.simplexion.z2.browser.css.gridGap24
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.html.div
+import hu.simplexion.z2.browser.html.grid
+import hu.simplexion.z2.browser.html.gridAutoRows
+import hu.simplexion.z2.browser.immaterial.schematic.field
 
 fun Z2.selectFieldPlayground() {
-//    val fieldValue = FieldValue<Int>()
-//    val fieldState = FieldState()
-//    val fieldConfig = FieldConfig()
-//    val selectState = SelectState<Data>().also {
-//        it.options = listOf(Data(12, "abc"), Data(34, "cde"), Data(56, "efg"))
-//    }
-//    val selectConfig = SelectConfig<Int, Data>().apply {
-//        renderer = AbstractDropdownListImpl()
-//        optionToValue = { _, option -> option.id }
-//        valueToString = { field, value -> field.selectState.options.first { it.id == value}.name }
-//        renderItem = { _, option -> text { option.name } }
-//        textFieldRenderer = FilledTextImpl()
-//    }
-//
-//    grid("400px 400px", "1fr", gridGap24) {
-//
-//        val container = div()
-//        SelectField(container, fieldValue, fieldState, fieldConfig, selectState, selectConfig).main()
-//
-//        grid("1fr", null, gridGap16) {
-//            gridAutoRows = "min-content"
-//
-//            Value(this, fieldValue, fieldState)
-//
-//            field { fieldState.error }
-//            field { fieldState.errorText }
-//            field { fieldState.hasFocus }
-//            field { fieldState.invalidInput }
-//            field { fieldState.touched }
-//
-//            field { fieldConfig.label }
-//            field { fieldConfig.supportEnabled }
-//            field { fieldConfig.supportText }
-//
-//        }
-//    }
+
+    val select = SelectField<Int, Data>().apply {
+        fieldConfig.impl = DropdownListImpl.uuid
+        selectState.options = listOf(Data(12, "abc"), Data(34, "cde"), Data(56, "efg"))
+        selectConfig.optionToValue = { _, option -> option.id }
+        selectConfig.valueToString =
+            { field, value -> field.selectState.options.firstOrNull { it.id == value }?.name ?: "" }
+        selectConfig.optionToString = { _, option -> option.name }
+        selectConfig.valueImpl = OutlinedTextImpl.uuid
+    }
+
+    grid("400px 400px", "1fr", gridGap24) {
+
+        val container = div {
+            selectField(select)
+        }
+
+        grid("1fr", null, gridGap16) {
+            gridAutoRows = "min-content"
+
+            Value(this, select.fieldValue, select.fieldState)
+
+            field { select.fieldState.error }
+            field { select.fieldState.errorText }
+            field { select.fieldState.hasFocus }
+            field { select.fieldState.invalidInput }
+            field { select.fieldState.touched }
+
+            field { select.fieldConfig.label }
+            field { select.fieldConfig.supportEnabled }
+            field { select.fieldConfig.supportText }
+
+        }
+    }
 }
 
 private class Data(
-    val id : Int,
-    val name : String
+    val id: Int,
+    val name: String
 )
 
 private class Value(parent: Z2, val fieldValue: FieldValue<Int>, fieldState: FieldState) : Z2(parent) {

@@ -4,6 +4,7 @@ import hu.simplexion.z2.adaptive.field.AdaptiveField
 import hu.simplexion.z2.adaptive.field.FieldConfig
 import hu.simplexion.z2.adaptive.field.FieldState
 import hu.simplexion.z2.adaptive.field.FieldValue
+import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.util.localLaunch
 
 /**
@@ -12,13 +13,14 @@ import hu.simplexion.z2.util.localLaunch
  * @param  VT  The type of the selected value.
  * @param  OT  Type of the options.
  */
-class SelectField<VT, OT>(
-    override val fieldValue: FieldValue<VT>,
-    override val fieldState: FieldState,
-    override val fieldConfig: FieldConfig,
-    val selectState: SelectState<OT>,
-    val selectConfig: SelectConfig<VT, OT>
-) : AdaptiveField<VT> {
+class SelectField<VT, OT> : Schematic<SelectField<VT, OT>>(), AdaptiveField<VT> {
+
+    override val fieldValue by schematic<FieldValue<VT>>()
+    override val fieldState by schematic<FieldState>()
+    override val fieldConfig by schematic<FieldConfig>()
+
+    val selectState by schematic<SelectState<OT>>()
+    val selectConfig by schematic<SelectConfig<VT, OT>>()
 
     /**
      * Incremented by one each time the user changes the filter. The select uses this

@@ -8,7 +8,6 @@ import hu.simplexion.z2.adaptive.field.isOf
 import hu.simplexion.z2.adaptive.field.text.TextField
 import hu.simplexion.z2.adaptive.field.text.impl.*
 import hu.simplexion.z2.adaptive.impl.AdaptiveImplFactory
-import hu.simplexion.z2.adaptive.impl.adaptiveImplFactories
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.css.gridGap16
 import hu.simplexion.z2.browser.css.gridGap24
@@ -26,8 +25,9 @@ fun Z2.textFieldPlayground() {
 
     grid("400px 400px", "1fr", gridGap24) {
 
-        val container = div()
-        container.textField(textField)
+        val container = div {
+            textField(textField)
+        }
 
         grid("1fr", null, gridGap16) {
             gridAutoRows = "min-content"
@@ -67,13 +67,6 @@ class TextFieldSettings : Schematic<TextFieldSettings>() {
     val leadingIcon by boolean()
     val trailingIcon by boolean()
     val errorIcon by boolean()
-}
-
-fun Z2.textField(field: TextField) {
-    (adaptiveImplFactories[field.fieldConfig.impl]!!.new(this) as AbstractTextImpl).also {
-        it.field = field
-        it.main()
-    }
 }
 
 class Support(
