@@ -5,7 +5,9 @@ import hu.simplexion.z2.adaptive.field.FieldConfig
 import hu.simplexion.z2.adaptive.field.FieldState
 import hu.simplexion.z2.adaptive.field.FieldValue
 import hu.simplexion.z2.schematic.Schematic
+import hu.simplexion.z2.schematic.SchematicCompanion
 import hu.simplexion.z2.util.localLaunch
+import kotlin.jvm.JvmName
 
 /**
  * A field that lets the user select a value from options.
@@ -21,6 +23,13 @@ class SelectField<VT, OT> : Schematic<SelectField<VT, OT>>(), AdaptiveField<VT> 
 
     val selectState by schematic<SelectState<OT>>()
     val selectConfig by schematic<SelectConfig<VT, OT>>()
+
+    companion object : SchematicCompanion<SelectField<Any,Any>> {
+        @Suppress("UNCHECKED_CAST")
+        @JvmName("genericInvoke")
+        operator fun <VT,OT> invoke(builder : SelectField<VT,OT>.() -> Unit) : SelectField<VT,OT> =
+            (newInstance() as SelectField<VT,OT>).apply(builder)
+    }
 
     /**
      * Incremented by one each time the user changes the filter. The select uses this

@@ -17,12 +17,11 @@ import hu.simplexion.z2.browser.immaterial.schematic.field
 
 fun Z2.selectFieldPlayground() {
 
-    val select = SelectField<Int, Data>().apply {
+    val select = SelectField<Int, Data> {
         fieldConfig.impl = DropdownListImpl.uuid
         selectState.options = listOf(Data(12, "abc"), Data(34, "cde"), Data(56, "efg"))
         selectConfig.optionToValue = { _, option -> option.id }
-        selectConfig.valueToString =
-            { field, value -> field.selectState.options.firstOrNull { it.id == value }?.name ?: "" }
+        selectConfig.valueToString = { field, value -> field.selectState.options.firstOrNull { it.id == value }?.name ?: "" }
         selectConfig.optionToString = { _, option -> option.name }
         selectConfig.valueImpl = OutlinedTextImpl.uuid
     }

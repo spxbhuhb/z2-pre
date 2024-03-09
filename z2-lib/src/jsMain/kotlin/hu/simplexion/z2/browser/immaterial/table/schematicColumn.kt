@@ -3,11 +3,11 @@ package hu.simplexion.z2.browser.immaterial.table
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.css.justifyContentFlexEnd
 import hu.simplexion.z2.browser.css.pr12
-import hu.simplexion.z2.browser.immaterial.schematic.label
 import hu.simplexion.z2.browser.immaterial.table.builders.ColumnBuilder
 import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.material.em
 import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.localization.label
 import hu.simplexion.z2.localization.locales.localized
 import hu.simplexion.z2.localization.locales.toDecimalString
 import hu.simplexion.z2.localization.localized

@@ -19,7 +19,7 @@ import hu.simplexion.z2.browser.immaterial.schematic.field
 import hu.simplexion.z2.schematic.Schematic
 
 fun Z2.textFieldPlayground() {
-    val textField = TextField().also { it.fieldConfig.impl = OutlinedTextImpl.uuid }
+    val textField = TextField { fieldConfig.impl = OutlinedTextImpl.uuid }
 
     val settings = TextFieldSettings()
 

@@ -1,10 +1,7 @@
-package hu.simplexion.z2.browser.immaterial.schematic
+package hu.simplexion.z2.localization
 
-import hu.simplexion.z2.localization.fallbackNamespace
-import hu.simplexion.z2.localization.localizedTextStore
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.localization.text.StaticText
-import hu.simplexion.z2.localization.traceLocalization
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaField
 

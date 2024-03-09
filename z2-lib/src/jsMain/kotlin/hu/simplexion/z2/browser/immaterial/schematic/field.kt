@@ -12,6 +12,7 @@ import hu.simplexion.z2.browser.material.textfield.FieldConfig
 import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
 import hu.simplexion.z2.browser.material.textfield.textField
 import hu.simplexion.z2.browser.material.timepicker.timePicker
+import hu.simplexion.z2.localization.label
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.localized
 import hu.simplexion.z2.localization.text.LocalizedText
