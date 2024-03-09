@@ -116,7 +116,7 @@ class RuiClassSymbols(
 
     private fun property(indices: List<String>, it: IrProperty) {
         val name = it.name.identifier
-        val index = indices.indexOf(name) - RUI_FRAGMENT_ARGUMENT_COUNT
+        val index = indices.indexOf(name) - Indices.RUI_FRAGMENT_ARGUMENT_COUNT
 
         if (name == RUI_EXTERNAL_PATCH) {
             externalPatch = it

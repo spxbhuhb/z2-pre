@@ -35,17 +35,49 @@ val RUI_FOR_LOOP_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiForLoo
 val RUI_ENTRY_FUNCTION = listOf("hu", "simplexion", "z2", "adaptive", "rui")
 val RUI_ANONYMOUS_CLASS = listOf("hu", "simplexion", "z2", "adaptive", "RuiAnonymous")
 
-/**
- * Number of Rui related constructor arguments.
- *
- * 1. ruiAdapter
- * 2. ruiScope
- * 3. ruiPatchExternal
- */
-const val RUI_FRAGMENT_ARGUMENT_COUNT = 3
-const val RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER = 0
-const val RUI_FRAGMENT_ARGUMENT_INDEX_SCOPE = 1
-const val RUI_FRAGMENT_ARGUMENT_INDEX_EXTERNAL_PATCH = 2
+object Strings {
+    const val RUI_BUILDER_PARENT = "parent"
+    const val RUI_EXTERNAL_PATCH_FRAGMENT = "fragment"
+    const val RUI_CLOSURE_CLASS = "hu.simplexion.z2.adaptive.RuiClosure"
+
+}
+
+object Names {
+    val RUI_EXTERNAL_PATCH_FRAGMENT = Name.identifier(Strings.RUI_EXTERNAL_PATCH_FRAGMENT)
+}
+
+object FqNames {
+    val RUI_CLOSURE_CLASS = FqName.fromSegments(Strings.RUI_CLOSURE_CLASS.split('.'))
+}
+
+object Indices {
+
+    /**
+     * Fragment constructor arguments.
+     *
+     * 1. ruiAdapter
+     * 2. ruiClosure
+     * 3. ruiParent
+     * 4. ruiPatchExternal
+     */
+    const val RUI_FRAGMENT_ARGUMENT_COUNT = 4
+
+    const val RUI_FRAGMENT_ADAPTER = 0
+    const val RUI_FRAGMENT_CLOSURE = 1
+    const val RUI_FRAGMENT_PARENT = 2
+    const val RUI_FRAGMENT_EXTERNAL_PATCH = 3
+
+    /**
+     * Builder function arguments.
+     */
+    const val RUI_BUILDER_PARENT = 0
+
+    /**
+     * External patch function arguments
+     */
+    const val RUI_EXTERNAL_PATCH_FRAGMENT = 0
+
+}
 
 const val RUI_BLOCK_ARGUMENT_COUNT = 2
 const val RUI_BLOCK_ARGUMENT_INDEX_FRAGMENTS = 1
@@ -58,14 +90,6 @@ const val RUI_TRACE_ARGUMENT_COUNT = 3
 const val RUI_TRACE_ARGUMENT_NAME = 0
 const val RUI_TRACE_ARGUMENT_POINT = 1
 const val RUI_TRACE_ARGUMENT_DATA = 2
-
-const val RUI_PATCH_ARGUMENT_INDEX_SCOPE_MASK = 0
-
-const val RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_FRAGMENT = 0
-const val RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_SCOPE_MASK = 1
-
-val RUI_EXTERNAL_PATCH_ARGUMENT_NAME_FRAGMENT = Name.identifier("fragment")
-val RUI_EXTERNAL_PATCH_ARGUMENT_NAME_SCOPE_MASK = Name.identifier("scopeMask")
 
 const val RUI_STATE_VARIABLE_LIMIT = 60
 
@@ -92,7 +116,8 @@ const val RUI_INVALIDATE = "ruiInvalidate"
 const val RUI_DIRTY = "ruiDirty"
 
 const val RUI_ADAPTER = "ruiAdapter"
-const val RUI_SCOPE = "ruiScope"
+const val RUI_CLOSURE = "ruiClosure"
+const val RUI_PARENT = "ruiParent"
 const val RUI_EXTERNAL_PATCH = "ruiExternalPatch"
 const val RUI_FRAGMENT = "containedFragment"
 const val RUI_MASK = "mask"

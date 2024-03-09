@@ -13,8 +13,8 @@ import hu.simplexion.z2.adaptive.testing.TestNode
  */
 class HigherOrderFun(
     override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiParent: RuiFragment<TestNode>,
     override val ruiClosure: RuiClosure<TestNode>?,
+    override val ruiParent: RuiFragment<TestNode>?,
     override val ruiExternalPatch: RuiExternalPatchType<TestNode>,
     var j: Int,
     val closure: RuiClosure<TestNode>,
@@ -161,8 +161,8 @@ class HigherOrderCall(
     fun ruiBuilder111(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
         return HigherOrderFun(
             ruiAdapter,
-            parent,
             null, // direct calls remove the current closure
+            parent,
             this::ruiExternalPatch111,
             i * 2,
             RuiClosure(this, emptyArray(), 1),

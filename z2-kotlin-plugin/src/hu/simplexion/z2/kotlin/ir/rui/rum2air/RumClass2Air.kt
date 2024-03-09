@@ -55,7 +55,8 @@ class RumClass2Air(
         val patch = patch()
 
         val adapter = addPropertyWithConstructorParameter(RUI_ADAPTER.name, classBoundAdapterType, overridden = context.ruiAdapter)
-        val scope = addPropertyWithConstructorParameter(RUI_SCOPE.name, classBoundFragmentType.makeNullable(), overridden = context.ruiScope)
+        val closure = addPropertyWithConstructorParameter(RUI_CLOSURE.name, classBoundClosureType.makeNullable(), overridden = context.ruiClosure)
+        val parent = addPropertyWithConstructorParameter(RUI_PARENT.name, classBoundFragmentType.makeNullable(), overridden = context.ruiParent)
         val externalPatch = addPropertyWithConstructorParameter(RUI_EXTERNAL_PATCH.name, classBoundExternalPatchType, overridden = context.ruiExternalPatch)
 
         val fragment = addIrProperty(RUI_FRAGMENT.name, context.ruiFragmentType, inIsVar = false, overridden = context.ruiFragment)
@@ -72,7 +73,8 @@ class RumClass2Air(
             rumClass.parentScope?.fqName,
             irClass,
             adapter,
-            scope,
+            closure,
+            parent,
             externalPatch,
             fragment,
             constructor,
@@ -226,11 +228,6 @@ class RumClass2Air(
 
             function.addDispatchReceiver {
                 type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Name.identifier("scopeMask")
-                type = irBuiltIns.longType
             }
 
             irClass.declarations += function

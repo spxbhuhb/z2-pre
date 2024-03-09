@@ -4,7 +4,6 @@
 package hu.simplexion.z2.kotlin.ir.rui.air2ir
 
 import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.ir.rui.RUI_PATCH_ARGUMENT_INDEX_SCOPE_MASK
 import hu.simplexion.z2.kotlin.ir.rui.RUI_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.ir.rui.air.AirClass
 import hu.simplexion.z2.kotlin.ir.rui.air.AirStateVariable
@@ -150,11 +149,6 @@ class StateAccessTransform(
                 origin = IrStatementOrigin.INVOKE
             ).apply {
                 dispatchReceiver = scopeReceiver()
-
-                putValueArgument(
-                    RUI_PATCH_ARGUMENT_INDEX_SCOPE_MASK,
-                    irBuilder.irGetValue(airClass.dirtyMasks.first().irProperty, scopeReceiver())
-                )
             }
         }
 

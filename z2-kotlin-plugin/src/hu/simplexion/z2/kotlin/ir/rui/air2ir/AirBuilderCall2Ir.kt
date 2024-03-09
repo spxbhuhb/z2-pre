@@ -1,6 +1,8 @@
 package hu.simplexion.z2.kotlin.ir.rui.air2ir
 
-import hu.simplexion.z2.kotlin.ir.rui.*
+import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
+import hu.simplexion.z2.kotlin.ir.rui.Indices
+import hu.simplexion.z2.kotlin.ir.rui.RUI_FRAGMENT_TYPE_INDEX_BRIDGE
 import hu.simplexion.z2.kotlin.ir.rui.air.AirBuilderCall
 import hu.simplexion.z2.kotlin.ir.rui.air2ir.StateAccessTransform.Companion.transformStateAccess
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -35,18 +37,19 @@ class AirBuilderCall2Ir(
                     symbolMap.primaryConstructor.symbol,
                     typeArgumentsCount = 1, // bridge type
                     constructorTypeArgumentsCount = 0,
-                    rumCall.valueArguments.size + RUI_FRAGMENT_ARGUMENT_COUNT // +3 = adapter + scope + external patch
+                    rumCall.valueArguments.size + Indices.RUI_FRAGMENT_ARGUMENT_COUNT
                 ).also { constructorCall ->
 
                     constructorCall.putTypeArgument(RUI_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER, irGetValue(airClass.adapter, irGet(localScope)))
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_SCOPE, irGetValue(airClass.scope, irGet(localScope)))
-                    constructorCall.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_EXTERNAL_PATCH, irExternalPatchReference(localScope))
+                    constructorCall.putValueArgument(Indices.RUI_FRAGMENT_ADAPTER, irGetValue(airClass.adapter, irGet(localScope)))
+                    constructorCall.putValueArgument(Indices.RUI_FRAGMENT_CLOSURE, irGetValue(airClass.closure, irGet(localScope)))
+                    constructorCall.putValueArgument(Indices.RUI_FRAGMENT_PARENT, irGet(irFunction.valueParameters[Indices.RUI_BUILDER_PARENT]))
+                    constructorCall.putValueArgument(Indices.RUI_FRAGMENT_EXTERNAL_PATCH, irExternalPatchReference(localScope))
 
                     rumCall.valueArguments.forEachIndexed { index, ruiExpression ->
                         constructorCall.putValueArgument(
-                            index + RUI_FRAGMENT_ARGUMENT_COUNT,
+                            index + Indices.RUI_FRAGMENT_ARGUMENT_COUNT,
                             transformStateAccess(ruiExpression, localScope.symbol)
                         )
                     }

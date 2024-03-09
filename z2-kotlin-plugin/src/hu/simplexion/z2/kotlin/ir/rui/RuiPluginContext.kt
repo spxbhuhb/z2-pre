@@ -58,11 +58,14 @@ class RuiPluginContext(
     val ruiAdapterType = ruiAdapterClass.defaultType
     val ruiAdapterTrace = ruiAdapterClass.functionByName(RUI_ADAPTER_TRACE)
 
+    val ruiClosureClass = classSymbol(FqNames.RUI_CLOSURE_CLASS)
+
     val ruiBridgeClass = classSymbol(RUI_FQN_BRIDGE_CLASS)
     val ruiBridgeType = ruiBridgeClass.defaultType
 
     val ruiAdapter = property(RUI_ADAPTER)
-    val ruiScope = property(RUI_SCOPE)
+    val ruiClosure = property(RUI_CLOSURE)
+    val ruiParent = property(RUI_PARENT)
     val ruiExternalPatch = property(RUI_EXTERNAL_PATCH)
     val ruiFragment = property(RUI_FRAGMENT)
 

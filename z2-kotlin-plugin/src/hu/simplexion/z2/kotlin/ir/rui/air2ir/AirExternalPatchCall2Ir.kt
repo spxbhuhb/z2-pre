@@ -1,8 +1,7 @@
 package hu.simplexion.z2.kotlin.ir.rui.air2ir
 
 import hu.simplexion.z2.kotlin.ir.rui.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.ir.rui.RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_FRAGMENT
-import hu.simplexion.z2.kotlin.ir.rui.RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_SCOPE_MASK
+import hu.simplexion.z2.kotlin.ir.rui.Indices
 import hu.simplexion.z2.kotlin.ir.rui.RUI_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.ir.rui.air.AirClass
 import hu.simplexion.z2.kotlin.ir.rui.air.AirExternalPatchCall
@@ -58,30 +57,15 @@ class AirExternalPatchCall2Ir(
     fun toIr() {
         val function = externalPatch.irFunction
 
-        val externalPatchIt = function.valueParameters[RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_FRAGMENT]
-        val scopeMask = function.valueParameters[RUI_EXTERNAL_PATCH_ARGUMENT_INDEX_SCOPE_MASK]
+        val externalPatchIt = function.valueParameters[Indices.RUI_EXTERNAL_PATCH_FRAGMENT]
 
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
-
-            +irIf(
-                irEqual(
-                    irAnd(irGet(scopeMask), irConst(callSiteDependencyMask)),
-                    irConst(0)
-                ),
-                irReturn(
-                    irGet(scopeMask)
-                )
-            )
 
             +irAs(irGet(externalPatchIt), symbolMap.defaultType)
 
             arguments.forEachIndexed { index, ruiExpression ->
                 irVariablePatch(externalPatchIt, index, ruiExpression)
             }
-
-            +irReturn(
-                irGet(scopeMask)
-            )
         }
     }
 

@@ -66,11 +66,14 @@ open class ClassBoundIrBuilder(
     val classBoundFragmentType: IrType
         get() = context.ruiFragmentClass.typeWith(classBoundBridgeType.defaultType)
 
+    val classBoundClosureType: IrType
+        get() = context.ruiClosureClass.typeWith(classBoundBridgeType.defaultType)
+
     val classBoundFunction0Type: IrType
         get() = irBuiltIns.functionN(0).typeWith(classBoundFragmentType)
 
     val classBoundExternalPatchType: IrType
-        get() = irBuiltIns.functionN(2).typeWith(classBoundFragmentType, irBuiltIns.longType, irBuiltIns.longType)
+        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
 
     val classBoundAdapterType: IrType
         get() = context.ruiAdapterClass.typeWith(classBoundBridgeType.defaultType)
@@ -237,18 +240,20 @@ open class ClassBoundIrBuilder(
                 type = irClass.typeWith(irClass.typeParameters.first().defaultType)
             }
 
+            function.addValueParameter(Strings.RUI_BUILDER_PARENT, classBoundFragmentType)
+
             function.parent = irClass
             irClass.declarations += function
-
         }
 
     /**
-     * Defines a `ruiExternalPatchNNN(it : RuiFragment<BT>, scopeMask:Long)` function (NNN = [startOffset])
+     * Defines a `ruiExternalPatchNNN(it : RuiFragment<BT>)` function (NNN = [startOffset])
      */
     fun externalPatch(startOffset: Int): IrSimpleFunction =
         irFactory.buildFun {
             name = Name.identifier("$RUI_EXTERNAL_PATCH_OF_CHILD$startOffset")
-            returnType = irBuiltIns.longType
+            returnType = irBuiltIns.unitType
+            returnType = irBuiltIns.unitType
             modality = Modality.OPEN
         }.also { function ->
 
@@ -257,13 +262,8 @@ open class ClassBoundIrBuilder(
             }
 
             function.addValueParameter {
-                name = RUI_EXTERNAL_PATCH_ARGUMENT_NAME_FRAGMENT
+                name = Names.RUI_EXTERNAL_PATCH_FRAGMENT
                 type = classBoundFragmentType
-            }
-
-            function.addValueParameter {
-                name = RUI_EXTERNAL_PATCH_ARGUMENT_NAME_SCOPE_MASK
-                type = irBuiltIns.longType
             }
 
             function.parent = irClass

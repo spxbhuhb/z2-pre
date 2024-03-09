@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildFun
 import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
@@ -39,11 +38,12 @@ class AirEntryPoint2Ir(
                 airClass.irClass.defaultType,
                 airClass.constructor.symbol,
                 0, 0,
-                RUI_FRAGMENT_ARGUMENT_COUNT
+                Indices.RUI_FRAGMENT_ARGUMENT_COUNT
             ).also { call ->
-                call.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER, irGetAdapter(function))
-                call.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_SCOPE, irNull())
-                call.putValueArgument(RUI_FRAGMENT_ARGUMENT_INDEX_EXTERNAL_PATCH, irExternalPatch(function.symbol))
+                call.putValueArgument(Indices.RUI_FRAGMENT_ADAPTER, irGetAdapter(function))
+                call.putValueArgument(Indices.RUI_FRAGMENT_CLOSURE, irNull())
+                call.putValueArgument(Indices.RUI_FRAGMENT_PARENT, irNull())
+                call.putValueArgument(Indices.RUI_FRAGMENT_EXTERNAL_PATCH, irExternalPatch(function.symbol))
             }
 
             val root = irTemporary(instance, "root").also { it.parent = function }
@@ -88,13 +88,8 @@ class AirEntryPoint2Ir(
                 type = context.ruiFragmentType
             }
 
-            function.addValueParameter {
-                name = Name.identifier("scopeMask")
-                type = irBuiltIns.longType
-            }
-
             function.body = DeclarationIrBuilder(context.irContext, function.symbol).irBlockBody {
-                +irReturn(irConst(0L))
+                // +irReturn(irConst(0L))
             }
         }
 

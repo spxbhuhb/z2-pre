@@ -35,7 +35,7 @@ class AirBuilderBlock2Ir(
                 ).also { constructorCall ->
 
                     constructorCall.putValueArgument(
-                        RUI_FRAGMENT_ARGUMENT_INDEX_ADAPTER,
+                        Indices.RUI_FRAGMENT_ADAPTER,
                         irGetValue(airClass.adapter, irGet(localScope))
                     )
 

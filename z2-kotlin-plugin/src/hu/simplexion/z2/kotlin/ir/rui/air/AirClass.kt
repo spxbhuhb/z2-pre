@@ -15,7 +15,8 @@ class AirClass(
     val irClass: IrClass,
 
     val adapter: IrProperty,
-    val scope: IrProperty,
+    val closure: IrProperty,
+    val parent: IrProperty,
     val externalPatch: IrProperty,
     val fragment: IrProperty,
 

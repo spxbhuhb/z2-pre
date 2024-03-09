@@ -65,7 +65,7 @@ open class RuiTestAdapter : RuiAdapter<TestNode> {
             return if (expected == lastTrace) {
                 "OK"
             } else {
-                "Fail:\n${expected.joinToString("\n")}\n==== vs ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${lastTrace.joinToString(",\n") { it.toCode() }}"
+                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${lastTrace.joinToString(",\n") { it.toCode() }}"
             }
         }
     }
