@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.services.ir
 
+import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.services.*
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoCache
 import hu.simplexion.z2.kotlin.services.ir.proto.ProtoEnum
@@ -18,8 +19,9 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 class ServicesPluginContext(
-    override val irContext: IrPluginContext
-) : AbstractPluginContext() {
+    irContext: IrPluginContext,
+    options : Z2Options
+) : AbstractPluginContext(irContext, options) {
 
     override val runtimePackage = RUNTIME_PACKAGE
 

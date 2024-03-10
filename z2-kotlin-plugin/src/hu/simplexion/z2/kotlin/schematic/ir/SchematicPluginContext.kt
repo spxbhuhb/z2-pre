@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.schematic.ir
 
+import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.schematic.*
 import hu.simplexion.z2.kotlin.schematic.ir.util.SchematicFunctionCache
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
@@ -14,8 +15,9 @@ import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class SchematicPluginContext(
-    override val irContext: IrPluginContext,
-) : AbstractPluginContext() {
+    irContext: IrPluginContext,
+    options: Z2Options
+) : AbstractPluginContext(irContext, options) {
 
     override val runtimePackage = Strings.SCHEMATIC_RUNTIME_PACKAGE
 
@@ -23,7 +25,7 @@ class SchematicPluginContext(
     val schematicClass = Strings.SCHEMATIC_CLASS.runtimeClass()
     val schematicEntityClass = Strings.SCHEMATIC_ENTITY_CLASS.runtimeClass(pkg = Strings.SCHEMATIC_ENTITY_PACKAGE)
     val schematicEntityStoreClass = Strings.SCHEMATIC_ENTITY_STORE_CLASS.runtimeClass(pkg = Strings.SCHEMATIC_ENTITY_PACKAGE)
-    val schematicToAccessContext = checkNotNull(schematicClass.getSimpleFunction(SCHEMATIC_TO_ACCESS_CONTEXT)) { "missing Schematic.toSchematicAccessContext"}
+    val schematicToAccessContext = checkNotNull(schematicClass.getSimpleFunction(SCHEMATIC_TO_ACCESS_CONTEXT)) { "missing Schematic.toSchematicAccessContext" }
 
     val schemaClass = Strings.SCHEMATIC_SCHEMA_CLASS.runtimeClass(Strings.SCHEMATIC_SCHEMA_PACKAGE)
     val schemaInitWithDefaults = checkNotNull(schemaClass.getSimpleFunction("initWithDefaults")?.owner?.symbol) { "missing Schema.initWithDefault" }

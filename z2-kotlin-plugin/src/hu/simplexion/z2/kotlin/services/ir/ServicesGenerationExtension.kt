@@ -15,7 +15,7 @@ class ServicesGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        ServicesPluginContext(pluginContext).apply {
+        ServicesPluginContext(pluginContext, options).apply {
             moduleFragment.accept(ProtoCompanionVisitor(this, protoCache), null)
             moduleFragment.accept(ServicesModuleTransform(this), null)
             moduleFragment.accept(GetConsumerTransform(this), null)

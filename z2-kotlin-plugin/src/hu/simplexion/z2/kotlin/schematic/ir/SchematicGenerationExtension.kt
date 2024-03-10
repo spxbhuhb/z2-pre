@@ -14,7 +14,8 @@ class SchematicGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        SchematicPluginContext(pluginContext).apply {
+        SchematicPluginContext(pluginContext, options).apply {
+
             SchematicModuleTransform(this).also {
                 // collects classes to transform and creates a SchematicClassTransform for each
                 // does not call any functions in the SchematicClassTransform apart the constructor
