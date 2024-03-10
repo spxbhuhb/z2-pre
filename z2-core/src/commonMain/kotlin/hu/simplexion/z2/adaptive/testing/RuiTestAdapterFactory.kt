@@ -3,13 +3,13 @@
  */
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.RuiAdapter
-import hu.simplexion.z2.adaptive.RuiAdapterFactory
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveAdapterFactory
 
-object RuiTestAdapterFactory : RuiAdapterFactory() {
+object AdaptiveTestAdapterFactory : AdaptiveAdapterFactory() {
 
-    override fun accept(vararg args: Any?): RuiAdapter<TestNode> {
-        return RuiTestAdapter()
+    override fun accept(vararg args: Any?): AdaptiveAdapter<TestNode> {
+        return AdaptiveTestAdapter()
     }
 
 }

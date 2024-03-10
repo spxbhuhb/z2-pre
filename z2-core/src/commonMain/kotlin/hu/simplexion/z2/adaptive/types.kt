@@ -1,3 +1,3 @@
 package hu.simplexion.z2.adaptive
 
-typealias RuiExternalPatchType<BT> = (it: RuiFragment<BT>) -> Unit
+typealias AdaptiveExternalPatchType<BT> = (it: AdaptiveFragment<BT>) -> Unit

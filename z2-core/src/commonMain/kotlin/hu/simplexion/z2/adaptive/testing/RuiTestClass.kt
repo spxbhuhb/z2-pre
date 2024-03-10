@@ -1,6 +1,6 @@
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.RuiPublicApi
+import hu.simplexion.z2.adaptive.AdaptivePublicApi
 
-@RuiPublicApi
-annotation class RuiTestClass
+@AdaptivePublicApi
+annotation class AdaptiveTestClass

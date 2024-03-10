@@ -3,23 +3,23 @@
  */
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.RuiBridge
+import hu.simplexion.z2.adaptive.AdaptiveBridge
 
-class RuiTestBridge(
+class AdaptiveTestBridge(
     val id: Int
-) : RuiBridge<TestNode> {
+) : AdaptiveBridge<TestNode> {
 
     override val receiver = TestNode()
 
-    override fun remove(child: RuiBridge<TestNode>) {
+    override fun remove(child: AdaptiveBridge<TestNode>) {
         receiver.removeChild(child.receiver)
     }
 
-    override fun replace(oldChild: RuiBridge<TestNode>, newChild: RuiBridge<TestNode>) {
+    override fun replace(oldChild: AdaptiveBridge<TestNode>, newChild: AdaptiveBridge<TestNode>) {
         receiver.replaceChild(oldChild.receiver, newChild.receiver)
     }
 
-    override fun add(child: RuiBridge<TestNode>) {
+    override fun add(child: AdaptiveBridge<TestNode>) {
         receiver.appendChild(child.receiver)
     }
 

@@ -3,11 +3,11 @@
  */
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.RuiAdapter
-import hu.simplexion.z2.adaptive.RuiBridge
-import hu.simplexion.z2.adaptive.RuiFragment
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveBridge
+import hu.simplexion.z2.adaptive.AdaptiveFragment
 
-open class RuiTestAdapter : RuiAdapter<TestNode> {
+open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     data class TraceEvent(
         val name: String,
@@ -26,13 +26,13 @@ open class RuiTestAdapter : RuiAdapter<TestNode> {
         }
     }
 
-    val fragments = mutableListOf<RuiFragment<TestNode>>()
+    val fragments = mutableListOf<AdaptiveFragment<TestNode>>()
 
     var nextId = 1
 
     final override fun newId(): Int = nextId ++ // This is not thread safe, OK for testing, but beware.
 
-    override val rootBridge = RuiTestBridge(newId())
+    override val rootBridge = AdaptiveTestBridge(newId())
 
     val trace = mutableListOf<TraceEvent>()
 
@@ -40,8 +40,8 @@ open class RuiTestAdapter : RuiAdapter<TestNode> {
         lastTrace = trace
     }
 
-    override fun createPlaceholder(): RuiBridge<TestNode> {
-        return RuiTestBridge(newId())
+    override fun createPlaceholder(): AdaptiveBridge<TestNode> {
+        return AdaptiveTestBridge(newId())
     }
 
     override fun trace(name: String, point: String, vararg data: Any?) {
@@ -51,7 +51,7 @@ open class RuiTestAdapter : RuiAdapter<TestNode> {
 
     fun Any?.asString(): String =
         when (this) {
-            is RuiTestBridge -> this.id.toString()
+            is AdaptiveTestBridge -> this.id.toString()
             else -> this.toString()
         }
 

@@ -4,12 +4,12 @@
 package hu.simplexion.z2.kotlin.ir
 
 import hu.simplexion.z2.kotlin.Z2Options
+import hu.simplexion.z2.kotlin.ir.adaptive.AdaptiveGenerationExtension
 import hu.simplexion.z2.kotlin.ir.css.CssModuleTransform
 import hu.simplexion.z2.kotlin.ir.css.CssPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.LocalizationPluginContext
 import hu.simplexion.z2.kotlin.ir.localization.ModuleTransform
 import hu.simplexion.z2.kotlin.ir.localization.export.ExportResources
-import hu.simplexion.z2.kotlin.ir.rui.RuiGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -21,7 +21,7 @@ internal class Z2GenerationExtension(
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         localization(moduleFragment, pluginContext)
         // css(moduleFragment, pluginContext)
-        RuiGenerationExtension(options).generate(moduleFragment, pluginContext)
+        AdaptiveGenerationExtension(options).generate(moduleFragment, pluginContext)
     }
 
     fun localization(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {

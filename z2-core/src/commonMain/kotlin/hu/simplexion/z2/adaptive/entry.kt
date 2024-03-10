@@ -4,21 +4,21 @@
 package hu.simplexion.z2.adaptive
 
 /**
- * Entry point of a Rui component tree.
+ * Entry point of a Adaptive component tree.
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
-fun rui(block: (ruiAdapter: RuiAdapter<*>) -> Unit) {
-    block(RuiAdapterRegistry.adapterFor())
+fun adaptive(block: (adaptiveAdapter: AdaptiveAdapter<*>) -> Unit) {
+    block(AdaptiveAdapterRegistry.adapterFor())
 }
 
 /**
- * Entry point of a Rui component tree with a specific adapter. The adapter
+ * Entry point of a Adaptive component tree with a specific adapter. The adapter
  * registry is not accessed in this case but the components will use the
  * adapter passed.
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
-fun <BT> rui(ruiAdapter: RuiAdapter<BT>, block: (ruiAdapter: RuiAdapter<BT>) -> Unit) {
-    block(ruiAdapter)
+fun <BT> adaptive(adaptiveAdapter: AdaptiveAdapter<BT>, block: (adaptiveAdapter: AdaptiveAdapter<BT>) -> Unit) {
+    block(adaptiveAdapter)
 }
