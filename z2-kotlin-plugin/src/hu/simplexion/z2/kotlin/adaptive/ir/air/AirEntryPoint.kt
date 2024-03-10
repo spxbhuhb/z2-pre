@@ -3,15 +3,15 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirEntryPoint2Ir
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumEntryPoint
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 
 class AirEntryPoint(
-    override val rumElement: RumEntryPoint,
+    override val armElement: ArmEntryPoint,
     val airClass: AirClass
 ) : AirElement {
 
-    val rumEntryPoint
-        get() = rumElement
+    val armEntryPoint
+        get() = armElement
 
     fun toIr(context: AdaptivePluginContext) = AirEntryPoint2Ir(context, this).toIr()
 

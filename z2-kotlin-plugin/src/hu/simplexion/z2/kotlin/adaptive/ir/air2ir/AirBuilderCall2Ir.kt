@@ -21,8 +21,8 @@ class AirBuilderCall2Ir(
 ) : ClassBoundIrBuilder(parent) {
 
     fun toIr() {
-        val rumCall = call.rumElement
-        val symbolMap = rumCall.target.symbolMap
+        val armCall = call.armElement
+        val symbolMap = armCall.target.symbolMap
         val irFunction = call.irFunction
 
         irFunction.body = DeclarationIrBuilder(irContext, irFunction.symbol).irBlockBody {
@@ -36,7 +36,7 @@ class AirBuilderCall2Ir(
                     symbolMap.primaryConstructor.symbol,
                     typeArgumentsCount = 1, // bridge type
                     constructorTypeArgumentsCount = 0,
-                    rumCall.valueArguments.size + Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+                    armCall.valueArguments.size + Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
                 ).also { constructorCall ->
 
                     constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
@@ -46,7 +46,7 @@ class AirBuilderCall2Ir(
                     constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(irFunction.valueParameters[Indices.ADAPTIVE_BUILDER_PARENT]))
                     constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_EXTERNAL_PATCH, irExternalPatchReference(localScope))
 
-                    rumCall.valueArguments.forEachIndexed { index, adaptiveExpression ->
+                    armCall.valueArguments.forEachIndexed { index, adaptiveExpression ->
                         constructorCall.putValueArgument(
                             index + Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT,
                             transformStateAccess(adaptiveExpression, localScope.symbol)

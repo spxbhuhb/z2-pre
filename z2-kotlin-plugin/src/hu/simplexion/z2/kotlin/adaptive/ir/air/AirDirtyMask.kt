@@ -1,12 +1,12 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumDirtyMask
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDirtyMask
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 class AirDirtyMask(
-    override val rumElement: RumDirtyMask,
+    override val armElement: ArmDirtyMask,
     override val irProperty: IrProperty,
     val invalidate: IrSimpleFunction
 ) : AirProperty {

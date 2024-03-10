@@ -7,7 +7,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirExternalPatchCall
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform.Companion.transformStateAccess
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumExpression
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmExpression
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.IrValueDeclaration
@@ -41,16 +41,16 @@ class AirExternalPatchCall2Ir(
     val externalPatch: AirExternalPatchCall
 ) : ClassBoundIrBuilder(parent) {
 
-    val rumCall
-        get() = externalPatch.rumElement
+    val armCall
+        get() = externalPatch.armElement
 
     val arguments
-        get() = rumCall.valueArguments
+        get() = armCall.valueArguments
 
     val dispatchReceiver
         get() = externalPatch.irFunction.dispatchReceiverParameter!!
 
-    val symbolMap = rumCall.symbolMap(this)
+    val symbolMap = armCall.symbolMap(this)
 
     val callSiteDependencyMask = calcCallSiteDependencyMask()
 
@@ -79,7 +79,7 @@ class AirExternalPatchCall2Ir(
         return mask
     }
 
-    private fun IrBlockBodyBuilder.irVariablePatch(externalPatchIt: IrValueDeclaration, index: Int, expression: RumExpression) {
+    private fun IrBlockBodyBuilder.irVariablePatch(externalPatchIt: IrValueDeclaration, index: Int, expression: ArmExpression) {
         // constants, globals, etc. have no dependencies, no need to patch them
         if (expression.dependencies.isEmpty()) return
 
@@ -93,7 +93,7 @@ class AirExternalPatchCall2Ir(
         )
     }
 
-    private fun irVariablePatchCondition(expression: RumExpression): IrExpression {
+    private fun irVariablePatchCondition(expression: ArmExpression): IrExpression {
 
         var result : IrExpression? = null
 
@@ -121,7 +121,7 @@ class AirExternalPatchCall2Ir(
     }
 
     fun AirStateVariable.irIsDirty(receiver: IrExpression): IrExpression {
-        val variableIndex = rumElement.index
+        val variableIndex = armElement.index
         val maskIndex = variableIndex / ADAPTIVE_STATE_VARIABLE_LIMIT
         val bitIndex = variableIndex % ADAPTIVE_STATE_VARIABLE_LIMIT
 
@@ -133,7 +133,7 @@ class AirExternalPatchCall2Ir(
         )
     }
 
-    private fun IrBlockBodyBuilder.irVariableSetAndInvalidate(externalPatchIt: IrValueDeclaration, index: Int, adaptiveExpression: RumExpression): IrExpression {
+    private fun IrBlockBodyBuilder.irVariableSetAndInvalidate(externalPatchIt: IrValueDeclaration, index: Int, adaptiveExpression: ArmExpression): IrExpression {
         return irBlock {
 
             val newValue = irTemporary(

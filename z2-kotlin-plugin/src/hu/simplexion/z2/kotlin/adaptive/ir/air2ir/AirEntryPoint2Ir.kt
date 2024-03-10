@@ -29,8 +29,8 @@ class AirEntryPoint2Ir(
     entryPoint: AirEntryPoint
 ) : ClassBoundIrBuilder(context, entryPoint.airClass) {
 
-    val function = entryPoint.rumEntryPoint.irFunction
-    val rumClass = airClass.rumClass
+    val function = entryPoint.armEntryPoint.irFunction
+    val armClass = airClass.armClass
 
     fun toIr() {
 

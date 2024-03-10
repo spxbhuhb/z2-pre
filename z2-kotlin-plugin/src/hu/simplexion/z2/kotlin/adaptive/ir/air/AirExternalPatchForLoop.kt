@@ -3,11 +3,11 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirExternalPatchForLoop2Ir
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumForLoop
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmForLoop
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 class AirExternalPatchForLoop(
-    override val rumElement: RumForLoop,
+    override val armElement: ArmForLoop,
     override val irFunction: IrSimpleFunction
 ) : AirExternalPatch {
 

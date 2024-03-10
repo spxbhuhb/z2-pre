@@ -8,8 +8,8 @@ import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirEntryPoint
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumClass
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumEntryPoint
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName
@@ -32,8 +32,8 @@ class AdaptivePluginContext(
 
     val messages = mutableListOf<PluginMessage>()
 
-    val rumClasses = mutableListOf<RumClass>()
-    val rumEntryPoints = mutableListOf<RumEntryPoint>()
+    val armClasses = mutableListOf<ArmClass>()
+    val armEntryPoints = mutableListOf<ArmEntryPoint>()
 
     val airClasses = mutableMapOf<FqName, AirClass>()
     val airEntryPoints = mutableListOf<AirEntryPoint>()

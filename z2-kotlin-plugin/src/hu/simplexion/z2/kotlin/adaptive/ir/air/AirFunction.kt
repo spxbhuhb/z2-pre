@@ -2,12 +2,12 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumRenderingStatement
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmRenderingStatement
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 interface AirFunction : AirElement {
 
-    override val rumElement: RumRenderingStatement
+    override val armElement: ArmRenderingStatement
     val irFunction: IrSimpleFunction
 
     fun toIr(parent: ClassBoundIrBuilder)

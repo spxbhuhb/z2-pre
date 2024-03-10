@@ -1,11 +1,11 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumStateVariable
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 
 class AirStateVariable(
-    override val rumElement: RumStateVariable,
+    override val armElement: ArmStateVariable,
     override val irProperty: IrProperty
 ) : AirProperty {
 

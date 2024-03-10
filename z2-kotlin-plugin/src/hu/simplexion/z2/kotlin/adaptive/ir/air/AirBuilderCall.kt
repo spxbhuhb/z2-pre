@@ -3,11 +3,11 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirBuilderCall2Ir
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumCall
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmCall
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 class AirBuilderCall(
-    override val rumElement: RumCall,
+    override val armElement: ArmCall,
     override val irFunction: IrSimpleFunction,
     override val externalPatch: AirFunction,
     override val subBuilders: List<AirBuilder>

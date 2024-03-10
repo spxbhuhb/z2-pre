@@ -24,7 +24,7 @@ class AirClass2Ir(
     airClass: AirClass
 ) : ClassBoundIrBuilder(context, airClass) {
 
-    val renderingSymbolMap = airClass.rendering.rumElement.symbolMap(this)
+    val renderingSymbolMap = airClass.rendering.armElement.symbolMap(this)
 
     fun toIr(): IrClass {
         airClass.initializer.toIr()
@@ -38,7 +38,7 @@ class AirClass2Ir(
     fun IrAnonymousInitializer.toIr() {
         body = DeclarationIrBuilder(irContext, irClass.symbol).irBlockBody {
 
-            airClass.rumElement.initializerStatements.forEach {
+            airClass.armElement.initializerStatements.forEach {
                 + transformStateAccess(it, airClass.irClass.thisReceiver !!.symbol)
             }
 

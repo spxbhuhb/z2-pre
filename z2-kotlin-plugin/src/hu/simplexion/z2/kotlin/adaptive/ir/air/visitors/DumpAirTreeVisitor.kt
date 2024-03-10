@@ -62,7 +62,7 @@ class DumpAirTreeVisitor(
     override fun visitBuilderCall(builder: AirBuilderCall) {
         indented {
             with(builder) {
-                println { "BUILDER type:CALL name:${irFunction.name} externalPatch:${externalPatch.irFunction.name} target:${rumElement.target}" }
+                println { "BUILDER type:CALL name:${irFunction.name} externalPatch:${externalPatch.irFunction.name} target:${armElement.target}" }
             }
             super.visitBuilderCall(builder)
         }
@@ -98,7 +98,7 @@ class DumpAirTreeVisitor(
     override fun visitExternalPatchCall(externalPatch: AirExternalPatchCall) {
         indented {
             with(externalPatch) {
-                println { "EXTERNAL_PATCH type:CALL name:${irFunction.name} target:${externalPatch.rumElement.target}" }
+                println { "EXTERNAL_PATCH type:CALL name:${irFunction.name} target:${externalPatch.armElement.target}" }
             }
             super.visitExternalPatchCall(externalPatch)
         }

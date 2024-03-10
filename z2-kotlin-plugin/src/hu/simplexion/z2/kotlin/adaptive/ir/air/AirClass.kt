@@ -3,13 +3,13 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirClass2Ir
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.name.FqName
 
 class AirClass(
 
-    val rumClass: RumClass,
+    val armClass: ArmClass,
     val scopeClassName : FqName?,
 
     val irClass: IrClass,
@@ -27,8 +27,8 @@ class AirClass(
 
 ) : AirElement {
 
-    override val rumElement
-        get() = rumClass
+    override val armElement
+        get() = armClass
 
     lateinit var stateVariableMap: Map<String, AirStateVariable>
     lateinit var stateVariableList: List<AirStateVariable>

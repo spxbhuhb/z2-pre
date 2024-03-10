@@ -10,7 +10,7 @@ import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_S
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumExpression
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmExpression
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -64,7 +64,7 @@ class StateAccessTransform(
         /**
          * Transforms variable access in external patch and CALL rendering builder.
          */
-        fun ClassBoundIrBuilder.transformStateAccess(expression: RumExpression, startScopeValue: IrValueSymbol): IrExpression =
+        fun ClassBoundIrBuilder.transformStateAccess(expression: ArmExpression, startScopeValue: IrValueSymbol): IrExpression =
             expression
                 .irExpression
                 .deepCopyWithVariables()
@@ -86,8 +86,8 @@ class StateAccessTransform(
     val airClass: AirClass
         get() = irBuilder.airClass
 
-    val rumClass
-        get() = airClass.rumClass
+    val armClass
+        get() = airClass.armClass
 
     val irContext = irBuilder.irContext
 
@@ -98,8 +98,8 @@ class StateAccessTransform(
     var haveToPatch = false
 
     override fun visitVariable(declaration: IrVariable): IrStatement {
-        ADAPTIVE_IR_RENDERING_VARIABLE.check(airClass.rumClass, declaration) {
-            declaration.startOffset < airClass.rumClass.boundary.startOffset ||
+        ADAPTIVE_IR_RENDERING_VARIABLE.check(airClass.armClass, declaration) {
+            declaration.startOffset < airClass.armClass.boundary.startOffset ||
                 declaration.origin == IrDeclarationOrigin.FOR_LOOP_ITERATOR ||
                 declaration.origin == IrDeclarationOrigin.FOR_LOOP_VARIABLE ||
                 declaration.origin == IrDeclarationOrigin.IR_TEMPORARY_VARIABLE
@@ -167,7 +167,7 @@ class StateAccessTransform(
 
         val (stateVariable,path) = airClass.findStateVariable(irBuilder.context, name) ?: return super.visitGetValue(expression)
 
-        ADAPTIVE_IR_STATE_VARIABLE_SHADOW.check(rumClass, expression) { stateVariable.rumElement.matches(expression.symbol) }
+        ADAPTIVE_IR_STATE_VARIABLE_SHADOW.check(armClass, expression) { stateVariable.armElement.matches(expression.symbol) }
 
         return irBuilder.irGetValue(stateVariable.irProperty, scopeReceiver(/* path */))
     }
@@ -185,7 +185,7 @@ class StateAccessTransform(
         val stateVariable = airClass.stateVariableMap[name]
             ?: return super.visitSetValue(expression)
 
-        ADAPTIVE_IR_STATE_VARIABLE_SHADOW.check(rumClass, expression) { stateVariable.rumElement.matches(expression.symbol) }
+        ADAPTIVE_IR_STATE_VARIABLE_SHADOW.check(armClass, expression) { stateVariable.armElement.matches(expression.symbol) }
 
         if (currentScope == null) return super.visitSetValue(expression)
 
@@ -195,7 +195,7 @@ class StateAccessTransform(
 
             + irBuilder.irSetValue(stateVariable.irProperty, expression.value, scopeReceiver())
 
-            val index = stateVariable.rumElement.index
+            val index = stateVariable.armElement.index
             val dirtyMask = airClass.dirtyMasks[index / ADAPTIVE_STATE_VARIABLE_LIMIT]
 
             + irCallOp(

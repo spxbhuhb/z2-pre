@@ -148,7 +148,7 @@ const val ADAPTIVE_WHEN_ARGUMENT_INDEX_FRAGMENTS = 2
 
 const val ADAPTIVE_BLOCK = "adaptiveBlock"
 const val ADAPTIVE_BRANCH = "adaptiveBranch"
-const val ADAPTIVE_CALL = "rumCall"
+const val ADAPTIVE_CALL = "armCall"
 const val ADAPTIVE_HIGHER_ORDER_CALL = "adaptiveHigherOrderCall"
 const val ADAPTIVE_FOR_LOOP = "adaptiveForLoop"
 const val ADAPTIVE_WHEN = "adaptiveWhen"

@@ -5,7 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.diagnostics
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrFileEntry
 import org.jetbrains.kotlin.ir.declarations.IrFunction
@@ -42,10 +42,10 @@ object ErrorsAdaptive {
             return "${id.toString().padStart(4, '0')}  $message"
         }
 
-        fun check(rumClass: RumClass, element: IrElement, check: () -> Boolean) {
+        fun check(armClass: ArmClass, element: IrElement, check: () -> Boolean) {
             if (check()) return
-            rumClass.compilationError = true
-            report(rumClass.adaptiveContext, rumClass.originalFunction.file.fileEntry, element.startOffset)
+            armClass.compilationError = true
+            report(armClass.adaptiveContext, armClass.originalFunction.file.fileEntry, element.startOffset)
         }
 
         fun report(adaptiveContext: AdaptivePluginContext, declaration: IrFunction, additionalInfo: String = "") {
@@ -53,13 +53,13 @@ object ErrorsAdaptive {
         }
 
 //        fun report(adaptiveClassBuilder: AdaptiveClassBuilder, element: IrElement, additionalInfo: String = ""): Nothing? {
-//            report(adaptiveClassBuilder.adaptiveContext, adaptiveClassBuilder.rumClass.irFunction.file.fileEntry, element.startOffset, additionalInfo)
+//            report(adaptiveClassBuilder.adaptiveContext, adaptiveClassBuilder.armClass.irFunction.file.fileEntry, element.startOffset, additionalInfo)
 //            return null
 //        }
 
-        fun report(rumClass: RumClass, element: IrElement, additionalInfo: String = ""): Nothing? {
-            rumClass.compilationError = true
-            report(rumClass.adaptiveContext, rumClass.originalFunction.file.fileEntry, element.startOffset, additionalInfo)
+        fun report(armClass: ArmClass, element: IrElement, additionalInfo: String = ""): Nothing? {
+            armClass.compilationError = true
+            report(armClass.adaptiveContext, armClass.originalFunction.file.fileEntry, element.startOffset, additionalInfo)
             return null
         }
 

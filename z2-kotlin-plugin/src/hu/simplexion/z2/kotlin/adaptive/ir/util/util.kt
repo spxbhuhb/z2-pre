@@ -8,7 +8,7 @@ import hu.simplexion.z2.kotlin.adaptive.Strings.toNameWithPostfix
 import hu.simplexion.z2.kotlin.adaptive.capitalizeFirstChar
 import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.rum.RumClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.name
@@ -23,7 +23,7 @@ fun Name.isSynthetic() = identifier.startsWith('$') || identifier.endsWith('$')
 
 class AdaptiveCompilationException(
     val error: ErrorsAdaptive.AdaptiveIrError,
-    var rumClass: RumClass? = null,
+    var armClass: ArmClass? = null,
     var irElement: IrElement? = null,
     val additionalInfo: String = ""
 ) : Exception() {
@@ -36,7 +36,7 @@ class AdaptiveCompilationException(
 
     fun report() {
         if (reported) return
-        rumClass?.let { c ->
+        armClass?.let { c ->
             irElement?.let { e ->
                 error.report(c, e, additionalInfo)
                 reported = true

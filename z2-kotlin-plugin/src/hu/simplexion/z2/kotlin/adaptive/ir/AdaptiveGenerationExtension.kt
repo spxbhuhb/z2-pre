@@ -4,8 +4,8 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.Z2Options
-import hu.simplexion.z2.kotlin.adaptive.ir.ir2rum.EntryPointTransform
-import hu.simplexion.z2.kotlin.adaptive.ir.ir2rum.OriginalFunctionTransform
+import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.EntryPointTransform
+import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.OriginalFunctionTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -35,20 +35,20 @@ internal class AdaptiveGenerationExtension(
 //                )
 //            }
 
-            // --------  IR to RUM  --------
+            // --------  IR to ARM  --------
 
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)
 
             if (compilationError) return // prevent the plugin to go on if there is an error that would result in an incorrect IR tree
 
-            debug("RUM CLASSES") { "\n\n" + rumClasses.joinToString("\n\n") { it.dump() } }
-            debug("RUM ENTRY POINTS") { "\n\n" + rumEntryPoints.joinToString("\n\n") { it.dump() } }
+            debug("ARM CLASSES") { "\n\n" + armClasses.joinToString("\n\n") { it.dump() } }
+            debug("ARM ENTRY POINTS") { "\n\n" + armEntryPoints.joinToString("\n\n") { it.dump() } }
 
-            // --------  RUM to AIR  --------
+            // --------  ARM to AIR  --------
 
-            rumClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
-            rumEntryPoints.forEach { airEntryPoints += it.toAir(this) }
+            armClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
+            armEntryPoints.forEach { airEntryPoints += it.toAir(this) }
 
             debug("AIR CLASSES") { "\n\n" + airClasses.values.joinToString("\n\n") { it.dump() } }
             debug("AIR ENTRY POINTS") { "\n\n" + airEntryPoints.joinToString("\n\n") { it.dump() } }
@@ -57,12 +57,12 @@ internal class AdaptiveGenerationExtension(
 
             airClasses.values.forEach {
                 it.toIr(this)
-                if (! it.rumClass.compilationError) {
-                    it.rumElement.originalFunction.file.addChild(it.irClass)
+                if (! it.armClass.compilationError) {
+                    it.armElement.originalFunction.file.addChild(it.irClass)
                 }
             }
             airEntryPoints.forEach {
-                if (! it.airClass.rumClass.compilationError) {
+                if (! it.airClass.armClass.compilationError) {
                     it.toIr(this)
                 }
             }

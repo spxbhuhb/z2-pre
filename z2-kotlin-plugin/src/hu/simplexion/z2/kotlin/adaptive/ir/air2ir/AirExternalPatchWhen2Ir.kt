@@ -13,13 +13,13 @@ class AirExternalPatchWhen2Ir(
     val externalPatch: AirExternalPatchWhen
 ) : ClassBoundIrBuilder(parent) {
 
-    val rumWhen
-        get() = externalPatch.rumElement
+    val armWhen
+        get() = externalPatch.armElement
 
     val dispatchReceiver
         get() = externalPatch.irFunction.dispatchReceiverParameter!!
 
-    val symbolMap = rumWhen.symbolMap(this)
+    val symbolMap = armWhen.symbolMap(this)
 
     fun toIr() {
         val function = externalPatch.irFunction
