@@ -9,11 +9,12 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapterFactory
-import hu.simplexion.z2.adaptive.testing.T1
+import hu.simplexion.z2.adaptive.testing.T0
 
 @Adaptive
-fun OnlyExternal(i: Int, s: String) {
-
+fun Sequence() {
+    T0()
+    T0()
 }
 
 fun box() : String {
@@ -21,9 +22,15 @@ fun box() : String {
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
     adaptive {
-        OnlyExternal(123, "abc")
+        Sequence()
     }
 
     return AdaptiveTestAdapter.assert(listOf(
+        TraceEvent("<root>", "init", ),
+        TraceEvent("AdaptiveSequence", "init", ),
+        TraceEvent("AdaptiveT0", "create", ),
+        TraceEvent("AdaptiveT0", "create", ),
+        TraceEvent("AdaptiveT0", "mount", "bridge:", "1"),
+        TraceEvent("AdaptiveT0", "mount", "bridge:", "1")
     ))
 }

@@ -48,6 +48,62 @@ public class BoxTestGenerated extends AbstractBoxTest {
         public void testEmptyEntry() throws Exception {
             runTest("testData/box/adaptive/emptyEntry.kt");
         }
+
+        @Test
+        @TestMetadata("sequence.kt")
+        public void testSequence() throws Exception {
+            runTest("testData/box/adaptive/sequence.kt");
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/variables")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Variables {
+            @Test
+            public void testAllFilesPresentInVariables() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/variables"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("many.kt")
+            public void testMany() throws Exception {
+                runTest("testData/box/adaptive/variables/many.kt");
+            }
+
+            @Test
+            @TestMetadata("onlyExternal.kt")
+            public void testOnlyExternal() throws Exception {
+                runTest("testData/box/adaptive/variables/onlyExternal.kt");
+            }
+
+            @Test
+            @TestMetadata("onlyInternal.kt")
+            public void testOnlyInternal() throws Exception {
+                runTest("testData/box/adaptive/variables/onlyInternal.kt");
+            }
+
+            @Test
+            @TestMetadata("variables.kt")
+            public void testVariables() throws Exception {
+                runTest("testData/box/adaptive/variables/variables.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/when")
+        @TestDataPath("$PROJECT_ROOT")
+        public class When {
+            @Test
+            public void testAllFilesPresentInWhen() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/when"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("ifBranch.kt")
+            public void testIfBranch() throws Exception {
+                runTest("testData/box/adaptive/when/ifBranch.kt");
+            }
+        }
     }
 
     @Nested
