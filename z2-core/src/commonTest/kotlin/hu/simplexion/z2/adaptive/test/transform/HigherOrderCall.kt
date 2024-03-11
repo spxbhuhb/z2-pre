@@ -1,59 +1,59 @@
 package hu.simplexion.z2.adaptive.test.transform
 
 import hu.simplexion.z2.adaptive.*
-import hu.simplexion.z2.adaptive.testing.RuiT0
-import hu.simplexion.z2.adaptive.testing.RuiT1
+import hu.simplexion.z2.adaptive.testing.AdaptiveT0
+import hu.simplexion.z2.adaptive.testing.AdaptiveT1
 import hu.simplexion.z2.adaptive.testing.TestNode
 
 /**
- * fun higherOrderFun(j : Int, @Rui paramFun : (p : Int) -> Unit) { // call site 111 (a block)
+ * fun higherOrderFun(j : Int, @Adaptive paramFun : (p : Int) -> Unit) { // call site 111 (a block)
  *     T0() // call site 222
  *     paramFun(j + 3) // call site 333
  * }
  */
 class HigherOrderFun(
-    override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiClosure: RuiClosure<TestNode>?,
-    override val ruiParent: RuiFragment<TestNode>?,
-    override val ruiExternalPatch: RuiExternalPatchType<TestNode>,
+    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
+    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adaptiveParent: AdaptiveFragment<TestNode>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
     var j: Int,
-    val closure: RuiClosure<TestNode>,
-    @Rui val paramFun: (parent: RuiAnonymous<TestNode>) -> RuiFragment<TestNode>
-) : RuiGeneratedFragment<TestNode> {
+    val closure: AdaptiveClosure<TestNode>,
+    @Adaptive val paramFun: (parent: AdaptiveAnonymous<TestNode>) -> AdaptiveFragment<TestNode>
+) : AdaptiveGeneratedFragment<TestNode> {
 
     val stateSize = 1
     val stateVariableIndex_j = 0
 
-    var ruiDirtyMask = RuiStateVariableMask(stateSize)
+    var adaptiveDirtyMask = AdaptiveStateVariableMask(stateSize)
 
-    fun ruiInvalidate0(statVariableIndex: Int) {
-        ruiDirtyMask.invalidate(statVariableIndex)
+    fun adaptiveInvalidate0(statVariableIndex: Int) {
+        adaptiveDirtyMask.invalidate(statVariableIndex)
     }
 
-    override fun ruiPatch() {
-        containedFragment.ruiExternalPatch(containedFragment)
-        containedFragment.ruiPatch()
-        ruiDirtyMask.clear()
+    override fun adaptivePatch() {
+        containedFragment.adaptiveExternalPatch(containedFragment)
+        containedFragment.adaptivePatch()
+        adaptiveDirtyMask.clear()
     }
 
-    override val containedFragment = ruiBuilder111(this)
+    override val containedFragment = adaptiveBuilder111(this)
 
     // ----  block site 111 --------
 
     val callSiteDependencyMask_111
         get() = callSiteDependencyMask222 or callSiteDependencyMask333
 
-    fun ruiBuilder111(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiSequence(
-            ruiAdapter,
-            parent.ruiClosure,
+    fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveSequence(
+            adaptiveAdapter,
+            parent.adaptiveClosure,
             parent,
-            this::ruiBuilder222,
-            this::ruiBuilder333
+            this::adaptiveBuilder222,
+            this::adaptiveBuilder333
         )
     }
 
-    fun ruiExternalPatch111(fragment: RuiFragment<TestNode>) {
+    fun adaptiveExternalPatch111(fragment: AdaptiveFragment<TestNode>) {
         // sequence has no state variables, therefore there is nothing to patch
         // `patch` will call `externalPatch` and `patch` of all items in the sequence
     }
@@ -63,11 +63,11 @@ class HigherOrderFun(
     val callSiteDependencyMask222: Int
         get() = 0
 
-    fun ruiBuilder222(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiT0(ruiAdapter, parent.ruiClosure, this, this::ruiExternalPatch222)
+    fun adaptiveBuilder222(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch222)
     }
 
-    fun ruiExternalPatch222(fragment: RuiFragment<TestNode>) {
+    fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {
         //T0  has no state variables, therefore there is nothing to patch
     }
 
@@ -86,24 +86,24 @@ class HigherOrderFun(
     // index of the first state variable in the anonymous component
     val stateVariableIndex_333_1 = 0
 
-    fun ruiBuilder333(parent: RuiFragment<TestNode>?): RuiFragment<TestNode> {
-        return RuiAnonymous(
-            ruiAdapter,
+    fun adaptiveBuilder333(parent: AdaptiveFragment<TestNode>?): AdaptiveFragment<TestNode> {
+        return AdaptiveAnonymous(
+            adaptiveAdapter,
             closure,
             parent,
-            this::ruiExternalPatch333,
+            this::adaptiveExternalPatch333,
             arrayOf(j + 3)
         ).also { paramFun(it) }
     }
 
-    fun ruiExternalPatch333(fragment: RuiFragment<TestNode>) {
-        if (ruiDirtyMask.isClearOf(callSiteDependencyMask333)) return
+    fun adaptiveExternalPatch333(fragment: AdaptiveFragment<TestNode>) {
+        if (adaptiveDirtyMask.isClearOf(callSiteDependencyMask333)) return
 
-        fragment as RuiAnonymous<TestNode>
+        fragment as AdaptiveAnonymous<TestNode>
 
-        if (ruiDirtyMask.isDirtyOf(stateVariableIndex_j)) {
-            fragment.ruiState[stateVariableIndex_333_0] = j + 3
-            fragment.ruiInvalidate(stateVariableIndex_333_0)
+        if (adaptiveDirtyMask.isDirtyOf(stateVariableIndex_j)) {
+            fragment.adaptiveState[stateVariableIndex_333_0] = j + 3
+            fragment.adaptiveInvalidate(stateVariableIndex_333_0)
         }
     }
 }
@@ -119,12 +119,12 @@ class HigherOrderFun(
  * ```
  */
 class HigherOrderCall(
-    override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiParent: RuiFragment<TestNode>,
-    override val ruiClosure: RuiClosure<TestNode>?,
-    override val ruiExternalPatch: RuiExternalPatchType<TestNode>,
+    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
+    override val adaptiveParent: AdaptiveFragment<TestNode>,
+    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
     var i: Int
-) : RuiGeneratedFragment<TestNode> {
+) : AdaptiveGeneratedFragment<TestNode> {
 
     val stateVariableIndex_i = 0
     val closureVariableIndex_i = stateVariableIndex_i // for the declaration scope closure variable index is the same as the state variable index
@@ -132,19 +132,19 @@ class HigherOrderCall(
     val scopeSize = 1 // one state variable in this scope
     val closureSize = scopeSize // for the declaration scope these two are the same
 
-    var ruiDirtyMask = RuiStateVariableMask(1)
+    var adaptiveDirtyMask = AdaptiveStateVariableMask(1)
 
-    fun ruiInvalidate(stateVariableIndex: Int) {
-        ruiDirtyMask.invalidate(stateVariableIndex)
+    fun adaptiveInvalidate(stateVariableIndex: Int) {
+        adaptiveDirtyMask.invalidate(stateVariableIndex)
     }
 
-    override fun ruiPatch() {
-        containedFragment.ruiExternalPatch(containedFragment)
-        containedFragment.ruiPatch()
-        ruiDirtyMask.clear()
+    override fun adaptivePatch() {
+        containedFragment.adaptiveExternalPatch(containedFragment)
+        containedFragment.adaptivePatch()
+        adaptiveDirtyMask.clear()
     }
 
-    override val containedFragment = ruiBuilder111(this)
+    override val containedFragment = adaptiveBuilder111(this)
 
     // ----  call site 111 --------
     //
@@ -152,32 +152,32 @@ class HigherOrderCall(
     //
 
     val callSiteDependencyMask_111 by lazy {
-        RuiStateVariableMask.of(
-            RuiStateVariableMask.of(stateVariableIndex_i), // the first parameter of H2 depends on `i`
+        AdaptiveStateVariableMask.of(
+            AdaptiveStateVariableMask.of(stateVariableIndex_i), // the first parameter of H2 depends on `i`
             callSiteDependencyMask_222 // dependencies of  the anonymous function
         )
     }
 
-    fun ruiBuilder111(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+    fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         return HigherOrderFun(
-            ruiAdapter,
+            adaptiveAdapter,
             null, // direct calls remove the current closure
             parent,
-            this::ruiExternalPatch111,
+            this::adaptiveExternalPatch111,
             i * 2,
-            RuiClosure(this, emptyArray(), 1),
-            this::ruiBuilder222
+            AdaptiveClosure(this, emptyArray(), 1),
+            this::adaptiveBuilder222
         )
     }
 
-    fun ruiExternalPatch111(fragment: RuiFragment<TestNode>) {
-        if (ruiDirtyMask.isClearOf(callSiteDependencyMask_111)) return
+    fun adaptiveExternalPatch111(fragment: AdaptiveFragment<TestNode>) {
+        if (adaptiveDirtyMask.isClearOf(callSiteDependencyMask_111)) return
 
         fragment as HigherOrderFun
 
-        if (ruiDirtyMask.isDirtyOf(stateVariableIndex_i)) {
+        if (adaptiveDirtyMask.isDirtyOf(stateVariableIndex_i)) {
             fragment.j = i * 2
-            fragment.ruiInvalidate0(fragment.stateVariableIndex_j)
+            fragment.adaptiveInvalidate0(fragment.stateVariableIndex_j)
         }
     }
 
@@ -189,38 +189,38 @@ class HigherOrderCall(
     val closureSize_222 = 2 // two closure variables: `i` and `p`
 
     val callSiteDependencyMask_222 by lazy {
-        RuiStateVariableMask.of(
+        AdaptiveStateVariableMask.of(
             callSiteDependencyMask333, callSiteDependencyMask_444
         )
     }
 
-    fun ruiGetValue_222_p(closure: RuiClosure<TestNode>): Int =
-        closure.anonymousScopes[scopeIndex_222].ruiState[scopeVariableIndex_222_p] as Int
+    fun adaptiveGetValue_222_p(closure: AdaptiveClosure<TestNode>): Int =
+        closure.anonymousScopes[scopeIndex_222].adaptiveState[scopeVariableIndex_222_p] as Int
 
-    fun ruiBuilder222(parent: RuiAnonymous<TestNode>): RuiFragment<TestNode> {
-        return RuiSequence(
-            ruiAdapter,
+    fun adaptiveBuilder222(parent: AdaptiveAnonymous<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveSequence(
+            adaptiveAdapter,
             parent.extendedClosure,
             parent,
-            this::ruiBuilder333,
-            this::ruiBuilder444
+            this::adaptiveBuilder333,
+            this::adaptiveBuilder444
         )
     }
 
-    fun ruiExternalPatch222(fragment: RuiFragment<TestNode>) {
-        fragment as RuiSequence
-        fragment.ruiPatch()
+    fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {
+        fragment as AdaptiveSequence
+        fragment.adaptivePatch()
     }
 
     // ----  T0 call site 333 --------
 
-    val callSiteDependencyMask333 = RuiStateVariableMask(0)
+    val callSiteDependencyMask333 = AdaptiveStateVariableMask(0)
 
-    fun ruiBuilder333(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
-        return RuiT0(ruiAdapter, parent.ruiClosure, this, this::ruiExternalPatch333)
+    fun adaptiveBuilder333(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch333)
     }
 
-    fun ruiExternalPatch333(fragment: RuiFragment<TestNode>) {
+    fun adaptiveExternalPatch333(fragment: AdaptiveFragment<TestNode>) {
         // nothing to do here as there are no parameters
     }
 
@@ -229,7 +229,7 @@ class HigherOrderCall(
     //  T1(i + p)
     //
 
-    val callSiteDependencyMask_444 = RuiStateVariableMask.of(
+    val callSiteDependencyMask_444 = AdaptiveStateVariableMask.of(
         closureVariableIndex_i,
         closureVariableIndex_222_p
     )
@@ -241,7 +241,7 @@ class HigherOrderCall(
      * In this specific case it is the same as the call site dependency mask but in general it is
      * a subset of the call site dependency mask.
      */
-    val callParameterDependencyMask_444_0 = RuiStateVariableMask.of(
+    val callParameterDependencyMask_444_0 = AdaptiveStateVariableMask.of(
         closureVariableIndex_i,
         closureVariableIndex_222_p
     )
@@ -251,28 +251,28 @@ class HigherOrderCall(
      * The `parent` parameter may vary depending on the actual code, it may be the
      * anonymous component directly or a structural.
      */
-    fun ruiBuilder444(parent: RuiFragment<TestNode>): RuiFragment<TestNode> {
+    fun adaptiveBuilder444(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
 
-        val closure = parent.ruiClosure !!
+        val closure = parent.adaptiveClosure !!
 
-        return RuiT1(
-            ruiAdapter,
+        return AdaptiveT1(
+            adaptiveAdapter,
             null, // direct calls remove the current closure
             this,
-            this::ruiExternalPatch444,
-            ruiGetValue_222_p(closure) + this.i
+            this::adaptiveExternalPatch444,
+            adaptiveGetValue_222_p(closure) + this.i
         )
     }
 
-    fun ruiExternalPatch444(fragment: RuiFragment<TestNode>) {
-        val closure = fragment.ruiClosure ?: return
+    fun adaptiveExternalPatch444(fragment: AdaptiveFragment<TestNode>) {
+        val closure = fragment.adaptiveClosure ?: return
         if (closure.isClearOf(callSiteDependencyMask_444)) return
 
-        fragment as RuiT1
+        fragment as AdaptiveT1
 
         if (closure.isDirtyOf(callParameterDependencyMask_444_0)) {
-            fragment.p0 = ruiGetValue_222_p(closure) + this.i
-            fragment.ruiInvalidate0(fragment.stateMask_p0) // this call sets the dirty mask of T1, so patch will update whatever it has to update
+            fragment.p0 = adaptiveGetValue_222_p(closure) + this.i
+            fragment.adaptiveInvalidate0(fragment.stateMask_p0) // this call sets the dirty mask of T1, so patch will update whatever it has to update
         }
     }
 

@@ -4,10 +4,10 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmInternalStateVariable2Air
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 

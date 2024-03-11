@@ -4,10 +4,10 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmExternalStateVariable2Air
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 

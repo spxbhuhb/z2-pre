@@ -4,9 +4,9 @@
 package hu.simplexion.z2.adaptive.test.manual
 
 import hu.simplexion.z2.adaptive.*
-import hu.simplexion.z2.adaptive.testing.RuiT1
-import hu.simplexion.z2.adaptive.testing.RuiTestAdapter
-import hu.simplexion.z2.adaptive.testing.RuiTestBridge
+import hu.simplexion.z2.adaptive.testing.AdaptiveT1
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestBridge
 import hu.simplexion.z2.adaptive.testing.TestNode
 import kotlin.test.Test
 
@@ -14,17 +14,17 @@ class BranchTest {
 
     @Test
     fun test() {
-        val adapter = RuiTestAdapter()
-        val root = RuiTestBridge(1)
+        val adapter = AdaptiveTestAdapter()
+        val root = AdaptiveTestBridge(1)
 
         Branch(adapter, null).apply {
-            ruiCreate()
-            ruiMount(root)
+            adaptiveCreate()
+            adaptiveMount(root)
 
             fun v(value: Int) {
                 v0 = value
-                ruiInvalidate0(1)
-                ruiPatch()
+                adaptiveInvalidate0(1)
+                adaptivePatch()
             }
 
             v(1)
@@ -38,83 +38,83 @@ class BranchTest {
     }
 
     val testResult = """
-        [ RuiT1                          ]  init                  |  
-        [ RuiT1                          ]  create                |  p0: 11
-        [ RuiT1                          ]  mount                 |  bridge: 2
-        [ RuiT1                          ]  patch                 |  ruiDirty0: 0 p0: 11
-        [ RuiT1                          ]  unmount               |  bridge: 2
-        [ RuiT1                          ]  dispose               |  
-        [ RuiT1                          ]  init                  |  
-        [ RuiT1                          ]  create                |  p0: 22
-        [ RuiT1                          ]  mount                 |  bridge: 2
-        [ RuiT1                          ]  unmount               |  bridge: 2
-        [ RuiT1                          ]  dispose               |  
-        [ RuiT1                          ]  init                  |  
-        [ RuiT1                          ]  create                |  p0: 11
-        [ RuiT1                          ]  mount                 |  bridge: 2
+        [ AdaptiveT1                          ]  init                  |  
+        [ AdaptiveT1                          ]  create                |  p0: 11
+        [ AdaptiveT1                          ]  mount                 |  bridge: 2
+        [ AdaptiveT1                          ]  patch                 |  adaptiveDirty0: 0 p0: 11
+        [ AdaptiveT1                          ]  unmount               |  bridge: 2
+        [ AdaptiveT1                          ]  dispose               |  
+        [ AdaptiveT1                          ]  init                  |  
+        [ AdaptiveT1                          ]  create                |  p0: 22
+        [ AdaptiveT1                          ]  mount                 |  bridge: 2
+        [ AdaptiveT1                          ]  unmount               |  bridge: 2
+        [ AdaptiveT1                          ]  dispose               |  
+        [ AdaptiveT1                          ]  init                  |  
+        [ AdaptiveT1                          ]  create                |  p0: 11
+        [ AdaptiveT1                          ]  mount                 |  bridge: 2
     """.trimIndent()
 
 }
 
 @Suppress("unused")
 class Branch(
-    override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiParent: RuiFragment<TestNode>?
-) : RuiGeneratedFragment<TestNode> {
+    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
+    override val adaptiveParent: AdaptiveFragment<TestNode>?
+) : AdaptiveGeneratedFragment<TestNode> {
 
-    override val ruiClosure: RuiClosure<TestNode>? = null
-    override val ruiExternalPatch: RuiExternalPatchType<TestNode> = {  }
+    override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = {  }
 
-    override val containedFragment: RuiFragment<TestNode>
+    override val containedFragment: AdaptiveFragment<TestNode>
 
     var v0: Int = 1
 
-    var ruiDirty0 = 0L
+    var adaptiveDirty0 = 0L
 
-    fun ruiInvalidate0(mask: Long) {
-        ruiDirty0 = ruiDirty0 or mask
+    fun adaptiveInvalidate0(mask: Long) {
+        adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    fun ruiEp0(it: RuiFragment<TestNode>) {
-        it as RuiT1
-        if (ruiDirty0 and 1L != 0L) {
+    fun adaptiveEp0(it: AdaptiveFragment<TestNode>) {
+        it as AdaptiveT1
+        if (adaptiveDirty0 and 1L != 0L) {
             it.p0 = v0 + 10
-            ruiInvalidate0(1)
+            adaptiveInvalidate0(1)
         }
     }
 
-    fun ruiEp1(it: RuiFragment<TestNode>) {
-        it as RuiT1
-        if (ruiDirty0 and 1L != 0L) {
+    fun adaptiveEp1(it: AdaptiveFragment<TestNode>) {
+        it as AdaptiveT1
+        if (adaptiveDirty0 and 1L != 0L) {
             it.p0 = v0 + 20
-            ruiInvalidate0(1)
+            adaptiveInvalidate0(1)
         }
     }
 
-    override fun ruiPatch() {
-        containedFragment.ruiExternalPatch(containedFragment)
+    override fun adaptivePatch() {
+        containedFragment.adaptiveExternalPatch(containedFragment)
     }
 
-    fun ruiBranch0(): RuiFragment<TestNode> = RuiT1(ruiAdapter, null, this, ::ruiEp0, v0 + 10)
-    fun ruiBranch1(): RuiFragment<TestNode> = RuiT1(ruiAdapter, null, this, ::ruiEp1, v0 + 20)
-    fun ruiBranch2(): RuiFragment<TestNode> = RuiPlaceholder(ruiAdapter, this)
+    fun adaptiveBranch0(): AdaptiveFragment<TestNode> = AdaptiveT1(adaptiveAdapter, null, this, ::adaptiveEp0, v0 + 10)
+    fun adaptiveBranch1(): AdaptiveFragment<TestNode> = AdaptiveT1(adaptiveAdapter, null, this, ::adaptiveEp1, v0 + 20)
+    fun adaptiveBranch2(): AdaptiveFragment<TestNode> = AdaptivePlaceholder(adaptiveAdapter, this)
 
-    fun ruiSelect(): Int =
+    fun adaptiveSelect(): Int =
         when (v0) {
-            1 -> 0 // index in RuiSelect.fragments
+            1 -> 0 // index in AdaptiveSelect.fragments
             2 -> 1
             else -> 2
         }
 
     init {
-        containedFragment = RuiSelect(
-            ruiAdapter,
+        containedFragment = AdaptiveWhen(
+            adaptiveAdapter,
             null,
             this,
-            ::ruiSelect,
-            ::ruiBranch0,
-            ::ruiBranch1,
-            ::ruiBranch2
+            ::adaptiveSelect,
+            ::adaptiveBranch0,
+            ::adaptiveBranch1,
+            ::adaptiveBranch2
         )
     }
 }

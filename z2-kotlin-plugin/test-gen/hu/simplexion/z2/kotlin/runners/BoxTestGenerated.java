@@ -32,9 +32,21 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
-        @TestMetadata("Basic.kt")
+        @TestMetadata("basic.kt")
         public void testBasic() throws Exception {
-            runTest("testData/box/adaptive/Basic.kt");
+            runTest("testData/box/adaptive/basic.kt");
+        }
+
+        @Test
+        @TestMetadata("emptyComponent.kt")
+        public void testEmptyComponent() throws Exception {
+            runTest("testData/box/adaptive/emptyComponent.kt");
+        }
+
+        @Test
+        @TestMetadata("emptyEntry.kt")
+        public void testEmptyEntry() throws Exception {
+            runTest("testData/box/adaptive/emptyEntry.kt");
         }
     }
 

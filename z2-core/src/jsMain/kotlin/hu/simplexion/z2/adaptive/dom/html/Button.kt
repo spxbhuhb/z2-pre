@@ -11,43 +11,43 @@ import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
 import org.w3c.dom.events.MouseEvent
 
-@Rui
-@RuiPublicApi
+@Adaptive
+@AdaptivePublicApi
 fun Button(title: String, onClick: () -> Unit) {
 }
 
-@RuiPublicApi
-class RuiButton(
-    ruiAdapter: RuiAdapter<Node>,
-    override val ruiParent: RuiFragment<Node>?,
-    ruiScope: RuiFragment<Node>?,
-    ruiExternalPatch: RuiExternalPatchType<Node>,
+@AdaptivePublicApi
+class AdaptiveButton(
+    adaptiveAdapter: AdaptiveAdapter<Node>,
+    override val adaptiveParent: AdaptiveFragment<Node>?,
+    adaptiveScope: AdaptiveFragment<Node>?,
+    adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
     var label: String,
     var onClick: (MouseEvent) -> Unit,
-) : LeafNode(ruiAdapter, ruiExternalPatch) {
+) : LeafNode(adaptiveAdapter, adaptiveExternalPatch) {
 
     override val receiver = document.createElement("button") as HTMLButtonElement
 
-    var ruiDirty0 = 0L
+    var adaptiveDirty0 = 0L
 
-    override val ruiClosure: RuiClosure<Node>?
+    override val adaptiveClosure: AdaptiveClosure<Node>?
         get() = TODO("Not yet implemented")
 
-    @RuiPublicApi
-    fun ruiInvalidate0(mask: Long) {
-        ruiDirty0 = ruiDirty0 or mask
+    @AdaptivePublicApi
+    fun adaptiveInvalidate0(mask: Long) {
+        adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun ruiCreate() {
+    override fun adaptiveCreate() {
         receiver.innerText = label
         receiver.onclick = onClick
     }
 
-    override fun ruiPatch() {
-        if (ruiDirty0 and 1L != 0L) {
+    override fun adaptivePatch() {
+        if (adaptiveDirty0 and 1L != 0L) {
             receiver.innerText = label
         }
-        if (ruiDirty0 and 2L != 0L) {
+        if (adaptiveDirty0 and 2L != 0L) {
             receiver.onclick = onClick
         }
     }

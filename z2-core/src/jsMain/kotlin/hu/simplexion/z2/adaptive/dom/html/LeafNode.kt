@@ -3,10 +3,10 @@
  */
 package hu.simplexion.z2.adaptive.dom.html
 
-import hu.simplexion.z2.adaptive.RuiAdapter
-import hu.simplexion.z2.adaptive.RuiBridge
-import hu.simplexion.z2.adaptive.RuiExternalPatchType
-import hu.simplexion.z2.adaptive.RuiFragment
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveBridge
+import hu.simplexion.z2.adaptive.AdaptiveExternalPatchType
+import hu.simplexion.z2.adaptive.AdaptiveFragment
 import org.w3c.dom.Node
 
 /**
@@ -14,32 +14,32 @@ import org.w3c.dom.Node
  * is a good example.
  */
 abstract class LeafNode(
-    override val ruiAdapter: RuiAdapter<Node>,
-    override val ruiExternalPatch: RuiExternalPatchType<Node>,
-) : RuiFragment<Node>, RuiBridge<Node> {
+    override val adaptiveAdapter: AdaptiveAdapter<Node>,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
+) : AdaptiveFragment<Node>, AdaptiveBridge<Node> {
 
 
-    override fun remove(child: RuiBridge<Node>) {
+    override fun remove(child: AdaptiveBridge<Node>) {
         throw IllegalStateException()
     }
 
-    override fun replace(oldChild: RuiBridge<Node>, newChild: RuiBridge<Node>) {
+    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
         throw IllegalStateException()
     }
 
-    override fun add(child: RuiBridge<Node>) {
+    override fun add(child: AdaptiveBridge<Node>) {
         throw IllegalStateException()
     }
 
-    override fun ruiMount(bridge: RuiBridge<Node>) {
+    override fun adaptiveMount(bridge: AdaptiveBridge<Node>) {
         bridge.add(this)
     }
 
-    override fun ruiUnmount(bridge: RuiBridge<Node>) {
+    override fun adaptiveUnmount(bridge: AdaptiveBridge<Node>) {
         bridge.remove(this)
     }
 
-    override fun ruiDispose() {
+    override fun adaptiveDispose() {
 
     }
 }

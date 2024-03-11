@@ -5,7 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Strings
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_INVALID_EXTERNAL_CLASS
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_INVALID_EXTERNAL_CLASS
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveCompilationException
 import hu.simplexion.z2.kotlin.adaptive.ir.util.isSynthetic
 import org.jetbrains.kotlin.ir.declarations.IrClass

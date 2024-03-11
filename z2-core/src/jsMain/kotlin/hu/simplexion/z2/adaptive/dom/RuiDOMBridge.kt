@@ -3,26 +3,26 @@
  */
 package hu.simplexion.z2.adaptive.dom
 
-import hu.simplexion.z2.adaptive.RuiBridge
-import hu.simplexion.z2.adaptive.RuiPublicApi
+import hu.simplexion.z2.adaptive.AdaptiveBridge
+import hu.simplexion.z2.adaptive.AdaptivePublicApi
 import org.w3c.dom.Node
 
 /**
  * Base bridge class for W3C DOM Nodes. Web browser components such as
  * H1, Span etc. are descendants of this class.
  */
-@RuiPublicApi
-interface RuiDOMBridge : RuiBridge<Node> {
+@AdaptivePublicApi
+interface AdaptiveDOMBridge : AdaptiveBridge<Node> {
 
-    override fun remove(child: RuiBridge<Node>) {
+    override fun remove(child: AdaptiveBridge<Node>) {
         receiver.removeChild(child.receiver)
     }
 
-    override fun replace(oldChild: RuiBridge<Node>, newChild: RuiBridge<Node>) {
+    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
         receiver.replaceChild(oldChild.receiver, newChild.receiver)
     }
 
-    override fun add(child: RuiBridge<Node>) {
+    override fun add(child: AdaptiveBridge<Node>) {
         receiver.appendChild(child.receiver)
     }
 

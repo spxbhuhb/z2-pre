@@ -6,9 +6,9 @@ package hu.simplexion.z2.kotlin.adaptive.ir.util
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.Strings.toNameWithPostfix
 import hu.simplexion.z2.kotlin.adaptive.capitalizeFirstChar
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.name

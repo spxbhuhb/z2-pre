@@ -8,35 +8,35 @@ package hu.simplexion.z2.adaptive.dom.html
 import hu.simplexion.z2.adaptive.*
 import org.w3c.dom.Node
 
-@Rui
-@RuiPublicApi
+@Adaptive
+@AdaptivePublicApi
 fun Text(content: String) {
 }
 
-@RuiPublicApi
-class RuiText(
-    ruiAdapter: RuiAdapter<Node>,
-    override val ruiClosure: RuiClosure<Node>?,
-    override val ruiParent: RuiFragment<Node>?,
-    ruiExternalPatch: RuiExternalPatchType<Node>,
+@AdaptivePublicApi
+class AdaptiveText(
+    adaptiveAdapter: AdaptiveAdapter<Node>,
+    override val adaptiveClosure: AdaptiveClosure<Node>?,
+    override val adaptiveParent: AdaptiveFragment<Node>?,
+    adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
     var content: String,
-) : LeafNode(ruiAdapter, ruiExternalPatch) {
+) : LeafNode(adaptiveAdapter, adaptiveExternalPatch) {
 
     override val receiver = org.w3c.dom.Text()
 
-    var ruiDirty0 = 0L
+    var adaptiveDirty0 = 0L
 
-    @RuiPublicApi
-    fun ruiInvalidate0(mask: Long) {
-        ruiDirty0 = ruiDirty0 or mask
+    @AdaptivePublicApi
+    fun adaptiveInvalidate0(mask: Long) {
+        adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun ruiCreate() {
+    override fun adaptiveCreate() {
         receiver.data = content
     }
 
-    override fun ruiPatch() {
-        if (ruiDirty0 and 1L != 0L) {
+    override fun adaptivePatch() {
+        if (adaptiveDirty0 and 1L != 0L) {
             receiver.data = content
         }
     }

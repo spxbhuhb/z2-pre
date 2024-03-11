@@ -3,22 +3,22 @@
  */
 package hu.simplexion.z2.adaptive.dom
 
-import hu.simplexion.z2.adaptive.RuiBridge
+import hu.simplexion.z2.adaptive.AdaptiveBridge
 import org.w3c.dom.Node
 
-open class RuiDOMPlaceholder : RuiBridge<Node> {
+open class AdaptiveDOMPlaceholder : AdaptiveBridge<Node> {
 
     override val receiver = org.w3c.dom.Text()
 
-    override fun remove(child: RuiBridge<Node>) {
+    override fun remove(child: AdaptiveBridge<Node>) {
         receiver.parentNode?.removeChild(child.receiver)
     }
 
-    override fun replace(oldChild: RuiBridge<Node>, newChild: RuiBridge<Node>) {
+    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
         receiver.parentNode?.replaceChild(newChild.receiver, oldChild.receiver)
     }
 
-    override fun add(child: RuiBridge<Node>) {
+    override fun add(child: AdaptiveBridge<Node>) {
         receiver.parentNode?.appendChild(child.receiver)
     }
 

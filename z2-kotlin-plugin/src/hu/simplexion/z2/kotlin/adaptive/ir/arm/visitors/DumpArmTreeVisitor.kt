@@ -59,12 +59,12 @@ class DumpArmTreeVisitor(
         }
     }
 
-    override fun visitBlock(statement: ArmBlock) {
+    override fun visitSequence(statement: ArmSequence) {
         indented {
             with(statement) {
-                println { "RENDERING type:BLOCK index:$index startOffset: ${statement.irBlock.startOffset}" }
+                println { "RENDERING type:SEQUENCE index:$index startOffset: ${statement.irBlock.startOffset}" }
             }
-            super.visitBlock(statement)
+            super.visitSequence(statement)
         }
     }
 

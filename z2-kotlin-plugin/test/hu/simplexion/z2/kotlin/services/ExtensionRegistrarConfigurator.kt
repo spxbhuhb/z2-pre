@@ -23,7 +23,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         val options = Z2Options(
             resourceOutputDir = File("testData/generated"),
             adaptiveTrace = true,
-            pluginDebug = false,
+            pluginDebug = true,
             pluginLogDir = null //File("testData/log")
         )
 

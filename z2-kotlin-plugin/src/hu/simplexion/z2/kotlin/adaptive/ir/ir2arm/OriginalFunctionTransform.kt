@@ -4,9 +4,9 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.Strings
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_MISSING_FUNCTION_BODY
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_MISSING_FUNCTION_BODY
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrFunction

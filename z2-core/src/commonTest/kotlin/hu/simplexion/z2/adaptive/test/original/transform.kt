@@ -5,14 +5,14 @@
 
 package hu.simplexion.z2.adaptive.test.original
 
-import hu.simplexion.z2.adaptive.Rui
+import hu.simplexion.z2.adaptive.Adaptive
 
-@Rui
+@Adaptive
 fun Use() {
     Comp() value "a"
 }
 
-@Rui
+@Adaptive
 fun Comp(value: String = ""): TransformComp {
     // Text(value)
     return TransformComp
@@ -23,8 +23,8 @@ object TransformComp
 infix fun TransformComp.value(v: String) = Unit
 
 
-@Rui
-fun Wrapper(@Rui block: TransformBlock.() -> Unit) {
+@Adaptive
+fun Wrapper(@Adaptive block: TransformBlock.() -> Unit) {
     var name = "block"
     //Text("before the $block")
     TransformBlock.block()
@@ -35,7 +35,7 @@ object TransformBlock {
     var name: String = ""
 }
 
-@Rui
+@Adaptive
 fun Counter() {
     var count = 0
     Wrapper {

@@ -3,17 +3,17 @@
  */
 package hu.simplexion.z2.adaptive.dom
 
-import hu.simplexion.z2.adaptive.RuiAdapter
-import hu.simplexion.z2.adaptive.RuiAdapterFactory
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveAdapterFactory
 import org.w3c.dom.Node
 
-object RuiDOMAdapterFactory : RuiAdapterFactory() {
+object AdaptiveDOMAdapterFactory : AdaptiveAdapterFactory() {
 
-    override fun accept(vararg args: Any?): RuiAdapter<*>? {
-        if (args.isEmpty()) return RuiDOMAdapter()
+    override fun accept(vararg args: Any?): AdaptiveAdapter<*>? {
+        if (args.isEmpty()) return AdaptiveDOMAdapter()
 
         args[0].let {
-            if (it != null && it is Node) return RuiDOMAdapter(it)
+            if (it != null && it is Node) return AdaptiveDOMAdapter(it)
         }
 
         return null

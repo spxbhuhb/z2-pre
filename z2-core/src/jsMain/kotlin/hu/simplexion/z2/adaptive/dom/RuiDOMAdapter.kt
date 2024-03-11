@@ -3,25 +3,25 @@
  */
 package hu.simplexion.z2.adaptive.dom
 
-import hu.simplexion.z2.adaptive.RuiAdapter
-import hu.simplexion.z2.adaptive.RuiAdapterRegistry
-import hu.simplexion.z2.adaptive.RuiBridge
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
+import hu.simplexion.z2.adaptive.AdaptiveBridge
 import kotlinx.browser.window
 import org.w3c.dom.Node
 
 /**
  * The default adapter for W3C DOM nodes used in browsers.
  */
-open class RuiDOMAdapter(
+open class AdaptiveDOMAdapter(
     val node: Node = requireNotNull(window.document.body) { "window.document.body is null or undefined" }
-) : RuiAdapter<Node> {
+) : AdaptiveAdapter<Node> {
 
-    override val rootBridge = RuiDOMPlaceholder().also {
+    override val rootBridge = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)
     }
 
-    override fun createPlaceholder(): RuiBridge<Node> {
-        return RuiDOMPlaceholder()
+    override fun createPlaceholder(): AdaptiveBridge<Node> {
+        return AdaptiveDOMPlaceholder()
     }
 
     override fun newId(): Int {
@@ -30,7 +30,7 @@ open class RuiDOMAdapter(
 
     companion object {
         init {
-            RuiAdapterRegistry.register(RuiDOMAdapterFactory)
+            AdaptiveAdapterRegistry.register(AdaptiveDOMAdapterFactory)
         }
     }
 }

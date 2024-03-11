@@ -22,7 +22,5 @@ fun box() : String {
         Empty()
     }
 
-    println(AdaptiveTestAdapter.lastTrace.joinToString("\n"))
-
-    return "OK"
+    return AdaptiveTestAdapter.assert(emptyList())
 }

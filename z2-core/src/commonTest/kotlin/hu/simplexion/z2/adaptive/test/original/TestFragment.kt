@@ -5,9 +5,9 @@
 
 package hu.simplexion.z2.adaptive.test.original
 
-import hu.simplexion.z2.adaptive.Rui
+import hu.simplexion.z2.adaptive.Adaptive
 
-@Rui
+@Adaptive
 fun TestFragment(value: Int) {
 
 }

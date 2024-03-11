@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 object Strings {
-    const val ADAPTIVE_RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive.Adaptive"
+    const val ADAPTIVE_RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive"
 
     const val ADAPTIVE_ANNOTATION = "hu.simplexion.z2.adaptive.Adaptive"
 
@@ -26,8 +26,8 @@ object Strings {
     const val ADAPTIVE_FRAGMENT_CLASS = "hu.simplexion.z2.adaptive.AdaptiveFragment"
     const val ADAPTIVE_GENERATED_FRAGMENT_CLASS = "hu.simplexion.z2.adaptive.AdaptiveGeneratedFragment"
     const val ADAPTIVE_ADAPTER_CLASS = "hu.simplexion.z2.adaptive.AdaptiveAdapter"
-    const val ADAPTIVE_BRIDGE_CLASS = "hu.simplexion.z2.adaptive.AdaptiveBridge"
-    const val ADAPTIVE_BLOCK_CLASS = "hu.simplexion.z2.adaptive.AdaptiveSequence"
+    const val ADAPTIVE_BRIDGE_CLASS = "AdaptiveBridge"
+    const val ADAPTIVE_SEQUENCE_CLASS = "AdaptiveSequence"
     const val ADAPTIVE_WHEN_CLASS = "hu.simplexion.z2.adaptive.AdaptiveWhen"
     const val ADAPTIVE_FOR_LOOP_CLASS = "hu.simplexion.z2.adaptive.AdaptiveForLoop"
     const val ADAPTIVE_ENTRY_FUNCTION = "hu.simplexion.z2.adaptive.adaptive"
@@ -55,6 +55,8 @@ object Strings {
 
     const val ADAPTIVE_BT = "BT" // type parameter for fragment, Bridge Type
     const val ADAPTIVE_ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
+
+    const val ADAPTIVE_SEQUENCE_ADD_FUN = "add" // add(fragment) function in sequence
 
     fun String.toNameWithPostfix(postfix: Int) =
         Name.identifier("$this$postfix")
@@ -84,12 +86,15 @@ object Names {
 }
 
 object FqNames {
+    val String.runtime
+        get() = FqName(Strings.ADAPTIVE_RUNTIME_PACKAGE + "." + this)
+
     val ADAPTIVE_CLOSURE_CLASS = FqName.fromSegments(Strings.ADAPTIVE_CLOSURE_CLASS.split('.'))
     val ADAPTIVE_FRAGMENT_CLASS = FqName.fromSegments(Strings.ADAPTIVE_FRAGMENT_CLASS.split('.'))
     val ADAPTIVE_GENERATED_FRAGMENT_CLASS = FqName.fromSegments(Strings.ADAPTIVE_GENERATED_FRAGMENT_CLASS.split('.'))
     val ADAPTIVE_ADAPTER_CLASS = FqName.fromSegments(Strings.ADAPTIVE_ADAPTER_CLASS.split('.'))
-    val ADAPTIVE_BRIDGE_CLASS = FqName.fromSegments(Strings.ADAPTIVE_BRIDGE_CLASS.split('.'))
-    val ADAPTIVE_BLOCK_CLASS = FqName.fromSegments(Strings.ADAPTIVE_BLOCK_CLASS.split('.'))
+    val ADAPTIVE_BRIDGE_CLASS = Strings.ADAPTIVE_BRIDGE_CLASS.runtime
+    val ADAPTIVE_SEQUENCE_CLASS = Strings.ADAPTIVE_SEQUENCE_CLASS.runtime
     val ADAPTIVE_WHEN_CLASS = FqName.fromSegments(Strings.ADAPTIVE_WHEN_CLASS.split('.'))
     val ADAPTIVE_FOR_LOOP_CLASS = FqName.fromSegments(Strings.ADAPTIVE_FOR_LOOP_CLASS.split('.'))
     val ADAPTIVE_ENTRY_FUNCTION = FqName.fromSegments(Strings.ADAPTIVE_ENTRY_FUNCTION.split('.'))
@@ -127,6 +132,7 @@ object Indices {
      * Adapter trace function arguments
      */
     const val ADAPTIVE_TRACE_ARGUMENT_COUNT = 3
+
     const val ADAPTIVE_TRACE_ARGUMENT_NAME = 0
     const val ADAPTIVE_TRACE_ARGUMENT_POINT = 1
     const val ADAPTIVE_TRACE_ARGUMENT_DATA = 2
@@ -137,19 +143,11 @@ object Indices {
     const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
 
-    const val ADAPTIVE_BLOCK_ARGUMENT_COUNT = 2
-    const val ADAPTIVE_BLOCK_ARGUMENT_INDEX_FRAGMENTS = 1
+    const val ADAPTIVE_SEQUENCE_ARGUMENT_COUNT = 3
 
 }
 
 const val ADAPTIVE_WHEN_ARGUMENT_COUNT = 3
 const val ADAPTIVE_WHEN_ARGUMENT_INDEX_SELECT = 1
 const val ADAPTIVE_WHEN_ARGUMENT_INDEX_FRAGMENTS = 2
-
-const val ADAPTIVE_BLOCK = "adaptiveBlock"
-const val ADAPTIVE_BRANCH = "adaptiveBranch"
-const val ADAPTIVE_CALL = "armCall"
-const val ADAPTIVE_HIGHER_ORDER_CALL = "adaptiveHigherOrderCall"
-const val ADAPTIVE_FOR_LOOP = "adaptiveForLoop"
-const val ADAPTIVE_WHEN = "adaptiveWhen"
 

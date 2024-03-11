@@ -19,7 +19,7 @@ interface ArmElementVisitor<out R, in D> {
     fun visitDirtyMask(dirtyMask: ArmDirtyMask, data: D) = visitElement(dirtyMask, data)
 
     fun visitStatement(statement: ArmRenderingStatement, data: D) = visitElement(statement, data)
-    fun visitBlock(statement: ArmBlock, data: D) = visitStatement(statement, data)
+    fun visitSequence(statement: ArmSequence, data: D) = visitStatement(statement, data)
     fun visitCall(statement: ArmCall, data: D) = visitStatement(statement, data)
     fun visitHigherOrderCall(statement: ArmHigherOrderCall, data: D) = visitStatement(statement, data)
     fun visitParameterFunctionCall(statement: ArmParameterFunctionCall, data: D) = visitStatement(statement, data)

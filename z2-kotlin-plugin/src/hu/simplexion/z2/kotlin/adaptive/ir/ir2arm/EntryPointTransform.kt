@@ -5,10 +5,10 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.Strings
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall

@@ -52,6 +52,9 @@ class AdaptivePluginContext(
     val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE_CLASS)
     val adaptiveBridgeType = adaptiveBridgeClass.defaultType
 
+    val adaptiveSequenceClass = Strings.ADAPTIVE_SEQUENCE_CLASS.runtimeClass()
+    val adaptiveSequenceAddFun = adaptiveSequenceClass.functionByName(Strings.ADAPTIVE_SEQUENCE_ADD_FUN)
+
     val adaptiveAdapter = property(Strings.ADAPTIVE_ADAPTER_PROP)
     val adaptiveClosure = property(Strings.ADAPTIVE_CLOSURE_PROP)
     val adaptiveParent = property(Strings.ADAPTIVE_PARENT_PROP)

@@ -23,14 +23,14 @@ interface AirElementVisitor<out R, in D> {
 
     fun visitBuilder(builder: AirBuilder, data: D) = visitFunction(builder, data)
 
-    fun visitBuilderBlock(builder: AirBuilderBlock, data: D) = visitBuilder(builder, data)
+    fun visitBuilderSequence(builder: AirBuilderSequence, data: D) = visitBuilder(builder, data)
     fun visitBuilderCall(builder: AirBuilderCall, data: D) = visitBuilder(builder, data)
     fun visitBuilderForLoop(builder: AirBuilderForLoop, data: D) = visitBuilder(builder, data)
     fun visitBuilderWhen(builder: AirBuilderWhen, data: D) = visitBuilder(builder, data)
 
     fun visitExternalPatch(externalPatch: AirExternalPatch, data: D) = visitFunction(externalPatch, data)
 
-    fun visitExternalPatchBlock(externalPatch: AirExternalPatchBlock, data: D) = visitExternalPatch(externalPatch, data)
+    fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence, data: D) = visitExternalPatch(externalPatch, data)
     fun visitExternalPatchCall(externalPatch: AirExternalPatchCall, data: D) = visitExternalPatch(externalPatch, data)
     fun visitExternalPatchForLoop(externalPatch: AirExternalPatchForLoop, data: D) = visitExternalPatch(externalPatch, data)
     fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen, data: D) = visitExternalPatch(externalPatch, data)

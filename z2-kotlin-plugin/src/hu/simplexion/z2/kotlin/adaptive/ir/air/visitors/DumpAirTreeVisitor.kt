@@ -50,12 +50,12 @@ class DumpAirTreeVisitor(
         }
     }
 
-    override fun visitBuilderBlock(builder: AirBuilderBlock) {
+    override fun visitBuilderSequence(builder: AirBuilderSequence) {
         indented {
             with(builder) {
-                println { "BUILDER type:BLOCK name:${irFunction.name} externalPatch:${externalPatch.irFunction.name}" }
+                println { "BUILDER type:SEQUENCE name:${irFunction.name} externalPatch:${externalPatch.irFunction.name}" }
             }
-            super.visitBuilderBlock(builder)
+            super.visitBuilderSequence(builder)
         }
     }
 
@@ -86,12 +86,12 @@ class DumpAirTreeVisitor(
         }
     }
 
-    override fun visitExternalPatchBlock(externalPatch: AirExternalPatchBlock) {
+    override fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence) {
         indented {
             with(externalPatch) {
-                println { "EXTERNAL_PATCH type:BLOCK name:${irFunction.name}" }
+                println { "EXTERNAL_PATCH type:SEQUENCE name:${irFunction.name}" }
             }
-            super.visitExternalPatchBlock(externalPatch)
+            super.visitExternalPatchSequence(externalPatch)
         }
     }
 

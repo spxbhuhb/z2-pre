@@ -7,12 +7,15 @@ open class AdaptiveSequence<BT>(
     override val adaptiveAdapter: AdaptiveAdapter<BT>,
     override val adaptiveClosure: AdaptiveClosure<BT>?,
     override val adaptiveParent: AdaptiveFragment<BT>,
-    vararg builders: (parent: AdaptiveFragment<BT>) -> AdaptiveFragment<BT>
 ) : AdaptiveFragment<BT> {
 
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
 
-    val fragments = builders.map { it.invoke(adaptiveParent) }
+    val fragments = mutableListOf<AdaptiveFragment<BT>>()
+
+    fun add(fragment : AdaptiveFragment<BT>) {
+        fragments += fragment
+    }
 
     override fun adaptiveCreate() {
         for (i in fragments.indices) {

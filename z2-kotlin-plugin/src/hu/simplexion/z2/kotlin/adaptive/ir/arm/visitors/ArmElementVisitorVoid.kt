@@ -31,8 +31,8 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitStatement(statement: ArmRenderingStatement) = visitElement(statement)
     override fun visitStatement(statement: ArmRenderingStatement, data: Nothing?) = visitStatement(statement)
 
-    fun visitBlock(statement: ArmBlock) = visitElement(statement)
-    override fun visitBlock(statement: ArmBlock, data: Nothing?) = visitBlock(statement)
+    fun visitSequence(statement: ArmSequence) = visitElement(statement)
+    override fun visitSequence(statement: ArmSequence, data: Nothing?) = visitSequence(statement)
 
     fun visitCall(statement: ArmCall) = visitElement(statement)
     override fun visitCall(statement: ArmCall, data: Nothing?) = visitCall(statement)

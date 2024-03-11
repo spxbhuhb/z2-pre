@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.adaptive
 
-open class AdaptiveSelect<BT>(
+open class AdaptiveWhen<BT>(
     override val adaptiveAdapter: AdaptiveAdapter<BT>,
     override val adaptiveClosure: AdaptiveClosure<BT>?,
     override val adaptiveParent: AdaptiveFragment<BT>,

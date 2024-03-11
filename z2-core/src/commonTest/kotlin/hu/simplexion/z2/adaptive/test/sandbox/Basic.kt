@@ -3,15 +3,15 @@
  */
 package hu.simplexion.z2.adaptive.test.sandbox
 
-import hu.simplexion.z2.adaptive.Rui
-import hu.simplexion.z2.adaptive.RuiAdapterRegistry
-import hu.simplexion.z2.adaptive.rui
-import hu.simplexion.z2.adaptive.testing.RuiTestAdapter
-import hu.simplexion.z2.adaptive.testing.RuiTestAdapter.TraceEvent
-import hu.simplexion.z2.adaptive.testing.RuiTestAdapterFactory
+import hu.simplexion.z2.adaptive.Adaptive
+import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
+import hu.simplexion.z2.adaptive.adaptive
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapterFactory
 import hu.simplexion.z2.adaptive.testing.T1
 
-@Rui
+@Adaptive
 fun Basic(i: Int) {
     val i2 = 12
     T1(0)
@@ -32,15 +32,15 @@ fun Basic(i: Int) {
 
 fun box() : String {
 
-    RuiAdapterRegistry.register(RuiTestAdapterFactory)
+    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
-    rui {
+    adaptive {
         Basic(11)
     }
 
-    return RuiTestAdapter.assert(listOf(
-        TraceEvent("RuiT1", "init"),
-        TraceEvent("RuiT1", "create", "p0:", "1"),
-        TraceEvent("RuiT1", "mount", "bridge:", "1")
+    return AdaptiveTestAdapter.assert(listOf(
+        TraceEvent("AdaptiveT1", "init"),
+        TraceEvent("AdaptiveT1", "create", "p0:", "1"),
+        TraceEvent("AdaptiveT1", "mount", "bridge:", "1")
     ))
 }

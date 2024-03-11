@@ -31,8 +31,8 @@ interface AirElementVisitorVoid<out R> : AirElementVisitor<R, Nothing?> {
     fun visitBuilder(builder: AirBuilder) = visitFunction(builder)
     override fun visitBuilder(builder: AirBuilder, data: Nothing?) = visitBuilder(builder)
 
-    fun visitBuilderBlock(builder: AirBuilderBlock) = visitBuilder(builder)
-    override fun visitBuilderBlock(builder: AirBuilderBlock, data: Nothing?) = visitBuilderBlock(builder)
+    fun visitBuilderSequence(builder: AirBuilderSequence) = visitBuilder(builder)
+    override fun visitBuilderSequence(builder: AirBuilderSequence, data: Nothing?) = visitBuilderSequence(builder)
 
     fun visitBuilderCall(builder: AirBuilderCall) = visitBuilder(builder)
     override fun visitBuilderCall(builder: AirBuilderCall, data: Nothing?) = visitBuilderCall(builder)
@@ -46,8 +46,8 @@ interface AirElementVisitorVoid<out R> : AirElementVisitor<R, Nothing?> {
     fun visitExternalPatch(externalPatch: AirExternalPatch) = visitFunction(externalPatch)
     override fun visitExternalPatch(externalPatch: AirExternalPatch, data: Nothing?) = visitExternalPatch(externalPatch)
 
-    fun visitExternalPatchBlock(externalPatch: AirExternalPatchBlock) = visitExternalPatch(externalPatch)
-    override fun visitExternalPatchBlock(externalPatch: AirExternalPatchBlock, data: Nothing?) = visitExternalPatchBlock(externalPatch)
+    fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence) = visitExternalPatch(externalPatch)
+    override fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence, data: Nothing?) = visitExternalPatchSequence(externalPatch)
 
     fun visitExternalPatchCall(externalPatch: AirExternalPatchCall) = visitExternalPatch(externalPatch)
     override fun visitExternalPatchCall(externalPatch: AirExternalPatchCall, data: Nothing?) = visitExternalPatchCall(externalPatch)

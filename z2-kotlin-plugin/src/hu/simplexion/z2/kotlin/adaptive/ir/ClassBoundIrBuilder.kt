@@ -75,6 +75,9 @@ open class ClassBoundIrBuilder(
     val classBoundFunction0Type: IrType
         get() = irBuiltIns.functionN(0).typeWith(classBoundFragmentType)
 
+    val classBoundBuilderType: IrType
+        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, classBoundFragmentType)
+
     val classBoundExternalPatchType: IrType
         get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
 

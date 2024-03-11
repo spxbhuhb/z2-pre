@@ -1,7 +1,7 @@
 package hu.simplexion.z2.adaptive.test.transform
 
 import hu.simplexion.z2.adaptive.*
-import hu.simplexion.z2.adaptive.testing.RuiT1
+import hu.simplexion.z2.adaptive.testing.AdaptiveT1
 
 /**
  * ```kotlin
@@ -10,41 +10,41 @@ import hu.simplexion.z2.adaptive.testing.RuiT1
  * }
  * ```
  */
-class SimpleCall<BT : RuiFragment<BT>>(
-    override val ruiAdapter: RuiAdapter<BT>,
-    override val ruiClosure: RuiClosure<BT>?,
-    override val ruiParent: RuiFragment<BT>?,
-    override val ruiExternalPatch: RuiExternalPatchType<BT>,
+class SimpleCall<BT : AdaptiveFragment<BT>>(
+    override val adaptiveAdapter: AdaptiveAdapter<BT>,
+    override val adaptiveClosure: AdaptiveClosure<BT>?,
+    override val adaptiveParent: AdaptiveFragment<BT>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
     var i: Int
-) : RuiGeneratedFragment<BT> {
+) : AdaptiveGeneratedFragment<BT> {
 
-    val stateMask_i : RuiStateVariableMask
-        get() = RuiStateVariableMask(1)
+    val stateMask_i : AdaptiveStateVariableMask
+        get() = AdaptiveStateVariableMask(1)
 
-    var ruiDirty0 = 0L
+    var adaptiveDirty0 = 0L
     // bit 0 represents i
 
-    fun ruiInvalidate0(mask: Long) {
-        ruiDirty0 = ruiDirty0 or mask
+    fun adaptiveInvalidate0(mask: Long) {
+        adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun ruiPatch() {
-        containedFragment.ruiExternalPatch(containedFragment)
-        ruiDirty0 = 0L
+    override fun adaptivePatch() {
+        containedFragment.adaptiveExternalPatch(containedFragment)
+        adaptiveDirty0 = 0L
     }
 
-    override val containedFragment = ruiBuilder123(this)
+    override val containedFragment = adaptiveBuilder123(this)
 
     // ----  T1  --------
 
     val callSiteDependencyMask123
         get() = stateMask_i
 
-    fun ruiBuilder123(parent: RuiFragment<BT>): RuiFragment<BT> {
-        return RuiT1(ruiAdapter, null, parent, this::ruiExternalPatch123, i*2)
+    fun adaptiveBuilder123(parent: AdaptiveFragment<BT>): AdaptiveFragment<BT> {
+        return AdaptiveT1(adaptiveAdapter, null, parent, this::adaptiveExternalPatch123, i*2)
     }
 
-    fun ruiExternalPatch123(it : RuiFragment<BT>) {
+    fun adaptiveExternalPatch123(it : AdaptiveFragment<BT>) {
         TODO()
     }
 }

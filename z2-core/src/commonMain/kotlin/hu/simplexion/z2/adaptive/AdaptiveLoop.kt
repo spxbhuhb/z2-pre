@@ -8,10 +8,10 @@ class AdaptiveLoop<BT, IT>(
     override val adaptiveClosure: AdaptiveClosure<BT>?,
     override val adaptiveParent: AdaptiveFragment<BT>,
     val makeIterator: () -> Iterator<IT>,
-    val makeFragment: () -> AdaptiveFragment<BT>
+    val makeFragment: (parent : AdaptiveFragment<BT>) -> AdaptiveFragment<BT>
 ) : AdaptiveFragment<BT> {
 
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = { }
 
     var loopVariable: IT? = null
 
@@ -22,7 +22,7 @@ class AdaptiveLoop<BT, IT>(
     override fun adaptiveCreate() {
         for (loopVariable in makeIterator()) {
             this.loopVariable = loopVariable
-            fragments.add(makeFragment())
+            fragments.add(makeFragment(this))
         }
     }
 
@@ -40,7 +40,7 @@ class AdaptiveLoop<BT, IT>(
         for (loopVariable in makeIterator()) {
             this.loopVariable = loopVariable
             if (index >= fragments.size) {
-                val f = makeFragment()
+                val f = makeFragment(this)
                 fragments.add(f)
                 f.adaptiveCreate()
                 f.adaptiveMount(placeholder)
@@ -50,13 +50,13 @@ class AdaptiveLoop<BT, IT>(
                     it.adaptivePatch()
                 }
             }
-            index++
+            index ++
         }
         while (index < fragments.size) {
             val f = fragments.removeLast()
             f.adaptiveUnmount(placeholder)
             f.adaptiveDispose()
-            index++
+            index ++
         }
     }
 

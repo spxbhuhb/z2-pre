@@ -4,11 +4,11 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.Strings
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_INVALID_RENDERING_STATEMENT
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_INVALID_DECLARATION
-import hu.simplexion.z2.kotlin.adaptive.diagnostics.ErrorsAdaptive.RIU_IR_RENDERING_NON_ADAPTIVE_CALL
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_INVALID_RENDERING_STATEMENT
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_INVALID_DECLARATION
+import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.RIU_IR_RENDERING_NON_ADAPTIVE_CALL
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import hu.simplexion.z2.kotlin.adaptive.ir.util.isParameterCall
 import org.jetbrains.kotlin.ir.IrElement
@@ -25,14 +25,15 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  *   - convert function parameters into [ArmExternalStateVariable] instances
  *   - convert function variables are into [ArmInternalStateVariable] instances
  *
- * Transforms IR structures such as loops, branches and calls into [ArmBlock] instances.
- * The type of the block corresponds with the language construct:
+ * Transforms IR structures such as loops, branches and calls into [ArmRenderingStatement] instances.
+ * The type of the statement corresponds with the language construct:
  *
- * - code block: [ArmBlock]
+ * - code block: [ArmSequence]
  * - `for` : [ArmForLoop]
  * - `if`, `when`: [ArmWhen]
  * - function call: [ArmCall]
  * - higher order function call: [ArmHigherOrderCall]
+ * - parameter function call: [ArmParameterFunctionCall]
  *
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
@@ -89,9 +90,9 @@ class IrFunction2Arm(
         }
     }
 
-    fun transformBlock(expression: IrBlock): ArmBlock {
+    fun transformBlock(expression: IrBlock): ArmSequence {
 
-        val armBlock = ArmBlock(armClass, blockIndex, expression)
+        val armSequence = ArmSequence(armClass, blockIndex, expression)
 
         expression.statements.forEach { statement ->
             when (statement) {
@@ -110,11 +111,11 @@ class IrFunction2Arm(
                 else -> ADAPTIVE_IR_INVALID_RENDERING_STATEMENT.report(armClass, statement)
 
             }?.let {
-                armBlock.statements += it
+                armSequence.statements += it
             }
         }
 
-        return armBlock
+        return armSequence
     }
 
     // ---------------------------------------------------------------------------

@@ -11,12 +11,12 @@ class ForLoopTest {
 
     // not implemented yet @Test
     fun test() {
-        val adapter = RuiTestAdapter()
-        val root = RuiTestBridge(1)
+        val adapter = AdaptiveTestAdapter()
+        val root = AdaptiveTestBridge(1)
 
         ForLoop(adapter, null).apply {
-            ruiCreate()
-            ruiMount(root)
+            adaptiveCreate()
+            adaptiveMount(root)
         }
 
         assertEquals(testResult, adapter.trace.joinToString("\n"))
@@ -30,61 +30,61 @@ class ForLoopTest {
 
 @Suppress("unused")
 class ForLoop(
-    override val ruiAdapter: RuiAdapter<TestNode>,
-    override val ruiParent: RuiFragment<TestNode>?
-) : RuiGeneratedFragment<TestNode> {
+    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
+    override val adaptiveParent: AdaptiveFragment<TestNode>?
+) : AdaptiveGeneratedFragment<TestNode> {
 
-    override val ruiClosure: RuiClosure<TestNode>? = null
-    override val ruiExternalPatch: RuiExternalPatchType<TestNode> = {  }
+    override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = {  }
 
-    override val containedFragment: RuiFragment<TestNode>
+    override val containedFragment: AdaptiveFragment<TestNode>
 
     var v0 = 1
 
-    var ruiDirty0 = 0L
+    var adaptiveDirty0 = 0L
 
-    fun ruiInvalidate0(mask: Long) {
-        ruiDirty0 = ruiDirty0 or mask
+    fun adaptiveInvalidate0(mask: Long) {
+        adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    fun ruiEp1(it: RuiFragment<TestNode>) {
-        it as RuiT1
-        if (ruiDirty0 and 1L != 0L) {
+    fun adaptiveEp1(it: AdaptiveFragment<TestNode>) {
+        it as AdaptiveT1
+        if (adaptiveDirty0 and 1L != 0L) {
             it.p0 = v0
-            it.ruiInvalidate0(1)
+            it.adaptiveInvalidate0(1)
         }
     }
 
-    override fun ruiPatch() {
-        containedFragment.ruiExternalPatch(containedFragment)
+    override fun adaptivePatch() {
+        containedFragment.adaptiveExternalPatch(containedFragment)
     }
 
-    fun ruiIterator0() = IntRange(0, 10).iterator()
+    fun adaptiveIterator0() = IntRange(0, 10).iterator()
 
-    fun ruiBuilderT1(parent : RuiFragment<TestNode>) : RuiFragment<TestNode> {
-        return RuiT1(ruiAdapter, null, parent, ::ruiEp1, v0)
+    fun adaptiveBuilderT1(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0)
     }
 
-    fun ruiBuilderT0(parent : RuiFragment<TestNode>) : RuiFragment<TestNode> {
-        return RuiT0(ruiAdapter, null, this) {  }
+    fun adaptiveBuilderT0(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+        return AdaptiveT0(adaptiveAdapter, null, this) {  }
     }
 
-    fun ruiBuilder0() =
-        RuiSequence(
-            ruiAdapter,
-            null,
-            this,
-            ::ruiBuilderT1,
-            ::ruiBuilderT0
-        )
+    fun adaptiveBuilder0(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+        val tmp = AdaptiveSequence(adaptiveAdapter, null, parent)
+
+        tmp.add(adaptiveBuilderT1(tmp))
+        tmp.add(adaptiveBuilderT0(tmp))
+
+        return tmp
+    }
 
     init {
-        containedFragment = RuiLoop(
-            ruiAdapter,
+        containedFragment = AdaptiveLoop(
+            adaptiveAdapter,
             null,
             this,
-            ::ruiIterator0,
-            ::ruiBuilder0
+            ::adaptiveIterator0,
+            ::adaptiveBuilder0
         )
     }
 }
