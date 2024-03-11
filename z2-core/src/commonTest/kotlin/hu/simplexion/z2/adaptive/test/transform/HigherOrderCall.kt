@@ -44,13 +44,16 @@ class HigherOrderFun(
         get() = callSiteDependencyMask222 or callSiteDependencyMask333
 
     fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveSequence(
+        val tmp = AdaptiveSequence(
             adaptiveAdapter,
             parent.adaptiveClosure,
             parent,
-            this::adaptiveBuilder222,
-            this::adaptiveBuilder333
         )
+
+        tmp.add(adaptiveBuilder222(tmp))
+        tmp.add(adaptiveBuilder333(tmp))
+
+        return tmp
     }
 
     fun adaptiveExternalPatch111(fragment: AdaptiveFragment<TestNode>) {
@@ -198,13 +201,16 @@ class HigherOrderCall(
         closure.anonymousScopes[scopeIndex_222].adaptiveState[scopeVariableIndex_222_p] as Int
 
     fun adaptiveBuilder222(parent: AdaptiveAnonymous<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveSequence(
+        val tmp = AdaptiveSequence(
             adaptiveAdapter,
             parent.extendedClosure,
-            parent,
-            this::adaptiveBuilder333,
-            this::adaptiveBuilder444
+            parent
         )
+
+        tmp.add(adaptiveBuilder333(tmp))
+        tmp.add(adaptiveBuilder444(tmp))
+
+        return tmp
     }
 
     fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {

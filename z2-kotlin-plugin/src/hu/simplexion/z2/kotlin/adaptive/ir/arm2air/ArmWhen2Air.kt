@@ -22,7 +22,7 @@ class ArmWhen2Air(
             armWhen,
             builder(irWhen.startOffset),
             externalPatch,
-            emptyList() // TODO statements.map { it.toAir(this@ArmWhen2Air) }
+            branches.map { it.result.toAir(this@ArmWhen2Air) }
         )
 
         airClass.functions += builder

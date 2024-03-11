@@ -6,9 +6,11 @@ package hu.simplexion.z2.adaptive.test.manual
 import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.AdaptiveT1
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestBridge
 import hu.simplexion.z2.adaptive.testing.TestNode
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class BranchTest {
 
@@ -33,26 +35,27 @@ class BranchTest {
             v(1)
         }
 
-        // FIXME assertEquals(testResult, adapter.trace.joinToString("\n"))
+        assertEquals(
+            "OK", AdaptiveTestAdapter.assert(
+                listOf(
+                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "create", "p0:", "11"),
+                    TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
+                    TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
+                    TraceEvent("AdaptiveT1", "dispose", ),
+                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "create", "p0:", "22"),
+                    TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
+                    TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
+                    TraceEvent("AdaptiveT1", "dispose", ),
+                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "create", "p0:", "11"),
+                    TraceEvent("AdaptiveT1", "mount", "bridge:", "2")
+                )
+            )
+        )
 
     }
-
-    val testResult = """
-        [ AdaptiveT1                          ]  init                  |  
-        [ AdaptiveT1                          ]  create                |  p0: 11
-        [ AdaptiveT1                          ]  mount                 |  bridge: 2
-        [ AdaptiveT1                          ]  patch                 |  adaptiveDirty0: 0 p0: 11
-        [ AdaptiveT1                          ]  unmount               |  bridge: 2
-        [ AdaptiveT1                          ]  dispose               |  
-        [ AdaptiveT1                          ]  init                  |  
-        [ AdaptiveT1                          ]  create                |  p0: 22
-        [ AdaptiveT1                          ]  mount                 |  bridge: 2
-        [ AdaptiveT1                          ]  unmount               |  bridge: 2
-        [ AdaptiveT1                          ]  dispose               |  
-        [ AdaptiveT1                          ]  init                  |  
-        [ AdaptiveT1                          ]  create                |  p0: 11
-        [ AdaptiveT1                          ]  mount                 |  bridge: 2
-    """.trimIndent()
 
 }
 
@@ -63,7 +66,7 @@ class Branch(
 ) : AdaptiveGeneratedFragment<TestNode> {
 
     override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = {  }
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = { }
 
     override val containedFragment: AdaptiveFragment<TestNode>
 
@@ -93,28 +96,47 @@ class Branch(
 
     override fun adaptivePatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
+        containedFragment.adaptivePatch()
     }
 
-    fun adaptiveBranch0(): AdaptiveFragment<TestNode> = AdaptiveT1(adaptiveAdapter, null, this, ::adaptiveEp0, v0 + 10)
-    fun adaptiveBranch1(): AdaptiveFragment<TestNode> = AdaptiveT1(adaptiveAdapter, null, this, ::adaptiveEp1, v0 + 20)
-    fun adaptiveBranch2(): AdaptiveFragment<TestNode> = AdaptivePlaceholder(adaptiveAdapter, this)
+    fun adaptiveBuilder0(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp0, v0 + 10)
 
-    fun adaptiveSelect(): Int =
-        when (v0) {
-            1 -> 0 // index in AdaptiveSelect.fragments
-            2 -> 1
-            else -> 2
+    fun adaptiveBuilder1(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0 + 20)
+
+    fun adaptiveBuilder2(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+        AdaptivePlaceholder(adaptiveAdapter, parent)
+
+    /**
+     * The return of select us passed to the factory function.
+     */
+    fun adaptiveExternalPatchSelect(it: AdaptiveFragment<TestNode>) {
+        (it as AdaptiveWhen<TestNode>).newBranch =
+            when (v0) {
+                1 -> 0
+                2 -> 1
+                else -> 2
+            }
+    }
+
+    fun adaptiveFactorySelect(parent : AdaptiveFragment<TestNode>, index : Int) : AdaptiveFragment<TestNode>? {
+        return when (index) {
+            -1 -> null
+            0 -> adaptiveBuilder0(parent)
+            1 -> adaptiveBuilder1(parent)
+            2 -> adaptiveBuilder2(parent)
+            else -> throw IllegalArgumentException()
         }
+    }
 
     init {
         containedFragment = AdaptiveWhen(
             adaptiveAdapter,
             null,
             this,
-            ::adaptiveSelect,
-            ::adaptiveBranch0,
-            ::adaptiveBranch1,
-            ::adaptiveBranch2
+            ::adaptiveExternalPatchSelect,
+            ::adaptiveFactorySelect
         )
     }
 }

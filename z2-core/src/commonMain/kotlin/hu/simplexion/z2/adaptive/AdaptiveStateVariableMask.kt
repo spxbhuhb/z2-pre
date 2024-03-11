@@ -58,4 +58,6 @@ class AdaptiveStateVariableMask private constructor(
     fun isDirtyOf(stateVariableIndex: Int) =
         ((value and stateVariableIndex) != 0)
 
+    override fun toString() = "(size=$size, value=$value)"
+
 }

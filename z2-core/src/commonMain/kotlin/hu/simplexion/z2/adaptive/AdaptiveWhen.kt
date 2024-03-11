@@ -3,34 +3,38 @@
  */
 package hu.simplexion.z2.adaptive
 
-open class AdaptiveWhen<BT>(
+class AdaptiveWhen<BT>(
     override val adaptiveAdapter: AdaptiveAdapter<BT>,
     override val adaptiveClosure: AdaptiveClosure<BT>?,
     override val adaptiveParent: AdaptiveFragment<BT>,
-    val adaptiveSelect: () -> Int,
-    vararg val factories: () -> AdaptiveFragment<BT>
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
+    val factory: AdaptiveFragmentFactory<BT>
 ) : AdaptiveFragment<BT> {
 
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    val placeholder: AdaptiveBridge<BT> = adaptiveAdapter.createPlaceholder()
 
-    lateinit var placeholder: AdaptiveBridge<BT>
+    var newBranch = -1 // this is changed by external patch
+    var branch = -1 // -1 means that there is nothing to add, like if (condition) div {  }
 
-    var branch = adaptiveSelect()
-    var fragment: AdaptiveFragment<BT>? = if (branch == - 1) null else factories[branch]()
+    var fragment: AdaptiveFragment<BT>? = null
+
+    init {
+        adaptiveExternalPatch(this)
+        if (newBranch != branch) {
+            fragment = factory(this, branch)
+        }
+    }
 
     override fun adaptiveCreate() {
         fragment?.adaptiveCreate()
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        placeholder = adaptiveAdapter.createPlaceholder()
         bridge.add(placeholder)
-
         fragment?.adaptiveMount(placeholder)
     }
 
     override fun adaptivePatch() {
-        val newBranch = adaptiveSelect()
         if (newBranch == branch) {
             fragment?.let {
                 it.adaptiveExternalPatch(it)
@@ -40,7 +44,7 @@ open class AdaptiveWhen<BT>(
             fragment?.adaptiveUnmount(placeholder)
             fragment?.adaptiveDispose()
             branch = newBranch
-            fragment = if (branch == - 1) null else factories[branch]()
+            fragment = factory(this, branch)
             fragment?.adaptiveCreate()
             fragment?.adaptiveMount(placeholder)
         }
