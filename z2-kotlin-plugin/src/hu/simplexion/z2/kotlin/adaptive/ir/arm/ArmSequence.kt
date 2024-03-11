@@ -17,7 +17,7 @@ class ArmSequence(
 
     val statements = mutableListOf<ArmRenderingStatement>()
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.context.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SEQUENCE_CLASS)
+    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SEQUENCE_CLASS)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmSequence2Air(parent, this).toAir()
 

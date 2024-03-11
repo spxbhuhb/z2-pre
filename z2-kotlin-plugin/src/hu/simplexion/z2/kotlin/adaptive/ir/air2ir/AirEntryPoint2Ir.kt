@@ -61,7 +61,7 @@ class AirEntryPoint2Ir(
                 dispatchReceiver = irGet(root),
                 args = arrayOf(
                     irCall(
-                        this@AirEntryPoint2Ir.context.adaptiveAdapterClass.getPropertyGetter(Strings.ADAPTIVE_ROOT_BRIDGE)!!.owner.symbol,
+                        this@AirEntryPoint2Ir.pluginContext.adaptiveAdapterClass.getPropertyGetter(Strings.ADAPTIVE_ROOT_BRIDGE)!!.owner.symbol,
                         dispatchReceiver = irGetAdapter(function)
                     )
                 )
@@ -88,10 +88,10 @@ class AirEntryPoint2Ir(
 
             function.addValueParameter {
                 name = Name.identifier("it")
-                type = context.adaptiveFragmentType
+                type = pluginContext.adaptiveFragmentType
             }
 
-            function.body = DeclarationIrBuilder(context.irContext, function.symbol).irBlockBody {
+            function.body = DeclarationIrBuilder(pluginContext.irContext, function.symbol).irBlockBody {
                 // +irReturn(irConst(0L))
             }
         }

@@ -33,14 +33,10 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 open class ClassBoundIrBuilder(
-    val context: AdaptivePluginContext
+    val pluginContext: AdaptivePluginContext
 ) {
 
-    companion object {
-        const val SCOPE_ARG_NAME = "scope"
-    }
-
-    constructor(parent: ClassBoundIrBuilder) : this(parent.context) {
+    constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext) {
         this.irClass = parent.irClass
         this.airClass = parent.airClass
     }
@@ -55,7 +51,7 @@ open class ClassBoundIrBuilder(
     lateinit var airClass: AirClass
 
     val irContext
-        get() = context.irContext
+        get() = pluginContext.irContext
 
     val irFactory
         get() = irContext.irFactory
@@ -67,10 +63,10 @@ open class ClassBoundIrBuilder(
         get() = irClass.typeParameters.first()
 
     val classBoundFragmentType: IrType
-        get() = context.adaptiveFragmentClass.typeWith(classBoundBridgeType.defaultType)
+        get() = pluginContext.adaptiveFragmentClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundClosureType: IrType
-        get() = context.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
+        get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundFunction0Type: IrType
         get() = irBuiltIns.functionN(0).typeWith(classBoundFragmentType)
@@ -82,10 +78,10 @@ open class ClassBoundIrBuilder(
         get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
 
     val classBoundAdapterType: IrType
-        get() = context.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
+        get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
 
     val FqName.symbolMap: AdaptiveClassSymbols
-        get() = context.adaptiveSymbolMap.getSymbolMap(this)
+        get() = pluginContext.adaptiveSymbolMap.getSymbolMap(this)
 
     // FIXME check uses of irThisReceiver
     fun irThisReceiver(): IrExpression =
@@ -477,7 +473,7 @@ open class ClassBoundIrBuilder(
         return IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
-            context.adaptiveAdapterTrace,
+            pluginContext.adaptiveAdapterTrace,
             typeArgumentsCount = 0,
             Indices.ADAPTIVE_TRACE_ARGUMENT_COUNT,
         ).also {
@@ -492,7 +488,7 @@ open class ClassBoundIrBuilder(
         return IrVarargImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
-            context.adaptiveFragmentType,
+            pluginContext.adaptiveFragmentType,
         ).also { vararg ->
             parameters.forEach {
                 vararg.addElement(it)

@@ -36,7 +36,7 @@ class ArmClass2Air(
 
         val originalFunction = armClass.originalFunction
 
-        irClass = context.irContext.irFactory.buildClass {
+        irClass = pluginContext.irContext.irFactory.buildClass {
             startOffset = originalFunction.startOffset
             endOffset = originalFunction.endOffset
             origin = IrDeclarationOrigin.DEFINED
@@ -49,19 +49,19 @@ class ArmClass2Air(
         typeParameters()
 
         irClass.parent = originalFunction.file
-        irClass.superTypes = listOf(context.adaptiveGeneratedFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+        irClass.superTypes = listOf(pluginContext.adaptiveGeneratedFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
         irClass.metadata = armClass.originalFunction.metadata
 
         thisReceiver()
         val constructor = constructor()
         val patch = patch()
 
-        val adapter = addPropertyWithConstructorParameter(Names.ADAPTIVE_ADAPTER_PROP, classBoundAdapterType, overridden = context.adaptiveAdapter)
-        val closure = addPropertyWithConstructorParameter(Names.ADAPTIVE_CLOSURE_PROP, classBoundClosureType.makeNullable(), overridden = context.adaptiveClosure)
-        val parent = addPropertyWithConstructorParameter(Names.ADAPTIVE_PARENT_PROP, classBoundFragmentType.makeNullable(), overridden = context.adaptiveParent)
-        val externalPatch = addPropertyWithConstructorParameter(Names.ADAPTIVE_EXTERNAL_PATCH_PROP, classBoundExternalPatchType, overridden = context.adaptiveExternalPatch)
+        val adapter = addPropertyWithConstructorParameter(Names.ADAPTIVE_ADAPTER_PROP, classBoundAdapterType, overridden = pluginContext.adaptiveAdapter)
+        val closure = addPropertyWithConstructorParameter(Names.ADAPTIVE_CLOSURE_PROP, classBoundClosureType.makeNullable(), overridden = pluginContext.adaptiveClosure)
+        val parent = addPropertyWithConstructorParameter(Names.ADAPTIVE_PARENT_PROP, classBoundFragmentType.makeNullable(), overridden = pluginContext.adaptiveParent)
+        val externalPatch = addPropertyWithConstructorParameter(Names.ADAPTIVE_EXTERNAL_PATCH_PROP, classBoundExternalPatchType, overridden = pluginContext.adaptiveExternalPatch)
 
-        val fragment = addIrProperty(Names.ADAPTIVE_CONTAINED_FRAGMENT_PROP, context.adaptiveFragmentType, inIsVar = false, overridden = context.adaptiveFragment)
+        val fragment = addIrProperty(Names.ADAPTIVE_CONTAINED_FRAGMENT_PROP, pluginContext.adaptiveFragmentType, inIsVar = false, overridden = pluginContext.adaptiveFragment)
 
         val initializer = initializer()
 
@@ -182,7 +182,7 @@ class ArmClass2Air(
             isFakeOverride = true
         }.also { function ->
 
-            function.overriddenSymbols = context.adaptiveCreate
+            function.overriddenSymbols = pluginContext.adaptiveCreate
             function.parent = irClass
 
             function.addDispatchReceiver {
@@ -202,7 +202,7 @@ class ArmClass2Air(
             isFakeOverride = true
         }.also { function ->
 
-            function.overriddenSymbols = context.adaptiveMount
+            function.overriddenSymbols = pluginContext.adaptiveMount
             function.parent = irClass
 
             function.addDispatchReceiver {
@@ -211,7 +211,7 @@ class ArmClass2Air(
 
             function.addValueParameter {
                 name = Name.identifier("bridge")
-                type = context.adaptiveBridgeType
+                type = pluginContext.adaptiveBridgeType
             }
 
             irClass.declarations += function
@@ -225,7 +225,7 @@ class ArmClass2Air(
             modality = Modality.OPEN
         }.also { function ->
 
-            function.overriddenSymbols = context.adaptivePatch
+            function.overriddenSymbols = pluginContext.adaptivePatch
             function.parent = irClass
 
             function.addDispatchReceiver {
@@ -246,7 +246,7 @@ class ArmClass2Air(
             isFakeOverride = true
         }.also { function ->
 
-            function.overriddenSymbols = context.adaptiveUnmount
+            function.overriddenSymbols = pluginContext.adaptiveUnmount
             function.parent = irClass
 
             function.addDispatchReceiver {
@@ -255,7 +255,7 @@ class ArmClass2Air(
 
             function.addValueParameter {
                 name = Name.identifier("bridge")
-                type = context.adaptiveBridgeType
+                type = pluginContext.adaptiveBridgeType
             }
 
             irClass.declarations += function
@@ -270,7 +270,7 @@ class ArmClass2Air(
             isFakeOverride = true
         }.also { function ->
 
-            function.overriddenSymbols = context.adaptiveDispose
+            function.overriddenSymbols = pluginContext.adaptiveDispose
             function.parent = irClass
 
             function.addDispatchReceiver {

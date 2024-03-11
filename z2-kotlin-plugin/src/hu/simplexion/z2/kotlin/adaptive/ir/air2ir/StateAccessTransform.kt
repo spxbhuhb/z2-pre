@@ -165,7 +165,7 @@ class StateAccessTransform(
 
         val name = expression.symbol.owner.name.identifier
 
-        val (stateVariable,path) = airClass.findStateVariable(irBuilder.context, name) ?: return super.visitGetValue(expression)
+        val (stateVariable,path) = airClass.findStateVariable(irBuilder.pluginContext, name) ?: return super.visitGetValue(expression)
 
         ADAPTIVE_IR_STATE_VARIABLE_SHADOW.check(armClass, expression) { stateVariable.armElement.matches(expression.symbol) }
 
@@ -210,7 +210,7 @@ class StateAccessTransform(
     }
 
     fun IrBlockBuilder.traceStateChangeBefore(stateVariable: AirStateVariable): IrVariable? {
-        if (! irBuilder.context.withTrace) return null
+        if (! irBuilder.pluginContext.withTrace) return null
 
         return irTemporary(irTraceGet(stateVariable, irBuilder.irThisReceiver()))
             .also { it.parent = currentFunction !!.irElement as IrFunction }

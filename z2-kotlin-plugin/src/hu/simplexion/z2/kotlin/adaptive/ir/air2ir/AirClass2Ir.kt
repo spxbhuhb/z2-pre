@@ -38,6 +38,10 @@ class AirClass2Ir(
     fun IrAnonymousInitializer.toIr() {
         body = DeclarationIrBuilder(irContext, irClass.symbol).irBlockBody {
 
+            if (pluginContext.withTrace) {
+                + irTrace("init", emptyList())
+            }
+
             airClass.armElement.initializerStatements.forEach {
                 + transformStateAccess(it, airClass.irClass.thisReceiver !!.symbol)
             }
@@ -60,7 +64,13 @@ class AirClass2Ir(
         val patch = airClass.patch
 
         patch.body = DeclarationIrBuilder(irContext, patch.symbol).irBlockBody {
+
+            if (pluginContext.withTrace) {
+                + irTrace(patch, "init", emptyList())
+            }
+
             irCallExternalPatchFromPatch(patch)
+
             airClass.dirtyMasks.forEach { + it.irClear(patch.dispatchReceiverParameter !!) }
         }
 

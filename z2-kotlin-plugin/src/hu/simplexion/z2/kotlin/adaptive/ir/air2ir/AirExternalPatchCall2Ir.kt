@@ -98,7 +98,7 @@ class AirExternalPatchCall2Ir(
         var result : IrExpression? = null
 
         for (dependency in expression.dependencies) {
-            val (stateVariable, scopePath) = checkNotNull(airClass.findStateVariable(context, dependency.name.identifier)) { "missing state variable: $dependency"}
+            val (stateVariable, scopePath) = checkNotNull(airClass.findStateVariable(pluginContext, dependency.name.identifier)) { "missing state variable: $dependency"}
 
             result = if (result == null) {
                 stateVariable.irIsDirty(scopePath.getScopeFragment(dispatchReceiver))

@@ -19,7 +19,7 @@ class ArmForLoop(
     val body: ArmRenderingStatement,
 ) : ArmRenderingStatement(armClass, index) {
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.context.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_FOR_LOOP_CLASS)
+    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_FOR_LOOP_CLASS)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmForLoop2Air(parent, this).toAir()
 

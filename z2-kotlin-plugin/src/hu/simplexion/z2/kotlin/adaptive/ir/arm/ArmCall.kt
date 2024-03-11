@@ -19,7 +19,7 @@ open class ArmCall(
 
     val valueArguments = mutableListOf<ArmExpression>()
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.context.adaptiveSymbolMap.getSymbolMap(target)
+    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(target)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmCall2Air(parent, this).toAir()
 

@@ -13,7 +13,7 @@ class ArmEntryPoint2Air(
     fun toAir(): AirEntryPoint {
         return AirEntryPoint(
             entryPoint,
-            context.airClasses[entryPoint.armClass.fqName]!!
+            pluginContext.airClasses[entryPoint.armClass.fqName]!!
         )
     }
 }

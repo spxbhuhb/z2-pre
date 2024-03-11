@@ -18,6 +18,7 @@ class AirBuilderSequence2Ir(
 
     fun toIr() {
         buildBody {
+
             val sequence = irTemporary(
                 buildConstructorCall(
                     FqNames.ADAPTIVE_SEQUENCE_CLASS.symbolMap,
@@ -34,7 +35,7 @@ class AirBuilderSequence2Ir(
     fun IrBlockBodyBuilder.buildFragments(declaringComponent: IrValueParameter, sequence: IrVariable) {
         airBuilder.subBuilders.forEach { sub ->
             + irCall(
-                this@AirBuilderSequence2Ir.context.adaptiveSequenceAddFun,
+                pluginContext.adaptiveSequenceAddFun,
                 dispatchReceiver = irGet(sequence),
                 args = arrayOf(
                     irCall(

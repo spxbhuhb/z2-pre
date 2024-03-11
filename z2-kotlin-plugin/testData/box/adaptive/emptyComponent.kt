@@ -8,6 +8,7 @@ import hu.simplexion.z2.adaptive.adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapterFactory
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
 
 @Adaptive
 fun Empty() {
@@ -22,5 +23,8 @@ fun box() : String {
         Empty()
     }
 
-    return AdaptiveTestAdapter.assert(emptyList())
+    return AdaptiveTestAdapter.assert(listOf(
+        TraceEvent("<root>", "init", ),
+        TraceEvent("AdaptiveEmpty", "init", )
+    ))
 }

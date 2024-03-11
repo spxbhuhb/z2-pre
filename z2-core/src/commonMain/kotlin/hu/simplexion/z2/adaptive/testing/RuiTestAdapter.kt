@@ -9,7 +9,7 @@ import hu.simplexion.z2.adaptive.AdaptiveFragment
 
 open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
-    data class TraceEvent(
+    class TraceEvent(
         val name: String,
         val point: String,
         val data: List<String>
@@ -23,6 +23,19 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
         fun toCode(): String {
             return "TraceEvent(\"$name\", \"${point}\", ${data.joinToString(", ") { "\"$it\"" }})"
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other == null) return false
+            if (other !is TraceEvent) return false
+            if (other.point != this.point) return false
+            if (other.data != this.data) return false
+            if (other.name == this.name) return true
+
+            if (this.name == "<root>" && other.name.startsWith("AdaptiveRoot")) return true
+            if (other.name == "<root>" && this.name.startsWith("AdaptiveRoot")) return true
+
+            return false
         }
     }
 

@@ -39,6 +39,8 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
+        TraceEvent("<root>", "init", ),
+        TraceEvent("AdaptiveBasic", "init", ),
         TraceEvent("AdaptiveT1", "init"),
         TraceEvent("AdaptiveT1", "create", "p0:", "0"),
         TraceEvent("AdaptiveT1", "mount", "bridge:", "1")
