@@ -21,28 +21,27 @@ actual class SettingDelegate<T>(
     var default: T? = null
 
     actual var valueOrNull: T? = null
+        get() {
+            if (!initialized) field = initialize()
+            return field
+        }
+        set(v) {
+            initialized = true
+            field = v
+        }
 
     actual var value: T
-        get() = getOrInitialize()
+        get() = checkNotNull(valueOrNull) { "missing setting: path=$path owner=$owner" }
         set(value) {
             valueOrNull = value
-            initialized = true
         }
 
     actual operator fun getValue(thisRef: Any?, property: KProperty<*>): T =
-       getOrInitialize()
+        value
 
-    fun getOrInitialize() : T {
-        if (! initialized) {
-            valueOrNull = SettingImpl.rootProvider.get(owner, path).firstOrNull()?.value?.let { decoder(it) }
-            when {
-                valueOrNull != null -> initialized = true
-                default != null -> return default !!
-                else -> throw IllegalStateException("missing setting: path=$path owner=$owner")
-            }
-        }
-        return valueOrNull !!
-    }
+    fun initialize(): T? =
+        SettingImpl.rootProvider.get(owner, path).firstOrNull()?.value?.let { decoder(it) }
+            ?: default
 
     actual operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         this.value = value

@@ -24,36 +24,36 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun authJvm() {
 
-    val firstTimeInit = isAllEmpty(
-        *tables(
-            principalTable,
-            credentialsTable,
-            roleTable,
-            roleGrantTable,
-            roleGroupTable,
-            sessionTable
-        )
+    val tables = tables(
+        principalTable,
+        credentialsTable,
+        roleTable,
+        roleGrantTable,
+        roleGroupTable,
+        sessionTable
     )
+
+    val firstTimeInit = isAllEmpty(*tables)
 
     transaction {
         with(ApplicationSettings) {
             if (firstTimeInit) {
                 makePrincipal(securityOfficerUuid, securityOfficerName, password = securityOfficerName)
 
-                makeRole(securityOfficerRoleUuid, securityOfficerRoleName)
+                securityOfficerRole = makeRole(securityOfficerRoleUuid, securityOfficerRoleName)
                 makeRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
 
-                makeRole(technicalAdminRoleUuid, technicalAdminRoleName)
+                technicalAdminRole = makeRole(technicalAdminRoleUuid, technicalAdminRoleName)
                 makeRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
 
                 makePrincipal(anonymousUuid, anonymousName)
             } else {
                 validatePrincipal(securityOfficerUuid)
 
-                validateRole(securityOfficerRoleUuid, securityOfficerRoleName)
+                securityOfficerRole = validateRole(securityOfficerRoleUuid, securityOfficerRoleName)
                 validateRoleGrant(securityOfficerRoleUuid, securityOfficerUuid)
 
-                validateRole(technicalAdminRoleUuid, technicalAdminRoleName)
+                technicalAdminRole = validateRole(technicalAdminRoleUuid, technicalAdminRoleName)
                 // technical admin may be revoked from the security officer
 
                 validatePrincipal(anonymousUuid, locked = true)
@@ -69,19 +69,20 @@ fun authJvm() {
     )
 }
 
-private fun makeRole(inUuid: UUID<Role>, inName: String) {
-    roleTable.insertWithId(
-        Role().apply {
-            uuid = inUuid
-            programmaticName = inName
-            displayName = inName
-        }
-    )
+private fun makeRole(inUuid: UUID<Role>, inName: String): Role {
+    val role = Role {
+        uuid = inUuid
+        programmaticName = inName
+        displayName = inName
+    }
+
+    roleTable.insertWithId(role)
+
+    return role
 }
 
-private fun validateRole(inUuid: UUID<Role>, inName: String) {
+private fun validateRole(inUuid: UUID<Role>, inName: String) =
     requireNotNull(roleTable.getOrNull(inUuid)) { "missing mandatory role: uuid=$inUuid name=$inName" }
-}
 
 internal fun makePrincipal(inUuid: UUID<Principal>, inName: String, password: String? = null) {
     principalTable.insertWithId(
