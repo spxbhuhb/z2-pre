@@ -35,4 +35,6 @@ interface AirElementVisitor<out R, in D> {
     fun visitExternalPatchForLoop(externalPatch: AirExternalPatchForLoop, data: D) = visitExternalPatch(externalPatch, data)
     fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen, data: D) = visitExternalPatch(externalPatch, data)
 
+    fun visitFragmentFactory(fragmentFactory: AirFragmentFactory, data: D) = visitFunction(fragmentFactory, data)
+
 }

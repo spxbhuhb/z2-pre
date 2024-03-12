@@ -46,12 +46,13 @@ AirBuilder <|-- AirBuilderCall
 
 class AirBuilderWhen {
     armElement : ArmWhen
+    fragmentFactory : AirFragmentFactory
 }
 AirBuilder <|-- AirBuilderWhen
 
 interface AirBuilder {
     externalPatch : AirExternalPatch
-    subBuilders : AirBuilder
+    subBuilders : AirBuilder[]
 }
 AirFunction <|-- AirBuilder
 
@@ -59,6 +60,12 @@ class AirExternalPatchBlock {
     armElement : ArmBlock
 }
 AirExternalPatch <|-- AirExternalPatchBlock
+
+interface AirFragmentFactory {
+    armElement : ArmWhen,
+    subBuilders: AirBuilder[]
+}
+AirFunction <|-- AirFragmentFactory
 
 class AirExternalPatchCall {
     armElement : ArmCall

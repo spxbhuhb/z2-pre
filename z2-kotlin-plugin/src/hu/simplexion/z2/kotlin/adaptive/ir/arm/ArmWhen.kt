@@ -19,7 +19,8 @@ class ArmWhen(
 
     val branches = mutableListOf<ArmBranch>()
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_WHEN_CLASS)
+    override fun symbolMap(irBuilder: ClassBoundIrBuilder) =
+        irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_WHEN_CLASS)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmWhen2Air(parent, this).toAir()
 

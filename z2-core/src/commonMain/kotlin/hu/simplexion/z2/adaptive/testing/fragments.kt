@@ -296,3 +296,39 @@ class AdaptiveEH1B(
     }
 
 }
+
+
+@Suppress("unused")
+@Adaptive
+fun RunOnMount(func: () -> Unit) {
+
+}
+
+@Suppress("unused")
+class AdaptiveRunOnMount<BT>(
+    override val adaptiveAdapter: AdaptiveAdapter<BT>,
+    override val adaptiveClosure: AdaptiveClosure<BT>?,
+    override val adaptiveParent: AdaptiveFragment<BT>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
+    var func: () -> Unit
+) : AdaptiveFragment<BT> {
+
+    fun adaptiveInvalidate0(stateVariableIndex: Int) {
+    }
+
+    override fun adaptiveCreate() { }
+
+    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+        func()
+    }
+
+    override fun adaptivePatch() {
+    }
+
+    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
+    }
+
+    override fun adaptiveDispose() {
+    }
+
+}

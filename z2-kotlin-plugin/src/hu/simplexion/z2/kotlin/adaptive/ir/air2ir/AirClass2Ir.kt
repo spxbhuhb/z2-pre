@@ -66,7 +66,7 @@ class AirClass2Ir(
         patch.body = DeclarationIrBuilder(irContext, patch.symbol).irBlockBody {
 
             if (pluginContext.withTrace) {
-                + irTrace(patch, "init", emptyList())
+                + irTrace(patch, "patch", emptyList())
             }
 
             irCallExternalPatchFromPatch(patch)

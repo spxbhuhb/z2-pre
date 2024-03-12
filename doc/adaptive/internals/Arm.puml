@@ -78,22 +78,22 @@ class ArmBranch {
     condition : ArmExpression
     result : ArmRenderingStatement
 }
-ArmElement <|-- RumBranch
+ArmElement <|-- ArmBranch
 
-class RumDeclaration {
-    dependencies : RumDependencies
+class ArmDeclaration {
+    dependencies : ArmDependencies
 }
-RumElement <|-- RumDeclaration
+ArmElement <|-- ArmDeclaration
 
-class RumValueArgument
-RumExpression <|-- RumValueArgument
+class ArmValueArgument
+ArmExpression <|-- ArmValueArgument
 
-interface RumScope {
+interface ArmScope {
     stateSize : Int
 }
 
-class RumElement {
-    parent : RumElement ?
+class ArmElement {
+    parent : ArmElement ?
 }
 
 @enduml

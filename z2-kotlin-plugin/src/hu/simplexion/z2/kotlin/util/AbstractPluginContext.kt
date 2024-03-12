@@ -31,6 +31,9 @@ abstract class AbstractPluginContext(
     val listClass by lazy { LIST.runtimeClass(KOTLIN_COLLECTIONS) }
     val uuidClass by lazy { UUID.runtimeClass(UTIL_PACKAGE) }
 
+    val illegalArgumentExceptionSymbol
+        get() = irContext.symbols.irBuiltIns.illegalArgumentExceptionSymbol
+
     fun String.runtimeClass(pkg: String = runtimePackage) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
             "Missing ${pkg}.$this class. Maybe the gradle dependency on \"hu.simplexion.z2:z2-core\" is missing."

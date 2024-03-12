@@ -38,16 +38,33 @@ class BranchTest {
         assertEquals(
             "OK", AdaptiveTestAdapter.assert(
                 listOf(
+                    TraceEvent("Branch", "init", ),
+                    TraceEvent("AdaptiveWhen", "init", "newBranch:", "0"),
                     TraceEvent("AdaptiveT1", "init", ),
+
+                    TraceEvent("Branch", "create", ),
+                    TraceEvent("AdaptiveWhen", "create", ),
                     TraceEvent("AdaptiveT1", "create", "p0:", "11"),
+
+                    TraceEvent("Branch", "mount", "bridge", "1"),
+                    TraceEvent("AdaptiveWhen", "mount", "bridge:", "1"),
                     TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
+
+                    TraceEvent("AdaptiveWhen", "patch", "branch:", "0", "newBranch:", "0"),
+                    TraceEvent("AdaptiveT1", "patch", "adaptiveDirty0:", "(size=1, value=0)", "p0:", "11"),
+
+                    TraceEvent("AdaptiveWhen", "patch", "branch:", "0", "newBranch:", "1"),
                     TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
                     TraceEvent("AdaptiveT1", "dispose", ),
                     TraceEvent("AdaptiveT1", "init", ),
                     TraceEvent("AdaptiveT1", "create", "p0:", "22"),
                     TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
+
+                    TraceEvent("AdaptiveWhen", "patch", "branch:", "1", "newBranch:", "2"),
                     TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
                     TraceEvent("AdaptiveT1", "dispose", ),
+
+                    TraceEvent("AdaptiveWhen", "patch", "branch:", "2", "newBranch:", "0"),
                     TraceEvent("AdaptiveT1", "init", ),
                     TraceEvent("AdaptiveT1", "create", "p0:", "11"),
                     TraceEvent("AdaptiveT1", "mount", "bridge:", "2")
@@ -73,6 +90,10 @@ class Branch(
     var v0: Int = 1
 
     var adaptiveDirty0 = 0L
+
+    init {
+        adaptiveAdapter.trace("Branch", "init")
+    }
 
     fun adaptiveInvalidate0(mask: Long) {
         adaptiveDirty0 = adaptiveDirty0 or mask

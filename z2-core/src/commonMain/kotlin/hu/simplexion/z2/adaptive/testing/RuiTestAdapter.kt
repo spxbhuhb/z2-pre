@@ -22,7 +22,8 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         }
 
         fun toCode(): String {
-            return "TraceEvent(\"$name\", \"${point}\", ${data.joinToString(", ") { "\"$it\"" }})"
+            val nameOrRoot = if (name.startsWith("AdaptiveRoot")) "<root>" else name
+            return "TraceEvent(\"$nameOrRoot\", \"${point}\", ${data.joinToString(", ") { "\"$it\"" }})"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -43,14 +44,16 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     var nextId = 1
 
+    override val trace = true
+
     final override fun newId(): Int = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override val rootBridge = AdaptiveTestBridge(newId())
 
-    val trace = mutableListOf<TraceEvent>()
+    val traceEvents = mutableListOf<TraceEvent>()
 
     init {
-        lastTrace = trace
+        lastTrace = traceEvents
     }
 
     override fun createPlaceholder(): AdaptiveBridge<TestNode> {
@@ -59,7 +62,7 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override fun trace(name: String, point: String, vararg data: Any?) {
         // convert the data to string so later changes won't change the content
-        trace += TraceEvent(name, point, data.map { it.asString() })
+        traceEvents += TraceEvent(name, point, data.map { it.asString() })
     }
 
     fun Any?.asString(): String =

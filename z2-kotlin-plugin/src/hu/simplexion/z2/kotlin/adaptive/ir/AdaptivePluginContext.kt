@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.getPropertySetter
 import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.name.FqName
 
@@ -55,6 +56,9 @@ class AdaptivePluginContext(
     val adaptiveSequenceClass = Strings.ADAPTIVE_SEQUENCE_CLASS.runtimeClass()
     val adaptiveSequenceAddFun = adaptiveSequenceClass.functionByName(Strings.ADAPTIVE_SEQUENCE_ADD_FUN)
 
+    val adaptiveWhenClass = Strings.ADAPTIVE_WHEN_CLASS.runtimeClass()
+    val adaptiveWhenNewBranchSetter = requireNotNull(adaptiveWhenClass.getPropertySetter(Strings.ADAPTIVE_WHEN_NEW_BRANCH_PROP))
+
     val adaptiveAdapter = property(Strings.ADAPTIVE_ADAPTER_PROP)
     val adaptiveClosure = property(Strings.ADAPTIVE_CLOSURE_PROP)
     val adaptiveParent = property(Strings.ADAPTIVE_PARENT_PROP)
@@ -79,11 +83,11 @@ class AdaptivePluginContext(
 
     class PluginMessage(
         val severity: IrMessageLogger.Severity,
-        val message : String,
+        val message: String,
         val location: IrMessageLogger.Location
     ) {
         override fun toString(): String {
-            return("[$severity]  $location  $message")
+            return ("[$severity]  $location  $message")
         }
     }
 

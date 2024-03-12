@@ -7,6 +7,8 @@ interface AdaptiveAdapter<BT> {
 
     val rootBridge: AdaptiveBridge<BT>
 
+    val trace : Boolean
+
     fun createPlaceholder(): AdaptiveBridge<BT>
 
     fun newId(): Int

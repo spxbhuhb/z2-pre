@@ -122,6 +122,15 @@ class DumpAirTreeVisitor(
         }
     }
 
+    override fun visitFragmentFactory(fragmentFactory: AirFragmentFactory) {
+        indented {
+            with(fragmentFactory) {
+                println { "FRAGMENT_FACTORY name:${irFunction.name}" }
+            }
+            super.visitFragmentFactory(fragmentFactory)
+        }
+    }
+
     private inline fun println(body: () -> String) {
         printer.println(body())
     }

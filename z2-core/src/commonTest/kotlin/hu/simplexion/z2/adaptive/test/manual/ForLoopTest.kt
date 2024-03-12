@@ -19,7 +19,7 @@ class ForLoopTest {
             adaptiveMount(root)
         }
 
-        assertEquals(testResult, adapter.trace.joinToString("\n"))
+        assertEquals(testResult, adapter.traceEvents.joinToString("\n"))
     }
 
     val testResult = """
