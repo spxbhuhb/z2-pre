@@ -48,6 +48,12 @@ object ApplicationSettings {
     val securityOfficerRoleName by setting<String> { "SECURITY_OFFICER_ROLE_NAME" } default "security-officer"
 
     /**
+     * The built-in security officer role. This field is initialized only on JVM and only if the
+     * auth module is loaded.
+     */
+    lateinit var securityOfficerRole: Role
+
+    /**
      * The UUID of the built-in security officer user.
      *
      * - Should not be changed after the first time the application runs.
@@ -78,5 +84,11 @@ object ApplicationSettings {
      * - Used during first time application startup to create the role of the security officer.
      */
     val technicalAdminRoleName by setting<String> { "TECHNICAL_ADMIN_ROLE_NAME" } default "technical-admin"
+
+    /**
+     * The built-in technical admin role. This field is initialized only on JVM and only if the
+     * auth module is loaded.
+     */
+    lateinit var technicalAdminRole: Role
 
 }

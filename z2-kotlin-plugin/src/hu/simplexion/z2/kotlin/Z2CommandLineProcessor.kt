@@ -29,7 +29,7 @@ class Z2CommandLineProcessor : CommandLineProcessor {
     }
 
     fun String.toWritableDirectory() : File =
-        File(this).also { require(it.isDirectory && it.canWrite()) }
+        File(this).also { require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" } }
 
     companion object {
 
@@ -43,7 +43,7 @@ class Z2CommandLineProcessor : CommandLineProcessor {
 
         val OPTION_RESOURCE_DIR = CliOption(
             OPTION_NAME_RESOURCE_DIR, "string", "Path to the directory to write generated resources into.",
-            required = true, allowMultipleOccurrences = false
+            required = false, allowMultipleOccurrences = false
         )
 
         // -------------------------------------------------------------------------------------------------
