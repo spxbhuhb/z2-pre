@@ -29,23 +29,36 @@ fun box() : String {
     adaptive {
         var v1 = 5
         IfElsePatch(v1)
-        RunOnMount({ v1 = 6 })
+        RunOnMount { v1 = 6 }
     }
 
     return AdaptiveTestAdapter.assert(listOf(
         TraceEvent("<root>", "init", ),
+        TraceEvent("AdaptiveSequence", "init", ),
         TraceEvent("AdaptiveIfElsePatch", "init", ),
         TraceEvent("AdaptiveWhen", "init", "newBranch:", "1"),
         TraceEvent("AdaptiveT1", "init", ),
+        TraceEvent("AdaptiveRunOnMount", "init", ),
 
         TraceEvent("<root>", "create", ),
+        TraceEvent("AdaptiveSequence", "create", ),
         TraceEvent("AdaptiveIfElsePatch", "create", ),
         TraceEvent("AdaptiveWhen", "create", ),
         TraceEvent("AdaptiveT1", "create", "p0:", "5"),
+        TraceEvent("AdaptiveRunOnMount", "create", ),
 
         TraceEvent("<root>", "mount", "bridge", "1"),
+        TraceEvent("AdaptiveSequence", "mount", "bridge:", "1"),
         TraceEvent("AdaptiveIfElsePatch", "mount", "bridge", "1"),
         TraceEvent("AdaptiveWhen", "mount", "bridge:", "1"),
-        TraceEvent("AdaptiveT1", "mount", "bridge:", "2")
+        TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
+        TraceEvent("AdaptiveRunOnMount", "mount", "bridge:", "1"),
+
+        TraceEvent("<root>", "patch", ),
+        TraceEvent("AdaptiveSequence", "patch", ),
+        TraceEvent("AdaptiveIfElsePatch", "patch", ),
+        TraceEvent("AdaptiveWhen", "patch", "branch:", "1", "newBranch:", "1"),
+        TraceEvent("AdaptiveT1", "patch", "adaptiveDirty0:", "(size=1, value=0)", "p0:", "5"),
+        TraceEvent("AdaptiveRunOnMount", "patch", )
     ))
 }

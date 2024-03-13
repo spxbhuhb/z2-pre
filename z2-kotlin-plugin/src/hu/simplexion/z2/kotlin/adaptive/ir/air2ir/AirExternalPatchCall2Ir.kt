@@ -137,7 +137,7 @@ class AirExternalPatchCall2Ir(
         return irBlock {
 
             val newValue = irTemporary(
-                transformStateAccess(adaptiveExpression, dispatchReceiver.symbol)
+                transformStateAccess(externalPatch.irFunction, adaptiveExpression, dispatchReceiver.symbol)
             )
 
             // set the state variable in the child fragment

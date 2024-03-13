@@ -75,7 +75,7 @@ class AdaptiveT1<BT>(
     adaptiveExternalPatch
 ) {
 
-    val stateMask_p0 : Int
+    val stateMask_p0: Int
         get() = 1
 
     var adaptiveDirtyMask = AdaptiveStateVariableMask(1)
@@ -128,7 +128,7 @@ class AdaptiveH1(
 
 @Suppress("unused")
 @Adaptive
-fun H2(i1 : Int, @Adaptive builder: (i2 : Int) -> Unit) {
+fun H2(i1: Int, @Adaptive builder: (i2: Int) -> Unit) {
     builder(i1 + 2)
 }
 
@@ -138,17 +138,17 @@ class AdaptiveH2(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    val i1 : Int,
+    val i1: Int,
     @Adaptive builder: (parentScope: AdaptiveFragment<TestNode>) -> AdaptiveFragment<TestNode>
 ) : AdaptiveC1(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
 
     override val fragment0 = adaptiveBuilder111(this)
 
-    fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>?) : AdaptiveFragment<TestNode> {
+    fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>?): AdaptiveFragment<TestNode> {
         return AdaptiveAnonymous(
             adaptiveAdapter,
             AdaptiveClosure(this, emptyArray(), 1),
-            adaptiveParent!!,
+            adaptiveParent !!,
             this::adaptiveExternalPatch111,
             arrayOf(i1 + 1)
         )
@@ -305,30 +305,26 @@ fun RunOnMount(func: () -> Unit) {
 }
 
 @Suppress("unused")
-class AdaptiveRunOnMount<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>?,
-    override val adaptiveParent: AdaptiveFragment<BT>?,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
+class AdaptiveRunOnMount(
+    adaptiveAdapter: AdaptiveAdapter<TestNode>,
+    adaptiveClosure: AdaptiveClosure<TestNode>?,
+    adaptiveParent: AdaptiveFragment<TestNode>?,
+    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
     var func: () -> Unit
-) : AdaptiveFragment<BT> {
+) : AdaptiveTracingFragment<TestNode>(
+    adaptiveAdapter,
+    adaptiveClosure,
+    adaptiveParent,
+    adaptiveExternalPatch
+) {
 
-    fun adaptiveInvalidate0(stateVariableIndex: Int) {
+    init {
+        adaptiveAdapter.trace(traceName, "init")
     }
 
-    override fun adaptiveCreate() { }
-
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+    override fun adaptiveMount(bridge: AdaptiveBridge<TestNode>) {
+        super.adaptiveMount(bridge)
         func()
-    }
-
-    override fun adaptivePatch() {
-    }
-
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-    }
-
-    override fun adaptiveDispose() {
     }
 
 }

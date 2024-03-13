@@ -26,7 +26,7 @@ class AirBuilderCall2Ir(
                     armCall.valueArguments.forEachIndexed { index, adaptiveExpression ->
                         constructorCall.putValueArgument(
                             index + Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT,
-                            transformStateAccess(adaptiveExpression, declaringComponent.symbol)
+                            transformStateAccess(call.irFunction, adaptiveExpression, call.irFunction.dispatchReceiverParameter!!.symbol)
                         )
                     }
                 }

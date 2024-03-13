@@ -73,7 +73,7 @@ class AirExternalPatchWhen2Ir(
     private fun irConditionBranch(branchIndex: Int, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            transformStateAccess(branch.condition, dispatchReceiver.symbol),
+            transformStateAccess(externalPatch.irFunction, branch.condition, dispatchReceiver.symbol),
             irConst(branchIndex)
         )
 
