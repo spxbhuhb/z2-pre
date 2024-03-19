@@ -48,26 +48,15 @@ object ApplicationSettings {
     val securityOfficerRoleName by setting<String> { "SECURITY_OFFICER_ROLE_NAME" } default "security-officer"
 
     /**
-     * The built-in security officer role. This field is initialized only on JVM and only if the
-     * auth module is loaded.
+     * The built-in security officer role. Initialized from [securityOfficerRoleName] and [securityOfficerRoleUuid].
      */
-    lateinit var securityOfficerRole: Role
-
-    /**
-     * The UUID of the built-in security officer user.
-     *
-     * - Should not be changed after the first time the application runs.
-     * - The initialization sequence creates this principal if there are no principals at the time the application starts.
-     * - If there are principals but this one is missing, the application stops.
-     */
-    val anonymousUuid by setting<UUID<Principal>> { "ANONYMOUS_UUID" } default UUID("065cc983-47fb-7530-8000-4a6a6c4c8022")
-
-    /**
-     * The principal name of the built-in anonymous user.
-     *
-     * - Used during first time application startup to create the principal of the anonymous user.
-     */
-    val anonymousName by setting<String> { "ANONYMOUS_NAME" } default "anonymous"
+    val securityOfficerRole by lazy {
+        Role().also {
+            it.uuid = securityOfficerRoleUuid
+            it.programmaticName = securityOfficerRoleName
+            it.displayName = securityOfficerRoleName
+        }
+    }
 
     /**
      * The UUID of the built-in technical administrator role.
@@ -86,9 +75,31 @@ object ApplicationSettings {
     val technicalAdminRoleName by setting<String> { "TECHNICAL_ADMIN_ROLE_NAME" } default "technical-admin"
 
     /**
-     * The built-in technical admin role. This field is initialized only on JVM and only if the
-     * auth module is loaded.
+     * The built-in technical admin role. Fields are initialized from [technicalAdminRoleName]
+     * and [technicalAdminRoleUuid].
      */
-    lateinit var technicalAdminRole: Role
+    val technicalAdminRole by lazy {
+        Role().also {
+            it.uuid = technicalAdminRoleUuid
+            it.programmaticName = technicalAdminRoleName
+            it.displayName = technicalAdminRoleName
+        }
+    }
+
+    /**
+     * The UUID of the built-in security officer user.
+     *
+     * - Should not be changed after the first time the application runs.
+     * - The initialization sequence creates this principal if there are no principals at the time the application starts.
+     * - If there are principals but this one is missing, the application stops.
+     */
+    val anonymousUuid by setting<UUID<Principal>> { "ANONYMOUS_UUID" } default UUID("065cc983-47fb-7530-8000-4a6a6c4c8022")
+
+    /**
+     * The principal name of the built-in anonymous user.
+     *
+     * - Used during first time application startup to create the principal of the anonymous user.
+     */
+    val anonymousName by setting<String> { "ANONYMOUS_NAME" } default "anonymous"
 
 }
