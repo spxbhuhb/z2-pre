@@ -11,14 +11,12 @@ import hu.simplexion.z2.auth.table.RoleTable.Companion.roleTable
 import hu.simplexion.z2.util.UUID
 
 
-fun makeRole(role: Role): Role {
-    roleTable.insertWithId(role)
-    return role
-}
+fun makeRole(role: Role): Role =
+    makeRole(role.uuid, role.programmaticName)
 
 fun makeRole(inUuid: UUID<Role>, inName: String): Role {
     val role = Role {
-        uuid = inUuid
+        uuid = if (inUuid.isNil) UUID() else inUuid
         programmaticName = inName
         displayName = inName
     }
@@ -27,10 +25,16 @@ fun makeRole(inUuid: UUID<Role>, inName: String): Role {
 }
 
 fun validateRole(role: Role) =
-    requireNotNull(roleTable.getOrNull(role.uuid)) { "missing mandatory role: uuid=${role.uuid} name=${role.programmaticName}" }
+    validateRole(role.uuid, role.programmaticName)
 
 fun validateRole(inUuid: UUID<Role>, inName: String) =
-    requireNotNull(roleTable.getOrNull(inUuid)) { "missing mandatory role: uuid=$inUuid name=$inName" }
+    requireNotNull(
+        if (inUuid.isNil) {
+            roleTable.getByNameOrNull(inName)
+        } else {
+            roleTable.getOrNull(inUuid)
+        }
+    ) { "missing mandatory role: uuid=$inUuid name=$inName" }
 
 fun makePrincipal(inUuid: UUID<Principal>, inName: String, password: String? = null) {
     principalTable.insertWithId(
@@ -53,9 +57,12 @@ fun makePrincipal(inUuid: UUID<Principal>, inName: String, password: String? = n
     }
 }
 
-
-fun validatePrincipal(inUuid: UUID<Principal>, locked: Boolean? = null) {
-    val principal = principalTable.getOrNull(inUuid)
+fun validatePrincipal(inUuid: UUID<Principal>, inPrincipalName: String? = null, locked: Boolean? = null) {
+    val principal = if (inUuid.isNil) {
+        principalTable.getByNameOrNull(inPrincipalName!!)
+    } else {
+        principalTable.getOrNull(inUuid)
+    }
     requireNotNull(principal) { "missing mandatory principal uuid=$inUuid" }
     if (locked == true) check(principal.locked) { "principal shall be locked: name=${principal.name} uuid=$inUuid" }
 }

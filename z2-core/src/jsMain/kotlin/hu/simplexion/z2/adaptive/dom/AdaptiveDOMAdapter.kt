@@ -16,9 +16,12 @@ open class AdaptiveDOMAdapter(
     val node: Node = requireNotNull(window.document.body) { "window.document.body is null or undefined" }
 ) : AdaptiveAdapter<Node> {
 
+
     override val rootBridge = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)
     }
+
+    override var trace = false
 
     override fun createPlaceholder(): AdaptiveBridge<Node> {
         return AdaptiveDOMPlaceholder()
