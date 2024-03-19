@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
@@ -65,6 +66,9 @@ open class ClassBoundIrBuilder(
     val classBoundFragmentType: IrType
         get() = pluginContext.adaptiveFragmentClass.typeWith(classBoundBridgeType.defaultType)
 
+    val classBoundNullableFragmentType: IrType
+        get() = classBoundFragmentType.makeNullable()
+
     val classBoundClosureType: IrType
         get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
 
@@ -76,6 +80,9 @@ open class ClassBoundIrBuilder(
 
     val classBoundExternalPatchType: IrType
         get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
+
+    val classBoundFragmentFactoryType: IrType
+        get() = irBuiltIns.functionN(2).typeWith(classBoundFragmentType, irBuiltIns.intType, classBoundNullableFragmentType)
 
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
@@ -255,7 +262,6 @@ open class ClassBoundIrBuilder(
         irFactory.buildFun {
             name = Name.identifier("${Strings.ADAPTIVE_EXTERNAL_PATCH_FUN}$startOffset")
             returnType = irBuiltIns.unitType
-            returnType = irBuiltIns.unitType
             modality = Modality.OPEN
         }.also { function ->
 
@@ -264,8 +270,36 @@ open class ClassBoundIrBuilder(
             }
 
             function.addValueParameter {
-                name = Names.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT
+                name = Names.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG
                 type = classBoundFragmentType
+            }
+
+            function.parent = irClass
+            irClass.declarations += function
+        }
+
+    /**
+     * Defines a `adaptiveFragmentFactoryNNN(parent : AdaptiveFragment<BT>, index : Int)` function (NNN = [startOffset])
+     */
+    fun fragmentFactory(startOffset: Int): IrSimpleFunction =
+        irFactory.buildFun {
+            name = Name.identifier("${Strings.ADAPTIVE_FRAGMENT_FACTORY_FUN}$startOffset")
+            returnType = classBoundFragmentType.makeNullable()
+            modality = Modality.OPEN
+        }.also { function ->
+
+            function.addDispatchReceiver {
+                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
+            }
+
+            function.addValueParameter {
+                name = Names.ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG
+                type = classBoundFragmentType
+            }
+
+            function.addValueParameter {
+                name = Names.ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG
+                type = irBuiltIns.intType
             }
 
             function.parent = irClass
@@ -281,6 +315,14 @@ open class ClassBoundIrBuilder(
         UNDEFINED_OFFSET,
         irContext.irBuiltIns.longType,
         IrConstKind.Long,
+        value
+    )
+
+    fun irConst(value: Int): IrConst<Int> = IrConstImpl(
+        UNDEFINED_OFFSET,
+        UNDEFINED_OFFSET,
+        irContext.irBuiltIns.intType,
+        IrConstKind.Int,
         value
     )
 

@@ -58,4 +58,7 @@ interface AirElementVisitorVoid<out R> : AirElementVisitor<R, Nothing?> {
     fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen) = visitExternalPatch(externalPatch)
     override fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen, data: Nothing?) = visitExternalPatchWhen(externalPatch)
 
+    fun visitFragmentFactory(fragmentFactory: AirFragmentFactory) = visitFunction(fragmentFactory)
+    override fun visitFragmentFactory(fragmentFactory: AirFragmentFactory, data: Nothing?) = visitFragmentFactory(fragmentFactory)
+
 }

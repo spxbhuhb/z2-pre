@@ -36,13 +36,13 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  * # General transform
  *
  * - original function parameter reads (IrGetValue):
- *   - transformed into state variable getter calls (start scope)
+ *   - transformed into state variable getter calls (declaration scope)
  * - top level local variable reads (IrCall to the getter)
- *   - transformed into state variable getter calls (start scope)
+ *   - transformed into state variable getter calls (declaration scope)
  * - top level local variable writes (IrCall to the setter)
- *   - transformed into state variable setter calls (start scope)
+ *   - transformed into state variable setter calls (declaration scope)
  * - anonymous function parameter reads (IrGetValue)
- *    - transformed into state variable getter calls (intermediate or end scope)
+ *    - transformed into state variable getter calls (anonymous scopes)
  *
  * # Local function transform
  *
@@ -52,11 +52,12 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  * - `adaptiveInvalidate0(stateVariableIndex)` calls to invalidate the variable
  * - `adaptivePatch(adaptiveDirty0)` calls to execute patch when necessary
  *
- * @param  startScopeValue  the value that stores the instance of the start scope class
+ * @param  declarationScopeValue  the value that stores the instance of the start scope class
  */
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
-    private val startScopeValue: IrValueSymbol
+    private val irParent : IrDeclarationParent,
+    private val declarationScopeValue: IrValueSymbol
 ) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
 
     companion object {
@@ -64,19 +65,19 @@ class StateAccessTransform(
         /**
          * Transforms variable access in external patch and CALL rendering builder.
          */
-        fun ClassBoundIrBuilder.transformStateAccess(expression: ArmExpression, startScopeValue: IrValueSymbol): IrExpression =
+        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, expression: ArmExpression, declarationScopeValue: IrValueSymbol): IrExpression =
             expression
                 .irExpression
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, startScopeValue), null)
+                .transform(StateAccessTransform(this, irParent, declarationScopeValue), null)
 
         /**
          * Transforms an initializer statement.
          */
-        fun ClassBoundIrBuilder.transformStateAccess(statement: IrStatement, startScopeValue: IrValueSymbol): IrStatement =
+        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, statement: IrStatement, declarationScopeValue: IrValueSymbol): IrStatement =
             statement
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, startScopeValue), null)
+                .transform(StateAccessTransform(this, irParent, declarationScopeValue), null)
                 as IrStatement
     }
 
@@ -93,7 +94,7 @@ class StateAccessTransform(
 
     val irBuiltIns = irContext.irBuiltIns
 
-    fun scopeReceiver() = irBuilder.irImplicitAs(startScopeValue.owner.type, IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, startScopeValue))
+    fun scopeReceiver() = irBuilder.irImplicitAs(declarationScopeValue.owner.type, IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, declarationScopeValue))
 
     var haveToPatch = false
 
@@ -115,7 +116,10 @@ class StateAccessTransform(
      */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         haveToPatch = false
+
         val transformed = super.visitFunctionNew(declaration) as IrFunction
+        transformed.parent = irParent
+
         if (! haveToPatch) return transformed
 
         val ps = parentScope // this is the IR scope, not the Adaptive scope
@@ -141,11 +145,11 @@ class StateAccessTransform(
             // FIXME this applies patch to the very end of the function, it should cover all returns
             // FIXME analyze all the possible uses of state changing functions and the possible scopes
 
-            // SOURCE  patch(adaptiveDirty0)
+            // SOURCE  adaptivePatch()
             + irCall(
                 airClass.patch.symbol,
                 irBuiltIns.unitType,
-                valueArgumentsCount = 1,
+                valueArgumentsCount = 0,
                 typeArgumentsCount = 0,
                 origin = IrStatementOrigin.INVOKE
             ).apply {
@@ -189,6 +193,8 @@ class StateAccessTransform(
 
         if (currentScope == null) return super.visitSetValue(expression)
 
+        haveToPatch = true
+
         return DeclarationIrBuilder(irContext, currentScope !!.scope.scopeOwnerSymbol).irComposite {
 
             val traceData = traceStateChangeBefore(stateVariable)
@@ -199,10 +205,10 @@ class StateAccessTransform(
             val dirtyMask = airClass.dirtyMasks[index / ADAPTIVE_STATE_VARIABLE_LIMIT]
 
             + irCallOp(
-                dirtyMask.invalidate.symbol,
-                irBuiltIns.unitType,
-                IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, startScopeValue),
-                (index % ADAPTIVE_STATE_VARIABLE_LIMIT).toIrConst(irBuiltIns.longType)
+                callee = dirtyMask.invalidate.symbol,
+                type = irBuiltIns.unitType,
+                dispatchReceiver = scopeReceiver(),
+                argument = (index % ADAPTIVE_STATE_VARIABLE_LIMIT).toIrConst(irBuiltIns.longType)
             )
 
             traceStateChangeAfter(stateVariable, traceData)
@@ -212,7 +218,7 @@ class StateAccessTransform(
     fun IrBlockBuilder.traceStateChangeBefore(stateVariable: AirStateVariable): IrVariable? {
         if (! irBuilder.pluginContext.withTrace) return null
 
-        return irTemporary(irTraceGet(stateVariable, irBuilder.irThisReceiver()))
+        return irTemporary(irTraceGet(stateVariable, scopeReceiver()))
             .also { it.parent = currentFunction !!.irElement as IrFunction }
     }
 

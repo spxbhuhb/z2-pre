@@ -20,21 +20,26 @@ class AdaptiveWhen<BT>(
 
     init {
         adaptiveExternalPatch(this)
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "init", "newBranch:", newBranch)
         if (newBranch != branch) {
+            branch = newBranch
             fragment = factory(this, branch)
         }
     }
 
     override fun adaptiveCreate() {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "create")
         fragment?.adaptiveCreate()
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "mount", "bridge:", bridge)
         bridge.add(placeholder)
         fragment?.adaptiveMount(placeholder)
     }
 
     override fun adaptivePatch() {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "patch", "branch:", branch, "newBranch:", newBranch)
         if (newBranch == branch) {
             fragment?.let {
                 it.adaptiveExternalPatch(it)
@@ -51,11 +56,13 @@ class AdaptiveWhen<BT>(
     }
 
     override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "unmount", "bridge:", bridge)
         fragment?.adaptiveUnmount(placeholder)
         bridge.remove(placeholder)
     }
 
     override fun adaptiveDispose() {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveWhen", "dispose")
         fragment?.adaptiveDispose()
     }
 

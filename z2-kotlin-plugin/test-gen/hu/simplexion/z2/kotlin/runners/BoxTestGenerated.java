@@ -99,9 +99,21 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
-            @TestMetadata("ifBranch.kt")
-            public void testIfBranch() throws Exception {
-                runTest("testData/box/adaptive/when/ifBranch.kt");
+            @TestMetadata("ifElse.kt")
+            public void testIfElse() throws Exception {
+                runTest("testData/box/adaptive/when/ifElse.kt");
+            }
+
+            @Test
+            @TestMetadata("ifElsePatch.kt")
+            public void testIfElsePatch() throws Exception {
+                runTest("testData/box/adaptive/when/ifElsePatch.kt");
+            }
+
+            @Test
+            @TestMetadata("ifOnly.kt")
+            public void testIfOnly() throws Exception {
+                runTest("testData/box/adaptive/when/ifOnly.kt");
             }
         }
     }

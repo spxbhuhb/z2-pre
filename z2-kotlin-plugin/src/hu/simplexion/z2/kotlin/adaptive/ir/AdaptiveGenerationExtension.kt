@@ -68,10 +68,8 @@ internal class AdaptiveGenerationExtension(
             }
 
             // --------  finishing up  --------
-
-            debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
             debug("KOTLIN LIKE") { "\n\n" + moduleFragment.dumpKotlinLike() }
-
+            debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }
 

@@ -23,20 +23,24 @@ interface AdaptiveGeneratedFragment<BT> : AdaptiveFragment<BT> {
     val containedFragment: AdaptiveFragment<BT>
 
     override fun adaptiveCreate() {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "create")
         containedFragment.adaptiveCreate()
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "mount", "bridge", bridge)
         containedFragment.adaptiveMount(bridge)
     }
 
     // do not override adaptivePatch, it should be generated in all cases
 
     override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "unmount", "bridge", bridge)
         containedFragment.adaptiveUnmount(bridge)
     }
 
     override fun adaptiveDispose() {
+        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "dispose")
         containedFragment.adaptiveDispose()
     }
 

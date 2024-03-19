@@ -8,10 +8,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform.Companion
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.declarations.IrAnonymousInitializer
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
@@ -43,7 +40,7 @@ class AirClass2Ir(
             }
 
             airClass.armElement.initializerStatements.forEach {
-                + transformStateAccess(it, airClass.irClass.thisReceiver !!.symbol)
+                + transformStateAccess(this.parent, it, airClass.irClass.thisReceiver !!.symbol)
             }
 
             val builderCall = irCallOp(
@@ -66,10 +63,13 @@ class AirClass2Ir(
         patch.body = DeclarationIrBuilder(irContext, patch.symbol).irBlockBody {
 
             if (pluginContext.withTrace) {
-                + irTrace(patch, "init", emptyList())
+                + irTrace(patch, "patch", emptyList())
             }
 
-            irCallExternalPatchFromPatch(patch)
+            val fragment = irTemporary(irGetFragment(patch))
+
+            irCallExternalPatch(fragment)
+            irCallPatch(fragment)
 
             airClass.dirtyMasks.forEach { + it.irClear(patch.dispatchReceiverParameter !!) }
         }
@@ -84,12 +84,10 @@ class AirClass2Ir(
      * adaptiveFragment.adaptiveExternalPatch(adaptiveFragment)
      * ```
      */
-    fun IrBlockBodyBuilder.irCallExternalPatchFromPatch(patch: IrSimpleFunction) {
+    fun IrBlockBodyBuilder.irCallExternalPatch(fragment: IrVariable) {
 
         val functionType = irBuiltIns.functionN(1)
         val invoke = functionType.functions.first { it.name.identifier == "invoke" }.symbol
-
-        val fragment = irTemporary(irGetFragment(patch))
 
         + irCall(
             invoke,
@@ -104,6 +102,27 @@ class AirClass2Ir(
                 irGet(fragment)
             )
             putValueArgument(0, irGet(fragment))
+        }
+
+    }
+
+
+    /**
+     * Call the patch of `adaptiveFragment`.
+     *
+     * ```kotlin
+     * adaptiveFragment.adaptivePatch()
+     * ```
+     */
+    fun IrBlockBodyBuilder.irCallPatch(fragment: IrVariable) {
+        + irCall(
+            renderingSymbolMap.patch.symbol,
+            irBuiltIns.unitType,
+            valueArgumentsCount = 0,
+            typeArgumentsCount = 0,
+            origin = IrStatementOrigin.INVOKE
+        ).apply {
+            dispatchReceiver = irGet(fragment)
         }
     }
 

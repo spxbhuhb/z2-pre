@@ -22,13 +22,17 @@ object Strings {
     const val ADAPTIVE_EXTERNAL_PATCH_FUN = "adaptiveExternalPatch"
     const val ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG = "fragment"
 
+    const val ADAPTIVE_FRAGMENT_FACTORY_FUN = "adaptiveFragmentFactory"
+    const val ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG = "parent"
+    const val ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG = "index"
+
     const val ADAPTIVE_CLOSURE_CLASS = "hu.simplexion.z2.adaptive.AdaptiveClosure"
     const val ADAPTIVE_FRAGMENT_CLASS = "hu.simplexion.z2.adaptive.AdaptiveFragment"
     const val ADAPTIVE_GENERATED_FRAGMENT_CLASS = "hu.simplexion.z2.adaptive.AdaptiveGeneratedFragment"
     const val ADAPTIVE_ADAPTER_CLASS = "hu.simplexion.z2.adaptive.AdaptiveAdapter"
     const val ADAPTIVE_BRIDGE_CLASS = "AdaptiveBridge"
     const val ADAPTIVE_SEQUENCE_CLASS = "AdaptiveSequence"
-    const val ADAPTIVE_WHEN_CLASS = "hu.simplexion.z2.adaptive.AdaptiveWhen"
+    const val ADAPTIVE_WHEN_CLASS = "AdaptiveWhen"
     const val ADAPTIVE_FOR_LOOP_CLASS = "hu.simplexion.z2.adaptive.AdaptiveForLoop"
     const val ADAPTIVE_ENTRY_FUNCTION = "hu.simplexion.z2.adaptive.adaptive"
     const val ADAPTIVE_ANONYMOUS_CLASS = "hu.simplexion.z2.adaptive.AdaptiveAnonymous"
@@ -58,6 +62,8 @@ object Strings {
 
     const val ADAPTIVE_SEQUENCE_ADD_FUN = "add" // add(fragment) function in sequence
 
+    const val ADAPTIVE_WHEN_NEW_BRANCH_PROP = "newBranch" // newBranch property of when
+
     fun String.toNameWithPostfix(postfix: Int) =
         Name.identifier("$this$postfix")
 
@@ -66,7 +72,10 @@ object Strings {
 }
 
 object Names {
-    val ADAPTIVE_EXTERNAL_PATCH_FRAGMENT = Name.identifier(Strings.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG)
+    val ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG = Name.identifier(Strings.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG)
+
+    val ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG = Name.identifier(Strings.ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG)
+    val ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG = Name.identifier(Strings.ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG)
 
     val ADAPTIVE_ADAPTER_PROP = Name.identifier(Strings.ADAPTIVE_ADAPTER_PROP)
     val ADAPTIVE_CLOSURE_PROP = Name.identifier(Strings.ADAPTIVE_CLOSURE_PROP)
@@ -95,7 +104,7 @@ object FqNames {
     val ADAPTIVE_ADAPTER_CLASS = FqName.fromSegments(Strings.ADAPTIVE_ADAPTER_CLASS.split('.'))
     val ADAPTIVE_BRIDGE_CLASS = Strings.ADAPTIVE_BRIDGE_CLASS.runtime
     val ADAPTIVE_SEQUENCE_CLASS = Strings.ADAPTIVE_SEQUENCE_CLASS.runtime
-    val ADAPTIVE_WHEN_CLASS = FqName.fromSegments(Strings.ADAPTIVE_WHEN_CLASS.split('.'))
+    val ADAPTIVE_WHEN_CLASS = Strings.ADAPTIVE_WHEN_CLASS.runtime
     val ADAPTIVE_FOR_LOOP_CLASS = FqName.fromSegments(Strings.ADAPTIVE_FOR_LOOP_CLASS.split('.'))
     val ADAPTIVE_ENTRY_FUNCTION = FqName.fromSegments(Strings.ADAPTIVE_ENTRY_FUNCTION.split('.'))
     val ADAPTIVE_ANONYMOUS_CLASS = FqName.fromSegments(Strings.ADAPTIVE_ANONYMOUS_CLASS.split('.'))
@@ -142,9 +151,26 @@ object Indices {
      */
     const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
-
+    /**
+     * AdaptiveSequence constructor argument count
+     * Argument indices are the same as generated fragment argument.
+     */
     const val ADAPTIVE_SEQUENCE_ARGUMENT_COUNT = 3
 
+    /**
+     * AdaptiveWhen constructor argument count
+     * First argument indices are the same as generated fragment argument.
+     */
+    const val ADAPTIVE_WHEN_ARGUMENT_COUNT = 5
+    const val ADAPTIVE_WHEN_FACTORY_ARG = 4
+
+    /**
+     * Fragment factory arguments
+     */
+    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT = 2
+
+    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_PARENT = 0
+    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_INDEX = 1
 }
 
 const val ADAPTIVE_WHEN_ARGUMENT_COUNT = 3

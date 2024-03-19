@@ -5,6 +5,7 @@ package hu.simplexion.z2.adaptive.test.manual
 
 import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.*
+import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -20,17 +21,25 @@ class BlockTest {
             adaptiveMount(root)
         }
 
-        assertEquals(testResult, adapter.trace.joinToString("\n"))
+        assertEquals(
+            "OK",
+            AdaptiveTestAdapter.assert(
+                listOf(
+                    TraceEvent("Block", "init"),
+                    TraceEvent("AdaptiveSequence", "init"),
+                    TraceEvent("AdaptiveT1", "init"),
+                    TraceEvent("Block", "create"),
+                    TraceEvent("AdaptiveSequence", "create"),
+                    TraceEvent("AdaptiveT1", "create", "p0:", "1"),
+                    TraceEvent("AdaptiveT0", "create"),
+                    TraceEvent("Block", "mount", "bridge", "1"),
+                    TraceEvent("AdaptiveSequence", "mount", "bridge:", "1"),
+                    TraceEvent("AdaptiveT1", "mount", "bridge:", "1"),
+                    TraceEvent("AdaptiveT0", "mount", "bridge:", "1")
+                )
+            )
+        )
     }
-
-    val testResult = """
-        [ AdaptiveT1                          ]  init                  |  
-        [ AdaptiveT1                          ]  create                |  p0: 1
-        [ AdaptiveT0                          ]  create                |  
-        [ AdaptiveT1                          ]  mount                 |  bridge: 1
-        [ AdaptiveT0                          ]  mount                 |  bridge: 1
-    """.trimIndent()
-
 }
 
 
@@ -41,13 +50,17 @@ class Block(
 ) : AdaptiveGeneratedFragment<TestNode> {
 
     override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = {  }
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = { }
 
     override val containedFragment: AdaptiveFragment<TestNode>
 
     var v0 = 1
 
     var adaptiveDirty0 = 0L
+
+    init {
+        adaptiveAdapter.trace("Block", "init")
+    }
 
     fun adaptiveInvalidate0(mask: Long) {
         adaptiveDirty0 = adaptiveDirty0 or mask
@@ -66,15 +79,15 @@ class Block(
         adaptiveDirty0 = 0L
     }
 
-    fun adaptiveBuilderT1(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+    fun adaptiveBuilderT1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0)
     }
 
-    fun adaptiveBuilderT0(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, null, this) {  }
+    fun adaptiveBuilderT0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveT0(adaptiveAdapter, null, this) { }
     }
 
-    fun adaptiveBuilderSequence(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+    fun adaptiveBuilderSequence(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         val tmp = AdaptiveSequence(adaptiveAdapter, null, parent)
 
         tmp.add(adaptiveBuilderT1(tmp))
