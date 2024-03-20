@@ -21,6 +21,7 @@ interface ArmElementVisitor<out R, in D> {
     fun visitStatement(statement: ArmRenderingStatement, data: D) = visitElement(statement, data)
     fun visitSequence(statement: ArmSequence, data: D) = visitStatement(statement, data)
     fun visitCall(statement: ArmCall, data: D) = visitStatement(statement, data)
+    fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall, data: D) = visitStatement(statement, data)
     fun visitHigherOrderCall(statement: ArmHigherOrderCall, data: D) = visitStatement(statement, data)
     fun visitParameterFunctionCall(statement: ArmParameterFunctionCall, data: D) = visitStatement(statement, data)
     fun visitWhen(statement: ArmWhen, data: D) = visitStatement(statement, data)
@@ -28,6 +29,7 @@ interface ArmElementVisitor<out R, in D> {
 
     fun visitExpression(expression: ArmExpression, data: D) = visitElement(expression, data)
     fun visitValueArgument(valueArgument: ArmValueArgument, data: D) = visitElement(valueArgument, data)
+    fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument, data: D) = visitElement(supportFunctionArgument, data)
     fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument, data: D) = visitElement(higherOrderArgument, data)
 
     fun visitDeclaration(declaration: ArmDeclaration, data: D) = visitElement(declaration, data)

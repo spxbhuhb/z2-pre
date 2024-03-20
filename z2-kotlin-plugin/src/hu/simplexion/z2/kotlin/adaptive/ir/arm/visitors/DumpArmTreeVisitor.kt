@@ -77,6 +77,15 @@ class DumpArmTreeVisitor(
         }
     }
 
+    override fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall) {
+        indented {
+            with(statement) {
+                println { "RENDERING type:CALLBACK_CALL index:$index startOffset: ${statement.irCall.startOffset} type:<$target>" }
+            }
+            super.visitCallbackFunctionCall(statement)
+        }
+    }
+
     override fun visitHigherOrderCall(statement: ArmHigherOrderCall) {
         indented {
             with(statement) {
@@ -135,6 +144,14 @@ class DumpArmTreeVisitor(
     override fun visitValueArgument(valueArgument: ArmValueArgument) {
         indented {
             with(valueArgument) {
+                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+            }
+        }
+    }
+
+    override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) {
+        indented {
+            with(supportFunctionArgument) {
                 println { "$origin $index ${dependencies.withLabel("dependencies")}" }
             }
         }
