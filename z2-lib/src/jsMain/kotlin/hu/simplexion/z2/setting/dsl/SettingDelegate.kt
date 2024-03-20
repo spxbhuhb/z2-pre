@@ -16,31 +16,47 @@ actual class SettingDelegate<T>(
     actual var writable: Boolean = true
     var initialized : Boolean = false
 
+    // FIXME settings default mess
+    var default: T? = null
+
     actual var valueOrNull: T? = null
+        get() {
+            if (!initialized) field = initialize()
+            return field
+        }
+        set(v) {
+            initialized = true
+            field = v
+        }
 
-    actual var value : T
-        get() = requireNotNull(valueOrNull) { "missing setting: path=$path owner=$owner" }
-        set(value) { valueOrNull = value }
+    actual var value: T
+        get() = checkNotNull(valueOrNull) { "missing setting: path=$path owner=$owner" }
+        set(value) {
+            valueOrNull = value
+        }
 
-    actual operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        return value
-    }
+    actual operator fun getValue(thisRef: Any?, property: KProperty<*>): T =
+        value
+
+    fun initialize(): T? =
+        browserSettings.get(owner, path).firstOrNull()?.value?.let { decoder(it) }
+            ?: default
 
     actual operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         this.value = value
+        browserSettings.put(owner, path, encoder(value))
     }
 
-    actual infix fun default(value : T) : SettingDelegate<T> {
-        this.value = value
+    actual infix fun default(value: T): SettingDelegate<T> {
+        this.default = value
         return this
     }
 
-    actual operator fun rangeTo(settingFlag: SettingFlag) : SettingDelegate<T> {
+    actual operator fun rangeTo(settingFlag: SettingFlag): SettingDelegate<T> {
         when (settingFlag) {
             SettingFlag.sensitive -> sensitive = true
             SettingFlag.writable -> writable = true
         }
         return this
     }
-
 }

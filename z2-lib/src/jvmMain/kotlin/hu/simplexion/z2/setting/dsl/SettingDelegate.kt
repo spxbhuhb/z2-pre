@@ -5,6 +5,7 @@ import hu.simplexion.z2.setting.implementation.SettingImpl
 import hu.simplexion.z2.util.UUID
 import kotlin.reflect.KProperty
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class SettingDelegate<T>(
     actual val path: String,
     actual val owner: UUID<Principal>?,

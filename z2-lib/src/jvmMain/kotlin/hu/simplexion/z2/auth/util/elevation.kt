@@ -1,9 +1,9 @@
 package hu.simplexion.z2.auth.util
 
-import hu.simplexion.z2.application.ApplicationSettings.securityOfficerRoleUuid
-import hu.simplexion.z2.application.ApplicationSettings.securityOfficerUuid
-import hu.simplexion.z2.application.ApplicationSettings.technicalAdminRoleUuid
+import hu.simplexion.z2.application.securityOfficerRole
+import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.model.Session
+import hu.simplexion.z2.auth.securityOfficerUuid
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.ServiceContext
 import kotlinx.coroutines.runBlocking
@@ -13,7 +13,7 @@ suspend fun <T> runAsSecurityOfficer(block: suspend (context: ServiceContext) ->
     val context = BasicServiceContext()
     context.data[Session.SESSION_TOKEN_UUID] = Session().also {
         it.principal = securityOfficerUuid
-        it.roles = listOf(securityOfficerRoleUuid)
+        it.roles = listOf(securityOfficerRole.uuid)
     }
     return block(context)
 }
@@ -30,7 +30,7 @@ suspend fun <T> runAsTechnicalAdmin(block: suspend (context: ServiceContext) -> 
     val context = BasicServiceContext()
     context.data[Session.SESSION_TOKEN_UUID] = Session().also {
         it.principal = securityOfficerUuid
-        it.roles = listOf(technicalAdminRoleUuid)
+        it.roles = listOf(technicalAdminRole.uuid)
     }
     return block(context)
 }

@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.application.ApplicationSettings
+import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.api.PrincipalApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -27,9 +27,9 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     companion object {
         val principalImpl = PrincipalImpl().internal
 
-        var addRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
-        var getRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
-        var updateRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
+        var addRoles = arrayOf(technicalAdminRole.uuid)
+        var getRoles = arrayOf(technicalAdminRole.uuid)
+        var updateRoles = arrayOf(technicalAdminRole.uuid)
     }
 
     override suspend fun list(): List<Principal> {

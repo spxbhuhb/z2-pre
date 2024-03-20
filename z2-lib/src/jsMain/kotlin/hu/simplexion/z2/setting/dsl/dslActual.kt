@@ -1,5 +1,8 @@
 package hu.simplexion.z2.setting.dsl
 
+import hu.simplexion.z2.auth.model.Principal
+import hu.simplexion.z2.setting.provider.InlineSettingProvider
+import hu.simplexion.z2.setting.settingService
 import hu.simplexion.z2.util.UUID
 import kotlin.reflect.KClass
 
@@ -13,3 +16,18 @@ actual fun <T : Any> setting(kClass: KClass<T>, path: String): SettingDelegate<T
         UUID::class -> SettingDelegate(path, null, { it.toString() }, { UUID<Any>(it !!) })
         else -> throw NotImplementedError("not implemented setting class: $kClass")
     } as SettingDelegate<T>
+
+// ---------------------------------------------------------------------
+// Setting provider builders
+// ---------------------------------------------------------------------
+
+val browserSettings = InlineSettingProvider()
+
+suspend fun settingsFromServer(owner: () -> UUID<Principal>) {
+    val ownerUuid = owner()
+    settingService
+        .get(ownerUuid, "", true)
+        .forEach {
+            browserSettings.put(ownerUuid, it.path, it.value)
+        }
+}

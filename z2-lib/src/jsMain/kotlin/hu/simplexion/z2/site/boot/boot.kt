@@ -1,6 +1,7 @@
 package hu.simplexion.z2.site.boot
 
 import hu.simplexion.z2.IBaseStrings
+import hu.simplexion.z2.application.applicationJs
 import hu.simplexion.z2.auth.authJs
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.sessionService
@@ -47,6 +48,7 @@ suspend fun bootJs(
         it.start()
     }
 
+    applicationJs()
     localeJs()
     authJs()
     historyJs()

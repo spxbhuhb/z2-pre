@@ -1,6 +1,6 @@
 package hu.simplexion.z2.setting.provider
 
-import hu.simplexion.z2.application.ApplicationSettings
+import hu.simplexion.z2.application.applicationSettings
 import hu.simplexion.z2.auth.context.ensureFailNotImplemented
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.setting.model.Setting
@@ -27,7 +27,7 @@ class EnvironmentSettingProvider(
     }
 
     override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> {
-        if (owner != null && owner != ApplicationSettings.applicationUuid) return emptyList()
+        if (owner != null && owner != applicationSettings.applicationUuid) return emptyList()
 
         val value = System.getenv("$environmentVariablePrefix$this")
         return if (value == null) {

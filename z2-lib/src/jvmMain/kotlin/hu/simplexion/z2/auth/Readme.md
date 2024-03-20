@@ -4,7 +4,7 @@
 
 ### JVM
 
-Performed by [authJvm](./jvm.kt).
+Performed by [authJvm](./authJvm.kt).
 
 Creates or updates all SQL tables.
 

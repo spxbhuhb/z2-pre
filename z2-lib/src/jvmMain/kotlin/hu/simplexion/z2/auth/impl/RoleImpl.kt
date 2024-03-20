@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.application.ApplicationSettings
+import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.api.RoleApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.model.Grant
@@ -21,9 +21,9 @@ class RoleImpl : RoleApi, ServiceImpl<RoleImpl> {
     companion object {
         val roleImpl = RoleImpl().internal
 
-        var addRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
-        var getRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
-        var updateRoles = arrayOf(ApplicationSettings.technicalAdminRoleUuid)
+        var addRoles = arrayOf(technicalAdminRole.uuid)
+        var getRoles = arrayOf(technicalAdminRole.uuid)
+        var updateRoles = arrayOf(technicalAdminRole.uuid)
     }
 
     override suspend fun query(): List<Role> {

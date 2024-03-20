@@ -1,8 +1,7 @@
 package hu.simplexion.z2.auth.context
 
-import hu.simplexion.z2.application.ApplicationSettings
-import hu.simplexion.z2.application.ApplicationSettings.securityOfficerRoleUuid
-import hu.simplexion.z2.application.ApplicationSettings.technicalAdminRoleUuid
+import hu.simplexion.z2.application.securityOfficerRole
+import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.services.ServiceImpl
@@ -27,7 +26,7 @@ fun ServiceImpl<*>.ensureInternal() {
  * @throws   AccessDenied  The principal does not have the security officer role.
  */
 fun ServiceImpl<*>.ensureSecurityOfficer() {
-    ensureHas(securityOfficerRoleUuid)
+    ensureHas(securityOfficerRole.uuid)
 }
 
 /**
@@ -36,7 +35,7 @@ fun ServiceImpl<*>.ensureSecurityOfficer() {
  * @throws   AccessDenied  The principal does not have any of the roles listed in [technicalAdminRoles].
  */
 fun ServiceImpl<*>.ensureTechnicalAdmin() {
-    ensureHas(technicalAdminRoleUuid)
+    ensureHas(technicalAdminRole.uuid)
 }
 
 /**
@@ -151,7 +150,7 @@ fun ServiceImpl<*>.ensureSelf(principal: UUID<Principal>) {
  * in the name of a security officer.
  */
 fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
-    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(ApplicationSettings.securityOfficerRoleUuid))
+    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(securityOfficerRole.uuid))
 }
 
 /**
@@ -159,7 +158,7 @@ fun ServiceImpl<*>.ensureSelfOrSecurityOfficer(principal: UUID<Principal>) {
  * in the name of technical admin.
  */
 fun ServiceImpl<*>.ensureSelfOrTechnicalAdmin(principal: UUID<Principal>) {
-    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(technicalAdminRoleUuid))
+    ensure(serviceContext.isPrincipal(principal) or serviceContext.has(technicalAdminRole.uuid))
 }
 
 /**
