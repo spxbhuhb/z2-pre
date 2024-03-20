@@ -8,7 +8,7 @@ class AdaptiveAnonymous<BT>(
     override val adaptiveClosure: AdaptiveClosure<BT>,
     override val adaptiveParent: AdaptiveFragment<BT>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    val adaptiveState: Array<Any?>,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveGeneratedFragment<BT> {
 
     override lateinit var containedFragment: AdaptiveFragment<BT>

@@ -12,6 +12,7 @@ class AdaptiveWhen<BT>(
 ) : AdaptiveFragment<BT> {
 
     val placeholder: AdaptiveBridge<BT> = adaptiveAdapter.createPlaceholder()
+    override val adaptiveState: Array<Any?> = emptyArray()
 
     var newBranch = -1 // this is changed by external patch
     var branch = -1 // -1 means that there is nothing to add, like if (condition) div {  }

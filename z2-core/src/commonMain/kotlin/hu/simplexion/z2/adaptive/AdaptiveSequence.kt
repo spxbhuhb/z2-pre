@@ -10,6 +10,7 @@ class AdaptiveSequence<BT>(
 ) : AdaptiveFragment<BT> {
 
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    override val adaptiveState: Array<Any?> = emptyArray()
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 

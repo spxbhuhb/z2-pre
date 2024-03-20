@@ -19,7 +19,7 @@ class BranchTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        Branch(adapter, null).apply {
+        Branch(adapter, null, null, {  }, emptyArray()).apply {
             adaptiveCreate()
             adaptiveMount(root)
 
@@ -38,12 +38,12 @@ class BranchTest {
         assertEquals(
             "OK", AdaptiveTestAdapter.assert(
                 listOf(
-                    TraceEvent("Branch", "init", ),
+                    TraceEvent("Branch", "init"),
                     TraceEvent("AdaptiveWhen", "init", "newBranch:", "0"),
-                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "init"),
 
-                    TraceEvent("Branch", "create", ),
-                    TraceEvent("AdaptiveWhen", "create", ),
+                    TraceEvent("Branch", "create"),
+                    TraceEvent("AdaptiveWhen", "create"),
                     TraceEvent("AdaptiveT1", "create", "p0:", "11"),
 
                     TraceEvent("Branch", "mount", "bridge", "1"),
@@ -55,17 +55,17 @@ class BranchTest {
 
                     TraceEvent("AdaptiveWhen", "patch", "branch:", "0", "newBranch:", "1"),
                     TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
-                    TraceEvent("AdaptiveT1", "dispose", ),
-                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "dispose"),
+                    TraceEvent("AdaptiveT1", "init"),
                     TraceEvent("AdaptiveT1", "create", "p0:", "22"),
                     TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
 
                     TraceEvent("AdaptiveWhen", "patch", "branch:", "1", "newBranch:", "2"),
                     TraceEvent("AdaptiveT1", "unmount", "bridge:", "2"),
-                    TraceEvent("AdaptiveT1", "dispose", ),
+                    TraceEvent("AdaptiveT1", "dispose"),
 
                     TraceEvent("AdaptiveWhen", "patch", "branch:", "2", "newBranch:", "0"),
-                    TraceEvent("AdaptiveT1", "init", ),
+                    TraceEvent("AdaptiveT1", "init"),
                     TraceEvent("AdaptiveT1", "create", "p0:", "11"),
                     TraceEvent("AdaptiveT1", "mount", "bridge:", "2")
                 )
@@ -79,11 +79,11 @@ class BranchTest {
 @Suppress("unused")
 class Branch(
     override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?
+    override val adaptiveParent: AdaptiveFragment<TestNode>?,
+    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
-
-    override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = { }
 
     override val containedFragment: AdaptiveFragment<TestNode>
 
@@ -120,13 +120,13 @@ class Branch(
         containedFragment.adaptivePatch()
     }
 
-    fun adaptiveBuilder0(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
-        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp0, v0 + 10)
+    fun adaptiveBuilder0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp0, arrayOf(v0 + 10))
 
-    fun adaptiveBuilder1(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
-        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0 + 20)
+    fun adaptiveBuilder1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0 + 20))
 
-    fun adaptiveBuilder2(parent : AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
+    fun adaptiveBuilder2(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
         AdaptivePlaceholder(adaptiveAdapter, parent)
 
     /**
@@ -141,9 +141,9 @@ class Branch(
             }
     }
 
-    fun adaptiveFactorySelect(parent : AdaptiveFragment<TestNode>, index : Int) : AdaptiveFragment<TestNode>? {
+    fun adaptiveFactorySelect(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode>? {
         return when (index) {
-            -1 -> null
+            - 1 -> null
             0 -> adaptiveBuilder0(parent)
             1 -> adaptiveBuilder1(parent)
             2 -> adaptiveBuilder2(parent)

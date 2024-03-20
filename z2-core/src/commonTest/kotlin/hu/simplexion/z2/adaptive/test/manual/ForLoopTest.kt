@@ -14,7 +14,7 @@ class ForLoopTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        ForLoop(adapter, null).apply {
+        ForLoop(adapter, null, null, {  }, emptyArray()).apply {
             adaptiveCreate()
             adaptiveMount(root)
         }
@@ -31,11 +31,11 @@ class ForLoopTest {
 @Suppress("unused")
 class ForLoop(
     override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?
+    override val adaptiveParent: AdaptiveFragment<TestNode>?,
+    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
-
-    override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = {  }
 
     override val containedFragment: AdaptiveFragment<TestNode>
 
@@ -61,15 +61,15 @@ class ForLoop(
 
     fun adaptiveIterator0() = IntRange(0, 10).iterator()
 
-    fun adaptiveBuilderT1(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
-        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0)
+    fun adaptiveBuilderT1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0))
     }
 
-    fun adaptiveBuilderT0(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, null, this) {  }
+    fun adaptiveBuilderT0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
+        return AdaptiveT0(adaptiveAdapter, null, this, { }, emptyArray())
     }
 
-    fun adaptiveBuilder0(parent : AdaptiveFragment<TestNode>) : AdaptiveFragment<TestNode> {
+    fun adaptiveBuilder0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         val tmp = AdaptiveSequence(adaptiveAdapter, null, parent)
 
         tmp.add(adaptiveBuilderT1(tmp))

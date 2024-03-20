@@ -16,7 +16,7 @@ class BlockTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        Block(adapter, null).apply {
+        Block(adapter, null, null, emptyArray()).apply {
             adaptiveCreate()
             adaptiveMount(root)
         }
@@ -46,10 +46,11 @@ class BlockTest {
 @Suppress("unused")
 class Block(
     override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?
+    override val adaptiveParent: AdaptiveFragment<TestNode>?,
+    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
 
-    override val adaptiveClosure: AdaptiveClosure<TestNode>? = null
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = { }
 
     override val containedFragment: AdaptiveFragment<TestNode>
@@ -80,11 +81,11 @@ class Block(
     }
 
     fun adaptiveBuilderT1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, v0)
+        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0))
     }
 
     fun adaptiveBuilderT0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, null, this) { }
+        return AdaptiveT0(adaptiveAdapter, null, this, {}, emptyArray())
     }
 
     fun adaptiveBuilderSequence(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {

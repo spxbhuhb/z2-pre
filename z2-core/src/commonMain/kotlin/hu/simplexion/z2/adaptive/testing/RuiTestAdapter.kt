@@ -38,6 +38,13 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
             return false
         }
+
+        override fun hashCode(): Int {
+            var result = name.hashCode()
+            result = 31 * result + point.hashCode()
+            result = 31 * result + data.hashCode()
+            return result
+        }
     }
 
     val fragments = mutableListOf<AdaptiveFragment<TestNode>>()

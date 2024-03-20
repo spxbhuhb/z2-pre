@@ -16,7 +16,9 @@ class HigherOrderFun(
     override val adaptiveClosure: AdaptiveClosure<TestNode>?,
     override val adaptiveParent: AdaptiveFragment<TestNode>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    var j: Int,
+    override val adaptiveState: Array<Any?>,
+
+    // the two
     val closure: AdaptiveClosure<TestNode>,
     @Adaptive val paramFun: (parent: AdaptiveAnonymous<TestNode>) -> AdaptiveFragment<TestNode>
 ) : AdaptiveGeneratedFragment<TestNode> {
@@ -67,7 +69,7 @@ class HigherOrderFun(
         get() = 0
 
     fun adaptiveBuilder222(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch222)
+        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch222, emptyArray())
     }
 
     fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {
@@ -95,7 +97,7 @@ class HigherOrderFun(
             closure,
             parent,
             this::adaptiveExternalPatch333,
-            arrayOf(j + 3)
+            arrayOf((adaptiveState[stateVariableIndex_j] as Int) + 3)
         ).also { paramFun(it) }
     }
 
@@ -167,7 +169,7 @@ class HigherOrderCall(
             null, // direct calls remove the current closure
             parent,
             this::adaptiveExternalPatch111,
-            i * 2,
+            arrayOf((adaptiveState[stateVariableIndex_i] as Int) * 2),
             AdaptiveClosure(this, emptyArray(), 1),
             this::adaptiveBuilder222
         )
@@ -179,7 +181,7 @@ class HigherOrderCall(
         fragment as HigherOrderFun
 
         if (adaptiveDirtyMask.isDirtyOf(stateVariableIndex_i)) {
-            fragment.j = i * 2
+            fragment.closure.setInt(fragment.stateVariableIndex_j, i * 2)
             fragment.adaptiveInvalidate0(fragment.stateVariableIndex_j)
         }
     }

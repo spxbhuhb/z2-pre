@@ -10,6 +10,7 @@ class AdaptivePlaceholder<BT>(
 
     override val adaptiveClosure: AdaptiveClosure<BT>? = null
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    override val adaptiveState: Array<Any?> = emptyArray()
 
     val bridge = adaptiveAdapter.createPlaceholder()
 

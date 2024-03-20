@@ -35,6 +35,8 @@ interface AdaptiveFragment<BT> {
 
     val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>
 
+    val adaptiveState: Array<Any?>
+
     fun adaptiveCreate()
     fun adaptiveMount(bridge: AdaptiveBridge<BT>)
     fun adaptivePatch()

@@ -11,7 +11,7 @@ abstract class AdaptiveTracingFragment<BT>(
     override val adaptiveAdapter: AdaptiveAdapter<BT>,
     override val adaptiveClosure: AdaptiveClosure<BT>?,
     override val adaptiveParent: AdaptiveFragment<BT>?,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>
+    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
 ) : AdaptiveFragment<BT> {
 
     val traceName = this::class.simpleName.toString()
@@ -48,12 +48,13 @@ class AdaptiveT0<BT>(
     adaptiveAdapter: AdaptiveAdapter<BT>,
     adaptiveClosure: AdaptiveClosure<BT>?,
     adaptiveParent: AdaptiveFragment<BT>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<BT>
+    adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveTracingFragment<BT>(
     adaptiveAdapter,
     adaptiveClosure,
     adaptiveParent,
-    adaptiveExternalPatch
+    adaptiveExternalPatch,
 )
 
 @Adaptive
@@ -67,13 +68,17 @@ class AdaptiveT1<BT>(
     adaptiveClosure: AdaptiveClosure<BT>?,
     adaptiveParent: AdaptiveFragment<BT>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    var p0: Int
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveTracingFragment<BT>(
     adaptiveAdapter,
     adaptiveClosure,
     adaptiveParent,
     adaptiveExternalPatch
 ) {
+
+    var p0 : Int
+        get() = adaptiveState[0] as Int
+        set(v) { adaptiveState[0] = v }
 
     val stateMask_p0: Int
         get() = 1
@@ -111,6 +116,7 @@ class AdaptiveH1(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
+    override val adaptiveState: Array<Any?>,
     @Adaptive val builder: (adaptiveAdapter: AdaptiveAdapter<TestNode>) -> AdaptiveFragment<TestNode>
 ) : AdaptiveC1(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
 
@@ -138,9 +144,13 @@ class AdaptiveH2(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    val i1: Int,
+    override val adaptiveState: Array<Any?>,
     @Adaptive builder: (parentScope: AdaptiveFragment<TestNode>) -> AdaptiveFragment<TestNode>
 ) : AdaptiveC1(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
+
+    var i1 : Int
+        get() = adaptiveState[0] as Int
+        set(v) { adaptiveState[0] = v }
 
     override val fragment0 = adaptiveBuilder111(this)
 
@@ -217,14 +227,18 @@ class AdaptiveEH1A(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    var p0: Int,
-    var eventHandler: (np0: Int) -> Unit,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveTracingFragment<TestNode>(
     adaptiveAdapter,
     adaptiveClosure,
     adaptiveParent,
     adaptiveExternalPatch
 ) {
+
+    var p0 : Int
+        get() = adaptiveState[0] as Int
+        set(v) { adaptiveState[0] = v }
+
 
     init {
         adaptiveAdapter.trace(traceName, "init", "p0:", p0)
@@ -263,14 +277,18 @@ class AdaptiveEH1B(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    var p0: Int,
-    var eventHandler: (np0: Int) -> Unit,
+    override val adaptiveState: Array<Any?>
 ) : AdaptiveTracingFragment<TestNode>(
     adaptiveAdapter,
     adaptiveClosure,
     adaptiveParent,
     adaptiveExternalPatch
 ) {
+
+    var p0 : Int
+        get() = adaptiveState[0] as Int
+        set(v) { adaptiveState[0] = v }
+
     init {
         adaptiveAdapter.trace(traceName, "init", "p0:", p0)
         if (adaptiveAdapter is AdaptiveTestAdapter) {
@@ -310,13 +328,18 @@ class AdaptiveRunOnMount(
     adaptiveClosure: AdaptiveClosure<TestNode>?,
     adaptiveParent: AdaptiveFragment<TestNode>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    var func: () -> Unit
+    override val adaptiveState: Array<Any?>,
 ) : AdaptiveTracingFragment<TestNode>(
     adaptiveAdapter,
     adaptiveClosure,
     adaptiveParent,
     adaptiveExternalPatch
 ) {
+
+    @Suppress("UNCHECKED_CAST")
+    var func : () -> Unit
+        get() = adaptiveState[0] as () -> Unit
+        set(v) { adaptiveState[0] = v }
 
     init {
         adaptiveAdapter.trace(traceName, "init")

@@ -12,6 +12,7 @@ class AdaptiveLoop<BT, IT>(
 ) : AdaptiveFragment<BT> {
 
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = { }
+    override val adaptiveState: Array<Any?> = emptyArray()
 
     var loopVariable: IT? = null
 
