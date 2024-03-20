@@ -37,6 +37,9 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitCall(statement: ArmCall) = visitElement(statement)
     override fun visitCall(statement: ArmCall, data: Nothing?) = visitCall(statement)
 
+    fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall) = visitElement(statement)
+    override fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall, data: Nothing?) = visitCallbackFunctionCall(statement)
+
     fun visitHigherOrderCall(statement: ArmHigherOrderCall) = visitElement(statement)
     override fun visitHigherOrderCall(statement: ArmHigherOrderCall, data: Nothing?) = visitHigherOrderCall(statement)
 
@@ -54,6 +57,9 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
 
     fun visitValueArgument(valueArgument: ArmValueArgument) = visitExpression(valueArgument)
     override fun visitValueArgument(valueArgument: ArmValueArgument, data: Nothing?) = visitValueArgument(valueArgument)
+
+    fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) = visitExpression(supportFunctionArgument)
+    override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument, data: Nothing?) = visitSupportFunctionArgument(supportFunctionArgument)
 
     fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument) = visitExpression(higherOrderArgument)
     override fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument, data: Nothing?) = visitHigherOrderArgument(higherOrderArgument)

@@ -6,7 +6,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
-class ArmValueArgument(
+open class ArmValueArgument(
     armClass: ArmClass,
     val index: Int,
     val value: IrExpression,

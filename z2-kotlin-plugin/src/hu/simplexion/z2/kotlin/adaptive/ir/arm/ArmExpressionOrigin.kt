@@ -5,6 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 enum class ArmExpressionOrigin {
     VALUE_ARGUMENT,
+    SUPPORT_FUNCTION_ARGUMENT,
     HIGHER_ORDER_ARGUMENT,
     BRANCH_CONDITION,
     BRANCH_RESULT,

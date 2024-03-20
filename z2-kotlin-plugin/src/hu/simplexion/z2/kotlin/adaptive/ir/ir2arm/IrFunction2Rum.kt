@@ -10,11 +10,12 @@ import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_I
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_INVALID_DECLARATION
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.RIU_IR_RENDERING_NON_ADAPTIVE_CALL
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
-import hu.simplexion.z2.kotlin.adaptive.ir.util.isParameterCall
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
+import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.psi.KtModifierListOwner
 
 /**
@@ -34,6 +35,7 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
  * - function call: [ArmCall]
  * - higher order function call: [ArmHigherOrderCall]
  * - parameter function call: [ArmParameterFunctionCall]
+ * - support function call: [ArmSupportFunctionCall]
  *
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
@@ -188,7 +190,7 @@ class IrFunction2Arm(
     // Call
     // ---------------------------------------------------------------------------
 
-    val IrCall.isHigherOrder: Boolean
+    val IrCall.isHigherOrderCall: Boolean
         get() {
             // TODO check if caching for higher order function symbols has positive impact on compilation performance
             // TODO default parameter values for higher order calls
@@ -201,13 +203,18 @@ class IrFunction2Arm(
             return false
         }
 
+    val IrCall.isParameterFunctionCall: Boolean
+        get() = dispatchReceiver.let { dr ->
+            dr is IrGetValue && dr.symbol.owner.annotations.any { it.type.asString() == Strings.ADAPTIVE_ANNOTATION }
+        }
+
     fun transformCall(statement: IrCall): ArmCall? {
 
         if (! statement.isAnnotatedWithAdaptive()) {
             return RIU_IR_RENDERING_NON_ADAPTIVE_CALL.report(armClass, statement)
         }
 
-        return if (statement.isHigherOrder) {
+        return if (statement.isHigherOrderCall) {
             transformHigherOrderCall(statement)
         } else {
             transformSimpleCall(statement)
@@ -216,7 +223,7 @@ class IrFunction2Arm(
 
     fun transformSimpleCall(statement: IrCall): ArmCall {
 
-        val armCall = if (statement.isParameterCall) {
+        val armCall = if (statement.isParameterFunctionCall) {
             ArmParameterFunctionCall(armClass, blockIndex, statement)
         } else {
             ArmCall(armClass, blockIndex, statement)
@@ -231,7 +238,11 @@ class IrFunction2Arm(
     }
 
     fun transformValueArgument(index: Int, expression: IrExpression): ArmExpression {
-        return ArmValueArgument(armClass, index, expression, expression.dependencies())
+        return if (expression.type.isFunction() && expression is IrFunctionExpression) {
+            ArmSupportFunctionArgument(armClass, index, expression, expression.dependencies())
+        } else {
+            ArmValueArgument(armClass, index, expression, expression.dependencies())
+        }
     }
 
     fun transformHigherOrderCall(irCall: IrCall): ArmHigherOrderCall {

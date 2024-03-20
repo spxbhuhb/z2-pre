@@ -8,12 +8,12 @@ The Z2 compiler plugin which transforms *original functions* into *component cla
 
 #### entry point
 
-A call to the `rui` function. The lambda passed to this call is a *root original function*.
+A call to the `adaptive` function. The lambda passed to this call is a *root original function*.
 
 ```kotlin
 fun main() {
     // the call below is the entry point
-    rui { // this lambda is the root original function
+    adaptive { // this lambda is the root original function
         Text("Hello World")
     }
 }
@@ -23,7 +23,7 @@ fun main() {
 
 #### original function
 
-A Kotlin function with the receiver `RUI`. These functions are transformed into *components classes* by the *compiler plugin*.
+A Kotlin function with the receiver `ADAPTIVE`. These functions are transformed into *components classes* by the *compiler plugin*.
 
 Types of original functions:
 
@@ -36,38 +36,38 @@ Types of original functions:
 
 An *original function* that is not a lambda.
 
-Name of the *component class* is `Rui<function-name>` where `<function-name>` is the capitalized name of the
+Name of the *component class* is `Adaptive<function-name>` where `<function-name>` is the capitalized name of the
 *named original function*.
 
 ```kotlin
-fun RUI.a(p1 : Int) { // transformed into class RuiA
+fun ADAPTIVE.a(p1 : Int) { // transformed into class AdaptiveA
     // ...
 }
 ```
 
 #### root original function
 
-An *original function* that is passed to the `rui` function at an *entry point*. The *compiler plugin* transforms
+An *original function* that is passed to the `adaptive` function at an *entry point*. The *compiler plugin* transforms
 the *root original function* into a *component class*.
 
-Name of the *component class* is `RuiRootFFFNNN` where `FFF` is the name of the source file (without the '.kt' extension) and
-`NNN` is the offset (number of characters in the source file) of lambda function. For example: `RuiRootHello342`.
+Name of the *component class* is `AdaptiveRootFFFNNN` where `FFF` is the name of the source file (without the '.kt' extension) and
+`NNN` is the offset (number of characters in the source file) of lambda function. For example: `AdaptiveRootHello342`.
 
 ```kotlin
 fun main() {
-    rui { 
+    adaptive { 
         // this lambda is the root original function
-        // transformed into RuiRootMain123
+        // transformed into AdaptiveRootMain123
     }
 }
 ```
 
 #### higher order original function
 
-A *named original function* that has a function type argument with `RUI` receiver.
+A *named original function* that has a function type argument with `ADAPTIVE` receiver.
 
 ```kotlin
-fun RUI.higherOrderFun(p1 : Int, builder : RUI.(sp1 : Int) -> Unit) { // transformed into class RuiHigherOrderFun
+fun ADAPTIVE.higherOrderFun(p1 : Int, builder : ADAPTIVE.(sp1 : Int) -> Unit) { // transformed into class AdaptiveHigherOrderFun
     builder(p1 * 2)
 }
 ```
@@ -77,14 +77,14 @@ fun RUI.higherOrderFun(p1 : Int, builder : RUI.(sp1 : Int) -> Unit) { // transfo
 A Kotlin lambda, passed as a parameter to a *higher order original function*. May have only *rendering statements*, may
 not have *initialization*.
 
-The compiler plugin **does not** transform *anonymous original functions* into classes. Instead, it uses the `RuiAnonymous`
+The compiler plugin **does not** transform *anonymous original functions* into classes. Instead, it uses the `AdaptiveAnonymous`
 class and all necessary functions will be put into the *component class* of the *named original function* in which
 the *anonymous original function* is declared.
 
 ```kotlin
-fun RUI.higherOrderCall() { // transformed into class RuiHigherOrderCall
+fun ADAPTIVE.higherOrderCall() { // transformed into class AdaptiveHigherOrderCall
     higherOrderFun(1) { // this is a call, so no class created here
-        // this lambda is the anonymous function, no class created, uses RuiAnonymous
+        // this lambda is the anonymous function, no class created, uses AdaptiveAnonymous
     }
 }
 ```
@@ -95,9 +95,9 @@ fun RUI.higherOrderCall() { // transformed into class RuiHigherOrderCall
 
 A *component class*:
 
-- extends `RuiFragment` 
+- extends `AdaptiveFragment` 
 - defines the *state variables* of the *component state*
-- may contain *builder* and *external patch* functions to build and patch the *rui tree*
+- may contain *builder* and *external patch* functions to build and patch the *adaptive tree*
 
 The compiler plugin generates *component classes* from:
 
@@ -110,13 +110,17 @@ A *component class* that belongs to a *root original function*.
 
 #### anonymous component class
 
-A *component class* that belongs to an *anonymous original function*. As of now this is always `RuiAnonymous`.
+A *component class* that belongs to an *anonymous original function*. As of now this is always `AdaptiveAnonymous`.
 This class does not contain any builder or external patch functions.
 
 #### structural class
 
-One of `RuiSequence`, `RuiSelect`, `RuiLoop` classes. Structural classes are stateless, they
+One of `AdaptiveSequence`, `AdaptiveSelect`, `AdaptiveLoop` classes. Structural classes are stateless, they
 use the *closure* they are defined in.
+
+#### bride component class
+
+A *component class* that manages the underlying UI.
 
 ### Instances
 
@@ -158,7 +162,7 @@ A set of *state variables*.
 // component state:
 //   p1 : Int - external state variable
 //   p2 : Int - internal state variable
-fun RUI.a(p1 : Int) {
+fun ADAPTIVE.a(p1 : Int) {
     var p2 = 1
 }
 ```
@@ -209,6 +213,6 @@ A bitmask that contains 1 for each *state variable* the given function call uses
 as is, used in a calculation of an argument value, used in the body of an *anonymous function*.
 This mask is used to decide if the *fragment* has to be patched or not.
 
-### rui fragment tree
+### adaptive fragment tree
 
-When the program runs, it builds a tree of *fragment* instances which is *rui fragment tree*.
+When the program runs, it builds a tree of *fragment* instances which is *adaptive fragment tree*.
