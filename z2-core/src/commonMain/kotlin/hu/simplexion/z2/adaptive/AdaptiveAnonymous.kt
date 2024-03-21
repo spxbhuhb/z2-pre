@@ -4,31 +4,31 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveAnonymous<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>,
-    override val adaptiveParent: AdaptiveFragment<BT>?,
+    override val adapter: AdaptiveAdapter<BT>,
+    override val closure: AdaptiveClosure<BT>,
+    override val parent: AdaptiveFragment<BT>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    override val adaptiveState: Array<Any?>
+    override val state: Array<Any?>
 ) : AdaptiveGeneratedFragment<BT> {
 
     override lateinit var containedFragment: AdaptiveFragment<BT>
 
-    val extendedClosure = adaptiveClosure.extendWith(this)
+    val extendedClosure = closure.extendWith(this)
 
     /**
      * Invalidate a state variable of this *anonymous component instance*.
      *
-     * @param  stateVariableIndex  The index of the state variable in [adaptiveState]. It shall not take
+     * @param  stateVariableIndex  The index of the state variable in [state]. It shall not take
      *                             [adaptiveClosure] into account, it is relative to `this`.
      */
     fun adaptiveInvalidate(stateVariableIndex: Int) {
-        extendedClosure.invalidate(adaptiveClosure.closureSize + stateVariableIndex)
+        extendedClosure.invalidate(closure.closureSize + stateVariableIndex)
     }
 
-    override fun adaptivePatch() {
-        extendedClosure.copyFrom(adaptiveClosure)
+    override fun adaptiveInternalPatch() {
+        extendedClosure.copyFrom(closure)
         containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptivePatch()
+        containedFragment.adaptiveInternalPatch()
         extendedClosure.clear()
     }
 

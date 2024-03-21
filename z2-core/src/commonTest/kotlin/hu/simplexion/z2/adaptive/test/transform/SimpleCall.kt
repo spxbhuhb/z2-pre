@@ -11,9 +11,9 @@ import hu.simplexion.z2.adaptive.testing.AdaptiveT1
  * ```
  */
 class SimpleCall<BT : AdaptiveFragment<BT>>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>?,
-    override val adaptiveParent: AdaptiveFragment<BT>?,
+    override val adapter: AdaptiveAdapter<BT>,
+    override val closure: AdaptiveClosure<BT>?,
+    override val parent: AdaptiveFragment<BT>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
     var i: Int
 ) : AdaptiveGeneratedFragment<BT> {
@@ -28,7 +28,7 @@ class SimpleCall<BT : AdaptiveFragment<BT>>(
         adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
         adaptiveDirty0 = 0L
     }
@@ -41,7 +41,7 @@ class SimpleCall<BT : AdaptiveFragment<BT>>(
         get() = stateMask_i
 
     fun adaptiveBuilder123(parent: AdaptiveFragment<BT>): AdaptiveFragment<BT> {
-        return AdaptiveT1(adaptiveAdapter, null, parent, this::adaptiveExternalPatch123, i*2)
+        return AdaptiveT1(adapter, null, parent, this::adaptiveExternalPatch123, i*2)
     }
 
     fun adaptiveExternalPatch123(it : AdaptiveFragment<BT>) {

@@ -17,30 +17,30 @@ interface AdaptiveGeneratedFragment<BT> : AdaptiveFragment<BT> {
      * - a structural fragment such as block, when or a loop
      * - direct call to another adaptive function
      *
-     * Set to [AdaptiveFragment.adaptiveClosure] by the initializer of the class
+     * Set to [AdaptiveFragment.closure] by the initializer of the class
      * that implements [AdaptiveGeneratedFragment].
      */
     val containedFragment: AdaptiveFragment<BT>
 
     override fun adaptiveCreate() {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "create")
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "create")
         containedFragment.adaptiveCreate()
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "mount", "bridge", bridge)
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "mount", "bridge", bridge)
         containedFragment.adaptiveMount(bridge)
     }
 
     // do not override adaptivePatch, it should be generated in all cases
 
     override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "unmount", "bridge", bridge)
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "unmount", "bridge", bridge)
         containedFragment.adaptiveUnmount(bridge)
     }
 
     override fun adaptiveDispose() {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace(this::class.simpleName ?: "<generated>", "dispose")
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "dispose")
         containedFragment.adaptiveDispose()
     }
 

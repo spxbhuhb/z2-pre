@@ -4,58 +4,47 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveSequence<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>?,
-    override val adaptiveParent: AdaptiveFragment<BT>,
-) : AdaptiveFragment<BT> {
+    override val adapter: AdaptiveAdapter<BT>,
+    override val closure: AdaptiveClosure<BT>?,
+    override val parent: AdaptiveFragment<BT>,
+    override val index: Int,
+    vararg val childIndices: Array<Int>
+) : AdaptiveStructuralFragment<BT> {
 
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
-    override val adaptiveState: Array<Any?> = emptyArray()
+    override val state: Array<Any?> = emptyArray()
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 
-    init {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "init")
-    }
-
-    fun add(fragment : AdaptiveFragment<BT>) {
-        fragments += fragment
-    }
-
     override fun adaptiveCreate() {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "create")
-        for (i in fragments.indices) {
-            fragments[i].adaptiveCreate()
-        }
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "create")
+
+        fragments.forEach { it.adaptiveCreate() }
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "mount", "bridge:", bridge)
-        for (i in fragments.indices) {
-            fragments[i].adaptiveMount(bridge)
-        }
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "mount", "bridge:", bridge)
+        fragments.forEach { it.adaptiveMount(bridge) }
     }
 
-    override fun adaptivePatch() {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "patch")
-        for (fragment in fragments) {
-            fragment.adaptiveExternalPatch(fragment)
-            fragment.adaptivePatch()
-        }
+    override fun adaptiveExternalPatch() {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "adaptiveExternalPatch")
+        fragments.forEach { it.adaptiveExternalPatch() }
+    }
+
+    override fun adaptiveInternalPatch() {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "adaptiveInternalPatch")
+        fragments.forEach { it.adaptiveInternalPatch() }
     }
 
     override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "unmount", "bridge:", bridge)
-        for (i in fragments.indices) {
-            fragments[i].adaptiveUnmount(bridge)
-        }
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "unmount", "bridge:", bridge)
+        fragments.forEach { it.adaptiveUnmount(bridge) }
     }
 
     override fun adaptiveDispose() {
-        if (adaptiveAdapter.trace) adaptiveAdapter.trace("AdaptiveSequence", "dispose")
-        for (i in fragments.indices) {
-            fragments[i].adaptiveDispose()
-        }
+        if (adapter.trace) adapter.trace("AdaptiveSequence", "dispose")
+        fragments.forEach { it.adaptiveDispose() }
     }
+
 
 }

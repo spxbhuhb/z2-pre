@@ -4,15 +4,15 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptivePlaceholder<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveParent: AdaptiveFragment<BT>,
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>,
 ) : AdaptiveFragment<BT> {
 
-    override val adaptiveClosure: AdaptiveClosure<BT>? = null
+    override val closure: AdaptiveClosure<BT>? = null
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
-    override val adaptiveState: Array<Any?> = emptyArray()
+    override val state: Array<Any?> = emptyArray()
 
-    val bridge = adaptiveAdapter.createPlaceholder()
+    val bridge = adapter.createPlaceholder()
 
     override fun adaptiveCreate() {
 
@@ -22,7 +22,7 @@ class AdaptivePlaceholder<BT>(
         bridge.add(this.bridge)
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
 
     }
 

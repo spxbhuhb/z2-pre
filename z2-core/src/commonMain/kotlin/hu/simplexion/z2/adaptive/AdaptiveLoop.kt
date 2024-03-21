@@ -4,15 +4,15 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveLoop<BT, IT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>?,
-    override val adaptiveParent: AdaptiveFragment<BT>,
+    override val adapter: AdaptiveAdapter<BT>,
+    override val closure: AdaptiveClosure<BT>,
+    override val parent: AdaptiveFragment<BT>,
     val makeIterator: () -> Iterator<IT>,
     val makeFragment: (parent : AdaptiveFragment<BT>) -> AdaptiveFragment<BT>
 ) : AdaptiveFragment<BT> {
 
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = { }
-    override val adaptiveState: Array<Any?> = emptyArray()
+    override val state: Array<Any?> = emptyArray()
 
     var loopVariable: IT? = null
 
@@ -28,7 +28,7 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        placeholder = adaptiveAdapter.createPlaceholder()
+        placeholder = adapter.createPlaceholder()
         bridge.add(placeholder)
 
         for (fragment in fragments) {
@@ -36,7 +36,7 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         var index = 0
         for (loopVariable in makeIterator()) {
             this.loopVariable = loopVariable
@@ -48,7 +48,7 @@ class AdaptiveLoop<BT, IT>(
             } else {
                 fragments[index].also {
                     it.adaptiveExternalPatch(it)
-                    it.adaptivePatch()
+                    it.adaptiveInternalPatch()
                 }
             }
             index ++

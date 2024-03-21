@@ -14,7 +14,7 @@ import org.w3c.dom.Node
  * is a good example.
  */
 abstract class LeafNode(
-    override val adaptiveAdapter: AdaptiveAdapter<Node>,
+    override val adapter: AdaptiveAdapter<Node>,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
 ) : AdaptiveFragment<Node>, AdaptiveBridge<Node> {
 

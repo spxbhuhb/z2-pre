@@ -19,7 +19,7 @@ fun Button(title: String, onClick: () -> Unit) {
 @AdaptivePublicApi
 class AdaptiveButton(
     adaptiveAdapter: AdaptiveAdapter<Node>,
-    override val adaptiveParent: AdaptiveFragment<Node>?,
+    override val parent: AdaptiveFragment<Node>?,
     adaptiveScope: AdaptiveFragment<Node>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
     var label: String,
@@ -30,7 +30,7 @@ class AdaptiveButton(
 
     var adaptiveDirty0 = 0L
 
-    override val adaptiveClosure: AdaptiveClosure<Node>?
+    override val closure: AdaptiveClosure<Node>?
         get() = TODO("Not yet implemented")
 
     @AdaptivePublicApi
@@ -43,7 +43,7 @@ class AdaptiveButton(
         receiver.onclick = onClick
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.innerText = label
         }

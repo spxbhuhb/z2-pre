@@ -12,11 +12,11 @@ import hu.simplexion.z2.adaptive.testing.TestNode
  * }
  */
 class HigherOrderFun(
-    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?,
+    override val adapter: AdaptiveAdapter<TestNode>,
+    override val closure: AdaptiveClosure<TestNode>?,
+    override val parent: AdaptiveFragment<TestNode>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val adaptiveState: Array<Any?>,
+    override val state: Array<Any?>,
 
     // the two
     val closure: AdaptiveClosure<TestNode>,
@@ -32,9 +32,9 @@ class HigherOrderFun(
         adaptiveDirtyMask.invalidate(statVariableIndex)
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptivePatch()
+        containedFragment.adaptiveInternalPatch()
         adaptiveDirtyMask.clear()
     }
 
@@ -47,8 +47,8 @@ class HigherOrderFun(
 
     fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         val tmp = AdaptiveSequence(
-            adaptiveAdapter,
-            parent.adaptiveClosure,
+            adapter,
+            parent.closure,
             parent,
         )
 
@@ -69,7 +69,7 @@ class HigherOrderFun(
         get() = 0
 
     fun adaptiveBuilder222(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch222, emptyArray())
+        return AdaptiveT0(adapter, parent.closure, this, this::adaptiveExternalPatch222, emptyArray())
     }
 
     fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {
@@ -93,11 +93,11 @@ class HigherOrderFun(
 
     fun adaptiveBuilder333(parent: AdaptiveFragment<TestNode>?): AdaptiveFragment<TestNode> {
         return AdaptiveAnonymous(
-            adaptiveAdapter,
+            adapter,
             closure,
             parent,
             this::adaptiveExternalPatch333,
-            arrayOf((adaptiveState[stateVariableIndex_j] as Int) + 3)
+            arrayOf((state[stateVariableIndex_j] as Int) + 3)
         ).also { paramFun(it) }
     }
 
@@ -107,7 +107,7 @@ class HigherOrderFun(
         fragment as AdaptiveAnonymous<TestNode>
 
         if (adaptiveDirtyMask.isDirtyOf(stateVariableIndex_j)) {
-            fragment.adaptiveState[stateVariableIndex_333_0] = j + 3
+            fragment.state[stateVariableIndex_333_0] = j + 3
             fragment.adaptiveInvalidate(stateVariableIndex_333_0)
         }
     }
@@ -124,9 +124,9 @@ class HigherOrderFun(
  * ```
  */
 class HigherOrderCall(
-    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>,
-    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adapter: AdaptiveAdapter<TestNode>,
+    override val parent: AdaptiveFragment<TestNode>,
+    override val closure: AdaptiveClosure<TestNode>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
     var i: Int
 ) : AdaptiveGeneratedFragment<TestNode> {
@@ -143,9 +143,9 @@ class HigherOrderCall(
         adaptiveDirtyMask.invalidate(stateVariableIndex)
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptivePatch()
+        containedFragment.adaptiveInternalPatch()
         adaptiveDirtyMask.clear()
     }
 
@@ -165,11 +165,11 @@ class HigherOrderCall(
 
     fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
         return HigherOrderFun(
-            adaptiveAdapter,
+            adapter,
             null, // direct calls remove the current closure
             parent,
             this::adaptiveExternalPatch111,
-            arrayOf((adaptiveState[stateVariableIndex_i] as Int) * 2),
+            arrayOf((state[stateVariableIndex_i] as Int) * 2),
             AdaptiveClosure(this, emptyArray(), 1),
             this::adaptiveBuilder222
         )
@@ -200,11 +200,11 @@ class HigherOrderCall(
     }
 
     fun adaptiveGetValue_222_p(closure: AdaptiveClosure<TestNode>): Int =
-        closure.anonymousScopes[scopeIndex_222].adaptiveState[scopeVariableIndex_222_p] as Int
+        closure.anonymousScopes[scopeIndex_222].state[scopeVariableIndex_222_p] as Int
 
     fun adaptiveBuilder222(parent: AdaptiveAnonymous<TestNode>): AdaptiveFragment<TestNode> {
         val tmp = AdaptiveSequence(
-            adaptiveAdapter,
+            adapter,
             parent.extendedClosure,
             parent
         )
@@ -217,7 +217,7 @@ class HigherOrderCall(
 
     fun adaptiveExternalPatch222(fragment: AdaptiveFragment<TestNode>) {
         fragment as AdaptiveSequence
-        fragment.adaptivePatch()
+        fragment.adaptiveInternalPatch()
     }
 
     // ----  T0 call site 333 --------
@@ -225,7 +225,7 @@ class HigherOrderCall(
     val callSiteDependencyMask333 = AdaptiveStateVariableMask(0)
 
     fun adaptiveBuilder333(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, parent.adaptiveClosure, this, this::adaptiveExternalPatch333)
+        return AdaptiveT0(adapter, parent.closure, this, this::adaptiveExternalPatch333)
     }
 
     fun adaptiveExternalPatch333(fragment: AdaptiveFragment<TestNode>) {
@@ -261,10 +261,10 @@ class HigherOrderCall(
      */
     fun adaptiveBuilder444(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
 
-        val closure = parent.adaptiveClosure !!
+        val closure = parent.closure !!
 
         return AdaptiveT1(
-            adaptiveAdapter,
+            adapter,
             null, // direct calls remove the current closure
             this,
             this::adaptiveExternalPatch444,
@@ -273,7 +273,7 @@ class HigherOrderCall(
     }
 
     fun adaptiveExternalPatch444(fragment: AdaptiveFragment<TestNode>) {
-        val closure = fragment.adaptiveClosure ?: return
+        val closure = fragment.closure ?: return
         if (closure.isClearOf(callSiteDependencyMask_444)) return
 
         fragment as AdaptiveT1

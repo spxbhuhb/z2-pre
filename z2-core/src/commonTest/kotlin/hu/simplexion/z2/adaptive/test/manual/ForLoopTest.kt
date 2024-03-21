@@ -30,11 +30,11 @@ class ForLoopTest {
 
 @Suppress("unused")
 class ForLoop(
-    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?,
-    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adapter: AdaptiveAdapter<TestNode>,
+    override val parent: AdaptiveFragment<TestNode>?,
+    override val closure: AdaptiveClosure<TestNode>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val adaptiveState: Array<Any?>
+    override val state: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
 
     override val containedFragment: AdaptiveFragment<TestNode>
@@ -55,22 +55,22 @@ class ForLoop(
         }
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
     }
 
     fun adaptiveIterator0() = IntRange(0, 10).iterator()
 
     fun adaptiveBuilderT1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0))
+        return AdaptiveT1(adapter, null, parent, ::adaptiveEp1, arrayOf(v0))
     }
 
     fun adaptiveBuilderT0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, null, this, { }, emptyArray())
+        return AdaptiveT0(adapter, null, this, { }, emptyArray())
     }
 
     fun adaptiveBuilder0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        val tmp = AdaptiveSequence(adaptiveAdapter, null, parent)
+        val tmp = AdaptiveSequence(adapter, null, parent)
 
         tmp.add(adaptiveBuilderT1(tmp))
         tmp.add(adaptiveBuilderT0(tmp))
@@ -80,7 +80,7 @@ class ForLoop(
 
     init {
         containedFragment = AdaptiveLoop(
-            adaptiveAdapter,
+            adapter,
             null,
             this,
             ::adaptiveIterator0,

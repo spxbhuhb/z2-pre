@@ -45,10 +45,10 @@ class BlockTest {
 
 @Suppress("unused")
 class Block(
-    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?,
-    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
-    override val adaptiveState: Array<Any?>
+    override val adapter: AdaptiveAdapter<TestNode>,
+    override val parent: AdaptiveFragment<TestNode>?,
+    override val closure: AdaptiveClosure<TestNode>?,
+    override val state: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
 
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode> = { }
@@ -60,7 +60,7 @@ class Block(
     var adaptiveDirty0 = 0L
 
     init {
-        adaptiveAdapter.trace("Block", "init")
+        adapter.trace("Block", "init")
     }
 
     fun adaptiveInvalidate0(mask: Long) {
@@ -75,21 +75,21 @@ class Block(
         }
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
         adaptiveDirty0 = 0L
     }
 
     fun adaptiveBuilderT1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0))
+        return AdaptiveT1(adapter, null, parent, ::adaptiveEp1, arrayOf(v0))
     }
 
     fun adaptiveBuilderT0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        return AdaptiveT0(adaptiveAdapter, null, this, {}, emptyArray())
+        return AdaptiveT0(adapter, null, this, {}, emptyArray())
     }
 
     fun adaptiveBuilderSequence(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> {
-        val tmp = AdaptiveSequence(adaptiveAdapter, null, parent)
+        val tmp = AdaptiveSequence(adapter, null, parent)
 
         tmp.add(adaptiveBuilderT1(tmp))
         tmp.add(adaptiveBuilderT0(tmp))

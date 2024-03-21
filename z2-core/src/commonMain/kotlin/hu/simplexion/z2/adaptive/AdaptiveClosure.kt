@@ -10,10 +10,10 @@ class AdaptiveClosure<BT>(
     val closureSize: Int
 ) {
     var adaptiveDirty0 = AdaptiveStateVariableMask(closureSize)
-    var declarationScopeSize = declarationScope.adaptiveState.size
+    var declarationScopeSize = declarationScope.state.size
 
     fun extendWith(scope: AdaptiveAnonymous<BT>): AdaptiveClosure<BT> {
-        return AdaptiveClosure(declarationScope, anonymousScopes + scope, closureSize + scope.adaptiveState.size)
+        return AdaptiveClosure(declarationScope, anonymousScopes + scope, closureSize + scope.state.size)
     }
 
     fun clear() = adaptiveDirty0.clear()
@@ -36,7 +36,7 @@ class AdaptiveClosure<BT>(
      */
     fun get(stateVariableIndex: Int): Any? {
         if (stateVariableIndex < declarationScopeSize) {
-            return declarationScope.adaptiveState[stateVariableIndex]
+            return declarationScope.state[stateVariableIndex]
         }
 
         // indices : 0 1 / 2 / 3 4 5 6 (declaration, anonymous 1, ANONYMOUS-2)
@@ -49,7 +49,7 @@ class AdaptiveClosure<BT>(
         for (anonymousScope in anonymousScopes) {
             val extendedClosureSize = anonymousScope.extendedClosure.closureSize
             if (extendedClosureSize > stateVariableIndex) {
-                return anonymousScope.adaptiveState[stateVariableIndex - (extendedClosureSize - anonymousScope.adaptiveState.size)]
+                return anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)]
             }
         }
 
@@ -62,12 +62,12 @@ class AdaptiveClosure<BT>(
      */
     fun set(stateVariableIndex: Int, value: Any?) {
         if (stateVariableIndex < declarationScopeSize) {
-            declarationScope.adaptiveState[stateVariableIndex] = value
+            declarationScope.state[stateVariableIndex] = value
         } else {
             for (anonymousScope in anonymousScopes) {
                 val extendedClosureSize = anonymousScope.extendedClosure.closureSize
                 if (extendedClosureSize > stateVariableIndex) {
-                    anonymousScope.adaptiveState[stateVariableIndex - (extendedClosureSize - anonymousScope.adaptiveState.size)] = value
+                    anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)] = value
                 }
             }
         }

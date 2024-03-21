@@ -26,7 +26,7 @@ class BranchTest {
             fun v(value: Int) {
                 v0 = value
                 adaptiveInvalidate0(1)
-                adaptivePatch()
+                adaptiveInternalPatch()
             }
 
             v(1)
@@ -78,11 +78,11 @@ class BranchTest {
 
 @Suppress("unused")
 class Branch(
-    override val adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    override val adaptiveParent: AdaptiveFragment<TestNode>?,
-    override val adaptiveClosure: AdaptiveClosure<TestNode>?,
+    override val adapter: AdaptiveAdapter<TestNode>,
+    override val parent: AdaptiveFragment<TestNode>?,
+    override val closure: AdaptiveClosure<TestNode>?,
     override val adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val adaptiveState: Array<Any?>
+    override val state: Array<Any?>
 ) : AdaptiveGeneratedFragment<TestNode> {
 
     override val containedFragment: AdaptiveFragment<TestNode>
@@ -92,7 +92,7 @@ class Branch(
     var adaptiveDirty0 = 0L
 
     init {
-        adaptiveAdapter.trace("Branch", "init")
+        adapter.trace("Branch", "init")
     }
 
     fun adaptiveInvalidate0(mask: Long) {
@@ -115,19 +115,19 @@ class Branch(
         }
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptivePatch()
+        containedFragment.adaptiveInternalPatch()
     }
 
     fun adaptiveBuilder0(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
-        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp0, arrayOf(v0 + 10))
+        AdaptiveT1(adapter, null, parent, ::adaptiveEp0, arrayOf(v0 + 10))
 
     fun adaptiveBuilder1(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
-        AdaptiveT1(adaptiveAdapter, null, parent, ::adaptiveEp1, arrayOf(v0 + 20))
+        AdaptiveT1(adapter, null, parent, ::adaptiveEp1, arrayOf(v0 + 20))
 
     fun adaptiveBuilder2(parent: AdaptiveFragment<TestNode>): AdaptiveFragment<TestNode> =
-        AdaptivePlaceholder(adaptiveAdapter, parent)
+        AdaptivePlaceholder(adapter, parent)
 
     /**
      * The return of select us passed to the factory function.
@@ -153,7 +153,7 @@ class Branch(
 
     init {
         containedFragment = AdaptiveWhen(
-            adaptiveAdapter,
+            adapter,
             null,
             this,
             ::adaptiveExternalPatchSelect,

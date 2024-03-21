@@ -16,8 +16,8 @@ fun Text(content: String) {
 @AdaptivePublicApi
 class AdaptiveText(
     adaptiveAdapter: AdaptiveAdapter<Node>,
-    override val adaptiveClosure: AdaptiveClosure<Node>?,
-    override val adaptiveParent: AdaptiveFragment<Node>?,
+    override val closure: AdaptiveClosure<Node>?,
+    override val parent: AdaptiveFragment<Node>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
     var content: String,
 ) : LeafNode(adaptiveAdapter, adaptiveExternalPatch) {
@@ -35,7 +35,7 @@ class AdaptiveText(
         receiver.data = content
     }
 
-    override fun adaptivePatch() {
+    override fun adaptiveInternalPatch() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.data = content
         }
