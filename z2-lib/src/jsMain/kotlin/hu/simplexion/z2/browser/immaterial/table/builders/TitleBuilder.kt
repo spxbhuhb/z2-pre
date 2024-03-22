@@ -1,14 +1,14 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
+import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.browserStrings
-import hu.simplexion.z2.browser.css.alignSelfCenter
-import hu.simplexion.z2.browser.css.gridGap16
-import hu.simplexion.z2.browser.css.titleLarge
-import hu.simplexion.z2.browser.css.whiteSpaceNoWrap
-import hu.simplexion.z2.browser.html.*
+import hu.simplexion.z2.browser.css.*
+import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.browser.html.div
+import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.table.Table
 import hu.simplexion.z2.browser.material.button.textButton
-import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
 
@@ -29,20 +29,14 @@ class TitleBuilder<T> {
 
     fun build(table: Table<T>): Z2 =
         with(table) {
-            grid {
-                gridTemplateRows = "60px"
-                gridTemplateColumns = "1fr min-content"
+            grid("1fr min-content", "48px") {
+                style.minHeight = 48.px
 
-                grid(gridGap16) {
-                    gridTemplateColumns = "min-content min-content"
-                    gridTemplateRows = "min-content"
-
-                    div(alignSelfCenter, titleLarge, whiteSpaceNoWrap, *textClasses) {
-                        text { text.localeCapitalized }
-                    }
+                div(alignSelfCenter, titleLarge, whiteSpaceNoWrap, pb12, pl8, *textClasses) {
+                    text { text.localeCapitalized }
                 }
 
-                grid {
+                grid(alignSelfCenter, pb12) {
                     for (action in actions) {
                         textButton(action.label) { action.handler() }
                     }

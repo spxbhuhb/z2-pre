@@ -32,7 +32,7 @@ class Table<T>(
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
-    arrayOf("table-outer-container".css),
+    tableOuterContainerStyles,
     null
 ) {
 
@@ -140,6 +140,9 @@ class Table<T>(
         }
 
         configuration.titleBuilder?.build(this)
+
+        gridTemplateRows = if (configuration.title) "min-content 1fr" else "1fr"
+        gridTemplateColumns = "1fr"
 
         div("table-content-container".css) {
             contentContainer = this
