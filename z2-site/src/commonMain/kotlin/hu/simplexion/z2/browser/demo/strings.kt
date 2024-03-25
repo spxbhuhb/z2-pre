@@ -43,6 +43,7 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val click = static("Click")
     val switch = static("Switch")
     val table = static("Table")
+    val schematicTable = static("Schematic Table")
     val container = static("Container")
     val decimal = static("decimal")
     val datepicker = static("Date Picker")

@@ -19,7 +19,7 @@ fun <T> Z2.tablePage(builder: TableBuilder<T>.() -> Unit) =
         }
     }
 
-class Row(
+private class Row(
     val v1: String,
     val v2: Int
 )
@@ -33,6 +33,7 @@ fun Z2.tableDemo() =
 
         title {
             text = strings.tableTitle
+            searchable = true
             action(strings.addAccount) { }
         }
 
@@ -46,7 +47,8 @@ fun Z2.tableDemo() =
         column {
             label = strings.headerA
             render = { text { it.v1 } }
-            comparator = { a, b -> a.v2.compareTo(b.v2) }
+            comparator = { a, b -> a.v1.compareTo(b.v1) }
+            filter = { row, filter -> filter in row.v1 }
             initialSize = 10.em
         }
 
@@ -54,6 +56,7 @@ fun Z2.tableDemo() =
             label = strings.headerB
             render = { text { it.v2 } }
             comparator = { a, b -> a.v2.compareTo(b.v2) }
+            filter = { row, filter -> filter in row.v2.toString() }
         }
 
     }

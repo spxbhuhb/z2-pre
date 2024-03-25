@@ -55,6 +55,7 @@ class Table<T>(
     var traceScroll = false
     var traceColumnResize = false
     var traceMultiLevel = false
+    var traceMatch = false
 
     var firstOnResume = true
 

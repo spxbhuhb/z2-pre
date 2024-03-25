@@ -22,6 +22,7 @@ import hu.simplexion.z2.browser.demo.pages.loginDemo
 import hu.simplexion.z2.browser.demo.routing.routingRouter
 import hu.simplexion.z2.browser.demo.search.searchDemo
 import hu.simplexion.z2.browser.demo.strings
+import hu.simplexion.z2.browser.demo.table.schematicTableDemo
 import hu.simplexion.z2.browser.demo.table.tableDemo
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.Content
@@ -103,11 +104,11 @@ object componentRouter : NavRouter(loggedIn = false) {
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
     val table            by render(strings.table)            { tableDemo() }
+    val schematicTable   by render(strings.schematicTable)   { schematicTableDemo() }
     val timepicker       by render(strings.timepicker)       { timepickerDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }
     // @formatter:on
 }
-
 
 @Suppress("unused")
 object adaptiveRouter : NavRouter(loggedIn = false) {

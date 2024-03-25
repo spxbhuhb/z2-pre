@@ -23,7 +23,6 @@ import hu.simplexion.z2.schematic.schema.field.stereotype.NullablePhoneNumberSch
 import hu.simplexion.z2.schematic.schema.field.stereotype.PhoneNumberSchemaField
 import kotlinx.datetime.Instant
 
-
 /**
  * An input for the schematic field accessed by [accessor]. The actual input depends on
  * the type of the field.
@@ -42,9 +41,11 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
 
         SchemaFieldType.Boolean ->
             column {
+                val filterText = schematicLabel.value.lowercase()
                 label = schematicLabel
                 render = { schematic -> if (field.booleanValue(schematic) == true) icon(browserIcons.check) }
                 comparator = { a, b -> compare(field.booleanValue(a), field.booleanValue(b)) }
+                filter = { schematic, filter -> field.booleanValue(schematic) == true && filter in filterText }
             }
 
         SchemaFieldType.Decimal ->
@@ -56,6 +57,9 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                     text { field.decimalValue(schematic)?.toDecimalString(field.scale) }
                 }
                 comparator = { a, b -> compare(field.decimalValue(a), field.decimalValue(b)) }
+                filter = { schematic, filter ->
+                    field.decimalValue(schematic)?.toDecimalString(field.scale)?.let { filter in it } ?: false
+                }
                 initialSize = 10.em
             }
 
@@ -64,6 +68,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.durationValue(schematic) } }
                 comparator = { a, b -> compare(field.durationValue(a), field.durationValue(b)) }
+                filter =
+                    { schematic, filter -> field.durationValue(schematic)?.toString()?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.Email ->
@@ -71,6 +77,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.emailValue(schematic) } }
                 comparator = { a, b -> compare(field.emailValue(a), field.emailValue(b)) }
+                filter = { schematic, filter -> field.emailValue(schematic)?.let { filter in it } ?: false }
+
             }
 
         SchemaFieldType.Enum ->
@@ -78,6 +86,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.enumValue(schematic)?.localized } }
                 comparator = { a, b -> compare(field.enumValue(a)?.localized, field.enumValue(b)?.localized) }
+                filter = { schematic, filter -> field.enumValue(schematic)?.localized?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.Instant ->
@@ -89,6 +98,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                     }
                 }
                 comparator = { a, b -> compare(field.instantValue(a), field.instantValue(b)) }
+                filter =
+                    { schematic, filter -> field.instantValue(schematic)?.localized?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.Int ->
@@ -99,6 +110,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                     text { field.intValue(schematic)?.localized }
                 }
                 comparator = { a, b -> compare(field.intValue(a), field.intValue(b)) }
+                filter = { schematic, filter -> field.intValue(schematic)?.localized?.let { filter in it } ?: false }
                 initialSize = 10.em
             }
 
@@ -107,6 +119,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.localDateValue(schematic)?.localized } }
                 comparator = { a, b -> compare(field.localDateValue(a), field.localDateValue(b)) }
+                filter =
+                    { schematic, filter -> field.localDateValue(schematic)?.localized?.let { filter in it } ?: false }
                 initialSize = 7.em
             }
 
@@ -115,6 +129,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.localDateTimeValue(schematic)?.localized } }
                 comparator = { a, b -> compare(field.localDateTimeValue(a), field.localDateTimeValue(b)) }
+                filter =
+                    { schematic, filter -> field.localDateValue(schematic)?.localized?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.LocalTime ->
@@ -122,6 +138,8 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.localTimeValue(schematic) } }
                 comparator = { a, b -> compare(field.localTimeValue(a), field.localTimeValue(b)) }
+                filter =
+                    { schematic, filter -> field.localTimeValue(schematic)?.toString()?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.Long ->
@@ -132,6 +150,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                     text { field.longValue(schematic)?.localized }
                 }
                 comparator = { a, b -> compare(field.longValue(a), field.longValue(b)) }
+                filter = { schematic, filter -> field.longValue(schematic)?.localized?.let { filter in it } ?: false }
                 initialSize = 10.em
             }
 
@@ -140,6 +159,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.phoneValue(schematic) } }
                 comparator = { a, b -> compare(field.phoneValue(a), field.phoneValue(b)) }
+                filter = { schematic, filter -> field.phoneValue(schematic)?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.Secret ->
@@ -154,6 +174,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.stringValue(schematic) } }
                 comparator = { a, b -> compare(field.stringValue(a), field.stringValue(b)) }
+                filter = { schematic, filter -> field.stringValue(schematic)?.let { filter in it } ?: false }
             }
 
         SchemaFieldType.UUID ->
@@ -161,6 +182,7 @@ fun <T : Schematic<T>> TableBuilder<T>.schematicColumn(
                 label = schematicLabel
                 render = { schematic -> text { field.uuidValue(schematic) } }
                 comparator = { a, b -> compare(field.uuidValue(a), field.uuidValue(b)) }
+                filter = { schematic, filter -> field.uuidValue(schematic)?.toString()?.let { filter in it } ?: false }
             }
 
         else -> throw NotImplementedError("schema field type ${field.type} not implemented in schematicColumn")

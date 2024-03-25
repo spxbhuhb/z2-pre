@@ -9,6 +9,9 @@ import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 
+fun Z2.textField(builder: TextField.() -> Unit) =
+    textField(TextField { builder() })
+
 fun Z2.textField(field: TextField) =
     (adaptiveImplFactories[field.fieldConfig.impl] !!.new(this) as AbstractTextImpl).also {
         it.field = field

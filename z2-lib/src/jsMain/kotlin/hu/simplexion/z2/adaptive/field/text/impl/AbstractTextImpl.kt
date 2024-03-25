@@ -1,6 +1,7 @@
 package hu.simplexion.z2.adaptive.field.text.impl
 
 import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.adaptive.event.AnonymousEventListener
 import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.EnterKeyEvent
@@ -70,6 +71,14 @@ abstract class AbstractTextImpl(
             is SchematicEvent -> patch()
             is RequestBlurEvent -> inputElement.blur()
         }
+    }
+
+    // ---- Support --------------------------------------------------------------
+
+    infix fun attach(handler: (value: String) -> Unit) {
+        val listener = AnonymousEventListener(fieldValue.schematicHandle) { handler(fieldValue.value) }
+        fieldValue.attach(listener)
+        listeners += listener
     }
 
     // ---- Main Container --------------------------------------------------------------

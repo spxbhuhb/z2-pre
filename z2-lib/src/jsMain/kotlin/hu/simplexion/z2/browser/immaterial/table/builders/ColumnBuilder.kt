@@ -14,6 +14,7 @@ open class ColumnBuilder<T> {
     var labelBuilder: Z2Builder = { text { label } }
     var render: Z2.(row: T) -> Unit = { }
     var comparator: (T, T) -> Int = { _, _ -> 0 }
+    var filter: (T, String) -> Boolean = { _, _ -> true }
     var initialSize = "1fr"
     var exportable = true
     var exportHeader: LocalizedText? = null
@@ -21,7 +22,18 @@ open class ColumnBuilder<T> {
     var fieldType : SchemaField<*>? = null
 
     open fun toColumn(table: Table<T>): TableColumn<T> =
-        TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader, exportFun, fieldType)
+        TableColumn(
+            table,
+            labelBuilder,
+            render,
+            comparator,
+            filter,
+            initialSize,
+            exportable,
+            exportHeader,
+            exportFun,
+            fieldType
+        )
 
     infix fun label(value: LocalizedText): ColumnBuilder<T> {
         label = value
