@@ -1,9 +1,8 @@
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.auth.model.Role
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.util.UUID
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -11,7 +10,7 @@ abstract class Router<R>(
     override val label: LocalizedText? = null,
     override val icon: LocalizedIcon? = null,
     override val loggedIn : Boolean = true,
-    override val roles : List<UUID<Role>> = emptyList()
+    override var visibility: ((target: RoutingTarget<R>) -> Boolean)? = null
 ) : RoutingTarget<R> {
 
     override var parent: Router<R>? = null
@@ -81,20 +80,20 @@ abstract class Router<R>(
         label: LocalizedText? = null,
         icon: LocalizedIcon? = null,
         loggedIn: Boolean = false,
-        roles: List<UUID<Role>> = emptyList(),
+        visibility: ((target: RoutingTarget<R>) -> Boolean)? = null,
         actionFun: () -> Unit
     ): RoutedAction<R> {
-        return RoutedAction(label, icon, loggedIn, roles, actionFun)
+        return RoutedAction(label, icon, loggedIn, visibility, actionFun)
     }
 
     open fun render(
         label: LocalizedText? = null,
         icon: LocalizedIcon? = null,
         loggedIn: Boolean = false,
-        roles: List<UUID<Role>> = emptyList(),
+        visibility: ((target: RoutingTarget<R>) -> Boolean)? = null,
         renderFun: R.() -> Unit
     ): RoutedRenderer<R> {
-        return RoutedRenderer(label, icon, loggedIn, roles, renderFun)
+        return RoutedRenderer(label, icon, loggedIn, visibility, renderFun)
     }
 
     class ParameterDelegate<R,T>(

@@ -31,9 +31,9 @@ fun Z2.tableDemo() =
             Row("s-$it", it)
         }
 
-        title {
+        header {
             text = strings.tableTitle
-            searchable = true
+            search = true
             action(strings.addAccount) { }
         }
 

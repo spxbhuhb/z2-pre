@@ -1,23 +1,21 @@
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.layout.Content.defaultLayout
 import hu.simplexion.z2.browser.material.navigation.navigationDrawer
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
-import hu.simplexion.z2.util.UUID
 
 open class NavRouter(
     label: LocalizedText? = null,
     icon: LocalizedIcon? = null,
     loggedIn : Boolean = true,
-    roles : List<UUID<Role>> = emptyList(),
+    visibility: ((target: RoutingTarget<Z2>) -> Boolean)? = null,
     open var useParentNav: Boolean = false,
     open var default : Z2Builder = {  }
 ) : Router<Z2>(
-    label, icon, loggedIn, roles
+    label, icon, loggedIn, visibility
 ) {
 
     open var nav: Z2Builder = {
@@ -34,10 +32,10 @@ open class NavRouter(
         label: LocalizedText?,
         icon: LocalizedIcon?,
         loggedIn: Boolean,
-        roles: List<UUID<Role>>,
+        visibility: ((target: RoutingTarget<Z2>) -> Boolean)?,
         renderFun: Z2Builder
     ): RoutedRenderer<Z2> {
-        return super.render(label, icon, loggedIn, roles) { defaultLayout(this@NavRouter, nav, renderFun) }
+        return super.render(label, icon, loggedIn, visibility) { defaultLayout(this@NavRouter, nav, renderFun) }
     }
 
     override fun default(receiver: Z2, path: List<String>) {

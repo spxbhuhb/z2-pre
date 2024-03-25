@@ -1,10 +1,11 @@
 package hu.simplexion.z2.browser.material.button
 
+import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.labelLarge
+import hu.simplexion.z2.browser.css.minWidthAuto
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.onClick
 import hu.simplexion.z2.browser.html.onMouseDown
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.util.localLaunch
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -33,7 +34,7 @@ open class LaunchButton(
 
     init {
 
-        addCss(labelLarge)
+        addCss(labelLarge, minWidthAuto)
 
         onClick {
             if (isDisabled) return@onClick

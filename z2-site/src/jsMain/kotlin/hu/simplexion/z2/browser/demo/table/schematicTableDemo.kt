@@ -21,9 +21,9 @@ fun Z2.schematicTableDemo() =
             }
         }
 
-        title {
+        header {
             text = strings.tableTitle
-            searchable = true
+            search = true
             action(strings.addAccount) { }
         }
 

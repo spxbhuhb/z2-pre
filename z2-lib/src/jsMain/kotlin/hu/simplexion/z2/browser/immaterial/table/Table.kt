@@ -140,9 +140,9 @@ class Table<T>(
             tableBuilder.state?.let { setData(it.value) }
         }
 
-        configuration.titleBuilder?.build(this)
+        configuration.headerBuilder?.build(this)
 
-        gridTemplateRows = if (configuration.title) "min-content 1fr" else "1fr"
+        gridTemplateRows = if (configuration.header) "min-content 1fr" else "1fr"
         gridTemplateColumns = "1fr"
 
         div("table-content-container".css) {

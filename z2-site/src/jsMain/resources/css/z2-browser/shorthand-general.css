@@ -31,6 +31,22 @@
 .flex-direction-column { flex-direction: column; }
 .flex-direction-row { flex-direction: row; }
 .flex-wrap-wrap {flex-wrap: wrap;}
+
+.gap-16 {
+    gap: 16px;
+}
+
+.gap-24 {
+    gap: 24px;
+}
+
+.gap-32 {
+    gap: 32px;
+}
+
+.gap-8 {
+    gap: 8px;
+}
 .grid-auto-columns-min-content { grid-auto-columns: min-content; }
 .grid-auto-flow-column { grid-auto-flow: column; }
 .grid-auto-flow-row { grid-auto-flow: row; }
@@ -63,6 +79,10 @@
 .mb-24 { margin-bottom: 24px; }
 .mb-4 { margin-bottom: 4px; }
 .mb-8 { margin-bottom: 8px; }
+
+.min-width-auto {
+    min-width: auto;
+}
 .min-width-0 { min-width: 0; }
 .min-width-140 { min-width: 140px; }
 .mr-24 {margin-right: 24px;}

@@ -14,7 +14,7 @@ open class ColumnBuilder<T> {
     var labelBuilder: Z2Builder = { text { label } }
     var render: Z2.(row: T) -> Unit = { }
     var comparator: (T, T) -> Int = { _, _ -> 0 }
-    var filter: (T, String) -> Boolean = { _, _ -> true }
+    var filter: (T, String) -> Boolean = { _, _ -> false }
     var initialSize = "1fr"
     var exportable = true
     var exportHeader: LocalizedText? = null

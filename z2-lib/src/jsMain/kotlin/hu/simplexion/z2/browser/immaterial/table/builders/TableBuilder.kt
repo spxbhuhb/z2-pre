@@ -19,9 +19,9 @@ open class TableBuilder<T>(
 
     var rowId: ((row : T) -> Any)? = null
 
-    open fun title(builder : TitleBuilder<T>.() -> Unit) {
-        title = true
-        titleBuilder = TitleBuilder<T>().apply(builder)
+    open fun header(builder: HeaderBuilder<T>.() -> Unit) {
+        header = true
+        headerBuilder = HeaderBuilder<T>().apply(builder)
     }
 
     open fun column(builder : ColumnBuilder<T>.() -> Unit) : ColumnBuilder<T> {

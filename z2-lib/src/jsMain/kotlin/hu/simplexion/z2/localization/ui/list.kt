@@ -19,7 +19,7 @@ internal fun Z2.list() =
 
             table<Locale> {
 
-                title {
+                header {
                     text = baseStrings.languages
                     action(baseStrings.addLocale) { add() }
                 }
