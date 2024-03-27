@@ -11,7 +11,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
 
     val traceName = this::class.simpleName.toString()
 
-    override val dirtyMask = 0
+    override var dirtyMask = 0
 
     override val createClosure : AdaptiveClosure<BT>?
         get() = parent?.thisClosure

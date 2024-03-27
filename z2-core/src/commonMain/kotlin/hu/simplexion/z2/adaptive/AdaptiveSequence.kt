@@ -14,7 +14,7 @@ class AdaptiveSequence<BT>(
     // 0 : Array<Int>, the indices of sequence items
     override val state = arrayOfNulls<Any?>(1)
 
-    override val dirtyMask: Int = 0
+    override var dirtyMask = 0
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 

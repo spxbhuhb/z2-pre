@@ -106,4 +106,12 @@ class AdaptiveClosure<BT>(
     fun getFromLast(variableIndex : Int) : Any? =
         components.last().state[variableIndex]
 
+    fun closureMask(): Int {
+        var mask = 0
+        for (component in components) {
+            mask = mask or component.dirtyMask
+        }
+        return mask
+    }
+
 }

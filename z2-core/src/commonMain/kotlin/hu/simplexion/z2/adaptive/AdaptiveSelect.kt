@@ -16,7 +16,7 @@ class AdaptiveSelect<BT>(
     // 0: The branch to show
     override val state = arrayOfNulls<Any>(1)
 
-    override val dirtyMask: Int = 0
+    override var dirtyMask: Int = 0
 
     val stateBranch
         get() = state[0] as Int

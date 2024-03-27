@@ -20,7 +20,7 @@ interface AdaptiveFragment<BT> {
 
     val state: Array<Any?>
 
-    val dirtyMask : Int
+    var dirtyMask : Int
 
     // functions that support the descendants of this fragment
 
@@ -38,11 +38,20 @@ interface AdaptiveFragment<BT> {
     fun unmount(bridge: AdaptiveBridge<BT>)
     fun dispose()
 
+    // state access functions
+
     fun getClosureVariableFromLast(variableIndex : Int) : Any? =
         checkNotNull(createClosure).getFromLast(variableIndex)
 
     fun getClosureVariable(variableIndex : Int) : Any? =
         checkNotNull(createClosure).get(variableIndex)
+
+    fun set(index : Int, value : Any?) {
+        state[index] = value
+        dirtyMask = dirtyMask or (1 shl index)
+    }
+
+    // utility functions
 
     fun invalidIndex(index: Int) : Nothing {
         throw IllegalStateException("invalid index: $index")

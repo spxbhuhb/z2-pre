@@ -50,7 +50,8 @@ class SelectTest {
         }
 
         assertEquals(
-            "OK", AdaptiveTestAdapter.assert(
+            adapter.actual(),
+            adapter.expected(
                 listOf(
                     TraceEvent("SelectTestComponent", 2, "create"),
                     TraceEvent("AdaptiveSelect", 3, "create"),
@@ -79,7 +80,7 @@ class SelectTest {
 
                     TraceEvent("SelectTestComponent", 2, "patch"),
                     TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "2", "stateBranch:", "2"),
-                    TraceEvent("AdaptiveT1", 7, "patch", "dirtyMask:", "0", "p0:", "21"),
+                    TraceEvent("AdaptiveT1", 7, "patch", "dirtyMask:", "1", "p0:", "21"),
 
                     TraceEvent("SelectTestComponent", 2, "patch"),
                     TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "2", "stateBranch:", "-1"),
@@ -101,8 +102,12 @@ class SelectTestComponent(
     var v0: Int
         get() = state[0] as Int
         set(v) {
-            state[0] = v
+            set(0, v)
         }
+
+    val closureMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
+    val closureMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
+    val closureMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
@@ -118,24 +123,39 @@ class SelectTestComponent(
     }
 
     override fun patch(fragment: AdaptiveFragment<TestNode>) {
+
+        val closureMask = fragment.createClosure?.closureMask() ?: 0
+
         when (fragment.index) {
             0 -> {
-                // if (thisClosure.isDirtyOf(closureMask_v0)) {
-                fragment.state[0] = when {
-                    v0 == 0 -> - 1
-                    v0 % 2 == 0 -> 1
-                    else -> 2
+                if (closureMask and closureMask_0_0 != 0) {
+                    fragment.set(
+                        0,
+                        when {
+                            v0 == 0 -> - 1
+                            v0 % 2 == 0 -> 1
+                            else -> 2
+                        }
+                    )
                 }
             }
 
             1 -> {
-                // if (thisClosure.isDirtyOf(closureMask_v0)) {
-                fragment.state[0] = v0 + 10
+                if (closureMask and closureMask_1_0 != 0) {
+                    fragment.set(
+                        0,
+                        v0 + 10
+                    )
+                }
             }
 
             2 -> {
-                // if (thisClosure.isDirtyOf(closureMask_v0)) {
-                fragment.state[0] = v0 + 20
+                if (closureMask and closureMask_2_0 != 0) {
+                    fragment.set(
+                        0,
+                        v0 + 20
+                    )
+                }
             }
         }
     }

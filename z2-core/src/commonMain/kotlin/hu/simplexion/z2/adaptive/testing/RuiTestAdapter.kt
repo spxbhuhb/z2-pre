@@ -40,11 +40,23 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
             else -> this.toString()
         }
 
+    fun actual(): String =
+        traceEvents.joinToString("\n")
+
+    fun expected(expected: List<TraceEvent>) : String =
+        expected.joinToString("\n")
+
     companion object {
         // Unit tests use this property when they run the generated fragment.
         // The trace of the last created adapter is here, unit tests should
         // clear this field before running the generated code.
         var lastTrace: MutableList<TraceEvent> = mutableListOf()
+
+        fun actual(): String =
+            lastTrace.joinToString("\n")
+
+        fun expected(expected: List<TraceEvent>) : String =
+            expected.joinToString("\n")
 
         fun assert(expected: List<TraceEvent>): String {
             return if (expected == lastTrace) {

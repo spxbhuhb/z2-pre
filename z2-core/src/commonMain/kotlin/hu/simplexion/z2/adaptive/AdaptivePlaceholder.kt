@@ -15,8 +15,9 @@ class AdaptivePlaceholder<BT>(
 
     override val state: Array<Any?> = emptyArray()
 
-    override val dirtyMask: Int
+    override var dirtyMask: Int
         get() = shouldNotRun()
+        set(v) { shouldNotRun()  }
 
     val bridge = adapter.createPlaceholder()
 
