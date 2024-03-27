@@ -1,3 +1,12 @@
+## Adapters
+
+Each entry point has an adapter instance which implements the
+[AdaptiveAdapter](/z2-core/src/commonMain/kotlin/hu/simplexion/z2/adaptive/AdaptiveAdapter.kt)
+interface. These instances act as the starting point for the binding between the components and the underlying UI.
+
+Adapters define the type [bridge](#bridge) components use. For browsers, it can be a DOM Node, for JVM
+it might be Android View.
+
 ## Bridge
 
 The bridge connects Adaptive fragments with their representation in the underlying
@@ -8,18 +17,18 @@ state into an actual UI state.
 The `BT` type parameter of the bridge is a type in the underlying UI, typically
 ancestor of all UI elements, such as `Node` in HTML or `View` in Android.
 
-`adaptiveMount` and `adaptiveUnmount` functions get the bridge of the parent fragment
+`mount` and `unmount` functions get the bridge of the parent fragment
 and use `add` and `remove` methods to add and remove themselves. Some bridges
 also implement the `replace` method which makes it possible to replace a
 fragment with another in place. This is used by `if` and `when`.
 
-### Bridge dependent and bridge independent fragments
+### Bridge Dependent And bridge Independent Fragments
 
 A bridge independent fragment is one that does not depend on the actual type
 its bridge uses. On the other hand, a bridge dependent fragment is one
 that uses the bridge in some very specific manner.
 
-For example `AdaptiveBlock` is a bridge independent fragment. It does not care
+For example `AdaptiveSequence` is a bridge independent fragment. It does not care
 about what goes on, it just has a few children, and they will handle the
 bridging themselves.
 
@@ -30,11 +39,11 @@ own way to add constant text to the UI. In browsers for example you use
 Bridge independent fragments use type parameter for the bridge receiver type:
 
 ```kotlin
-open class AdaptiveBlock<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    vararg val fragments: AdaptiveFragment<BT>
+open class AdaptiveSequence<BT>(
+    override val adapter: AdaptiveAdapter<BT>,
+    /* ... */
 ) : AdaptiveFragment<BT> {
-    // ...
+    /* ... */
 }
 ```
 

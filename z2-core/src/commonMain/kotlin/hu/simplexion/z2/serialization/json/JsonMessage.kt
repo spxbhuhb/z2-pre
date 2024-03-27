@@ -122,8 +122,8 @@ class JsonMessage(
     fun <T> instance(fieldName: String, decoder: JsonDecoder<T>): T =
         decoder.decodeJson(get(fieldName))
 
-    fun <T> instanceOrNull(fieldName: String, nullfieldName: String, decoder: JsonDecoder<T>): T? =
-        getOrNull(nullfieldName)?.let { decoder.decodeJson(it) }
+    fun <T> instanceOrNull(fieldName: String, decoder: JsonDecoder<T>): T? =
+        getOrNull(fieldName)?.let { decoder.decodeJson(it) }
 
     fun <T> instanceList(fieldName: String, decoder: JsonDecoder<T>): List<T> =
         requireNotNull(instanceListOrNull(fieldName, decoder)) { "missing or null instance" }

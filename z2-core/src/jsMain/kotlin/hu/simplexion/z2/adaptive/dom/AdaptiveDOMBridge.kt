@@ -4,7 +4,6 @@
 package hu.simplexion.z2.adaptive.dom
 
 import hu.simplexion.z2.adaptive.AdaptiveBridge
-import hu.simplexion.z2.adaptive.AdaptivePublicApi
 import org.w3c.dom.Node
 
 /**

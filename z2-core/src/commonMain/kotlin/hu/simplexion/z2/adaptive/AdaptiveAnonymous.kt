@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive
 
@@ -32,23 +32,6 @@ class AdaptiveAnonymous<BT>(
         if (adapter.trace) adapter.trace("AdaptiveAnonymous", id, "create")
         createClosure.owner.patch(this)
         containedFragment = factory.build(this)
-    }
-
-    /**
-     * Invalidate a state variable of this *anonymous component instance*.
-     *
-     * @param  stateVariableIndex  The index of the state variable in [state]. It shall not take
-     *                             [adaptiveClosure] into account, it is relative to `this`.
-     */
-    fun adaptiveInvalidate(stateVariableIndex: Int) {
-        thisClosure.invalidate(createClosure.closureSize + stateVariableIndex)
-    }
-
-    override fun patch() {
-        // thisClosure.copyFrom(createClosure)
-        // containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.patch()
-        // thisClosure.clear()
     }
 
 }

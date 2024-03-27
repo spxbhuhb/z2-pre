@@ -1,70 +1,37 @@
 **DISCLAIMER**
 
-Rui is in a **proof-of-concept** phase. The examples below should work
+Adaptive is in a **proof-of-concept** phase. The examples below should work
 but changes may result in horrendous compilation error messages. Here there be monsters!
 
-To get started with Rui you need a project to work with. Two simple ways to
-get one:
+To get started with Adaptive you need a KMP project. Create a new multiplatform project with IDEA and
+add the dependencies as described in the [Z2 README](/README.md).
 
-* check out the [Example Project](https://github.com/spxbhuhb/rui-example)
-* create a new multiplatform project with IDEA and
-  * [add the Gradle plugin dependency](../README.md#dependencies)
-  * [add the runtime dependency](../README.md#dependencies)
-
-The best place to start experimenting with Rui is `src/jsMain/kotlin/main.kt`:
+Start experimenting with Adaptive by editing `src/jsMain/kotlin/main.kt`:
 
 ```kotlin
-import hu.simplexion.rui.runtime.dom.RuiDOMAdapter
-import hu.simplexion.rui.runtime.dom.html.Button
-import hu.simplexion.rui.runtime.dom.html.Text
-import hu.simplexion.rui.runtime.rui
+import hu.simplexion.z2.adaptive.dom.RuiDOMAdapter
+import hu.simplexion.z2.adaptive.dom.html.Button
+import hu.simplexion.z2.adaptive.dom.html.Text
+import hu.simplexion.z2.adaptive.adaptive
 
 fun main() {
-  rui(RuiDOMAdapter()) {
-    var counter = 0
-    Button("Counter: $counter") { counter++ }
-    Text("You've clicked $counter times.")
-  }
+    adaptive {
+        var counter = 0
+        filledButton { "Counter: $counter" } onClick { counter++ }
+        text { "You've clicked $counter times." }
+    }
 }
 ```
-
-On JVM you can use `RuiTestAdapter`.
-
-```kotlin
-import hu.simplexion.rui.runtime.rui
-import hu.simplexion.rui.runtime.testing.RuiTestAdapter
-import hu.simplexion.rui.runtime.testing.T1
-
-fun main() {
-  rui(RuiTestAdapter()) {
-    T1(12)
-  }
-}
-```
-
-## Running
-
-You can use `jsBrowserRun` of the example project. It shows a web page with a functioning
-Rui button.
-
-## Adapters
-
-Adapters link Rui components with the underlying UI implementation. For browsers, it can be DOM or Canvas, for JVM
-it might be Swing or Android view based.
-
-- `RuiDOMAdapter` is an adapter for web browser DOM.
-- `RuiTestAdapter` is an adapter for testing, can be used on any platform.
 
 ## Basics: Components
 
-The basic building blocks of a Rui application are components. The
-following code defines the "HelloWorld" component which simply displays the
+The basic building blocks of an Adaptive application are components. The
+following code defines the "helloWorld" component which simply displays the
 text "Hello World!".
 
 ```kotlin
-@Rui
-fun HelloWorld() {
-  Text("Hello World!")
+fun Adaptive.helloWorld() {
+    text { "Hello World!" }
 }
 ```
 
@@ -74,12 +41,12 @@ You can try and add this component to the `main` function.
 
 ```kotlin
 fun main() {
-  rui(RuiDOMAdapter()) {
-    var counter = 0
-    HelloWorld()
-    Button("Counter: $counter") { counter++ }
-    Text("You've clicked $counter times.")
-  }
+    adaptive {
+        var counter = 0
+        helloWorld()
+        filledButton { "Counter: $counter" } onClick { counter++ }
+        text { "You've clicked $counter times." }
+    }
 }
 ```
 
@@ -92,10 +59,9 @@ Defined variables are part of the component state, and they are *reactive by def
 We call these *internal state variables*.
 
 ```kotlin
-@Rui
-fun Counter() {
+fun Adaptive.counter() {
     var counter = 0
-    Button { "Click count: $counter" } onClick { counter++ }
+    filledButton { "Click count: $counter" } onClick { counter++ }
 }
 ```
 
@@ -113,16 +79,15 @@ the component. However, it may happen that the parameter changes
 on the outside. In that case the component updates the UI automatically.
 
 ```kotlin
-@Rui
-fun Counter(label: String) {
+fun Adaptive.counter(label: String) {
     var counter = 0
-    Button { "$label: $counter" } onClick { counter++ }
+    filledButton { "$label: $counter" } onClick { counter++ }
 }
 ```
 
 ## Basics: Boundary
 
-Rui components have two main areas: *state initialization* and *rendering*.
+Adaptive components have two main areas: *state initialization* and *rendering*.
 These are separated by the *boundary*.
 
 Above the boundary, you initialize the component state. This is a one-time
@@ -135,61 +100,57 @@ is executed whenever the state changes.
 *rendering* (except in event handlers, see later). This is a design decision we've
 made to avoid confusion. The compiler will report an error if you try to do so.
 
-Rui automatically finds the *boundary*: the first call to another Rui component
+Adaptive automatically finds the *boundary*: the first call to another Adaptive component
 function marks the *boundary*.
 
 ```kotlin
-@Rui
-fun Counter() {
+fun Adaptive.counter() {
     var counter = 0
     // ---- boundary ----
-    Button { "Click count: $counter" } onClick { counter++ }
+    filledButton { "Click count: $counter" } onClick { counter++ }
 }
 ```
 
-## Basics: Event Handlers
+## Basics: Support Functions
 
-*Event handlers* are functions called when something happens: user input,
+*Support functions* are functions called when something happens: user input,
 completion of a launched co-routine etc.
 
-Event handlers may change state variables and these changes result in a UI update.
+Support functions may change state variables and these changes result in a UI update.
 
-You can define event handlers as local functions or as lambdas. Rui recognizes
+You can define support functions as local functions or as lambdas. Adaptive recognizes
 when a block changes a state variable and automatically updates the UI.
 
 The handlers in this example are equivalent. Note that whichever button you
 click, labels of all show the new counter value.
 
 ```kotlin
-@Rui
-fun Counter() {
+fun Adaptive.counter() {
     var counter = 0
 
     fun increment() {
         counter++
     }
 
-    Button { "Click count: $counter" } onClick ::increment
-    Button { "Click count: $counter" } onClick { counter++ }
+    filledButton { "Click count: $counter" } onClick ::increment
+    filledButton { "Click count: $counter" } onClick { counter++ }
 }
 ```
 
-## Basics: Nesting
+## Basics: Higher Order Components
 
 Components may contain other components, letting you build complex UI
 structures. When `counter` of the parent component changes the child
 automatically updates the child component.
 
 ```kotlin
-@Rui
-fun Child(counter: Int) {
-    Text("Click count: $counter")
+fun Adaptive.child(counter: Int) {
+    text { "Click count: $counter" }
 }
 
-@Rui
-fun Parent() {
+fun Adaptive.parent() {
     var counter = 0
-    Child(counter) onClick { counter++ }
+    child(counter) onClick { counter++ }
 }
 ```
 
@@ -198,35 +159,35 @@ fun Parent() {
 You can use the standard Kotlin `if` and `when` to decide what to display.
 
 ```kotlin
-@Rui
-fun Counter() {
+fun Adaptive.counter() {
     var count = 0
-    Button { "click count: $count" } onClick { count++ }
+    filledButton { "click count: $count" } onClick { count++ }
     if (count < 3) {
-        Text("(click count is less than 3)")
+        text { "(click count is less than 3)" }
     }
 }
 ```
 
 ```kotlin
-@Rui
-fun Counter() {
-  var count = 0
-  when (count) {
-    1 -> Text("click count: 1")
-    2 -> Text("click count: 2")
-    else -> Text("click count > 2")
-  }
-  Button { "click to increment" } onClick { count++ }
+fun Adaptive.counter() {
+    var count = 0
+    
+    when (count) {
+        1 -> text { "click count: 1" }
+        2 -> text { "click count: 2" }
+        else -> text { "click count > 2" }
+    }
+    
+    filledButton { "click to increment" } onClick { count++ }
 }
 ```
 
-## Everthing Else...
+## Basics: For Loops
 
-...is to be written.
-
-I have actual plans for `for` lops and higher order functions. See  (not 100% up to date):
-
-* [Internals](./Internals.md) for some ideas
-* [TestForLoop](../rui-runtime/src/commonTest/kotlin/hu/simplexion/rui/runtime/test/manual/TestForLoop.kt)
-* [TestForLoop](../rui-runtime/src/commonTest/kotlin/hu/simplexion/rui/runtime/test/manual/TestHigherOrder.kt)
+```kotlin
+fun Adaptive.list() {
+    for (i in 0..3) {
+        text { "list item: $i" }
+    }
+}
+```

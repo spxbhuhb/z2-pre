@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 @file:Suppress("FunctionName")
 
@@ -50,9 +50,8 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
 
 }
 
-@Adaptive
-@Suppress("unused", "FunctionName")
-fun T0() {
+@Suppress("unused", "FunctionName", "UnusedReceiverParameter")
+fun Adaptive.T0() {
 }
 
 @Suppress("unused")
@@ -70,9 +69,10 @@ class AdaptiveT0<BT>(
 
 }
 
-@Adaptive
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
-fun T1(p0: Int) {
+
+@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
+fun Adaptive.T1(p0: Int) {
+
 }
 
 @Suppress("unused")
@@ -95,13 +95,6 @@ class AdaptiveT1<BT>(
     val stateMask_p0: Int
         get() = 1
 
-    var adaptiveDirtyMask = AdaptiveStateVariableMask(1)
-
-    fun adaptiveInvalidate0(stateVariableIndex: Int) {
-        adapter.trace(traceName, id, "invalidate", "stateVariableIndex:", stateVariableIndex, "adaptiveDirty0:", adaptiveDirtyMask)
-        adaptiveDirtyMask.invalidate(stateVariableIndex)
-    }
-
     override fun create() {
         createClosure?.owner?.patch(this)
         adapter.trace(traceName, id, "create", "p0:", p0)
@@ -114,8 +107,7 @@ class AdaptiveT1<BT>(
 }
 
 @Suppress("unused")
-@Adaptive
-fun H1(@Adaptive builder: () -> Unit) {
+fun Adaptive.H1(builder: Adaptive.() -> Unit) {
     builder()
 }
 
@@ -185,8 +177,7 @@ class AdaptiveH1<BT>(
 }
 
 @Suppress("unused")
-@Adaptive
-fun H2(i1: Int, @Adaptive builder: (i2: Int) -> Unit) {
+fun Adaptive.H2(i1: Int, builder: Adaptive.(i2: Int) -> Unit) {
     builder(i1 + 2)
 }
 
@@ -268,9 +259,8 @@ class AdaptiveH2<BT>(
 }
 
 
-@Adaptive
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
-fun EH1A(p0: Int, eventHandler: (np0: Int) -> Unit) {
+@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
+fun Adaptive.EH1A(p0: Int, eventHandler: (np0: Int) -> Unit) {
 }
 
 @Suppress("unused")
@@ -295,16 +285,14 @@ class AdaptiveEH1A<BT>(
         get() = state[1] as AdaptiveSupportFunction<BT>
         set(v) { state[1] = v }
 
-    val adaptiveDirtyMask = AdaptiveStateVariableMask(2)
-
     override fun patch() {
-        adapter.trace(traceName, id, "patch", "adaptiveDirty0:", adaptiveDirtyMask, "p0:", p0)
+        adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
 
         if (p0 % 2 == 0) {
             eventHandler.invoke(p0)
         }
 
-        adaptiveDirtyMask.clear()
+        dirtyMask = 0
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive
 
@@ -8,7 +8,6 @@ package hu.simplexion.z2.adaptive
  * This interface may define functions the generated fragments use, so
  * we do not have to code them in IR.
  */
-@AdaptivePublicApi
 abstract class AdaptiveGeneratedFragment<BT>(
     final override val adapter: AdaptiveAdapter<BT>,
     stateSize : Int

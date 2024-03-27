@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
 package hu.simplexion.z2.adaptive
 
 /**
@@ -11,8 +14,6 @@ class AdaptiveClosure<BT>(
     val owner
         get() = components[0]
 
-    var adaptiveDirty0 = AdaptiveStateVariableMask(closureSize)
-
     var declarationScopeSize = owner.state.size
 
     /**
@@ -21,7 +22,7 @@ class AdaptiveClosure<BT>(
      *
      * Anonymous components use this function to find their declaring closure and extend it with themselves.
      */
-    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent : AdaptiveFragment<BT>): AdaptiveClosure<BT> {
+    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent: AdaptiveFragment<BT>): AdaptiveClosure<BT> {
         var ancestor = component.parent
 
         while (ancestor != null && ancestor.thisClosure.owner !== declaringComponent) {
@@ -32,21 +33,10 @@ class AdaptiveClosure<BT>(
 
         val declaringClosure = ancestor.thisClosure
 
-        return AdaptiveClosure(declaringClosure.components + component, declaringClosure.closureSize + component.state.size)
-    }
-
-    fun clear() = adaptiveDirty0.clear()
-
-    fun isClearOf(mask: AdaptiveStateVariableMask) = adaptiveDirty0.isClearOf(mask)
-
-    fun isDirtyOf(mask: AdaptiveStateVariableMask) = adaptiveDirty0.isDirtyOf(mask)
-
-    fun copyFrom(other: AdaptiveClosure<BT>) {
-        adaptiveDirty0.copyFrom(other.adaptiveDirty0)
-    }
-
-    fun invalidate(stateVariableIndex: Int) {
-        adaptiveDirty0.invalidate(stateVariableIndex)
+        return AdaptiveClosure(
+            declaringClosure.components + component,
+            declaringClosure.closureSize + component.state.size
+        )
     }
 
     /**
@@ -75,41 +65,42 @@ class AdaptiveClosure<BT>(
         throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
     }
 
-    fun getBoolean(stateVariableIndex: Int) : Boolean = get(stateVariableIndex) as Boolean
-    fun getInt(stateVariableIndex: Int) : Int = get(stateVariableIndex) as Int
-    fun getLong(stateVariableIndex: Int) : Long = get(stateVariableIndex) as Long
-    fun getFloat(stateVariableIndex: Int) : Float = get(stateVariableIndex) as Float
-    fun getDouble(stateVariableIndex: Int) : Double = get(stateVariableIndex) as Double
-    fun getString(stateVariableIndex: Int) : String = get(stateVariableIndex) as String
-
     /**
      * Set a state variable by its index in the closure. Walks over the scopes in the
      * closure to find the state and then sets the variable of that state.
      */
     fun set(stateVariableIndex: Int, value: Any?) {
         if (stateVariableIndex < declarationScopeSize) {
-            owner.state[stateVariableIndex] = value
-        } else {
-            for (anonymousScope in components) {
-                val extendedClosureSize = anonymousScope.thisClosure.closureSize
-                if (extendedClosureSize > stateVariableIndex) {
-                    anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)] = value
-                }
-            }
+            owner.set(stateVariableIndex, value)
+            return
         }
 
-        invalidate(stateVariableIndex)
+        for (anonymousScope in components) {
+            val extendedClosureSize = anonymousScope.thisClosure.closureSize
+            if (extendedClosureSize > stateVariableIndex) {
+                anonymousScope.set(stateVariableIndex - (extendedClosureSize - anonymousScope.state.size), value)
+                return
+            }
+        }
 
         throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
     }
 
-    fun getFromLast(variableIndex : Int) : Any? =
+    /**
+     * Get a state variable from the last component in [components].
+     */
+    fun getFromLast(variableIndex: Int): Any? =
         components.last().state[variableIndex]
 
+    /**
+     * Calculate the complete closure mask (or of components masks).
+     */
     fun closureMask(): Int {
         var mask = 0
+        var position = 0
         for (component in components) {
-            mask = mask or component.dirtyMask
+            mask = mask or (component.dirtyMask shl position)
+            position += component.state.size
         }
         return mask
     }

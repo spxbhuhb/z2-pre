@@ -18,11 +18,56 @@ package hu.simplexion.z2.gradle
 
 import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
+import org.gradle.api.provider.Property
+import java.nio.file.Path
 
 /**
  * Settings for the Z2 Counter compiler plugin.
  */
-open class Z2GradleExtension(objects: ObjectFactory)
+open class Z2GradleExtension(objects: ObjectFactory) {
+    /**
+     * ```
+     * Category: Debug of generated code
+     * ```
+     *
+     * When `true` the plugin adds trace to the generated code. These traces contains all Adaptive related
+     * function calls and state variable changes. See the troubleshooting section of the documentation for
+     * more information.
+     * ```
+     *
+     * Default: `false`
+     */
+    val adaptiveTrace: Property<Boolean> = objects.property(Boolean::class.java).also { it.set(false) }
+
+    /**
+     * ```
+     * Category: Plugin development/troubleshooting
+     * ```
+     *
+     * When `true` the plugin generates output into [pluginLogDir]
+     * ```
+     *
+     * Default: `false`
+     */
+    val pluginDebug: Property<Boolean> = objects.property(Boolean::class.java).also { it.set(false) }
+
+    /**
+     * ```
+     * Category: Plugin development/troubleshooting
+     * ```
+     *
+     * When [pluginDebug] is true the plugin saves logs into this directory. Each run creates a file named
+     * "rui-log-yyyyMMdd-HHmmss.txt" in this directory. This is mostly useful during the development of the
+     * plugin itself and/or troubleshooting.
+     *
+     * Generates large amount of data, be careful with it.
+     *
+     * Relative paths save the data into the gradle daemons log directory. On my machine it is:
+     *
+     * `/Users/<username>/Library/Application Support/kotlin/daemon`
+     */
+    val pluginLogDir: Property<Path?> = objects.property(Path::class.java).also { it.set(null as Path?) }
+}
 
 @Suppress("unused")
 fun org.gradle.api.Project.z2(configure: Action<Z2GradleExtension>): Unit =
