@@ -108,11 +108,11 @@ class AdaptiveClassSymbols(
         }
 
         when (it.name.identifier) {
-            Strings.ADAPTIVE_CREATE_FUN -> create = it
-            Strings.ADAPTIVE_MOUNT_FUN -> mount = it
-            Strings.ADAPTIVE_PATCH_FUN -> patch = it
-            Strings.ADAPTIVE_UNMOUNT_FUN -> unmount = it
-            Strings.ADAPTIVE_DISPOSE_FUN -> dispose = it
+            Strings.CREATE -> create = it
+            Strings.MOUNT -> mount = it
+            Strings.PATCH -> patch = it
+            Strings.UNMOUNT -> unmount = it
+            Strings.DISPOSE -> dispose = it
         }
     }
 

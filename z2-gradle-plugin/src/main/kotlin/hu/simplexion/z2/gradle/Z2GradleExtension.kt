@@ -20,6 +20,7 @@ import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * Settings for the Z2 Counter compiler plugin.
@@ -66,7 +67,7 @@ open class Z2GradleExtension(objects: ObjectFactory) {
      *
      * `/Users/<username>/Library/Application Support/kotlin/daemon`
      */
-    val pluginLogDir: Property<Path?> = objects.property(Path::class.java).also { it.set(null as Path?) }
+    val pluginLogDir: Property<Path> = objects.property(Path::class.java).also { it.set(Paths.get(".")) }
 }
 
 @Suppress("unused")

@@ -84,7 +84,10 @@ class Z2GradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         options += SubpluginOption(key = "adaptive-trace", extension.adaptiveTrace.get().toString())
         options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.get().toString())
-        options += SubpluginOption(key = "plugin-log-dir", extension.pluginLogDir.get().toString())
+
+        extension.pluginLogDir.get()?.let {
+            options += SubpluginOption(key = "plugin-log-dir", it.toString())
+        }
 
         return project.provider { options }
     }

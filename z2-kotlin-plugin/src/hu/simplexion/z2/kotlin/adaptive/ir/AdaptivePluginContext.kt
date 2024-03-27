@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getPropertySetter
 import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.name.FqName
 
@@ -25,7 +24,7 @@ class AdaptivePluginContext(
     options: Z2Options
 ) : AbstractPluginContext(irContext, options) {
 
-    override val runtimePackage = Strings.ADAPTIVE_RUNTIME_PACKAGE
+    override val runtimePackage = Strings.RUNTIME_PACKAGE
 
     val withTrace = options.adaptiveTrace
 
@@ -39,41 +38,37 @@ class AdaptivePluginContext(
     val airClasses = mutableMapOf<FqName, AirClass>()
     val airEntryPoints = mutableListOf<AirEntryPoint>()
 
-    val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_CLASS)
+    val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT)
     val adaptiveFragmentType = adaptiveFragmentClass.defaultType
 
-    val adaptiveGeneratedFragmentClass = classSymbol(FqNames.ADAPTIVE_GENERATED_FRAGMENT_CLASS)
+    val adaptiveGeneratedFragmentClass = classSymbol(FqNames.ADAPTIVE_GENERATED_FRAGMENT)
 
-    val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER_CLASS)
+    val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER)
     val adaptiveAdapterType = adaptiveAdapterClass.defaultType
-    val adaptiveAdapterTrace = adaptiveAdapterClass.functionByName(Strings.ADAPTIVE_ADAPTER_TRACE_FUN)
+    val adaptiveAdapterTrace = adaptiveAdapterClass.functionByName(Strings.TRACE)
 
-    val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE_CLASS)
+    val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE)
 
-    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE_CLASS)
+    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE)
     val adaptiveBridgeType = adaptiveBridgeClass.defaultType
 
-    val adaptiveSequenceClass = Strings.ADAPTIVE_SEQUENCE_CLASS.runtimeClass()
-    val adaptiveSequenceAddFun = adaptiveSequenceClass.functionByName(Strings.ADAPTIVE_SEQUENCE_ADD_FUN)
+    val adaptiveSequenceClass = classSymbol(FqNames.ADAPTIVE_SEQUENCE)
+    val adaptiveSelectClass = classSymbol(FqNames.ADAPTIVE_SELECT)
 
-    val adaptiveWhenClass = Strings.ADAPTIVE_WHEN_CLASS.runtimeClass()
-    val adaptiveWhenNewBranchSetter = requireNotNull(adaptiveWhenClass.getPropertySetter(Strings.ADAPTIVE_WHEN_NEW_BRANCH_PROP))
+    val adapter = property(Strings.ADAPTER)
+    val thisClosure = property(Strings.THIS_CLOSURE)
+    val createClosure = property(Strings.CREATE_CLOSURE)
+    val parent = property(Strings.PARENT)
+    val containedFragment = property(Strings.CONTAINED_FRAGMENT)
 
-    val adaptiveAdapter = property(Strings.ADAPTIVE_ADAPTER_PROP)
-    val adaptiveClosure = property(Strings.ADAPTIVE_CLOSURE_PROP)
-    val adaptiveParent = property(Strings.ADAPTIVE_PARENT_PROP)
-    val adaptiveExternalPatch = property(Strings.ADAPTIVE_EXTERNAL_PATCH_PROP)
-    val adaptiveFragment = property(Strings.ADAPTIVE_CONTAINED_FRAGMENT_PROP)
+    val create = function(Strings.CREATE)
+    val mount = function(Strings.MOUNT)
 
-    val adaptiveCreate = function(Strings.ADAPTIVE_CREATE_FUN)
-    val adaptiveMount = function(Strings.ADAPTIVE_MOUNT_FUN)
-    val adaptivePatch = function(Strings.ADAPTIVE_PATCH_FUN)
-    val adaptiveDispose = function(Strings.ADAPTIVE_DISPOSE_FUN)
-    val adaptiveUnmount = function(Strings.ADAPTIVE_UNMOUNT_FUN)
+    // val patch = function(Strings.PATCH)
+    val dispose = function(Strings.DISPOSE)
+    val unmount = function(Strings.UNMOUNT)
 
     val adaptiveSymbolMap = AdaptiveSymbolMap(this)
-
-    val implicit0SymbolMap = adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_ANONYMOUS_CLASS)
 
     private fun property(name: String) =
         adaptiveGeneratedFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()

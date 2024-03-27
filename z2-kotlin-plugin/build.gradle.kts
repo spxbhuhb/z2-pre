@@ -16,8 +16,8 @@ val scmPath = "spxbhuhb/z2"
 val kotlin_version: String by project.properties
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
 }
 
 kotlin {
