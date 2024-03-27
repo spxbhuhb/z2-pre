@@ -2,18 +2,37 @@ package hu.simplexion.z2.adaptive
 
 /**
  * @property  closureSize  The total number of state variables in this closure. This is the sum of the number
- *                         of state variables in [declarationScope] and all [anonymousScopes].
+ *                         of state variables in [owner] and all [components].
  */
 class AdaptiveClosure<BT>(
-    val declarationScope: AdaptiveFragment<BT>,
-    val anonymousScopes: Array<AdaptiveAnonymous<BT>>,
+    val components: Array<AdaptiveFragment<BT>>,
     val closureSize: Int
 ) {
-    var adaptiveDirty0 = AdaptiveStateVariableMask(closureSize)
-    var declarationScopeSize = declarationScope.state.size
+    val owner
+        get() = components[0]
 
-    fun extendWith(scope: AdaptiveAnonymous<BT>): AdaptiveClosure<BT> {
-        return AdaptiveClosure(declarationScope, anonymousScopes + scope, closureSize + scope.state.size)
+    var adaptiveDirty0 = AdaptiveStateVariableMask(closureSize)
+
+    var declarationScopeSize = owner.state.size
+
+    /**
+     * Finds the first parent with `thisClosure` owned by [declaringComponent]. Then extends that closure with
+     * the component and returns with the extended closure.
+     *
+     * Anonymous components use this function to find their declaring closure and extend it with themselves.
+     */
+    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent : AdaptiveFragment<BT>): AdaptiveClosure<BT> {
+        var ancestor = component.parent
+
+        while (ancestor != null && ancestor.thisClosure.owner !== declaringComponent) {
+            ancestor = ancestor.parent
+        }
+
+        checkNotNull(ancestor) { "couldn't find declaring component for closure extension" }
+
+        val declaringClosure = ancestor.thisClosure
+
+        return AdaptiveClosure(declaringClosure.components + component, declaringClosure.closureSize + component.state.size)
     }
 
     fun clear() = adaptiveDirty0.clear()
@@ -36,7 +55,7 @@ class AdaptiveClosure<BT>(
      */
     fun get(stateVariableIndex: Int): Any? {
         if (stateVariableIndex < declarationScopeSize) {
-            return declarationScope.state[stateVariableIndex]
+            return owner.state[stateVariableIndex]
         }
 
         // indices : 0 1 / 2 / 3 4 5 6 (declaration, anonymous 1, ANONYMOUS-2)
@@ -46,8 +65,8 @@ class AdaptiveClosure<BT>(
         // index of the first variable of ANONYMOUS-2 in the closure: 3 = closure size - state size
         // index of the requested variable of ANONYMOUS-2 in the state of ANONYMOUS-2: requested index - ANONYMOUS-2 index
 
-        for (anonymousScope in anonymousScopes) {
-            val extendedClosureSize = anonymousScope.extendedClosure.closureSize
+        for (anonymousScope in components) {
+            val extendedClosureSize = anonymousScope.thisClosure.closureSize
             if (extendedClosureSize > stateVariableIndex) {
                 return anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)]
             }
@@ -56,16 +75,23 @@ class AdaptiveClosure<BT>(
         throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
     }
 
+    fun getBoolean(stateVariableIndex: Int) : Boolean = get(stateVariableIndex) as Boolean
+    fun getInt(stateVariableIndex: Int) : Int = get(stateVariableIndex) as Int
+    fun getLong(stateVariableIndex: Int) : Long = get(stateVariableIndex) as Long
+    fun getFloat(stateVariableIndex: Int) : Float = get(stateVariableIndex) as Float
+    fun getDouble(stateVariableIndex: Int) : Double = get(stateVariableIndex) as Double
+    fun getString(stateVariableIndex: Int) : String = get(stateVariableIndex) as String
+
     /**
      * Set a state variable by its index in the closure. Walks over the scopes in the
      * closure to find the state and then sets the variable of that state.
      */
     fun set(stateVariableIndex: Int, value: Any?) {
         if (stateVariableIndex < declarationScopeSize) {
-            declarationScope.state[stateVariableIndex] = value
+            owner.state[stateVariableIndex] = value
         } else {
-            for (anonymousScope in anonymousScopes) {
-                val extendedClosureSize = anonymousScope.extendedClosure.closureSize
+            for (anonymousScope in components) {
+                val extendedClosureSize = anonymousScope.thisClosure.closureSize
                 if (extendedClosureSize > stateVariableIndex) {
                     anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)] = value
                 }
@@ -77,22 +103,7 @@ class AdaptiveClosure<BT>(
         throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
     }
 
-    fun getBoolean(stateVariableIndex: Int) : Boolean = get(stateVariableIndex) as Boolean
-    fun setBoolean(stateVariableIndex: Int, value : Boolean) = set(stateVariableIndex, value)
-
-    fun getInt(stateVariableIndex: Int) : Int = get(stateVariableIndex) as Int
-    fun setInt(stateVariableIndex: Int, value : Int) = set(stateVariableIndex, value)
-
-    fun getLong(stateVariableIndex: Int) : Long = get(stateVariableIndex) as Long
-    fun setLong(stateVariableIndex: Int, value : Long) = set(stateVariableIndex, value)
-
-    fun getFloat(stateVariableIndex: Int) : Float = get(stateVariableIndex) as Float
-    fun setFloat(stateVariableIndex: Int, value : Float) = set(stateVariableIndex, value)
-
-    fun getDouble(stateVariableIndex: Int) : Double = get(stateVariableIndex) as Double
-    fun setDouble(stateVariableIndex: Int, value : Double) = set(stateVariableIndex, value)
-
-    fun getString(stateVariableIndex: Int) : String = get(stateVariableIndex) as String
-    fun setString(stateVariableIndex: Int, value : Int) = set(stateVariableIndex, value)
+    fun getFromLast(variableIndex : Int) : Any? =
+        components.last().state[variableIndex]
 
 }

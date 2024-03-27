@@ -9,51 +9,13 @@ import hu.simplexion.z2.adaptive.AdaptiveFragment
 
 open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
-    class TraceEvent(
-        val name: String,
-        val point: String,
-        val data: List<String>
-    ) {
-
-        constructor(name: String, point: String, vararg data: Any?) : this(name, point, data.map { it.toString() })
-
-        override fun toString(): String {
-            return "[ ${name.padEnd(30)} ]  ${point.padEnd(20)}  |  ${data.joinToString(" ")}"
-        }
-
-        fun toCode(): String {
-            val nameOrRoot = if (name.startsWith("AdaptiveRoot")) "<root>" else name
-            return "TraceEvent(\"$nameOrRoot\", \"${point}\", ${data.joinToString(", ") { "\"$it\"" }})"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (other == null) return false
-            if (other !is TraceEvent) return false
-            if (other.point != this.point) return false
-            if (other.data != this.data) return false
-            if (other.name == this.name) return true
-
-            if (this.name == "<root>" && other.name.startsWith("AdaptiveRoot")) return true
-            if (other.name == "<root>" && this.name.startsWith("AdaptiveRoot")) return true
-
-            return false
-        }
-
-        override fun hashCode(): Int {
-            var result = name.hashCode()
-            result = 31 * result + point.hashCode()
-            result = 31 * result + data.hashCode()
-            return result
-        }
-    }
-
     val fragments = mutableListOf<AdaptiveFragment<TestNode>>()
 
-    var nextId = 1
+    var nextId = 1L
 
     override val trace = true
 
-    final override fun newId(): Int = nextId ++ // This is not thread safe, OK for testing, but beware.
+    final override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override val rootBridge = AdaptiveTestBridge(newId())
 
@@ -67,9 +29,9 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         return AdaptiveTestBridge(newId())
     }
 
-    override fun trace(name: String, point: String, vararg data: Any?) {
+    override fun trace(name: String, id : Long, point: String, vararg data: Any?) {
         // convert the data to string so later changes won't change the content
-        traceEvents += TraceEvent(name, point, data.map { it.asString() })
+        traceEvents += TraceEvent(name, id, point, data.map { it.asString() })
     }
 
     fun Any?.asString(): String =

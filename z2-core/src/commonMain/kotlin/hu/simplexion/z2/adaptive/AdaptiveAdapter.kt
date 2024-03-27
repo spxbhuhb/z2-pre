@@ -11,10 +11,10 @@ interface AdaptiveAdapter<BT> {
 
     fun createPlaceholder(): AdaptiveBridge<BT>
 
-    fun newId(): Int
+    fun newId(): Long
 
-    fun trace(name: String, point: String, vararg data: Any?) {
+    fun trace(name: String, id : Long, point: String, vararg data: Any?) {
         // FIXME should we escape the data string? think about security
-        println("[ ${name.padEnd(30)} ]  ${point.padEnd(20)}  |  ${data.joinToString(" ") { it.toString() }}")
+        println("[ ${name.padEnd(30)} @ $id ] ${point.padEnd(20)}  |  ${data.joinToString(" ") { it.toString() }}")
     }
 }

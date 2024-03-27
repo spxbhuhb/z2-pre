@@ -31,15 +31,15 @@ abstract class LeafNode(
         throw IllegalStateException()
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<Node>) {
+    override fun mount(bridge: AdaptiveBridge<Node>) {
         bridge.add(this)
     }
 
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<Node>) {
+    override fun unmount(bridge: AdaptiveBridge<Node>) {
         bridge.remove(this)
     }
 
-    override fun adaptiveDispose() {
+    override fun dispose() {
 
     }
 }

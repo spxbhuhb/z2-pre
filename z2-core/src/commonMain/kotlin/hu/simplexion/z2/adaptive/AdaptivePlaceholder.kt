@@ -6,31 +6,37 @@ package hu.simplexion.z2.adaptive
 class AdaptivePlaceholder<BT>(
     override val adapter: AdaptiveAdapter<BT>,
     override val parent: AdaptiveFragment<BT>,
-) : AdaptiveFragment<BT> {
+) : AdaptiveStructuralFragment<BT> {
 
-    override val closure: AdaptiveClosure<BT>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    override val id = adapter.newId()
+
+    override val index: Int
+        get() = shouldNotRun()
+
     override val state: Array<Any?> = emptyArray()
+
+    override val dirtyMask: Int
+        get() = shouldNotRun()
 
     val bridge = adapter.createPlaceholder()
 
-    override fun adaptiveCreate() {
+    override fun create() {
 
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+    override fun mount(bridge: AdaptiveBridge<BT>) {
         bridge.add(this.bridge)
     }
 
-    override fun adaptiveInternalPatch() {
+    override fun patch() {
 
     }
 
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
         bridge.remove(this.bridge)
     }
 
-    override fun adaptiveDispose() {
+    override fun dispose() {
 
     }
 

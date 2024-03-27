@@ -5,31 +5,46 @@ package hu.simplexion.z2.adaptive
 
 interface AdaptiveFragment<BT> {
 
+    val id : Long
+
     val adapter: AdaptiveAdapter<BT>
 
     val parent: AdaptiveFragment<BT>?
 
-    val closure: AdaptiveClosure<BT>?
+    val createClosure: AdaptiveClosure<BT>?
+        get() = parent?.thisClosure
 
-    val state: Array<Any?>
+    val thisClosure: AdaptiveClosure<BT>
 
     val index : Int
 
+    val state: Array<Any?>
+
+    val dirtyMask : Int
+
     // functions that support the descendants of this fragment
 
-    fun adaptiveBuild(closure : AdaptiveClosure<BT>, parent : AdaptiveFragment<BT>, index : Int) : AdaptiveFragment<BT>
-    fun adaptivePatch(fragment : AdaptiveFragment<BT>, index : Int)
-    fun adaptiveSelect(fragment : AdaptiveFragment<BT>, index: Int) : Int
+    fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int) : AdaptiveFragment<BT>
+    fun patch(fragment : AdaptiveFragment<BT>)
+    fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments : Array<out Any?>) : Any?
 
     // functions that operate on the fragment itself
 
-    fun adaptiveCreate()
-    fun adaptiveMount(bridge: AdaptiveBridge<BT>)
+    fun create()
+    fun mount(bridge: AdaptiveBridge<BT>)
 
-    fun adaptiveExternalPatch()
-    fun adaptiveInternalPatch()
+    fun patch()
 
-    fun adaptiveUnmount(bridge: AdaptiveBridge<BT>)
-    fun adaptiveDispose()
+    fun unmount(bridge: AdaptiveBridge<BT>)
+    fun dispose()
 
+    fun getClosureVariableFromLast(variableIndex : Int) : Any? =
+        checkNotNull(createClosure).getFromLast(variableIndex)
+
+    fun getClosureVariable(variableIndex : Int) : Any? =
+        checkNotNull(createClosure).get(variableIndex)
+
+    fun invalidIndex(index: Int) : Nothing {
+        throw IllegalStateException("invalid index: $index")
+    }
 }

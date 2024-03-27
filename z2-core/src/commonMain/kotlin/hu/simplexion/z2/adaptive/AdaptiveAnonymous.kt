@@ -4,16 +4,35 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveAnonymous<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val closure: AdaptiveClosure<BT>,
-    override val parent: AdaptiveFragment<BT>?,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    override val state: Array<Any?>
-) : AdaptiveGeneratedFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>,
+    override val index: Int,
+    val factory: AdaptiveFragmentFactory<BT>,
+    stateSize: Int,
+) : AdaptiveGeneratedFragment<BT>(adapter, stateSize) {
 
-    override lateinit var containedFragment: AdaptiveFragment<BT>
+    override val createClosure : AdaptiveClosure<BT>
+        get() = parent.thisClosure
 
-    val extendedClosure = closure.extendWith(this)
+    override val thisClosure = createClosure.extendWith(this, factory.declaringFragment)
+
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+        shouldNotRun()
+    }
+
+    override fun patch(fragment: AdaptiveFragment<BT>) {
+        factory.declaringFragment.patch(fragment)
+    }
+
+    override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
+        shouldNotRun()
+    }
+
+    override fun create() {
+        if (adapter.trace) adapter.trace("AdaptiveAnonymous", id, "create")
+        createClosure.owner.patch(this)
+        containedFragment = factory.build(this)
+    }
 
     /**
      * Invalidate a state variable of this *anonymous component instance*.
@@ -22,14 +41,14 @@ class AdaptiveAnonymous<BT>(
      *                             [adaptiveClosure] into account, it is relative to `this`.
      */
     fun adaptiveInvalidate(stateVariableIndex: Int) {
-        extendedClosure.invalidate(closure.closureSize + stateVariableIndex)
+        thisClosure.invalidate(createClosure.closureSize + stateVariableIndex)
     }
 
-    override fun adaptiveInternalPatch() {
-        extendedClosure.copyFrom(closure)
-        containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptiveInternalPatch()
-        extendedClosure.clear()
+    override fun patch() {
+        // thisClosure.copyFrom(createClosure)
+        // containedFragment.adaptiveExternalPatch(containedFragment)
+        containedFragment.patch()
+        // thisClosure.clear()
     }
 
 }

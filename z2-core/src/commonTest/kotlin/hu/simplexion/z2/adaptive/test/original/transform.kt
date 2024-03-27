@@ -39,7 +39,7 @@ object TransformBlock {
 fun Counter() {
     var count = 0
     Wrapper {
-        name = "Wrapped Block"
+        name = "Wrapped Sequence"
         // Button { "click count: $count" } onClick { count ++ }
     }
 }

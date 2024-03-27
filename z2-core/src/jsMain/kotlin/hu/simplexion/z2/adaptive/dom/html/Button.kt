@@ -30,7 +30,7 @@ class AdaptiveButton(
 
     var adaptiveDirty0 = 0L
 
-    override val closure: AdaptiveClosure<Node>?
+    override val createClosure: AdaptiveClosure<Node>?
         get() = TODO("Not yet implemented")
 
     @AdaptivePublicApi
@@ -38,12 +38,12 @@ class AdaptiveButton(
         adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun adaptiveCreate() {
+    override fun create() {
         receiver.innerText = label
         receiver.onclick = onClick
     }
 
-    override fun adaptiveInternalPatch() {
+    override fun patch() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.innerText = label
         }

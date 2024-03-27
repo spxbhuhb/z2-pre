@@ -16,7 +16,7 @@ fun Text(content: String) {
 @AdaptivePublicApi
 class AdaptiveText(
     adaptiveAdapter: AdaptiveAdapter<Node>,
-    override val closure: AdaptiveClosure<Node>?,
+    override val createClosure: AdaptiveClosure<Node>?,
     override val parent: AdaptiveFragment<Node>?,
     adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
     var content: String,
@@ -31,11 +31,11 @@ class AdaptiveText(
         adaptiveDirty0 = adaptiveDirty0 or mask
     }
 
-    override fun adaptiveCreate() {
+    override fun create() {
         receiver.data = content
     }
 
-    override fun adaptiveInternalPatch() {
+    override fun patch() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.data = content
         }

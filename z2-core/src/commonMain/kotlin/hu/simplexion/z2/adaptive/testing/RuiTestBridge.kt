@@ -6,7 +6,7 @@ package hu.simplexion.z2.adaptive.testing
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 
 class AdaptiveTestBridge(
-    val id: Int
+    val id: Long
 ) : AdaptiveBridge<TestNode> {
 
     override val receiver = TestNode()

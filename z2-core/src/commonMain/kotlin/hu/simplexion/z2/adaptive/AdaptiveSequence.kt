@@ -5,45 +5,48 @@ package hu.simplexion.z2.adaptive
 
 class AdaptiveSequence<BT>(
     override val adapter: AdaptiveAdapter<BT>,
-    override val closure: AdaptiveClosure<BT>?,
-    override val parent: AdaptiveFragment<BT>,
+    override val parent: AdaptiveFragment<BT>?,
     override val index: Int,
-    vararg val childIndices: Array<Int>
 ) : AdaptiveStructuralFragment<BT> {
 
-    override val state: Array<Any?> = emptyArray()
+    override val id = adapter.newId()
+
+    // 0 : Array<Int>, the indices of sequence items
+    override val state = arrayOfNulls<Any?>(1)
+
+    override val dirtyMask: Int = 0
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 
-    override fun adaptiveCreate() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "create")
+    override fun create() {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "create")
 
-        fragments.forEach { it.adaptiveCreate() }
+        createClosure.owner.patch(this)
+
+        @Suppress("UNCHECKED_CAST")
+        for (itemIndex in state[0] as Array<Int>) {
+            fragments += createClosure.owner.build(this, itemIndex)
+        }
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "mount", "bridge:", bridge)
-        fragments.forEach { it.adaptiveMount(bridge) }
+    override fun mount(bridge: AdaptiveBridge<BT>) {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "mount", "bridge:", bridge)
+        fragments.forEach { it.mount(bridge) }
     }
 
-    override fun adaptiveExternalPatch() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "adaptiveExternalPatch")
-        fragments.forEach { it.adaptiveExternalPatch() }
+    override fun patch() {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "adaptiveInternalPatch")
+        fragments.forEach { it.patch() }
     }
 
-    override fun adaptiveInternalPatch() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "adaptiveInternalPatch")
-        fragments.forEach { it.adaptiveInternalPatch() }
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "unmount", "bridge:", bridge)
+        fragments.forEach { it.unmount(bridge) }
     }
 
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "unmount", "bridge:", bridge)
-        fragments.forEach { it.adaptiveUnmount(bridge) }
-    }
-
-    override fun adaptiveDispose() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", "dispose")
-        fragments.forEach { it.adaptiveDispose() }
+    override fun dispose() {
+        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "dispose")
+        fragments.forEach { it.dispose() }
     }
 
 

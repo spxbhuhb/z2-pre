@@ -16,6 +16,7 @@ open class AdaptiveDOMAdapter(
     val node: Node = requireNotNull(window.document.body) { "window.document.body is null or undefined" }
 ) : AdaptiveAdapter<Node> {
 
+    var nextId = 1L
 
     override val rootBridge = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)
@@ -27,9 +28,8 @@ open class AdaptiveDOMAdapter(
         return AdaptiveDOMPlaceholder()
     }
 
-    override fun newId(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun newId(): Long =
+        nextId++
 
     companion object {
         init {

@@ -9,7 +9,19 @@ package hu.simplexion.z2.adaptive
  * we do not have to code them in IR.
  */
 @AdaptivePublicApi
-interface AdaptiveGeneratedFragment<BT> : AdaptiveFragment<BT> {
+abstract class AdaptiveGeneratedFragment<BT>(
+    final override val adapter: AdaptiveAdapter<BT>,
+    stateSize : Int
+) : AdaptiveFragment<BT> {
+
+    override val id = adapter.newId()
+
+    override val state = arrayOfNulls<Any?>(stateSize)
+
+    override var dirtyMask = 0
+
+    @Suppress("LeakingThis") // closure won't do anything with components during init
+    override val thisClosure = AdaptiveClosure(arrayOf(this), stateSize)
 
     /**
      * The top level fragment of this scope. This may be:
@@ -17,31 +29,39 @@ interface AdaptiveGeneratedFragment<BT> : AdaptiveFragment<BT> {
      * - a structural fragment such as block, when or a loop
      * - direct call to another adaptive function
      *
-     * Set to [AdaptiveFragment.closure] by the initializer of the class
+     * Set to [AdaptiveFragment.createClosure] by the initializer of the class
      * that implements [AdaptiveGeneratedFragment].
      */
-    val containedFragment: AdaptiveFragment<BT>
+    lateinit var containedFragment: AdaptiveFragment<BT>
 
-    override fun adaptiveCreate() {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "create")
-        containedFragment.adaptiveCreate()
+    override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+        shouldNotRun() // this is overridden by the plugin
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "mount", "bridge", bridge)
-        containedFragment.adaptiveMount(bridge)
+    override fun create() {
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "create")
+        createClosure?.owner?.patch(this)
+        containedFragment = build(this, 0)
     }
 
-    // do not override adaptivePatch, it should be generated in all cases
-
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "unmount", "bridge", bridge)
-        containedFragment.adaptiveUnmount(bridge)
+    override fun mount(bridge: AdaptiveBridge<BT>) {
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "mount", "bridge", bridge)
+        containedFragment.mount(bridge)
     }
 
-    override fun adaptiveDispose() {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", "dispose")
-        containedFragment.adaptiveDispose()
+    override fun patch() {
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "patch")
+        containedFragment.patch()
+    }
+
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "unmount", "bridge", bridge)
+        containedFragment.unmount(bridge)
+    }
+
+    override fun dispose() {
+        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "dispose")
+        containedFragment.dispose()
     }
 
 }

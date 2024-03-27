@@ -7,33 +7,45 @@ package hu.simplexion.z2.adaptive.testing
 
 import hu.simplexion.z2.adaptive.*
 
-abstract class AdaptiveTracingFragment<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val closure: AdaptiveClosure<BT>?,
-    override val parent: AdaptiveFragment<BT>?,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-) : AdaptiveFragment<BT> {
+abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
 
     val traceName = this::class.simpleName.toString()
 
-    override fun adaptiveCreate() {
-        adapter.trace(traceName, "create")
+    override val dirtyMask = 0
+
+    override val createClosure : AdaptiveClosure<BT>?
+        get() = parent?.thisClosure
+
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+        shouldNotRun()
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
-        adapter.trace(traceName, "mount", "bridge:", bridge)
+    override fun patch(fragment: AdaptiveFragment<BT>) {
+        adapter.trace(traceName, id, "patch(fragment)")
     }
 
-    override fun adaptiveInternalPatch() {
-        adapter.trace(traceName, "patch")
+    override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
+        adapter.trace(traceName, id, "invoke")
     }
 
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
-        adapter.trace(traceName, "unmount", "bridge:", bridge)
+    override fun create() {
+        adapter.trace(traceName, id, "create")
     }
 
-    override fun adaptiveDispose() {
-        adapter.trace(traceName, "dispose")
+    override fun mount(bridge: AdaptiveBridge<BT>) {
+        adapter.trace(traceName, id, "mount", "bridge:", bridge)
+    }
+
+    override fun patch() {
+        adapter.trace(traceName, id, "patch")
+    }
+
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
+        adapter.trace(traceName, id, "unmount", "bridge:", bridge)
+    }
+
+    override fun dispose() {
+        adapter.trace(traceName, id, "dispose")
     }
 
 }
@@ -45,17 +57,18 @@ fun T0() {
 
 @Suppress("unused")
 class AdaptiveT0<BT>(
-    adaptiveAdapter: AdaptiveAdapter<BT>,
-    adaptiveClosure: AdaptiveClosure<BT>?,
-    adaptiveParent: AdaptiveFragment<BT>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    override val state: Array<Any?>
-) : AdaptiveTracingFragment<BT>(
-    adaptiveAdapter,
-    adaptiveClosure,
-    adaptiveParent,
-    adaptiveExternalPatch,
-)
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>?,
+    override val index: Int
+) : AdaptiveTracingFragment<BT>() {
+
+    override val id = adapter.newId()
+
+    override val state = emptyArray<Any?>()
+
+    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
+
+}
 
 @Adaptive
 @Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
@@ -64,17 +77,16 @@ fun T1(p0: Int) {
 
 @Suppress("unused")
 class AdaptiveT1<BT>(
-    adaptiveAdapter: AdaptiveAdapter<BT>,
-    adaptiveClosure: AdaptiveClosure<BT>?,
-    adaptiveParent: AdaptiveFragment<BT>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    override val state: Array<Any?>
-) : AdaptiveTracingFragment<BT>(
-    adaptiveAdapter,
-    adaptiveClosure,
-    adaptiveParent,
-    adaptiveExternalPatch
-) {
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>?,
+    override val index: Int
+) : AdaptiveTracingFragment<BT>() {
+
+    override val id = adapter.newId()
+
+    override val state = arrayOfNulls<Any?>(1)
+
+    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
 
     var p0 : Int
         get() = state[0] as Int
@@ -86,21 +98,18 @@ class AdaptiveT1<BT>(
     var adaptiveDirtyMask = AdaptiveStateVariableMask(1)
 
     fun adaptiveInvalidate0(stateVariableIndex: Int) {
-        adapter.trace(traceName, "invalidate", "stateVariableIndex:", stateVariableIndex, "adaptiveDirty0:", adaptiveDirtyMask)
+        adapter.trace(traceName, id, "invalidate", "stateVariableIndex:", stateVariableIndex, "adaptiveDirty0:", adaptiveDirtyMask)
         adaptiveDirtyMask.invalidate(stateVariableIndex)
     }
 
-    init {
-        adaptiveAdapter.trace(traceName, "init")
+    override fun create() {
+        createClosure?.owner?.patch(this)
+        adapter.trace(traceName, id, "create", "p0:", p0)
     }
 
-    override fun adaptiveCreate() {
-        adapter.trace(traceName, "create", "p0:", p0)
-    }
-
-    override fun adaptiveInternalPatch() {
-        adapter.trace(traceName, "patch", "adaptiveDirty0:", adaptiveDirtyMask, "p0:", p0)
-        adaptiveDirtyMask.clear()
+    override fun patch() {
+        createClosure?.owner?.patch(this)
+        adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
     }
 }
 
@@ -111,24 +120,67 @@ fun H1(@Adaptive builder: () -> Unit) {
 }
 
 @Suppress("unused")
-class AdaptiveH1(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val state: Array<Any?>,
-    @Adaptive val builder: (adaptiveAdapter: AdaptiveAdapter<TestNode>) -> AdaptiveFragment<TestNode>
-) : AdaptiveC1(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
+class AdaptiveH1<BT>(
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>?,
+    override val index: Int
+) : AdaptiveTracingFragment<BT>() {
 
-    override val fragment0 = builder(adaptiveAdapter)
+    override val id = adapter.newId()
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<TestNode>) {
-        super.adaptiveMount(bridge)
-        fragment0.adaptiveMount(bridge)
+    override val state = arrayOfNulls<Any?>(1)
+
+    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
+
+    @Suppress("UNCHECKED_CAST")
+    var builder : AdaptiveFragmentFactory<BT>
+        get() = state[0] as AdaptiveFragmentFactory<BT>
+        set(v) { state[0] = v }
+
+    lateinit var fragment0: AdaptiveFragment<BT>
+
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+
+        val fragment = when (declarationIndex) {
+            0 -> builder.build(parent)
+            else -> invalidIndex(declarationIndex) // throws exception
+        }
+
+        fragment.create()
+
+        return fragment
     }
 
-    init {
-        adaptiveAdapter.trace(traceName, "init")
+    override fun patch(fragment: AdaptiveFragment<BT>) {
+        super.patch(fragment)
+        fragment0.patch()
+    }
+
+    override fun create() {
+        super.create()
+        createClosure!!.owner.patch(this)
+
+        fragment0 = build(this, 0) // 0 is the index of the `builder` call
+    }
+
+    override fun mount(bridge: AdaptiveBridge<BT>) {
+        super.mount(bridge)
+        fragment0.mount(bridge)
+    }
+
+    override fun patch() {
+        super.patch()
+        fragment0.patch()
+    }
+
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
+        fragment0.unmount(bridge)
+        super.unmount(bridge)
+    }
+
+    override fun dispose() {
+        fragment0.dispose()
+        super.dispose()
     }
 }
 
@@ -139,82 +191,82 @@ fun H2(i1: Int, @Adaptive builder: (i2: Int) -> Unit) {
 }
 
 @Suppress("unused")
-class AdaptiveH2(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val state: Array<Any?>,
-    @Adaptive builder: (parentScope: AdaptiveFragment<TestNode>) -> AdaptiveFragment<TestNode>
-) : AdaptiveC1(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
+class AdaptiveH2<BT>(
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>?,
+    override val index: Int
+) : AdaptiveTracingFragment<BT>() {
 
-    var i1 : Int
-        get() = state[0] as Int
+    override val id = adapter.newId()
+
+    override val state = arrayOfNulls<Any?>(2)
+
+    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
+
+    @Suppress("UNCHECKED_CAST")
+    var builder : AdaptiveFragmentFactory<BT>
+        get() = state[0] as AdaptiveFragmentFactory<BT>
         set(v) { state[0] = v }
 
-    override val fragment0 = adaptiveBuilder111(this)
+    var i1 : Int
+        get() = state[1] as Int
+        set(v) { state[1] = v }
 
-    fun adaptiveBuilder111(parent: AdaptiveFragment<TestNode>?): AdaptiveFragment<TestNode> {
-        return AdaptiveAnonymous(
-            adapter,
-            AdaptiveClosure(this, emptyArray(), 1),
-            this.parent !!,
-            this::adaptiveExternalPatch111,
-            arrayOf(i1 + 1)
-        )
+    lateinit var fragment0: AdaptiveFragment<BT>
+
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+
+        val fragment = when (declarationIndex) {
+            0 -> builder.build(this)
+            else -> invalidIndex(declarationIndex) // throws exception
+        }
+
+        fragment.create()
+
+        return fragment
     }
 
-    fun adaptiveExternalPatch111(it: AdaptiveFragment<TestNode>) {
+    override fun patch(fragment: AdaptiveFragment<BT>) {
+        super.patch(fragment)
 
+        when (fragment.index) {
+            0 -> {
+                fragment0.state[0] = i1 + 2
+            }
+            else -> invalidIndex(fragment.index)
+        }
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<TestNode>) {
-        super.adaptiveMount(bridge)
-        fragment0.adaptiveMount(bridge)
+    override fun create() {
+        super.create()
+
+        createClosure!!.owner.patch(this)
+
+        fragment0 = build(this, 0) // 0 is the index of the `builder` call
     }
 
-    init {
-        adaptiveAdapter.trace(traceName, "init")
+    override fun mount(bridge: AdaptiveBridge<BT>) {
+        super.mount(bridge)
+        fragment0.mount(bridge)
     }
 
-    // FIXME finish ADAPTIVE H2 test fragment
+    override fun patch() {
+        super.patch()
+        fragment0.patch()
+    }
+
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
+        fragment0.unmount(bridge)
+        super.unmount(bridge)
+    }
+
+    override fun dispose() {
+        fragment0.dispose()
+        super.dispose()
+    }
+
 }
 
-@Suppress("unused")
-abstract class AdaptiveC1(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>
-) : AdaptiveTracingFragment<TestNode>(adaptiveAdapter, adaptiveClosure, adaptiveParent, adaptiveExternalPatch) {
-
-    abstract val fragment0: AdaptiveFragment<TestNode>
-
-    override fun adaptiveCreate() {
-        super.adaptiveCreate()
-        fragment0.adaptiveCreate()
-    }
-
-    override fun adaptiveMount(bridge: AdaptiveBridge<TestNode>) {
-        super.adaptiveMount(bridge)
-        fragment0.adaptiveMount(bridge)
-    }
-
-    override fun adaptiveInternalPatch() {
-        super.adaptiveInternalPatch()
-        fragment0.adaptiveInternalPatch()
-    }
-
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<TestNode>) {
-        fragment0.adaptiveUnmount(bridge)
-        super.adaptiveUnmount(bridge)
-    }
-
-    override fun adaptiveDispose() {
-        fragment0.adaptiveDispose()
-        super.adaptiveDispose()
-    }
-}
 
 @Adaptive
 @Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
@@ -222,132 +274,37 @@ fun EH1A(p0: Int, eventHandler: (np0: Int) -> Unit) {
 }
 
 @Suppress("unused")
-class AdaptiveEH1A(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val state: Array<Any?>
-) : AdaptiveTracingFragment<TestNode>(
-    adaptiveAdapter,
-    adaptiveClosure,
-    adaptiveParent,
-    adaptiveExternalPatch
-) {
+class AdaptiveEH1A<BT>(
+    override val adapter: AdaptiveAdapter<BT>,
+    override val parent: AdaptiveFragment<BT>?,
+    override val index: Int
+) : AdaptiveTracingFragment<BT>() {
+
+    override val id = adapter.newId()
+
+    override val state = arrayOfNulls<Any?>(2)
+
+    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
 
     var p0 : Int
         get() = state[0] as Int
         set(v) { state[0] = v }
-
-
-    init {
-        adaptiveAdapter.trace(traceName, "init", "p0:", p0)
-        if (adaptiveAdapter is AdaptiveTestAdapter) {
-            adaptiveAdapter.fragments += this
-        }
-    }
-
-    val adaptiveDirtyMask = AdaptiveStateVariableMask(2)
-
-    override fun adaptiveCreate() {
-        adapter.trace(traceName, "create")
-    }
-
-    @Suppress("unused")
-    fun adaptiveInvalidate0(stateVariableIndex: Int) {
-        adapter.trace(traceName, "invalidate", "stateVariableIndex:", stateVariableIndex, "adaptiveDirty0:", adaptiveDirtyMask)
-        adaptiveDirtyMask.invalidate(stateVariableIndex)
-    }
-
-    override fun adaptiveInternalPatch() {
-        adapter.trace(traceName, "patch", "adaptiveDirty0:", adaptiveDirtyMask, "p0:", p0)
-        adaptiveDirtyMask.clear()
-    }
-
-}
-
-@Adaptive
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER")
-fun EH1B(p0: Int, eventHandler: (np0: Int) -> Unit) {
-}
-
-@Suppress("unused")
-class AdaptiveEH1B(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val state: Array<Any?>
-) : AdaptiveTracingFragment<TestNode>(
-    adaptiveAdapter,
-    adaptiveClosure,
-    adaptiveParent,
-    adaptiveExternalPatch
-) {
-
-    var p0 : Int
-        get() = state[0] as Int
-        set(v) { state[0] = v }
-
-    init {
-        adaptiveAdapter.trace(traceName, "init", "p0:", p0)
-        if (adaptiveAdapter is AdaptiveTestAdapter) {
-            adaptiveAdapter.fragments += this
-        }
-    }
-
-    val adaptiveDirtyMask = AdaptiveStateVariableMask(2)
-
-    override fun adaptiveCreate() {
-        adapter.trace(traceName, "create")
-    }
-
-    @Suppress("unused")
-    fun adaptiveInvalidate0(stateVariableIndex: Int) {
-        adapter.trace(traceName, "invalidate", "stateVariableIndex:", stateVariableIndex, "adaptiveDirty0:", adaptiveDirtyMask)
-        adaptiveDirtyMask.invalidate(stateVariableIndex)
-    }
-
-    override fun adaptiveInternalPatch() {
-        adapter.trace(traceName, "patch", "adaptiveDirty0:", adaptiveDirtyMask, "p0:", p0)
-        adaptiveDirtyMask.clear()
-    }
-
-}
-
-
-@Suppress("unused")
-@Adaptive
-fun RunOnMount(func: () -> Unit) {
-
-}
-
-@Suppress("unused")
-class AdaptiveRunOnMount(
-    adaptiveAdapter: AdaptiveAdapter<TestNode>,
-    adaptiveClosure: AdaptiveClosure<TestNode>?,
-    adaptiveParent: AdaptiveFragment<TestNode>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<TestNode>,
-    override val state: Array<Any?>,
-) : AdaptiveTracingFragment<TestNode>(
-    adaptiveAdapter,
-    adaptiveClosure,
-    adaptiveParent,
-    adaptiveExternalPatch
-) {
 
     @Suppress("UNCHECKED_CAST")
-    var func : () -> Unit
-        get() = state[0] as () -> Unit
-        set(v) { state[0] = v }
+    var eventHandler : AdaptiveSupportFunction<BT>
+        get() = state[1] as AdaptiveSupportFunction<BT>
+        set(v) { state[1] = v }
 
-    init {
-        adaptiveAdapter.trace(traceName, "init")
-    }
+    val adaptiveDirtyMask = AdaptiveStateVariableMask(2)
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<TestNode>) {
-        super.adaptiveMount(bridge)
-        func()
+    override fun patch() {
+        adapter.trace(traceName, id, "patch", "adaptiveDirty0:", adaptiveDirtyMask, "p0:", p0)
+
+        if (p0 % 2 == 0) {
+            eventHandler.invoke(p0)
+        }
+
+        adaptiveDirtyMask.clear()
     }
 
 }
