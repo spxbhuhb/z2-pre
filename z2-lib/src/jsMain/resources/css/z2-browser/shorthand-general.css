@@ -81,6 +81,14 @@
 .min-width-208 {
     min-width: 208px;
 }
+
+.min-width-320 {
+    min-width: 320px;
+}
+
+.min-width-384 {
+    min-width: 384px;
+}
 .mr-24 {margin-right: 24px;}
 .mt-12 { margin-top: 12px; }
 .mt-16 { margin-top: 16px; }
@@ -151,6 +159,10 @@
 .w-42 { width: 42px; }
 .w-60 { width: 60px; }
 .w-80 { width: 80px; }
+
+.w-160 {
+    width: 160px;
+}
 .w-full { width: 100%; }
 .w-min-content { width: min-content; }
 .white-space-no-wrap { white-space: nowrap; }
