@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.expressions.IrExpression
 
 /**
  * A function argument that is a function itself, but not an adaptive one.
@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 class ArmSupportFunctionArgument(
     armClass: ArmClass,
     index: Int,
-    value: IrFunctionExpression,
+    value: IrExpression,
     dependencies: ArmDependencies,
 ) : ArmValueArgument(armClass, index, value, dependencies) {
 

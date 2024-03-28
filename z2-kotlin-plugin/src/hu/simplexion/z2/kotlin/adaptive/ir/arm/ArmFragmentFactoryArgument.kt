@@ -4,18 +4,18 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrExpression
 
-class ArmHigherOrderCall(
+class ArmFragmentFactoryArgument(
     armClass: ArmClass,
     index: Int,
-    irCall: IrCall,
-) : ArmCall(armClass, index, irCall) {
+    value: IrExpression,
+    dependencies: ArmDependencies,
+) : ArmValueArgument(armClass, index, value, dependencies) {
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitHigherOrderCall(this, data)
+        visitor.visitHigherOrderArgument(this, data)
 
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-        valueArguments.forEach { it.accept(visitor, data) }
-    }
+    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
+
 }

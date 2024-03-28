@@ -71,14 +71,14 @@ class AdaptiveClosure<BT>(
      */
     fun set(stateVariableIndex: Int, value: Any?) {
         if (stateVariableIndex < declarationScopeSize) {
-            owner.set(stateVariableIndex, value)
+            owner.setStateVariable(stateVariableIndex, value)
             return
         }
 
         for (anonymousScope in components) {
             val extendedClosureSize = anonymousScope.thisClosure.closureSize
             if (extendedClosureSize > stateVariableIndex) {
-                anonymousScope.set(stateVariableIndex - (extendedClosureSize - anonymousScope.state.size), value)
+                anonymousScope.setStateVariable(stateVariableIndex - (extendedClosureSize - anonymousScope.state.size), value)
                 return
             }
         }

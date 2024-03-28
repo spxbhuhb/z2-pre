@@ -43,14 +43,14 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitHigherOrderCall(statement: ArmHigherOrderCall) = visitElement(statement)
     override fun visitHigherOrderCall(statement: ArmHigherOrderCall, data: Nothing?) = visitHigherOrderCall(statement)
 
-    fun visitParameterFunctionCall(statement: ArmParameterFunctionCall) = visitElement(statement)
-    override fun visitParameterFunctionCall(statement: ArmParameterFunctionCall, data: Nothing?) = visitParameterFunctionCall(statement)
+    fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall) = visitElement(statement)
+    override fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall, data: Nothing?) = visitParameterFunctionCall(statement)
 
-    fun visitWhen(statement: ArmWhen) = visitElement(statement)
-    override fun visitWhen(statement: ArmWhen, data: Nothing?) = visitWhen(statement)
+    fun visitWhen(statement: ArmSelect) = visitElement(statement)
+    override fun visitWhen(statement: ArmSelect, data: Nothing?) = visitWhen(statement)
 
-    fun visitForLoop(statement: ArmForLoop) = visitElement(statement)
-    override fun visitForLoop(statement: ArmForLoop, data: Nothing?) = visitForLoop(statement)
+    fun visitForLoop(statement: ArmLoop) = visitElement(statement)
+    override fun visitForLoop(statement: ArmLoop, data: Nothing?) = visitForLoop(statement)
 
     fun visitExpression(expression: ArmExpression) = visitElement(expression)
     override fun visitExpression(expression: ArmExpression, data: Nothing?) = visitExpression(expression)
@@ -61,8 +61,8 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) = visitExpression(supportFunctionArgument)
     override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument, data: Nothing?) = visitSupportFunctionArgument(supportFunctionArgument)
 
-    fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument) = visitExpression(higherOrderArgument)
-    override fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument, data: Nothing?) = visitHigherOrderArgument(higherOrderArgument)
+    fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument) = visitExpression(higherOrderArgument)
+    override fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument, data: Nothing?) = visitHigherOrderArgument(higherOrderArgument)
 
     fun visitDeclaration(declaration: ArmDeclaration) = visitElement(declaration)
     override fun visitDeclaration(declaration: ArmDeclaration, data: Nothing?) = visitDeclaration(declaration)

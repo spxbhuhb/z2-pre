@@ -43,11 +43,11 @@ class StateDefinitionTransform(
                 }
 
                 statement.startOffset < armClass.boundary.startOffset -> {
-                    armClass.initializerStatements += statement
+                    armClass.originalInitializerStatements += statement
                 }
 
                 else -> {
-                    armClass.renderingStatements += statement
+                    armClass.originalRenderingStatements += statement
                 }
             }
         }

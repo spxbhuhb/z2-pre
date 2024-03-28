@@ -11,7 +11,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air.AirStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmExpression
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_VARIABLE
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_STATE_VARIABLE_SHADOW
-import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
+import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
@@ -24,7 +24,6 @@ import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.interpreter.toIrConst
-import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.psi.KtModifierListOwner
@@ -57,27 +56,26 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val irParent : IrDeclarationParent,
-    private val declarationScopeValue: IrValueSymbol
-) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
+) : IrElementTransformerVoidWithContext(), AdaptiveNonAnnotationBasedExtension {
 
     companion object {
 
         /**
          * Transforms variable access in external patch and CALL rendering builder.
          */
-        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, expression: ArmExpression, declarationScopeValue: IrValueSymbol): IrExpression =
+        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, expression: ArmExpression): IrExpression =
             expression
                 .irExpression
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, irParent, declarationScopeValue), null)
+                .transform(StateAccessTransform(this, irParent), null)
 
         /**
          * Transforms an initializer statement.
          */
-        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, statement: IrStatement, declarationScopeValue: IrValueSymbol): IrStatement =
+        fun ClassBoundIrBuilder.transformStateAccess(irParent : IrDeclarationParent, statement: IrStatement): IrStatement =
             statement
                 .deepCopyWithVariables()
-                .transform(StateAccessTransform(this, irParent, declarationScopeValue), null)
+                .transform(StateAccessTransform(this, irParent), null)
                 as IrStatement
     }
 

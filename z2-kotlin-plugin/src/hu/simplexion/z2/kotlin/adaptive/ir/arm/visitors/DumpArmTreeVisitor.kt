@@ -96,7 +96,7 @@ class DumpArmTreeVisitor(
     }
 
 
-    override fun visitParameterFunctionCall(statement: ArmParameterFunctionCall) {
+    override fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall) {
         indented {
             with(statement) {
                 println { "RENDERING type:PARAMETER_FUNCTION_CALL index:$index" }
@@ -105,7 +105,7 @@ class DumpArmTreeVisitor(
         }
     }
 
-    override fun visitWhen(statement: ArmWhen) {
+    override fun visitWhen(statement: ArmSelect) {
         indented {
             with(statement) {
                 println { "RENDERING type:WHEN index:$index" }
@@ -114,7 +114,7 @@ class DumpArmTreeVisitor(
         }
     }
 
-    override fun visitForLoop(statement: ArmForLoop) {
+    override fun visitForLoop(statement: ArmLoop) {
         indented {
             with(statement) {
                 println { "RENDERING type:FOR_LOOP index:$index" }
@@ -157,7 +157,7 @@ class DumpArmTreeVisitor(
         }
     }
 
-    override fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument) {
+    override fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument) {
         indented {
             with(higherOrderArgument) {
                 println { "$origin $index type:${armClass.name} ${dependencies.withLabel("dependencies")}" }

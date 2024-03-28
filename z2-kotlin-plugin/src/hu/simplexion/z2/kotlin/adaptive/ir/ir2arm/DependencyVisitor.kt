@@ -3,16 +3,13 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
-import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
-import org.jetbrains.kotlin.psi.KtModifierListOwner
 
 /**
  * Collects state variable dependencies. These may be:
@@ -24,12 +21,9 @@ import org.jetbrains.kotlin.psi.KtModifierListOwner
 class DependencyVisitor(
     private val adaptiveContext : AdaptivePluginContext,
     private val endScope: ArmClass
-) : AdaptiveAnnotationBasedExtension, IrElementVisitorVoid {
+) : IrElementVisitorVoid {
 
     var dependencies = mutableListOf<ArmStateVariable>()
-
-    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
-        listOf(Strings.ADAPTIVE_ANNOTATION)
 
     override fun visitElement(element: IrElement) {
         element.acceptChildren(this, null)

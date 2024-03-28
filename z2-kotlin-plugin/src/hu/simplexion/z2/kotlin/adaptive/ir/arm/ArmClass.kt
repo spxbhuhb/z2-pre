@@ -8,36 +8,28 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmClass2Air
 import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.BoundaryVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.util.toAdaptiveClassFqName
-import org.jetbrains.kotlin.ir.IrStatement
+import hu.simplexion.z2.kotlin.adaptive.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
     val adaptiveContext: AdaptivePluginContext,
-    val originalFunction: IrFunction,
-    val parentScope: ArmClass?,
+    val originalFunction: IrFunction
 ) : ArmElement {
 
-    val fqName = originalFunction.toAdaptiveClassFqName(adaptiveContext, isAnonymous)
+    val fqName = originalFunction.adaptiveClassFqName()
     val name = fqName.shortName()
 
     var compilationError: Boolean = false
-
-    val isAnonymous
-        get() = (parentScope != null)
 
     val boundary: ArmBoundary = BoundaryVisitor(adaptiveContext).findBoundary(originalFunction)
 
     val originalStatements = checkNotNull(originalFunction.body?.statements) { "missing function body" }
 
-    val initializerStatements = mutableListOf<IrStatement>()
-    val renderingStatements = mutableListOf<IrStatement>()
-
     val stateVariables = mutableListOf<ArmStateVariable>()
     val dirtyMasks = mutableListOf<ArmDirtyMask>()
 
-    lateinit var rendering: ArmRenderingStatement
+    val rendering = mutableListOf<ArmRenderingStatement>()
 
     fun toAir(context: AdaptivePluginContext): AirClass = ArmClass2Air(context, this).toAir()
 
@@ -47,6 +39,6 @@ class ArmClass(
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
         stateVariables.forEach { it.accept(visitor, data) }
         dirtyMasks.forEach { it.accept(visitor, data) }
-        rendering.accept(visitor, data)
+        rendering.forEach { it.accept(visitor, data) }
     }
 }

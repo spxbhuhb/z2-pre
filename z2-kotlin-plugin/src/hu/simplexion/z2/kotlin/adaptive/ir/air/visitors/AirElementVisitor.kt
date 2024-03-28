@@ -21,6 +21,10 @@ interface AirElementVisitor<out R, in D> {
 
     fun visitFunction(function: AirFunction, data: D) = visitElement(function, data)
 
+    fun visitBuildBranch(builder: AirBuildBranch, data: D) = visitElement(builder, data)
+    fun visitPatchBranch(builder: AirPatchBranch, data: D) = visitElement(builder, data)
+    fun visitInvokeBranch(builder: AirInvokeBranch, data: D) = visitElement(builder, data)
+
     fun visitBuilder(builder: AirBuilder, data: D) = visitFunction(builder, data)
 
     fun visitBuilderSequence(builder: AirBuilderSequence, data: D) = visitBuilder(builder, data)

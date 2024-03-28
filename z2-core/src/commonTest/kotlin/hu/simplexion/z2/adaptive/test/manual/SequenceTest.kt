@@ -69,11 +69,11 @@ class SequenceTestComponent(
     override fun patch(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
-                fragment.set(0, arrayOf(1, 2)) // indices of T0 and T1
+                fragment.setStateVariable(0, arrayOf(1, 2)) // indices of T0 and T1
             }
 
             2 -> {
-                fragment.set(0, 12)
+                fragment.setStateVariable(0, 12)
             }
         }
     }

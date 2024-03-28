@@ -102,7 +102,7 @@ class SelectTestComponent(
     var v0: Int
         get() = state[0] as Int
         set(v) {
-            set(0, v)
+            setStateVariable(0, v)
         }
 
     val closureMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
@@ -129,7 +129,7 @@ class SelectTestComponent(
         when (fragment.index) {
             0 -> {
                 if (closureMask and closureMask_0_0 != 0) {
-                    fragment.set(
+                    fragment.setStateVariable(
                         0,
                         when {
                             v0 == 0 -> - 1
@@ -142,7 +142,7 @@ class SelectTestComponent(
 
             1 -> {
                 if (closureMask and closureMask_1_0 != 0) {
-                    fragment.set(
+                    fragment.setStateVariable(
                         0,
                         v0 + 10
                     )
@@ -151,7 +151,7 @@ class SelectTestComponent(
 
             2 -> {
                 if (closureMask and closureMask_2_0 != 0) {
-                    fragment.set(
+                    fragment.setStateVariable(
                         0,
                         v0 + 20
                     )

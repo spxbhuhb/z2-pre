@@ -6,11 +6,11 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmWhen2Air
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSelect2Air
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrWhen
 
-class ArmWhen(
+class ArmSelect(
     armClass: ArmClass,
     index: Int,
     val irSubject: IrVariable?,
@@ -20,9 +20,9 @@ class ArmWhen(
     val branches = mutableListOf<ArmBranch>()
 
     override fun symbolMap(irBuilder: ClassBoundIrBuilder) =
-        irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_WHEN_CLASS)
+        irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SELECT)
 
-    override fun toAir(parent: ClassBoundIrBuilder) = ArmWhen2Air(parent, this).toAir()
+    override fun toAir(parent: ClassBoundIrBuilder) = ArmSelect2Air(parent, this).toAir()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitWhen(this, data)

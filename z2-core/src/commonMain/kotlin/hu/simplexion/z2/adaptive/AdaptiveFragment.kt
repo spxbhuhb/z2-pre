@@ -46,7 +46,7 @@ interface AdaptiveFragment<BT> {
     fun getClosureVariable(variableIndex : Int) : Any? =
         checkNotNull(createClosure).get(variableIndex)
 
-    fun set(index : Int, value : Any?) {
+    fun setStateVariable(index : Int, value : Any?) {
         state[index] = value
         dirtyMask = dirtyMask or (1 shl index)
     }

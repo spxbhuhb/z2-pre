@@ -3,16 +3,12 @@ package hu.simplexion.z2.kotlin.adaptive.ir.air2ir
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirDirtyMask
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform.Companion.transformStateAccess
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
-import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.functions
 
@@ -25,9 +21,10 @@ class AirClass2Ir(
 
     fun toIr(): IrClass {
         airClass.initializer.toIr()
-        airClass.functions.forEach { it.toIr(this) }
 
+        buildBody()
         patchBody()
+        invokeBody()
 
         return irClass
     }
@@ -126,21 +123,9 @@ class AirClass2Ir(
         }
     }
 
-    /**
-     * Fetch the instance of this fragment. Dispatch receiver of the scope has to be the class itself.
-     */
-    fun IrBlockBodyBuilder.irGetFragment(scope: IrSimpleFunction): IrExpression {
-        // FIXME check receiver logic when having deeper structures
-        return irGet(
-            airClass.fragment.backingField !!.type,
-            IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, scope.dispatchReceiverParameter !!.symbol),
-            airClass.fragment.getter !!.symbol
-        )
-    }
-
-    fun AirDirtyMask.irClear(receiver: IrValueParameter): IrStatement =
+    fun irClearDirtyMask(receiver: IrValueParameter): IrStatement =
         irSetValue(
-            irProperty,
+            airClass.dirtyMask,
             irConst(0L),
             receiver = irGet(receiver)
         )

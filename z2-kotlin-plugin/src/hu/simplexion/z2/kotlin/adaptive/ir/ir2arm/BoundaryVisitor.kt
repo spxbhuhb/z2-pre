@@ -3,31 +3,26 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
-import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmBoundary
-import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
+import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
-import org.jetbrains.kotlin.psi.KtModifierListOwner
 
 /**
- * Finds the boundary between state definition and rendering parts of a ADAPTIVE function.
+ * Finds the boundary between state definition and rendering parts of an adaptive function.
  * The boundary is the `startOffset` of the first rendering statement.
  * Entry point is [findBoundary].
  */
 class BoundaryVisitor(
     private val adaptiveContext: AdaptivePluginContext
-) : AdaptiveAnnotationBasedExtension, IrElementVisitorVoid {
+) : IrElementVisitorVoid, AdaptiveNonAnnotationBasedExtension {
 
     var found: Boolean = false
-
-    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
-        listOf(Strings.ADAPTIVE_ANNOTATION)
 
     fun findBoundary(declaration: IrFunction): ArmBoundary {
 
@@ -51,8 +46,9 @@ class BoundaryVisitor(
 
     override fun visitCall(expression: IrCall) {
         when {
-            expression.isAnnotatedWithAdaptive() -> found = true
+            expression.isAdaptive(adaptiveContext) -> found = true
             else -> super.visitCall(expression)
         }
     }
+
 }

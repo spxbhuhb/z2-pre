@@ -10,34 +10,31 @@ import org.jetbrains.kotlin.name.FqName
 class AirClass(
 
     val armClass: ArmClass,
-    val scopeClassName : FqName?,
+    val scopeClassName: FqName?,
 
     val irClass: IrClass,
 
-    val adapter: IrProperty,
-    val closure: IrProperty,
-    val parent: IrProperty,
-    val externalPatch: IrProperty,
-    val fragment: IrProperty,
-
     val constructor: IrConstructor,
+
+    val adapter: IrProperty,
+    val parent: IrProperty,
+    val index: IrProperty,
+    val dirtyMask : IrProperty,
+
     val initializer: IrAnonymousInitializer,
 
-    val patch: IrSimpleFunction
+    val build: IrSimpleFunction,
+    val patch: IrSimpleFunction,
+    val invoke: IrSimpleFunction
 
 ) : AirElement {
-
-    override val armElement
-        get() = armClass
 
     lateinit var stateVariableMap: Map<String, AirStateVariable>
     lateinit var stateVariableList: List<AirStateVariable>
 
-    lateinit var dirtyMasks: List<AirDirtyMask>
-
-    lateinit var rendering: AirBuilder
-
-    val functions = mutableListOf<AirFunction>()
+    val buildBranches = mutableListOf<AirBuildBranch>()
+    val patchBranches = mutableListOf<AirPatchBranch>()
+    val invokeBranches = mutableListOf<AirInvokeBranch>()
 
     fun toIr(context: AdaptivePluginContext): IrClass = AirClass2Ir(context, this).toIr()
 
@@ -46,12 +43,10 @@ class AirClass(
 
     override fun <D> acceptChildren(visitor: AirElementVisitor<Unit, D>, data: D) {
         stateVariableList.forEach { it.accept(visitor, data) }
-        dirtyMasks.forEach { it.accept(visitor, data) }
-        functions.forEach { it.accept(visitor, data) }
     }
 
-    fun findStateVariable(context : AdaptivePluginContext, name : String) : Pair<AirStateVariable, List<AirClass>>? {
-        var scope : AirClass? = this
+    fun findStateVariable(context: AdaptivePluginContext, name: String): Pair<AirStateVariable, List<AirClass>>? {
+        var scope: AirClass? = this
         val path = mutableListOf<AirClass>()
         while (scope != null) {
             path += scope

@@ -4,12 +4,10 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.FqNames
-import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
-import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -17,19 +15,15 @@ import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.types.classifierOrNull
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.superTypes
-import org.jetbrains.kotlin.psi.KtModifierListOwner
 
 /**
- * Creates a [ArmClass] and a [ArmEntryPoint] for each call of the `adaptive` function (defined in the runtime).
+ * Creates a [AirClass] and a [ArmEntryPoint] for each call of the `adaptive` function (defined in the runtime).
  */
 class EntryPointTransform(
     private val adaptiveContext: AdaptivePluginContext
-) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
+) : IrElementTransformerVoidWithContext() {
 
     val irBuiltIns = adaptiveContext.irContext.irBuiltIns
-
-    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
-        listOf(Strings.ADAPTIVE_ANNOTATION)
 
     /**
      * Transforms Adaptive entry points (calls to the function `adaptive`) into a
@@ -74,7 +68,7 @@ class EntryPointTransform(
         }
 
         // skip the adaptiveAdapter function parameter
-        val armClass = IrFunction2Arm(adaptiveContext, function, skipParameters = 1).transform()
+        val armClass = IrFunction2Air(adaptiveContext, function, skipParameters = 1).transform()
 
         ArmEntryPoint(armClass, function).also {
             adaptiveContext.armEntryPoints += it

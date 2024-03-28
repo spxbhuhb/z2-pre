@@ -7,17 +7,14 @@ import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSequence2Air
-import org.jetbrains.kotlin.ir.expressions.IrBlock
 
 class ArmSequence(
     armClass: ArmClass,
     index: Int,
-    val irBlock: IrBlock
+    val statements : List<ArmRenderingStatement>
 ) : ArmRenderingStatement(armClass, index) {
 
-    val statements = mutableListOf<ArmRenderingStatement>()
-
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SEQUENCE_CLASS)
+    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SEQUENCE)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmSequence2Air(parent, this).toAir()
 
