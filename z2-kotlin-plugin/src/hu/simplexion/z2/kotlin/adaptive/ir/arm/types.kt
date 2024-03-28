@@ -1,3 +1,4 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-typealias ArmDependencies = List<ArmStateVariable> // state variable indices
+typealias ArmState = List<ArmStateVariable>
+typealias ArmDependencies = List<ArmStateVariable>

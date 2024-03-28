@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.name.Name
 object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive"
 
-    const val ADAPTIVE_INTERFACE = "hu.simplexion.z2.adaptive.Adaptive"
+    const val ADAPTIVE_NAMESPACE = "Adaptive"
     const val ADAPTIVE_ENTRY_FUNCTION = "hu.simplexion.z2.adaptive.adaptive"
 
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
@@ -82,12 +82,18 @@ object Names {
     val MOUNT = Name.identifier(Strings.MOUNT)
     val UNMOUNT = Name.identifier(Strings.UNMOUNT)
     val DISPOSE = Name.identifier(Strings.DISPOSE)
+
+    val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
+    val FRAGMENT = Name.identifier(Strings.FRAGMENT)
+    val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
+    val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
 }
 
 object FqNames {
     val String.runtime
         get() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
 
+    val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
     val ADAPTIVE_GENERATED_FRAGMENT = Strings.ADAPTIVE_GENERATED_FRAGMENT.runtime

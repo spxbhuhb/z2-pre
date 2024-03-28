@@ -5,7 +5,6 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -17,7 +16,7 @@ import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.superTypes
 
 /**
- * Creates a [AirClass] and a [ArmEntryPoint] for each call of the `adaptive` function (defined in the runtime).
+ * Creates an `ArmClass` and a `ArmEntryPoint` for each call of the `adaptive` function (defined in the runtime).
  */
 class EntryPointTransform(
     private val adaptiveContext: AdaptivePluginContext
@@ -68,7 +67,7 @@ class EntryPointTransform(
         }
 
         // skip the adaptiveAdapter function parameter
-        val armClass = IrFunction2Air(adaptiveContext, function, skipParameters = 1).transform()
+        val armClass = IrFunction2ArmClass(adaptiveContext, function, skipParameters = 1).transform()
 
         ArmEntryPoint(armClass, function).also {
             adaptiveContext.armEntryPoints += it

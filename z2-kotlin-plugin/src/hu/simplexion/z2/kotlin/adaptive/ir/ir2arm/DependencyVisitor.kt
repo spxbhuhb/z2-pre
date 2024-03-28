@@ -3,8 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmState
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -19,8 +18,7 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
  *
  */
 class DependencyVisitor(
-    private val adaptiveContext : AdaptivePluginContext,
-    private val endScope: ArmClass
+    private val closure: ArmState
 ) : IrElementVisitorVoid {
 
     var dependencies = mutableListOf<ArmStateVariable>()
@@ -33,12 +31,8 @@ class DependencyVisitor(
      * Call to the getter.
      */
     override fun visitCall(expression: IrCall) {
-        var scope : ArmClass? = endScope
-        while (scope != null) {
-            scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
-                dependencies += it
-            }
-            scope = scope.parentScope
+        closure.firstOrNull { it.matches(expression.symbol) }?.let {
+            dependencies += it
         }
         super.visitCall(expression)
     }
@@ -47,12 +41,8 @@ class DependencyVisitor(
      * Parameter get from the original function.
      */
     override fun visitGetValue(expression: IrGetValue) {
-        var scope : ArmClass? = endScope
-        while (scope != null) {
-            scope.stateVariables.firstOrNull { it.matches(expression.symbol) }?.let {
-                dependencies += it
-            }
-            scope = scope.parentScope
+        closure.firstOrNull { it.matches(expression.symbol) }?.let {
+            dependencies += it
         }
         super.visitGetValue(expression)
     }

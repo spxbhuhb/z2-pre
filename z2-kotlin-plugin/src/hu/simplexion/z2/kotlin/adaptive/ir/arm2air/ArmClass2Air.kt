@@ -68,7 +68,6 @@ class ArmClass2Air(
 
         airClass = AirClass(
             armClass,
-            armClass.parentScope?.fqName,
             irClass,
             constructor,
             adapter,
@@ -82,7 +81,7 @@ class ArmClass2Air(
         )
 
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
-        airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.armElement.originalName }
+        airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.name }
 
         return airClass
     }

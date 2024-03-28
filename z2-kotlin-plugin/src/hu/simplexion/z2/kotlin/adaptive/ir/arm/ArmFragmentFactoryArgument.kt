@@ -10,8 +10,10 @@ class ArmFragmentFactoryArgument(
     armClass: ArmClass,
     index: Int,
     value: IrExpression,
-    dependencies: ArmDependencies,
+    dependencies: ArmDependencies
 ) : ArmValueArgument(armClass, index, value, dependencies) {
+
+    lateinit var closure: ArmState
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitHigherOrderArgument(this, data)

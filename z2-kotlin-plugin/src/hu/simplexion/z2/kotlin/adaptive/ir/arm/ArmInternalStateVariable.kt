@@ -13,12 +13,12 @@ import org.jetbrains.kotlin.ir.symbols.IrSymbol
 
 class ArmInternalStateVariable(
     override val armClass: ArmClass,
-    override val index: Int,
+    override val indexInState: Int,
+    override val indexInClosure: Int,
     val irVariable: IrVariable,
 ) : ArmStateVariable {
 
-    override val originalName = irVariable.name.identifier
-    override val name = irVariable.name
+    override val name = irVariable.name.identifier
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
 
@@ -30,10 +30,13 @@ class ArmInternalStateVariable(
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
 
     init {
-        ErrorsAdaptive.ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES.check(armClass, irVariable) { index <= ADAPTIVE_STATE_VARIABLE_LIMIT }
+        ErrorsAdaptive.ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES.check(
+            armClass,
+            irVariable
+        ) { indexInClosure <= ADAPTIVE_STATE_VARIABLE_LIMIT }
     }
 
     override fun toString(): String {
-        return "INTERNAL_STATE_VARIABLE index:$index name:$name"
+        return "INTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name"
     }
 }

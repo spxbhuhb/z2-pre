@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 class AirStateVariable(
     val indexInFragment : Int,
     val indexInClosure : Int,
+    val name: String,
     val type : IrType
 ) : AirElement {
 

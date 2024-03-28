@@ -1,8 +1,6 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
-import hu.simplexion.z2.kotlin.adaptive.Names
-import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -26,7 +24,6 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.name.FqName
@@ -97,35 +94,6 @@ open class ClassBoundIrBuilder(
     // --------------------------------------------------------------------------------------------------------
     // Properties
     // --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Adds a constructor parameter and a property with the same name. The property
-     * is initialized from the constructor parameter.
-     */
-    fun addPropertyWithConstructorParameter(
-        inName: Name,
-        inType: IrType,
-        inIsVar: Boolean = false,
-        overridden: List<IrPropertySymbol>? = null,
-        inVarargElementType: IrType? = null
-    ): IrProperty =
-
-        with(irClass.constructors.first()) {
-
-            addValueParameter {
-                name = inName
-                type = inType
-                varargElementType = inVarargElementType
-            }.let {
-                addIrProperty(
-                    inName,
-                    inType,
-                    inIsVar,
-                    irGet(it, origin = IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER),
-                    overridden
-                )
-            }
-        }
 
     /**
      * Adds a property to [irClass].
@@ -229,81 +197,6 @@ open class ClassBoundIrBuilder(
         ).apply {
             dispatchReceiver = receiver
             putValueArgument(0, value)
-        }
-
-    // --------------------------------------------------------------------------------------------------------
-    // Functions
-    // --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Defines a `fun adaptiveBuilderNNN() : AdaptiveFragment<BT>` function (NNN = [startOffset])
-     */
-    fun builder(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_BUILDER_FUN}$startOffset")
-            returnType = classBoundFragmentType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter(Strings.ADAPTIVE_BUILDER_PARENT_ARG, classBoundFragmentType)
-
-            function.parent = irClass
-            irClass.declarations += function
-        }
-
-    /**
-     * Defines a `adaptiveExternalPatchNNN(it : AdaptiveFragment<BT>)` function (NNN = [startOffset])
-     */
-    fun externalPatch(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_EXTERNAL_PATCH_FUN}$startOffset")
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG
-                type = classBoundFragmentType
-            }
-
-            function.parent = irClass
-            irClass.declarations += function
-        }
-
-    /**
-     * Defines a `adaptiveFragmentFactoryNNN(parent : AdaptiveFragment<BT>, index : Int)` function (NNN = [startOffset])
-     */
-    fun fragmentFactory(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_FRAGMENT_FACTORY_FUN}$startOffset")
-            returnType = classBoundFragmentType.makeNullable()
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG
-                type = classBoundFragmentType
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG
-                type = irBuiltIns.intType
-            }
-
-            function.parent = irClass
-            irClass.declarations += function
         }
 
     // --------------------------------------------------------------------------------------------------------

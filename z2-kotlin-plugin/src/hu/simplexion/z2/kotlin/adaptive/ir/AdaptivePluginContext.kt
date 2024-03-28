@@ -32,6 +32,8 @@ class AdaptivePluginContext(
 
     val messages = mutableListOf<PluginMessage>()
 
+    val adaptiveNamespaceClass = classSymbol(FqNames.ADAPTIVE_NAMESPACE)
+
     val armClasses = mutableListOf<ArmClass>()
     val armEntryPoints = mutableListOf<ArmEntryPoint>()
 
@@ -58,8 +60,15 @@ class AdaptivePluginContext(
     val adapter = property(Strings.ADAPTER)
     val thisClosure = property(Strings.THIS_CLOSURE)
     val createClosure = property(Strings.CREATE_CLOSURE)
+    val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
+
     val containedFragment = property(Strings.CONTAINED_FRAGMENT)
+    val dirtyMask = property(Strings.DIRTY_MASK)
+
+    val build = function(Strings.BUILD)
+    val patch = function(Strings.PATCH)
+    val invoke = function(Strings.INVOKE)
 
     val create = function(Strings.CREATE)
     val mount = function(Strings.MOUNT)
@@ -74,7 +83,7 @@ class AdaptivePluginContext(
         adaptiveGeneratedFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()
 
     private fun function(name: String) =
-        listOf(adaptiveGeneratedFragmentClass.functions.single { it.owner.name.asString() == name })
+        adaptiveGeneratedFragmentClass.functions.single { it.owner.name.asString() == name }
 
     class PluginMessage(
         val severity: IrMessageLogger.Severity,

@@ -5,7 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
-import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
+import hu.simplexion.z2.kotlin.adaptive.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isFunction
+import org.jetbrains.kotlin.ir.util.statements
 
 /**
  * Transforms an original function into a [ArmClass]. This is a somewhat complex transformation.
@@ -36,10 +37,12 @@ class IrFunction2ArmClass(
     lateinit var armClass: ArmClass
 
     var fragmentIndex = 0
-        get() = field ++
+        get() = field++
 
     var supportIndex = 0
-        get() = field ++
+        get() = field++
+
+    val closures: Stack<ArmState> = mutableListOf()
 
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
@@ -54,7 +57,7 @@ class IrFunction2ArmClass(
     }
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(adaptiveContext, armClass)
+        val visitor = DependencyVisitor(closures.peek())
         accept(visitor, null)
         return visitor.dependencies
     }
@@ -71,7 +74,7 @@ class IrFunction2ArmClass(
         transformBlock(renderingBlock)
     }
 
-    fun transformStatement(statement : IrStatement) : ArmRenderingStatement =
+    fun transformStatement(statement: IrStatement): ArmRenderingStatement =
         when (statement) {
             is IrBlock -> {
                 when (statement.origin) {
@@ -177,7 +180,7 @@ class IrFunction2ArmClass(
 
     fun transformCall(irCall: IrCall): ArmCall {
 
-        if (! irCall.isAdaptive(adaptiveContext)) {
+        if (!irCall.isAdaptive(adaptiveContext)) {
             throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
@@ -193,12 +196,16 @@ class IrFunction2ArmClass(
         return armCall
     }
 
-    fun transformValueArgument(argumentIndex: Int, parameter: IrValueParameter, expression: IrExpression): ArmValueArgument =
+    fun transformValueArgument(
+        argumentIndex: Int,
+        parameter: IrValueParameter,
+        expression: IrExpression
+    ): ArmValueArgument =
         when {
             parameter.isAdaptive() -> {
                 if (expression is IrFunctionExpression) {
                     ArmFragmentFactoryArgument(armClass, fragmentIndex, expression, expression.dependencies()).also {
-                        transformFragmentFactoryArgument(expression)
+                        transformFragmentFactoryArgument(it, expression)
                     }
                 } else {
                     ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
@@ -218,8 +225,25 @@ class IrFunction2ArmClass(
             }
         }
 
-    fun transformFragmentFactoryArgument(expression: IrFunctionExpression) {
-        TODO()
+    fun transformFragmentFactoryArgument(
+        fragmentFactory: ArmFragmentFactoryArgument,
+        expression: IrFunctionExpression
+    ) {
+        var stateVariableIndex = closures.last().last().indexInClosure + 1
+
+        closures.push(
+            expression.function.valueParameters.mapIndexed { indexInState, parameter ->
+                ArmExternalStateVariable(armClass, stateVariableIndex++, indexInState, parameter)
+            }
+        )
+
+        fragmentFactory.closure = closures.flatten()
+
+        expression.function.body?.statements?.forEach {
+            transformStatement(it)
+        }
+
+        closures.pop()
     }
 
     // ---------------------------------------------------------------------------
