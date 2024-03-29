@@ -69,17 +69,11 @@ open class ClassBoundIrBuilder(
     val classBoundClosureType: IrType
         get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
 
-    val classBoundFunction0Type: IrType
-        get() = irBuiltIns.functionN(0).typeWith(classBoundFragmentType)
-
-    val classBoundBuilderType: IrType
-        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, classBoundFragmentType)
-
-    val classBoundExternalPatchType: IrType
-        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
+    val classBoundSupportFunctionType: IrType
+        get() = pluginContext.adaptiveSupportFunctionClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundFragmentFactoryType: IrType
-        get() = irBuiltIns.functionN(2).typeWith(classBoundFragmentType, irBuiltIns.intType, classBoundNullableFragmentType)
+        get() = pluginContext.adaptiveFragmentFactoryClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
@@ -90,6 +84,32 @@ open class ClassBoundIrBuilder(
     // FIXME check uses of irThisReceiver
     fun irThisReceiver(): IrExpression =
         IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irClass.thisReceiver !!.symbol)
+
+    // --------------------------------------------------------------------------------------------------------
+    // Build expression builder
+    // --------------------------------------------------------------------------------------------------------
+
+    fun irBuildExpression(classSymbols: AdaptiveClassSymbols): IrExpression {
+        val buildFun = airClass.build
+
+        val constructorCall =
+            IrConstructorCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                classSymbols.defaultType,
+                classSymbols.primaryConstructor.symbol,
+                typeArgumentsCount = 1, // bridge type
+                constructorTypeArgumentsCount = 0,
+                Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+            )
+
+        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
+
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(airClass.adapter, irGet(buildFun.dispatchReceiverParameter !!)))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.ADAPTIVE_BUILDER_PARENT]))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.ADAPTIVE_BUILDER_DECLARATION_INDEX]))
+
+        return constructorCall
+    }
 
     // --------------------------------------------------------------------------------------------------------
     // Properties
@@ -436,7 +456,7 @@ open class ClassBoundIrBuilder(
     // --------------------------------------------------------------------------------------------------------
 
     val String.function: IrFunction
-        get() = airClass.irClass.declarations.first { it is IrFunction && it.name.asString() == this } as IrFunction
+        get() = irClass.declarations.first { it is IrFunction && it.name.asString() == this } as IrFunction
 
     val String.name: Name
         get() = Name.identifier(this)

@@ -54,6 +54,9 @@ class AdaptivePluginContext(
     val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE)
     val adaptiveBridgeType = adaptiveBridgeClass.defaultType
 
+    val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
+    val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
+
     val adaptiveSequenceClass = classSymbol(FqNames.ADAPTIVE_SEQUENCE)
     val adaptiveSelectClass = classSymbol(FqNames.ADAPTIVE_SELECT)
 
@@ -72,10 +75,11 @@ class AdaptivePluginContext(
 
     val create = function(Strings.CREATE)
     val mount = function(Strings.MOUNT)
-
-    // val patch = function(Strings.PATCH)
+    //val patch = function(Strings.PATCH, 0)
     val dispose = function(Strings.DISPOSE)
     val unmount = function(Strings.UNMOUNT)
+
+    val setStateVariable = function(Strings.SET_STATE_VARIABLE)
 
     val adaptiveSymbolMap = AdaptiveSymbolMap(this)
 

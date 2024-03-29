@@ -22,6 +22,7 @@ object Strings {
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
+    const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
 
     const val BUILD = "build"
@@ -32,6 +33,8 @@ object Strings {
     const val MOUNT = "mount"
     const val UNMOUNT = "unmount"
     const val DISPOSE = "dispose"
+
+    const val SET_STATE_VARIABLE = "setStateVariable"
 
     const val GET_CLOSURE_VARIABLE = "getClosureVariable"
 
@@ -54,12 +57,6 @@ object Strings {
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
     const val ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
-
-    fun String.toNameWithPostfix(postfix: Int) =
-        Name.identifier("$this$postfix")
-
-    fun String.toNameWithPostfix(postfix: String) =
-        Name.identifier("$this$postfix")
 }
 
 object Names {
@@ -83,8 +80,8 @@ object Names {
     val UNMOUNT = Name.identifier(Strings.UNMOUNT)
     val DISPOSE = Name.identifier(Strings.DISPOSE)
 
-    val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
+    val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
     val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
     val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
 }
@@ -104,6 +101,8 @@ object FqNames {
     val ADAPTIVE_FOR_LOOP = Strings.ADAPTIVE_LOOP.runtime
     val ADAPTIVE_ENTRY_FUNCTION = Strings.ADAPTIVE_ENTRY_FUNCTION.runtime
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
+    val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
+    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
 }
 
 object Indices {
@@ -123,13 +122,21 @@ object Indices {
 
     /**
      * Builder function arguments.
-     *
-     *
      */
     const val ADAPTIVE_BUILDER_ARGUMENT_COUNT = 2
 
     const val ADAPTIVE_BUILDER_PARENT = 0
     const val ADAPTIVE_BUILDER_DECLARATION_INDEX = 1
+
+    /**
+     * setStateVariable function arguments.
+     *
+     *
+     */
+    const val ADAPTIVE_SET_STATE_VARIABLE_ARGUMENT_COUNT = 2
+
+    const val ADAPTIVE_SET_STATE_VARIABLE_INDEX = 0
+    const val ADAPTIVE_SET_STATE_VARIABLE_VALUE = 1
 
     /**
      * Adapter trace function arguments
