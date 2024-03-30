@@ -11,10 +11,12 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSequence2Air
 class ArmSequence(
     armClass: ArmClass,
     index: Int,
-    val statements : List<ArmRenderingStatement>
-) : ArmRenderingStatement(armClass, index) {
+    closure: ArmClosure,
+    startOffset: Int,
+    val statements : List<ArmRenderingStatement>,
+) : ArmRenderingStatement(armClass, index, closure, startOffset) {
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SEQUENCE)
+    val target = FqNames.ADAPTIVE_SEQUENCE
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmSequence2Air(parent, this).toAir()
 

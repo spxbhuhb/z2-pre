@@ -25,9 +25,6 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable) = visitElement(stateVariable)
     override fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable, data: Nothing?) = visitInternalStateVariable(stateVariable)
 
-    fun visitDirtyMask(dirtyMask: ArmDirtyMask) = visitElement(dirtyMask)
-    override fun visitDirtyMask(dirtyMask: ArmDirtyMask, data: Nothing?) = visitDirtyMask(dirtyMask)
-
     fun visitStatement(statement: ArmRenderingStatement) = visitElement(statement)
     override fun visitStatement(statement: ArmRenderingStatement, data: Nothing?) = visitStatement(statement)
 
@@ -37,20 +34,11 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitCall(statement: ArmCall) = visitElement(statement)
     override fun visitCall(statement: ArmCall, data: Nothing?) = visitCall(statement)
 
-    fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall) = visitElement(statement)
-    override fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall, data: Nothing?) = visitCallbackFunctionCall(statement)
-
-    fun visitHigherOrderCall(statement: ArmHigherOrderCall) = visitElement(statement)
-    override fun visitHigherOrderCall(statement: ArmHigherOrderCall, data: Nothing?) = visitHigherOrderCall(statement)
-
-    fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall) = visitElement(statement)
-    override fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall, data: Nothing?) = visitParameterFunctionCall(statement)
-
     fun visitWhen(statement: ArmSelect) = visitElement(statement)
     override fun visitWhen(statement: ArmSelect, data: Nothing?) = visitWhen(statement)
 
-    fun visitForLoop(statement: ArmLoop) = visitElement(statement)
-    override fun visitForLoop(statement: ArmLoop, data: Nothing?) = visitForLoop(statement)
+    fun visitLoop(statement: ArmLoop) = visitElement(statement)
+    override fun visitLoop(statement: ArmLoop, data: Nothing?) = visitLoop(statement)
 
     fun visitExpression(expression: ArmExpression) = visitElement(expression)
     override fun visitExpression(expression: ArmExpression, data: Nothing?) = visitExpression(expression)
@@ -61,8 +49,8 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) = visitExpression(supportFunctionArgument)
     override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument, data: Nothing?) = visitSupportFunctionArgument(supportFunctionArgument)
 
-    fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument) = visitExpression(higherOrderArgument)
-    override fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument, data: Nothing?) = visitHigherOrderArgument(higherOrderArgument)
+    fun visitFragmentFactoryArgument(fragmentFactoryArgument: ArmFragmentFactoryArgument) = visitExpression(fragmentFactoryArgument)
+    override fun visitFragmentFactoryArgument(fragmentFactoryArgument: ArmFragmentFactoryArgument, data: Nothing?) = visitFragmentFactoryArgument(fragmentFactoryArgument)
 
     fun visitDeclaration(declaration: ArmDeclaration) = visitElement(declaration)
     override fun visitDeclaration(declaration: ArmDeclaration, data: Nothing?) = visitDeclaration(declaration)

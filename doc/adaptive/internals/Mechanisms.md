@@ -19,7 +19,7 @@ fun Z3.higherFun(builder : Z3.() -> Unit) {
 }
 
 fun Z2.test() {
-    higherFun { // declaration
+    higherFun { // creation of `higherFun` and declaration of an anonymous component
         T0()
         T1(i)
     }
@@ -50,8 +50,9 @@ fun Z3.higherFun(builder : Z3.() -> Unit) {
 }
 
 fun Z2.test() {
-    // (for `higherFun` call) index: 0 
+    // (for `higherFun` call) index: 0 (creation)
     // (for the anonymous function) index: 1 (declaration)
+    // (for implicit sequence in the anonymous function) index: 1 (creation)
     higherFun { 
         T0()      // index: 2
         T1(i)     // index: 3

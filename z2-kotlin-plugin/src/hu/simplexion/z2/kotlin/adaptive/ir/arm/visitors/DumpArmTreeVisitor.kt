@@ -26,7 +26,7 @@ class DumpArmTreeVisitor(
     override fun visitClass(armClass: ArmClass) {
         indented {
             with(armClass) {
-                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex}) parentScope:${parentScope?.fqName}" }
+                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex})" }
             }
             super.visitClass(armClass)
         }
@@ -35,7 +35,7 @@ class DumpArmTreeVisitor(
     override fun visitExternalStateVariable(stateVariable: ArmExternalStateVariable) {
         indented {
             with(stateVariable) {
-                println { "EXTERNAL_STATE_VARIABLE index:$index name:$name" }
+                println { "EXTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name" }
             }
             super.visitStateVariable(stateVariable)
         }
@@ -44,25 +44,16 @@ class DumpArmTreeVisitor(
     override fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable) {
         indented {
             with(stateVariable) {
-                println { "INTERNAL_STATE_VARIABLE index:$index name:$name" }
+                println { "INTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name" }
             }
             super.visitStateVariable(stateVariable)
-        }
-    }
-
-    override fun visitDirtyMask(dirtyMask: ArmDirtyMask) {
-        indented {
-            with(dirtyMask) {
-                println { "DIRTY_MASK index:$index" }
-            }
-            super.visitDirtyMask(dirtyMask)
         }
     }
 
     override fun visitSequence(statement: ArmSequence) {
         indented {
             with(statement) {
-                println { "RENDERING type:SEQUENCE index:$index startOffset: ${statement.irBlock.startOffset}" }
+                println { "SEQUENCE index:$index startOffset:${statement.startOffset}" }
             }
             super.visitSequence(statement)
         }
@@ -71,55 +62,27 @@ class DumpArmTreeVisitor(
     override fun visitCall(statement: ArmCall) {
         indented {
             with(statement) {
-                println { "RENDERING type:CALL index:$index startOffset: ${statement.irCall.startOffset} type:<$target>" }
+                println { "CALL index:$index startOffset:${statement.startOffset} type:<$target>" }
             }
             super.visitCall(statement)
-        }
-    }
-
-    override fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:CALLBACK_CALL index:$index startOffset: ${statement.irCall.startOffset} type:<$target>" }
-            }
-            super.visitCallbackFunctionCall(statement)
-        }
-    }
-
-    override fun visitHigherOrderCall(statement: ArmHigherOrderCall) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:HIGHER_ORDER_CALL index:$index type:<$target>" }
-            }
-            super.visitHigherOrderCall(statement)
-        }
-    }
-
-
-    override fun visitParameterFunctionCall(statement: ArmLowerOrderFunctionCall) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:PARAMETER_FUNCTION_CALL index:$index" }
-            }
-            super.visitParameterFunctionCall(statement)
         }
     }
 
     override fun visitWhen(statement: ArmSelect) {
         indented {
             with(statement) {
-                println { "RENDERING type:WHEN index:$index" }
+                println { "WHEN index:$index startOffset:${statement.startOffset}" }
             }
             super.visitWhen(statement)
         }
     }
 
-    override fun visitForLoop(statement: ArmLoop) {
+    override fun visitLoop(statement: ArmLoop) {
         indented {
             with(statement) {
-                println { "RENDERING type:FOR_LOOP index:$index" }
+                println { "LOOP index:$index startOffset:${statement.startOffset}" }
             }
-            super.visitForLoop(statement)
+            super.visitLoop(statement)
         }
     }
 
@@ -157,10 +120,10 @@ class DumpArmTreeVisitor(
         }
     }
 
-    override fun visitHigherOrderArgument(higherOrderArgument: ArmFragmentFactoryArgument) {
+    override fun visitFragmentFactoryArgument(fragmentFactoryArgument: ArmFragmentFactoryArgument) {
         indented {
-            with(higherOrderArgument) {
-                println { "$origin $index type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
+            with(fragmentFactoryArgument) {
+                println { "$origin index:$index type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
             }
         }
     }

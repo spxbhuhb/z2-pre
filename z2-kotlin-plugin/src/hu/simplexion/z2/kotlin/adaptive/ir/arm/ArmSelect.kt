@@ -7,20 +7,17 @@ import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSelect2Air
-import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.expressions.IrWhen
 
 class ArmSelect(
     armClass: ArmClass,
     index: Int,
-    val irSubject: IrVariable?,
-    val irWhen: IrWhen
-) : ArmRenderingStatement(armClass, index) {
+    closure: ArmClosure,
+    startOffset : Int
+) : ArmRenderingStatement(armClass, index, closure, startOffset) {
+
+    val target = FqNames.ADAPTIVE_SELECT
 
     val branches = mutableListOf<ArmBranch>()
-
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) =
-        irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_SELECT)
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmSelect2Air(parent, this).toAir()
 

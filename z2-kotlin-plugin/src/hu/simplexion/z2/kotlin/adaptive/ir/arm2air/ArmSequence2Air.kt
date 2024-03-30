@@ -5,9 +5,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSequence
-import org.jetbrains.kotlin.ir.expressions.IrBlock
-import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstantArrayImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstantPrimitiveImpl
 import org.jetbrains.kotlin.ir.types.defaultType
@@ -19,40 +17,19 @@ class ArmSequence2Air(
 ) : ClassBoundIrBuilder(parent) {
 
     fun toAir() {
-        airClass.buildBranches += AirBuildBranch(armSequence.index, irBuildExpression(armSequence.symbolMap(this)))
-        airClass.patchBranches += AirPatchBranch(armSequence.index, irPatchExpression())
+        airClass.buildBranches += AirBuildBranch(armSequence.index, irConstructorCallFromBuild(armSequence.target))
+        airClass.patchBranches += AirPatchBranch(armSequence.index, irPatchItemIndices())
     }
 
-    fun irPatchExpression(): IrBlock =
-        IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
-            .also { block ->
-                block.statements +=
-                    IrCallImpl(
-                        SYNTHETIC_OFFSET,
-                        SYNTHETIC_OFFSET,
-                        irBuiltIns.unitType,
-                        pluginContext.setStateVariable,
-                        typeArgumentsCount = 0,
-                        valueArgumentsCount = 1
-                    ).also { call ->
+    private fun irPatchItemIndices(): IrExpression =
+        irSetStateVariable(
+            Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,
+            IrConstantArrayImpl(
+                startOffset = SYNTHETIC_OFFSET,
+                endOffset = SYNTHETIC_OFFSET,
+                irBuiltIns.intArray.defaultType,
+                armSequence.statements.map { IrConstantPrimitiveImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irConst(it.index)) }
+            )
+        )
 
-                        call.dispatchReceiver = irGet(airClass.patch.valueParameters.first())
-
-                        call.putValueArgument(
-                            Indices.ADAPTIVE_SET_STATE_VARIABLE_INDEX,
-                            irConst(0)
-                        )
-
-                        call.putValueArgument(
-                            Indices.ADAPTIVE_SET_STATE_VARIABLE_VALUE,
-                            IrConstantArrayImpl(
-                                startOffset = SYNTHETIC_OFFSET,
-                                endOffset = SYNTHETIC_OFFSET,
-                                irBuiltIns.intArray.defaultType,
-                                armSequence.statements.map { IrConstantPrimitiveImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irConst(it.index)) }
-                            )
-                        )
-
-                    }
-            }
 }

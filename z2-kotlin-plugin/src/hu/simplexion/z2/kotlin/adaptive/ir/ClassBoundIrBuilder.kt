@@ -2,6 +2,8 @@ package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
+import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -24,6 +26,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.name.FqName
@@ -78,25 +81,23 @@ open class ClassBoundIrBuilder(
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
 
-    val FqName.symbolMap: AdaptiveClassSymbols
-        get() = pluginContext.adaptiveSymbolMap.getSymbolMap(this)
-
     // FIXME check uses of irThisReceiver
     fun irThisReceiver(): IrExpression =
         IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irClass.thisReceiver !!.symbol)
 
     // --------------------------------------------------------------------------------------------------------
-    // Build expression builder
+    // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    fun irBuildExpression(classSymbols: AdaptiveClassSymbols): IrExpression {
+    fun irConstructorCallFromBuild(target : FqName): IrExpression {
         val buildFun = airClass.build
+        val classSymbol = pluginContext.classSymbol(target)
 
         val constructorCall =
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                classSymbols.defaultType,
-                classSymbols.primaryConstructor.symbol,
+                classSymbol.defaultType,
+                classSymbol.constructors.single(),
                 typeArgumentsCount = 1, // bridge type
                 constructorTypeArgumentsCount = 0,
                 Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
@@ -105,11 +106,61 @@ open class ClassBoundIrBuilder(
         constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(airClass.adapter, irGet(buildFun.dispatchReceiverParameter !!)))
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.ADAPTIVE_BUILDER_PARENT]))
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.ADAPTIVE_BUILDER_DECLARATION_INDEX]))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
 
         return constructorCall
     }
+
+    fun irFragmentFactoryFromPatch(index : Int): IrExpression {
+        val patchFun = airClass.patchExternal
+
+        val constructorCall =
+            IrConstructorCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                classBoundFragmentType,
+                pluginContext.adaptiveFragmentFactoryConstructor,
+                typeArgumentsCount = 1, // bridge type
+                constructorTypeArgumentsCount = 0,
+                Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT
+            )
+
+        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
+
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter!!))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX, irConst(index))
+
+        return constructorCall
+    }
+
+    fun irSetStateVariable(stateVariableIndex : Int, value : IrExpression) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET,
+            SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            pluginContext.setStateVariable,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = 1
+        ).also { call ->
+
+            call.dispatchReceiver = irGet(airClass.patchExternal.valueParameters.first())
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_INDEX,
+                irConst(stateVariableIndex)
+            )
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_VALUE,
+                value
+            )
+        }
+
+    fun IrExpression.transformStateAccess(closure : ArmClosure, irGetFragment : () -> IrExpression) : IrExpression =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null)
+
+    fun IrStatement.transformStateAccess(closure : ArmClosure, irGetFragment : () -> IrExpression) : IrStatement =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null) as IrStatement
 
     // --------------------------------------------------------------------------------------------------------
     // Properties
@@ -409,47 +460,47 @@ open class ClassBoundIrBuilder(
     // Trace
     // --------------------------------------------------------------------------------------------------------
 
-    fun irTrace(point: String, parameters: List<IrExpression>): IrStatement {
-        return irTrace(irThisReceiver(), point, parameters)
-    }
-
-    fun irTrace(function: IrFunction, point: String, parameters: List<IrExpression>): IrStatement {
-        return irTrace(irGet(function.dispatchReceiverParameter !!), point, parameters)
-    }
-
-    fun irTrace(fragment: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
-        return irTraceDirect(irGetValue(airClass.adapter, fragment), point, parameters)
-    }
-
-    /**
-     * @param dispatchReceiver The `AdaptiveAdapter` instance to use for the trace.
-     */
-    fun irTraceDirect(dispatchReceiver: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
-        return IrCallImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.unitType,
-            pluginContext.adaptiveAdapterTrace,
-            typeArgumentsCount = 0,
-            Indices.ADAPTIVE_TRACE_ARGUMENT_COUNT,
-        ).also {
-            it.dispatchReceiver = dispatchReceiver
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_NAME, irConst(irClass.name.identifier))
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_POINT, irConst(point))
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_DATA, buildTraceVarArg(parameters))
-        }
-    }
-
-    fun buildTraceVarArg(parameters: List<IrExpression>): IrExpression {
-        return IrVarargImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
-            pluginContext.adaptiveFragmentType,
-        ).also { vararg ->
-            parameters.forEach {
-                vararg.addElement(it)
-            }
-        }
-    }
+//    fun irTrace(point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTrace(irThisReceiver(), point, parameters)
+//    }
+//
+//    fun irTrace(function: IrFunction, point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTrace(irGet(function.dispatchReceiverParameter !!), point, parameters)
+//    }
+//
+//    fun irTrace(fragment: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTraceDirect(irGetValue(airClass.adapter, fragment), point, parameters)
+//    }
+//
+//    /**
+//     * @param dispatchReceiver The `AdaptiveAdapter` instance to use for the trace.
+//     */
+//    fun irTraceDirect(dispatchReceiver: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
+//        return IrCallImpl(
+//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+//            irBuiltIns.unitType,
+//            pluginContext.adaptiveAdapterTrace,
+//            typeArgumentsCount = 0,
+//            Indices.ADAPTIVE_TRACE_ARGUMENT_COUNT,
+//        ).also {
+//            it.dispatchReceiver = dispatchReceiver
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_NAME, irConst(irClass.name.identifier))
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_POINT, irConst(point))
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_DATA, buildTraceVarArg(parameters))
+//        }
+//    }
+//
+//    fun buildTraceVarArg(parameters: List<IrExpression>): IrExpression {
+//        return IrVarargImpl(
+//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+//            irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
+//            pluginContext.adaptiveFragmentType,
+//        ).also { vararg ->
+//            parameters.forEach {
+//                vararg.addElement(it)
+//            }
+//        }
+//    }
 
     // --------------------------------------------------------------------------------------------------------
     // Misc

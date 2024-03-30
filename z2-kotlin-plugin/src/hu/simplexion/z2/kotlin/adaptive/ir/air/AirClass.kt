@@ -1,9 +1,11 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.air
 
+import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirClass2Ir
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.ir.declarations.*
 
 class AirClass(
@@ -14,15 +16,10 @@ class AirClass(
 
     val constructor: IrConstructor,
 
-    val adapter: IrProperty,
-    val parent: IrProperty,
-    val index: IrProperty,
-    val dirtyMask : IrProperty,
-
     val initializer: IrAnonymousInitializer,
 
     val build: IrSimpleFunction,
-    val patch: IrSimpleFunction,
+    val patchExternal: IrSimpleFunction,
     val invoke: IrSimpleFunction
 
 ) : AirElement {
@@ -33,6 +30,11 @@ class AirClass(
     val buildBranches = mutableListOf<AirBuildBranch>()
     val patchBranches = mutableListOf<AirPatchBranch>()
     val invokeBranches = mutableListOf<AirInvokeBranch>()
+
+    val adapter: IrProperty = irClass.property(Names.ADAPTER)
+    val parent: IrProperty = irClass.property(Names.PARENT)
+    val index: IrProperty = irClass.property(Names.INDEX)
+    val dirtyMask : IrProperty =irClass.property(Names.DIRTY_MASK)
 
     fun toIr(context: AdaptivePluginContext): IrClass = AirClass2Ir(context, this).toIr()
 

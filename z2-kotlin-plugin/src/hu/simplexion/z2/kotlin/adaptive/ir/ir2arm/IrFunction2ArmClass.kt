@@ -42,12 +42,19 @@ class IrFunction2ArmClass(
     var supportIndex = 0
         get() = field++
 
-    val closures: Stack<ArmState> = mutableListOf()
+    val states: Stack<ArmState> = mutableListOf()
+    val closures: Stack<ArmClosure> = mutableListOf()
+
+    val closure : ArmClosure
+        get() = closures.peek()
 
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
 
         StateDefinitionTransform(armClass, skipParameters).transform()
+
+        states.push(armClass.stateVariables)
+        closures.push(armClass.stateVariables)
 
         transformRoot()
 
@@ -57,19 +64,17 @@ class IrFunction2ArmClass(
     }
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(closures.peek())
+        val visitor = DependencyVisitor(states.peek())
         accept(visitor, null)
         return visitor.dependencies
     }
 
     fun transformRoot() {
-        val statements = armClass.originalStatements
-
         val startOffset = armClass.originalFunction.startOffset
         val endOffset = armClass.originalFunction.endOffset
 
         val renderingBlock = IrBlockImpl(startOffset, endOffset, adaptiveContext.irContext.irBuiltIns.unitType)
-        renderingBlock.statements.addAll(statements.subList(armClass.boundary.statementIndex, statements.size))
+        renderingBlock.statements.addAll(armClass.originalRenderingStatements)
 
         transformBlock(renderingBlock)
     }
@@ -88,6 +93,8 @@ class IrFunction2ArmClass(
 
             is IrWhen -> transformWhen(statement)
 
+            is IrReturn -> ArmSequence(armClass, fragmentIndex, closure, statement.startOffset, emptyList()) // TODO better check on return statement
+
             else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}")
 
         }
@@ -98,12 +105,12 @@ class IrFunction2ArmClass(
     // ---------------------------------------------------------------------------
 
     fun transformBlock(expression: IrBlock): ArmRenderingStatement {
-        val statements = expression.statements.map { transformStatement(it) }
+        val statements = expression.statements.mapNotNull { transformStatement(it) }
 
         return if (statements.size == 1) {
             statements[0]
         } else {
-            ArmSequence(armClass, fragmentIndex, statements)
+            ArmSequence(armClass, fragmentIndex, closure, expression.startOffset, statements)
         }
     }
 
@@ -160,7 +167,8 @@ class IrFunction2ArmClass(
         return ArmLoop(
             armClass,
             fragmentIndex,
-            statement,
+            closure,
+            statement.startOffset,
             iterator,
             condition,
             loopVariable,
@@ -184,7 +192,7 @@ class IrFunction2ArmClass(
             throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
-        val armCall = ArmCall(armClass, fragmentIndex, irCall)
+        val armCall = ArmCall(armClass, fragmentIndex, closure, irCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
@@ -229,21 +237,30 @@ class IrFunction2ArmClass(
         fragmentFactory: ArmFragmentFactoryArgument,
         expression: IrFunctionExpression
     ) {
-        var stateVariableIndex = closures.last().last().indexInClosure + 1
+        // add the anonymous function parameters to the closure
 
-        closures.push(
+        var stateVariableIndex = states.last().last().indexInClosure + 1
+
+        states.push(
             expression.function.valueParameters.mapIndexed { indexInState, parameter ->
                 ArmExternalStateVariable(armClass, stateVariableIndex++, indexInState, parameter)
             }
         )
 
-        fragmentFactory.closure = closures.flatten()
+        closures.push(states.flatten())
+
+        // transform the anonymous function itself with the new closure
+
+        fragmentFactory.closure = closure
 
         expression.function.body?.statements?.forEach {
             transformStatement(it)
         }
 
+        // remove the anonymous function parameters from the closure
+
         closures.pop()
+        states.pop()
     }
 
     // ---------------------------------------------------------------------------
@@ -274,7 +291,7 @@ class IrFunction2ArmClass(
 
     fun transformWhen(statement: IrWhen, subject: IrVariable? = null): ArmSelect {
 
-        val armSelect = ArmSelect(armClass, fragmentIndex, subject, statement)
+        val armSelect = ArmSelect(armClass, fragmentIndex, closure, statement.startOffset)
 
         statement.branches.forEach { irBranch ->
             ArmBranch(

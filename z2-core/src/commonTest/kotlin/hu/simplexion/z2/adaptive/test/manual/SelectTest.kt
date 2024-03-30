@@ -38,7 +38,7 @@ class SelectTest {
             fun v(value: Int) {
                 v0 = value
                 dirtyMask = 1
-                patch()
+                patchInternal()
             }
 
             // even: + 10  odd: + 20
@@ -105,9 +105,9 @@ class SelectTestComponent(
             setStateVariable(0, v)
         }
 
-    val closureMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
-    val closureMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
-    val closureMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
+    val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
+    val dependencyMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
+    val dependencyMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
@@ -122,13 +122,13 @@ class SelectTestComponent(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
 
-        val closureMask = fragment.createClosure?.closureMask() ?: 0
+        val closureMask = fragment.getClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {
-                if (closureMask and closureMask_0_0 != 0) {
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     fragment.setStateVariable(
                         0,
                         when {
@@ -141,7 +141,7 @@ class SelectTestComponent(
             }
 
             1 -> {
-                if (closureMask and closureMask_1_0 != 0) {
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
                     fragment.setStateVariable(
                         0,
                         v0 + 10
@@ -150,7 +150,7 @@ class SelectTestComponent(
             }
 
             2 -> {
-                if (closureMask and closureMask_2_0 != 0) {
+                if (fragment.haveToPatch(closureMask, dependencyMask_2_0)) {
                     fragment.setStateVariable(
                         0,
                         v0 + 20

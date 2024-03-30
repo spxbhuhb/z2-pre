@@ -26,17 +26,16 @@ object Strings {
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
 
     const val BUILD = "build"
-    const val PATCH = "patch"
+    const val PATCH_EXTERNAL = "patchExternal"
     const val INVOKE = "invoke"
 
     const val CREATE = "create"
     const val MOUNT = "mount"
-    const val UNMOUNT = "unmount"
-    const val DISPOSE = "dispose"
 
+    const val GET_CLOSURE_DIRTY_MASK = "getClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
-
     const val GET_CLOSURE_VARIABLE = "getClosureVariable"
+    const val INVALID_INDEX = "invalidIndex"
 
     const val PARENT = "parent"
     const val INDEX = "index"
@@ -64,21 +63,13 @@ object Names {
     val INDEX = Name.identifier(Strings.INDEX)
 
     val ADAPTER = Name.identifier(Strings.ADAPTER)
-    val THIS_CLOSURE = Name.identifier(Strings.THIS_CLOSURE)
-    val CREATE_CLOSURE = Name.identifier(Strings.CREATE_CLOSURE)
-    val CONTAINED_FRAGMENT = Name.identifier(Strings.CONTAINED_FRAGMENT)
     val DIRTY_MASK = Name.identifier(Strings.DIRTY_MASK)
 
     val BT = Name.identifier(Strings.BT)
 
     val BUILD = Name.identifier(Strings.BUILD)
-    val PATCH = Name.identifier(Strings.PATCH)
+    val PATCH_EXTERNAL = Name.identifier(Strings.PATCH_EXTERNAL)
     val INVOKE = Name.identifier(Strings.INVOKE)
-
-    val CREATE = Name.identifier(Strings.CREATE)
-    val MOUNT = Name.identifier(Strings.MOUNT)
-    val UNMOUNT = Name.identifier(Strings.UNMOUNT)
-    val DISPOSE = Name.identifier(Strings.DISPOSE)
 
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
     val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
@@ -98,7 +89,7 @@ object FqNames {
     val ADAPTIVE_BRIDGE = Strings.ADAPTIVE_BRIDGE.runtime
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.runtime
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.runtime
-    val ADAPTIVE_FOR_LOOP = Strings.ADAPTIVE_LOOP.runtime
+    val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.runtime
     val ADAPTIVE_ENTRY_FUNCTION = Strings.ADAPTIVE_ENTRY_FUNCTION.runtime
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
@@ -121,22 +112,45 @@ object Indices {
     const val ADAPTIVE_FRAGMENT_INDEX = 2
 
     /**
-     * Builder function arguments.
+     * AdaptiveGeneratedFragment constructor arguments
      */
-    const val ADAPTIVE_BUILDER_ARGUMENT_COUNT = 2
-
-    const val ADAPTIVE_BUILDER_PARENT = 0
-    const val ADAPTIVE_BUILDER_DECLARATION_INDEX = 1
+    const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 4
+    const val ADAPTIVE_GENERATED_FRAGMENT_ADAPTER = 0
+    const val ADAPTIVE_GENERATED_FRAGMENT_PARENT = 1
+    const val ADAPTIVE_GENERATED_FRAGMENT_INDEX = 2
+    const val ADAPTIVE_GENERATED_FRAGMENT_STATE_SIZE = 3
 
     /**
-     * setStateVariable function arguments.
-     *
-     *
+     * `build(parent, declarationIndex)` arguments
      */
-    const val ADAPTIVE_SET_STATE_VARIABLE_ARGUMENT_COUNT = 2
+    const val BUILD_PARENT = 0
+    const val BUILD_DECLARATION_INDEX = 1
 
-    const val ADAPTIVE_SET_STATE_VARIABLE_INDEX = 0
-    const val ADAPTIVE_SET_STATE_VARIABLE_VALUE = 1
+    /**
+     * `patchExternal(fragment)` arguments
+     */
+    const val PATCH_EXTERNAL_FRAGMENT = 0
+
+    /**
+     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?` arguments
+     */
+    const val INVOKE_SUPPORT_FUNCTION = 0
+    const val INVOKE_ARGUMENTS = 1
+
+    /**
+     * `setStateVariable(index, value)` arguments
+     */
+    const val SET_STATE_VARIABLE_ARGUMENT_COUNT = 2
+
+    const val SET_STATE_VARIABLE_INDEX = 0
+    const val SET_STATE_VARIABLE_VALUE = 1
+
+    /**
+     * `getClosureVariable(index)` arguments
+     */
+    const val GET_CLOSURE_VARIABLE_ARGUMENT_COUNT = 1
+
+    const val GET_CLOSURE_VARIABLE_INDEX = 0
 
     /**
      * Adapter trace function arguments
@@ -159,4 +173,17 @@ object Indices {
 
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT = 0
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX = 1
+
+    /**
+     * Structural fragment state indices
+     */
+    const val ADAPTIVE_SEQUENCE_ITEM_INDICES = 0
+    const val ADAPTIVE_SELECT_BRANCH = 0
+    const val ADAPTIVE_LOOP_ITERATOR = 0
+    const val ADAPTIVE_LOOP_FACTORY = 1
+
+    /**
+     * AdaptiveFragment.invalidIndex(index) arguments
+     */
+    const val INVALID_INDEX_INDEX = 0
 }

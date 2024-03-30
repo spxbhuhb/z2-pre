@@ -12,14 +12,13 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 open class ArmCall(
     armClass: ArmClass,
     index: Int,
+    closure: ArmClosure,
     val irCall: IrCall
-) : ArmRenderingStatement(armClass, index) {
+) : ArmRenderingStatement(armClass, index, closure, irCall.startOffset) {
 
-    open val target = irCall.symbol.owner.adaptiveClassFqName()
+    val target = irCall.symbol.owner.adaptiveClassFqName()
 
     val arguments = mutableListOf<ArmValueArgument>()
-
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(target)
 
     override fun toAir(parent: ClassBoundIrBuilder) {
         ArmCall2Air(parent, this).toAir()

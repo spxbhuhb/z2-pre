@@ -95,7 +95,7 @@ class AdaptiveClosure<BT>(
     /**
      * Calculate the complete closure mask (or of components masks).
      */
-    fun closureMask(): Int {
+    fun closureDirtyMask(): AdaptiveStateVariableMask {
         var mask = 0
         var position = 0
         for (component in components) {

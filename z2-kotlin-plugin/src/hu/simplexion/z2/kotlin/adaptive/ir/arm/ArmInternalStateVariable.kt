@@ -10,6 +10,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmInternalStateVariable2Air
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.types.IrType
 
 class ArmInternalStateVariable(
     override val armClass: ArmClass,
@@ -19,6 +20,9 @@ class ArmInternalStateVariable(
 ) : ArmStateVariable {
 
     override val name = irVariable.name.identifier
+
+    override val type: IrType
+        get() = irVariable.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
 

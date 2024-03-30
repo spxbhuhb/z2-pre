@@ -53,7 +53,11 @@ class SequenceTestComponent(
     override val index: Int
 ) : AdaptiveGeneratedFragment<TestNode>(adapter, 0) {
 
+    val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
+    val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
+
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSequence(adapter, parent, declarationIndex)
             1 -> AdaptiveT0(adapter, parent, declarationIndex)
@@ -66,19 +70,26 @@ class SequenceTestComponent(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+
+        val closureMask = fragment.getClosureDirtyMask()
+
         when (fragment.index) {
             0 -> {
-                fragment.setStateVariable(0, arrayOf(1, 2)) // indices of T0 and T1
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
+                    fragment.setStateVariable(0, arrayOf(1, 2)) // indices of T0 and T1
+                }
             }
 
             2 -> {
-                fragment.setStateVariable(0, 12)
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
+                    fragment.setStateVariable(0, 12)
+                }
             }
         }
     }
 
-    override fun patch() {
-        containedFragment.patch()
+    override fun patchInternal() {
+        containedFragment.patchInternal()
     }
 }

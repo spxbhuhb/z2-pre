@@ -14,19 +14,21 @@ class AdaptiveSequence<BT>(
     // 0 : Array<Int>, the indices of sequence items
     override val state = arrayOfNulls<Any?>(1)
 
-    override var dirtyMask = 0
+    override var dirtyMask = adaptiveInitStateMask
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 
     override fun create() {
         if (adapter.trace) adapter.trace("AdaptiveSequence", id, "create")
 
-        createClosure.owner.patch(this)
+        createClosure.owner.patchExternal(this)
 
         @Suppress("UNCHECKED_CAST")
         for (itemIndex in state[0] as Array<Int>) {
             fragments += createClosure.owner.build(this, itemIndex)
         }
+
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -34,9 +36,10 @@ class AdaptiveSequence<BT>(
         fragments.forEach { it.mount(bridge) }
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         if (adapter.trace) adapter.trace("AdaptiveSequence", id, "adaptiveInternalPatch")
-        fragments.forEach { it.patch() }
+        fragments.forEach { it.patchInternal() }
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {

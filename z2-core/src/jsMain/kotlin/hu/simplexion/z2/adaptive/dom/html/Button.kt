@@ -43,7 +43,7 @@ class AdaptiveButton(
         receiver.onclick = onClick
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.innerText = label
         }

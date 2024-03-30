@@ -6,6 +6,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirStateVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.types.IrType
 
 interface ArmStateVariable : ArmElement {
 
@@ -13,6 +14,7 @@ interface ArmStateVariable : ArmElement {
     val indexInState: Int
     val indexInClosure: Int
     val name: String
+    val type : IrType
 
     fun matches(symbol: IrSymbol): Boolean
 

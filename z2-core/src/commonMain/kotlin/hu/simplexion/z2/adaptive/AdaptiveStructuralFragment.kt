@@ -15,7 +15,7 @@ interface AdaptiveStructuralFragment<BT> : AdaptiveFragment<BT> {
         shouldNotRun()
     }
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
         shouldNotRun()
     }
 

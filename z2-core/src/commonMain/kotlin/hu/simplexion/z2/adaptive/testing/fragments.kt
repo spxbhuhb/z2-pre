@@ -11,7 +11,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
 
     val traceName = this::class.simpleName.toString()
 
-    override var dirtyMask = 0
+    override var dirtyMask = adaptiveInitStateMask
 
     override val createClosure : AdaptiveClosure<BT>?
         get() = parent?.thisClosure
@@ -20,7 +20,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
         shouldNotRun()
     }
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
         adapter.trace(traceName, id, "patch(fragment)")
     }
 
@@ -36,7 +36,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
         adapter.trace(traceName, id, "mount", "bridge:", bridge)
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         adapter.trace(traceName, id, "patch")
     }
 
@@ -96,12 +96,13 @@ class AdaptiveT1<BT>(
         get() = 1
 
     override fun create() {
-        createClosure?.owner?.patch(this)
+        createClosure?.owner?.patchExternal(this)
         adapter.trace(traceName, id, "create", "p0:", p0)
+        dirtyMask = adaptiveCleanStateMask
     }
 
-    override fun patch() {
-        createClosure?.owner?.patch(this)
+    override fun patchInternal() {
+        createClosure?.owner?.patchExternal(this)
         adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
     }
 }
@@ -143,14 +144,14 @@ class AdaptiveH1<BT>(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
-        super.patch(fragment)
-        fragment0.patch()
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
+        super.patchExternal(fragment)
+        fragment0.patchInternal()
     }
 
     override fun create() {
         super.create()
-        createClosure!!.owner.patch(this)
+        createClosure!!.owner.patchExternal(this)
 
         fragment0 = build(this, 0) // 0 is the index of the `builder` call
     }
@@ -160,9 +161,9 @@ class AdaptiveH1<BT>(
         fragment0.mount(bridge)
     }
 
-    override fun patch() {
-        super.patch()
-        fragment0.patch()
+    override fun patchInternal() {
+        super.patchInternal()
+        fragment0.patchInternal()
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -217,8 +218,8 @@ class AdaptiveH2<BT>(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
-        super.patch(fragment)
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
+        super.patchExternal(fragment)
 
         when (fragment.index) {
             0 -> {
@@ -231,7 +232,7 @@ class AdaptiveH2<BT>(
     override fun create() {
         super.create()
 
-        createClosure!!.owner.patch(this)
+        createClosure!!.owner.patchExternal(this)
 
         fragment0 = build(this, 0) // 0 is the index of the `builder` call
     }
@@ -241,9 +242,9 @@ class AdaptiveH2<BT>(
         fragment0.mount(bridge)
     }
 
-    override fun patch() {
-        super.patch()
-        fragment0.patch()
+    override fun patchInternal() {
+        super.patchInternal()
+        fragment0.patchInternal()
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -285,7 +286,7 @@ class AdaptiveEH1A<BT>(
         get() = state[1] as AdaptiveSupportFunction<BT>
         set(v) { state[1] = v }
 
-    override fun patch() {
+    override fun patchInternal() {
         adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
 
         if (p0 % 2 == 0) {

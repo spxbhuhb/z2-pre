@@ -10,6 +10,8 @@ package hu.simplexion.z2.adaptive
  */
 abstract class AdaptiveGeneratedFragment<BT>(
     final override val adapter: AdaptiveAdapter<BT>,
+    override val parent : AdaptiveFragment<BT>?,
+    override val index: Int,
     stateSize : Int
 ) : AdaptiveFragment<BT> {
 
@@ -17,7 +19,7 @@ abstract class AdaptiveGeneratedFragment<BT>(
 
     override val state = arrayOfNulls<Any?>(stateSize)
 
-    override var dirtyMask = 0
+    override var dirtyMask = adaptiveInitStateMask
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
     override val thisClosure = AdaptiveClosure(arrayOf(this), stateSize)
@@ -39,8 +41,12 @@ abstract class AdaptiveGeneratedFragment<BT>(
 
     override fun create() {
         if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "create")
-        createClosure?.owner?.patch(this)
+
+        createClosure?.owner?.patchExternal(this)
+
         containedFragment = build(this, 0)
+
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -48,9 +54,10 @@ abstract class AdaptiveGeneratedFragment<BT>(
         containedFragment.mount(bridge)
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "patch")
-        containedFragment.patch()
+        containedFragment.patchInternal()
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {

@@ -32,7 +32,7 @@ class AdaptivePlaceholder<BT>(
         bridge.add(this.bridge)
     }
 
-    override fun patch() {
+    override fun patchInternal() {
 
     }
 

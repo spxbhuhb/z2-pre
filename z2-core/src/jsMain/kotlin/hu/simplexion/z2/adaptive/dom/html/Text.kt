@@ -35,7 +35,7 @@ class AdaptiveText(
         receiver.data = content
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         if (adaptiveDirty0 and 1L != 0L) {
             receiver.data = content
         }

@@ -13,32 +13,12 @@ interface AirElementVisitor<out R, in D> {
 
     fun visitClass(airClass: AirClass, data: D) = visitElement(airClass, data)
 
-    fun visitProperty(property: AirProperty, data: D) = visitElement(property, data)
+    fun visitStateVariable(stateVariable: AirStateVariable, data: D) = visitElement(stateVariable, data)
 
-    fun visitStateVariable(stateVariable: AirStateVariable, data: D) = visitProperty(stateVariable, data)
+    fun visitBuildBranch(branch: AirBuildBranch, data: D) = visitElement(branch, data)
 
-    fun visitDirtyMask(dirtyMask: AirDirtyMask, data: D) = visitProperty(dirtyMask, data)
+    fun visitPatchBranch(branch: AirPatchBranch, data: D) = visitElement(branch, data)
 
-    fun visitFunction(function: AirFunction, data: D) = visitElement(function, data)
-
-    fun visitBuildBranch(builder: AirBuildBranch, data: D) = visitElement(builder, data)
-    fun visitPatchBranch(builder: AirPatchBranch, data: D) = visitElement(builder, data)
-    fun visitInvokeBranch(builder: AirInvokeBranch, data: D) = visitElement(builder, data)
-
-    fun visitBuilder(builder: AirBuilder, data: D) = visitFunction(builder, data)
-
-    fun visitBuilderSequence(builder: AirBuilderSequence, data: D) = visitBuilder(builder, data)
-    fun visitBuilderCall(builder: AirBuilderCall, data: D) = visitBuilder(builder, data)
-    fun visitBuilderForLoop(builder: AirBuilderForLoop, data: D) = visitBuilder(builder, data)
-    fun visitBuilderWhen(builder: AirBuilderWhen, data: D) = visitBuilder(builder, data)
-
-    fun visitExternalPatch(externalPatch: AirExternalPatch, data: D) = visitFunction(externalPatch, data)
-
-    fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence, data: D) = visitExternalPatch(externalPatch, data)
-    fun visitExternalPatchCall(externalPatch: AirExternalPatchCall, data: D) = visitExternalPatch(externalPatch, data)
-    fun visitExternalPatchForLoop(externalPatch: AirExternalPatchForLoop, data: D) = visitExternalPatch(externalPatch, data)
-    fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen, data: D) = visitExternalPatch(externalPatch, data)
-
-    fun visitFragmentFactory(fragmentFactory: AirFragmentFactory, data: D) = visitFunction(fragmentFactory, data)
+    fun visitInvokeBranch(branch: AirInvokeBranch, data: D) = visitElement(branch, data)
 
 }

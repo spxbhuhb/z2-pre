@@ -7,24 +7,24 @@ import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmLoop2Air
-import org.jetbrains.kotlin.ir.expressions.IrBlock
 
 class ArmLoop(
     armClass: ArmClass,
     index: Int,
-    val irBlock: IrBlock,
+    closure: ArmClosure,
+    startOffset : Int,
     var iterator: ArmDeclaration,
     val condition: ArmExpression,
     val loopVariable: ArmDeclaration,
     val body: ArmRenderingStatement,
-) : ArmRenderingStatement(armClass, index) {
+) : ArmRenderingStatement(armClass, index, closure, startOffset) {
 
-    override fun symbolMap(irBuilder: ClassBoundIrBuilder) = irBuilder.pluginContext.adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_FOR_LOOP_CLASS)
+    val target = FqNames.ADAPTIVE_LOOP
 
     override fun toAir(parent: ClassBoundIrBuilder) = ArmLoop2Air(parent, this).toAir()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitForLoop(this, data)
+        visitor.visitLoop(this, data)
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
         iterator.accept(visitor, data)

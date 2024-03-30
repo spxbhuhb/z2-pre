@@ -5,14 +5,14 @@ package hu.simplexion.z2.adaptive
 
 class AdaptiveAnonymous<BT>(
     adapter: AdaptiveAdapter<BT>,
-    override val parent: AdaptiveFragment<BT>,
-    override val index: Int,
-    val factory: AdaptiveFragmentFactory<BT>,
+    parent: AdaptiveFragment<BT>,
+    index: Int,
     stateSize: Int,
-) : AdaptiveGeneratedFragment<BT>(adapter, stateSize) {
+    val factory: AdaptiveFragmentFactory<BT>,
+) : AdaptiveGeneratedFragment<BT>(adapter, parent, index, stateSize) {
 
     override val createClosure : AdaptiveClosure<BT>
-        get() = parent.thisClosure
+        get() = parent!!.thisClosure
 
     override val thisClosure = createClosure.extendWith(this, factory.declaringFragment)
 
@@ -20,8 +20,8 @@ class AdaptiveAnonymous<BT>(
         shouldNotRun()
     }
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
-        factory.declaringFragment.patch(fragment)
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
+        factory.declaringFragment.patchExternal(fragment)
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
@@ -30,7 +30,7 @@ class AdaptiveAnonymous<BT>(
 
     override fun create() {
         if (adapter.trace) adapter.trace("AdaptiveAnonymous", id, "create")
-        createClosure.owner.patch(this)
+        createClosure.owner.patchExternal(this)
         containedFragment = factory.build(this)
     }
 

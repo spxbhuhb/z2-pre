@@ -76,6 +76,14 @@ class HigherOrderTestComponent(
     override val index: Int
 ) : AdaptiveGeneratedFragment<TestNode>(adapter, 0) {
 
+    val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
+    val dependencyMask_0_1 = 0x00 // fragment index: 0, state variable index: 1
+
+    val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
+    val dependencyMask_1_1 = 0x00 // fragment index: 1, state variable index: 1
+
+    val dependencyMask_2_0 = 0x00 // fragment index: 2, state variable index: 0
+
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> HigherFun(adapter, parent, declarationIndex)
@@ -89,18 +97,30 @@ class HigherOrderTestComponent(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+        val closureMask = fragment.getClosureDirtyMask()
+
         when (fragment.index) {
             0 -> {
-                fragment.state[0] = 12
-                fragment.state[1] = AdaptiveFragmentFactory(this, 1)
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
+                    fragment.setStateVariable(0, 12)
+                }
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
+                    fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))
+                }
             }
             1 -> {
-                fragment.state[0] = (fragment.getClosureVariableFromLast(0) as Int)
-                fragment.state[1] = AdaptiveFragmentFactory(this, 2)
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
+                    fragment.setStateVariable(0, fragment.getClosureVariable(0) as Int)
+                }
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
+                    fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 2))
+                }
             }
             2 -> {
-                fragment.state[0] = (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariableFromLast(0) as Int)
+                if (fragment.haveToPatch(closureMask, dependencyMask_2_0)) {
+                    fragment.setStateVariable(0, (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariable(1) as Int))
+                }
             }
             else -> invalidIndex(fragment.index)
         }
@@ -132,7 +152,7 @@ class HigherFun(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
                 fragment.state[0] = higherI * 2
@@ -171,7 +191,7 @@ class HigherFunInner(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
                 fragment.state[0] = innerI + 1

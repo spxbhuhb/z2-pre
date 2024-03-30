@@ -16,7 +16,7 @@ class AdaptiveSelect<BT>(
     // 0: The branch to show
     override val state = arrayOfNulls<Any>(1)
 
-    override var dirtyMask: Int = 0
+    override var dirtyMask = adaptiveInitStateMask
 
     val stateBranch
         get() = state[0] as Int
@@ -40,12 +40,14 @@ class AdaptiveSelect<BT>(
     override fun create() {
         if (adapter.trace) adapter.trace("AdaptiveSelect", id, "create")
 
-        createClosure.owner.patch(this)
+        createClosure.owner.patchExternal(this)
 
         if (stateBranch != shownBranch) {
             createClosure.owner.build(this, stateBranch)
             shownBranch = stateBranch
         }
+
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -54,13 +56,13 @@ class AdaptiveSelect<BT>(
         shownFragment?.mount(placeholder)
     }
 
-    override fun patch() {
-        createClosure.owner.patch(this) // this will update the branch in the state
+    override fun patchInternal() {
+        createClosure.owner.patchExternal(this) // this will update the branch in the state
 
         if (adapter.trace) adapter.trace("AdaptiveSelect", id, "patch", "shownBranch:", shownBranch, "stateBranch:", stateBranch)
 
         if (stateBranch == shownBranch) {
-            shownFragment?.patch()
+            shownFragment?.patchInternal()
         } else {
             shownFragment?.unmount(placeholder)
             shownFragment?.dispose()
@@ -74,6 +76,8 @@ class AdaptiveSelect<BT>(
 
             shownBranch = stateBranch
         }
+
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {

@@ -78,6 +78,10 @@ class LoopTestComponent(
         get() = state[0] as Int
         set(v) { state[0] = v }
 
+    val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
+    val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 0
+    val dependencyMask_1_0 = 0x02 // fragment index: 1, state variable index: 0
+
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveLoop<TestNode, Int>(adapter, parent, declarationIndex)
@@ -90,19 +94,24 @@ class LoopTestComponent(
         return fragment
     }
 
-    override fun patch(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+
+        val closureMask = fragment.getClosureDirtyMask()
+
         when (fragment.index) {
             0 -> {
-                // if (thisClosure.isDirty(count_closureMask)) {
-                fragment.state[0] = (0 .. count).iterator()
-                fragment.state[1] = AdaptiveFragmentFactory(this, 1)
-                //     fragment.thisClosure.makeDirty(count_closureMask))
-                // }
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
+                    fragment.setStateVariable(0, (0 .. count).iterator())
+                }
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
+                    fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))
+                }
             }
             1 -> {
                 // T1.createClosure is [ (count), (i) ]
-                // getVariableFromLast accesses the state of the last component in the closure
-                fragment.state[0] = (fragment.getClosureVariableFromLast(0) as Int) + 10
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
+                    fragment.setStateVariable(0, (fragment.getClosureVariable(1) as Int) + 10)
+                }
             }
             else -> invalidIndex(fragment.index)
         }

@@ -16,7 +16,7 @@ class ArmFragmentFactoryArgument(
     lateinit var closure: ArmState
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitHigherOrderArgument(this, data)
+        visitor.visitFragmentFactoryArgument(this, data)
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
 

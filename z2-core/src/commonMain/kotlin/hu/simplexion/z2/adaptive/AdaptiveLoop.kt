@@ -15,7 +15,7 @@ class AdaptiveLoop<BT, IT>(
     // 1: AdaptiveFragmentFactory
     override val state = arrayOfNulls<Any>(2)
 
-    override var dirtyMask: Int = 0
+    override var dirtyMask = adaptiveInitStateMask
 
     @Suppress("UNCHECKED_CAST")
     val iterator
@@ -31,12 +31,12 @@ class AdaptiveLoop<BT, IT>(
 
     val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
 
-    override fun patch(fragment: AdaptiveFragment<BT>) {
+    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
         // anonymous fragments are patched by `patch()` for loops
     }
 
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment<BT> =
-        AdaptiveAnonymous(adapter, this, 0, builder, 1).also {
+        AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
             fragments.add(it)
             it.state[0] = iteratorValue
             it.create()
@@ -45,11 +45,13 @@ class AdaptiveLoop<BT, IT>(
     override fun create() {
         if (adapter.trace) adapter.trace("AdaptiveLoop", id, "create")
 
-        createClosure.owner.patch(this)
+        createClosure.owner.patchExternal(this)
 
         for (loopVariable in iterator) {
             addAnonymous(loopVariable)
         }
+
+        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -62,7 +64,7 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun patch() {
+    override fun patchInternal() {
         if (adapter.trace) adapter.trace("AdaptiveLoop", id, "patch")
 
         // TODO think about re-running iterators, we should not do that
@@ -72,7 +74,7 @@ class AdaptiveLoop<BT, IT>(
             patchContent()
         }
 
-        dirtyMask = 0
+        dirtyMask = adaptiveCleanStateMask
     }
 
     fun patchStructure() {
@@ -84,7 +86,7 @@ class AdaptiveLoop<BT, IT>(
                 f.mount(placeholder)
             } else {
                 fragments[index].also {
-                    it.patch()
+                    it.patchInternal()
                 }
             }
             index ++
@@ -99,7 +101,7 @@ class AdaptiveLoop<BT, IT>(
 
     fun patchContent() {
         for (fragment in fragments) {
-            fragment.patch()
+            fragment.patchInternal()
         }
     }
 

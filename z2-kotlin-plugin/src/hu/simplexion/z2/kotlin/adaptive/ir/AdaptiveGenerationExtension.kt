@@ -58,7 +58,7 @@ internal class AdaptiveGenerationExtension(
             airClasses.values.forEach {
                 it.toIr(this)
                 if (! it.armClass.compilationError) {
-                    it.armElement.originalFunction.file.addChild(it.irClass)
+                    it.armClass.originalFunction.file.addChild(it.irClass)
                 }
             }
             airEntryPoints.forEach {

@@ -1,15 +1,18 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 
 import hu.simplexion.z2.kotlin.adaptive.AdaptivePluginKey
+import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.declarations.*
+import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrTypeParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -20,12 +23,10 @@ import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.addFakeOverrides
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.file
 import org.jetbrains.kotlin.name.Name
@@ -37,7 +38,7 @@ class ArmClass2Air(
     val armClass: ArmClass
 ) : ClassBoundIrBuilder(context) {
 
-    fun toAir() : AirClass {
+    fun toAir(): AirClass {
 
         val originalFunction = armClass.originalFunction
 
@@ -58,30 +59,34 @@ class ArmClass2Air(
         irClass.metadata = armClass.originalFunction.metadata
 
         thisReceiver()
+
+        // these have to be before addFakeOverrides()
+
         val constructor = constructor()
+        val initializer = initializer()
+        val build = build()
+        val patchExternal = patchExternal()
+        val invoke = invoke()
 
-        val adapter = addPropertyWithConstructorParameter(Names.ADAPTER, classBoundAdapterType, overridden = pluginContext.adapter)
-        val parent = addPropertyWithConstructorParameter(Names.PARENT, classBoundFragmentType.makeNullable(), overridden = pluginContext.parent)
-        val index = addPropertyWithConstructorParameter(Names.INDEX, classBoundClosureType.makeNullable(), overridden = pluginContext.index)
+        // this has to be before AirClass() (adds overridden properties)
 
-        val dirtyMask = addIrProperty(Names.DIRTY_MASK, irBuiltIns.intType, inIsVar = true, irConst(0), pluginContext.dirtyMask)
+        irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 
         airClass = AirClass(
             armClass,
             irClass,
             constructor,
-            adapter,
-            parent,
-            index,
-            dirtyMask,
-            initializer(),
-            build(),
-            patch(),
-            invoke()
+            initializer,
+            build,
+            patchExternal,
+            invoke
         )
 
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
         airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.name }
+
+
+        armClass.rendering.forEach { it.toAir(this) } // adds build, patch and invoke branches
 
         return airClass
     }
@@ -137,16 +142,37 @@ class ArmClass2Air(
         }.apply {
             parent = irClass
 
+            val adapter = addValueParameter {
+                name = Names.ADAPTER
+                type = classBoundAdapterType
+            }
+
+            val parent = addValueParameter {
+                name = Names.PARENT
+                type = classBoundFragmentType.makeNullable()
+            }
+
+            val index = addValueParameter {
+                name = Names.INDEX
+                type = irBuiltIns.intType
+            }
+
             body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
                 statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
                     SYNTHETIC_OFFSET,
                     SYNTHETIC_OFFSET,
-                    irBuiltIns.anyType,
-                    irBuiltIns.anyClass.constructors.first(),
-                    typeArgumentsCount = 0,
-                    valueArgumentsCount = 0
-                )
+                    pluginContext.adaptiveGeneratedFragmentClass.typeWith(classBoundFragmentType),
+                    pluginContext.adaptiveGeneratedFragmentClass.constructors.first(),
+                    typeArgumentsCount = 1,
+                    valueArgumentsCount = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                ).apply {
+                    putTypeArgument(0, classBoundFragmentType)
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_ADAPTER, irGet(adapter))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_PARENT, irGet(parent))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_INDEX, irGet(index))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
+                }
 
                 statements += IrInstanceInitializerCallImpl(
                     SYNTHETIC_OFFSET,
@@ -158,17 +184,20 @@ class ArmClass2Air(
         }
 
     private fun initializer(): IrAnonymousInitializer =
-
         irFactory.createAnonymousInitializer(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             origin = IrDeclarationOrigin.DEFINED,
             symbol = IrAnonymousInitializerSymbolImpl(),
             isStatic = false
-        ).apply {
-            parent = irClass
-            // we should not add the initializer here as it should be the last
-            // declaration of the class to be able to access all properties
-            // it is added in finalize
+        ).also { initFun ->
+            initFun.parent = irClass
+            irClass.declarations += initFun
+
+            initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
+                armClass.originalInitializationStatements.forEach { statement ->
+                    + statement.transformStateAccess(armClass.stateVariables) { irGet(irClass.thisReceiver !!) }
+                }
+            }
         }
 
     /**
@@ -205,11 +234,11 @@ class ArmClass2Air(
     // --------------------------------------------------------------------------------------------------------
 
     fun function(
-        inName : Name,
-        inReturnType : IrType,
-        overridden : IrSimpleFunctionSymbol,
-        vararg parameters : Pair<Name, IrType>
-    ) : IrSimpleFunction =
+        inName: Name,
+        inReturnType: IrType,
+        overridden: IrSimpleFunctionSymbol,
+        vararg parameters: Pair<Name, IrType>
+    ): IrSimpleFunction =
         irFactory.buildFun {
             name = inName
             returnType = inReturnType
@@ -246,13 +275,13 @@ class ArmClass2Air(
         )
 
     /**
-     * Defines a `patch(fragment : AdaptiveFragment<BT>)`
+     * Defines a `patchExternal(fragment : AdaptiveFragment<BT>)`
      */
-    fun patch(): IrSimpleFunction =
+    fun patchExternal(): IrSimpleFunction =
         function(
-            Names.PATCH,
+            Names.PATCH_EXTERNAL,
             irBuiltIns.unitType,
-            pluginContext.patch,
+            pluginContext.patchExternal,
             Names.FRAGMENT to classBoundFragmentType
         )
 
@@ -264,7 +293,7 @@ class ArmClass2Air(
             Names.INVOKE,
             irBuiltIns.anyNType,
             pluginContext.invoke,
-            Names.SUPPORT_FUNCTION to classBoundFragmentType
+            Names.SUPPORT_FUNCTION to classBoundSupportFunctionType
         ).also {
             it.addValueParameter {
                 name = Names.ARGUMENTS

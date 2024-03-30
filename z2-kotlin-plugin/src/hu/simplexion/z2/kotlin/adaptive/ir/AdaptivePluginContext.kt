@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.name.FqName
@@ -55,33 +56,26 @@ class AdaptivePluginContext(
     val adaptiveBridgeType = adaptiveBridgeClass.defaultType
 
     val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
+    val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
+
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
 
-    val adaptiveSequenceClass = classSymbol(FqNames.ADAPTIVE_SEQUENCE)
-    val adaptiveSelectClass = classSymbol(FqNames.ADAPTIVE_SELECT)
-
     val adapter = property(Strings.ADAPTER)
-    val thisClosure = property(Strings.THIS_CLOSURE)
-    val createClosure = property(Strings.CREATE_CLOSURE)
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
 
-    val containedFragment = property(Strings.CONTAINED_FRAGMENT)
     val dirtyMask = property(Strings.DIRTY_MASK)
 
     val build = function(Strings.BUILD)
-    val patch = function(Strings.PATCH)
+    val patchExternal = function(Strings.PATCH_EXTERNAL)
     val invoke = function(Strings.INVOKE)
 
     val create = function(Strings.CREATE)
     val mount = function(Strings.MOUNT)
-    //val patch = function(Strings.PATCH, 0)
-    val dispose = function(Strings.DISPOSE)
-    val unmount = function(Strings.UNMOUNT)
 
+    val getClosureMask = function(Strings.GET_CLOSURE_DIRTY_MASK)
+    val getClosureVariable = function(Strings.GET_CLOSURE_VARIABLE)
     val setStateVariable = function(Strings.SET_STATE_VARIABLE)
-
-    val adaptiveSymbolMap = AdaptiveSymbolMap(this)
 
     private fun property(name: String) =
         adaptiveGeneratedFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()

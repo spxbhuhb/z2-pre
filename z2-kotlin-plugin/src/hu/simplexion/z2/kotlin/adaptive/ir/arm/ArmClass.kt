@@ -9,6 +9,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmClass2Air
 import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.util.adaptiveClassFqName
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.util.statements
 
@@ -26,8 +27,10 @@ class ArmClass(
 
     val originalStatements = checkNotNull(originalFunction.body?.statements) { "missing function body" }
 
+    val originalInitializationStatements = mutableListOf<IrStatement>()
+    val originalRenderingStatements = mutableListOf<IrStatement>()
+
     val stateVariables = mutableListOf<ArmStateVariable>()
-    val dirtyMasks = mutableListOf<ArmDirtyMask>()
 
     val rendering = mutableListOf<ArmRenderingStatement>()
 
@@ -38,7 +41,6 @@ class ArmClass(
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
         stateVariables.forEach { it.accept(visitor, data) }
-        dirtyMasks.forEach { it.accept(visitor, data) }
         rendering.forEach { it.accept(visitor, data) }
     }
 }

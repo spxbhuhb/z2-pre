@@ -5,7 +5,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmElement
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
 class AirInvokeBranch(
-    override val armElement : ArmElement,
+    val armElement : ArmElement,
     val index : Int,
     val body : IrExpression
 ) : AirElement {
