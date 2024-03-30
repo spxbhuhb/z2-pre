@@ -85,9 +85,6 @@ class ArmClass2Air(
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
         airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.name }
 
-
-        armClass.rendering.forEach { it.toAir(this) } // adds build, patch and invoke branches
-
         return airClass
     }
 

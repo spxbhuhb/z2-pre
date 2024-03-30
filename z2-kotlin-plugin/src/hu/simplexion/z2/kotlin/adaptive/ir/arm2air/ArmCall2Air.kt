@@ -32,7 +32,7 @@ class ArmCall2Air(
     }
 
     fun invokeBranchExpressions() {
-        TODO()
+
     }
 
 }

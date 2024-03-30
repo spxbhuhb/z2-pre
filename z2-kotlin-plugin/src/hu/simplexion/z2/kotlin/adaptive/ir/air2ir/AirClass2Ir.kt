@@ -30,6 +30,10 @@ class AirClass2Ir(
 
     fun toIr(): IrClass {
 
+        // adds build, patch and invoke branches
+        // this has to be done after all classes has their IrClass or build won't be able to find them
+        airClass.armClass.rendering.forEach { it.toAir(this) }
+
         build()
         patchExternal()
         invoke()

@@ -91,7 +91,7 @@ open class ClassBoundIrBuilder(
 
     fun irConstructorCallFromBuild(target: FqName): IrExpression {
         val buildFun = airClass.build
-        val classSymbol = pluginContext.classSymbol(target)
+        val classSymbol = pluginContext.airClasses[target]?.irClass?.symbol ?: pluginContext.classSymbol(target)
 
         val constructorCall =
             IrConstructorCallImpl(
