@@ -11,9 +11,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
-import org.jetbrains.kotlin.ir.types.classifierOrNull
 import org.jetbrains.kotlin.ir.util.kotlinFqName
-import org.jetbrains.kotlin.ir.util.superTypes
 
 /**
  * Creates an `ArmClass` and a `ArmEntryPoint` for each call of the `adaptive` function (defined in the runtime).
@@ -52,22 +50,7 @@ class EntryPointTransform(
 
         val function = block.function
 
-        if (function.valueParameters.isEmpty()) {
-            return report("${expression.symbol} does not have AdaptiveAdapter as first parameter")
-        }
-
-        val adapter = function.valueParameters.first()
-
-        val classifier = adaptiveContext.adaptiveAdapterType.classifierOrNull
-
-        if (adapter.type.classifierOrNull != classifier) {
-            if (adapter.type.superTypes().firstOrNull { it.classifierOrNull == classifier } == null) {
-                return report("${expression.symbol} first parameter is not a AdaptiveAdapter")
-            }
-        }
-
-        // skip the adaptiveAdapter function parameter
-        val armClass = IrFunction2ArmClass(adaptiveContext, function, skipParameters = 1).transform()
+        val armClass = IrFunction2ArmClass(adaptiveContext, block.function).transform()
 
         ArmEntryPoint(armClass, function).also {
             adaptiveContext.armEntryPoints += it

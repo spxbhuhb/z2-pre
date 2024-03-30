@@ -294,11 +294,10 @@ class ArmClass2Air(
             irBuiltIns.anyNType,
             pluginContext.invoke,
             Names.SUPPORT_FUNCTION to classBoundSupportFunctionType
-        ).also {
-            it.addValueParameter {
+        ).apply {
+            addValueParameter {
                 name = Names.ARGUMENTS
                 type = irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType)
-                varargElementType = irBuiltIns.anyNType
             }
         }
 }

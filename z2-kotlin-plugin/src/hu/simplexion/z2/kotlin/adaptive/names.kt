@@ -10,7 +10,7 @@ object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive"
 
     const val ADAPTIVE_NAMESPACE = "Adaptive"
-    const val ADAPTIVE_ENTRY_FUNCTION = "hu.simplexion.z2.adaptive.adaptive"
+    const val ENTRY_FUNCTION = "adaptive"
 
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
     const val ADAPTIVE_ANONYMOUS = "AdaptiveAnonymous"
@@ -90,7 +90,7 @@ object FqNames {
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.runtime
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.runtime
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.runtime
-    val ADAPTIVE_ENTRY_FUNCTION = Strings.ADAPTIVE_ENTRY_FUNCTION.runtime
+    val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
@@ -105,7 +105,7 @@ object Indices {
      * 2. parent
      * 3. index
      */
-    const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 4
+    const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 3
 
     const val ADAPTIVE_FRAGMENT_ADAPTER = 0
     const val ADAPTIVE_FRAGMENT_PARENT = 1

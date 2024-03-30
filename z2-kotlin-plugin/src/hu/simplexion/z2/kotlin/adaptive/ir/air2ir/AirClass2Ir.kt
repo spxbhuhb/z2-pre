@@ -63,7 +63,7 @@ class AirClass2Ir(
     private fun irBuildWhen(): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.intType,
+            classBoundFragmentType,
             IrStatementOrigin.WHEN
         ).apply {
 
@@ -114,14 +114,14 @@ class AirClass2Ir(
                 }
             )
 
-            patchExternalWhen(fragmentIndex, closureMask)
+            + patchExternalWhen(fragmentIndex, closureMask)
         }
     }
 
     private fun patchExternalWhen(fragmentIndex : IrVariable, closureMask: IrVariable): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.intType,
+            irBuiltIns.unitType,
             IrStatementOrigin.WHEN
         ).apply {
 
@@ -129,7 +129,7 @@ class AirClass2Ir(
                 branches += irPatchExternalBranch(branch, fragmentIndex, closureMask)
             }
 
-            branches += irInvalidIndexBranch(irGet(fragmentIndex))
+            //branches += irInvalidIndexBranch(irGet(fragmentIndex))
         }
 
     private fun irPatchExternalBranch(branch: AirPatchBranch, fragmentIndex: IrVariable, closureMask: IrVariable) =

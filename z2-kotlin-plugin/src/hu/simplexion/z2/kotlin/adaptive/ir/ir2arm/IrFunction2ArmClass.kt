@@ -30,8 +30,7 @@ import org.jetbrains.kotlin.ir.util.statements
  */
 class IrFunction2ArmClass(
     val adaptiveContext: AdaptivePluginContext,
-    val irFunction: IrFunction,
-    val skipParameters: Int
+    val irFunction: IrFunction
 ) : AdaptiveNonAnnotationBasedExtension {
 
     lateinit var armClass: ArmClass
@@ -51,7 +50,7 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
 
-        StateDefinitionTransform(armClass, skipParameters).transform()
+        StateDefinitionTransform(armClass, 0).transform()
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
@@ -69,6 +68,11 @@ class IrFunction2ArmClass(
         return visitor.dependencies
     }
 
+    fun ArmRenderingStatement.add() : ArmRenderingStatement {
+        armClass.rendering += this
+        return this
+    }
+
     fun transformRoot() {
         val startOffset = armClass.originalFunction.startOffset
         val endOffset = armClass.originalFunction.endOffset
@@ -76,7 +80,7 @@ class IrFunction2ArmClass(
         val renderingBlock = IrBlockImpl(startOffset, endOffset, adaptiveContext.irContext.irBuiltIns.unitType)
         renderingBlock.statements.addAll(armClass.originalRenderingStatements)
 
-        transformBlock(renderingBlock)
+       transformBlock(renderingBlock)
     }
 
     fun transformStatement(statement: IrStatement): ArmRenderingStatement =
@@ -93,7 +97,7 @@ class IrFunction2ArmClass(
 
             is IrWhen -> transformWhen(statement)
 
-            is IrReturn -> ArmSequence(armClass, fragmentIndex, closure, statement.startOffset, emptyList()) // TODO better check on return statement
+            is IrReturn -> ArmSequence(armClass, fragmentIndex, closure, statement.startOffset, emptyList()).add() // TODO better check on return statement
 
             else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}")
 
@@ -105,12 +109,12 @@ class IrFunction2ArmClass(
     // ---------------------------------------------------------------------------
 
     fun transformBlock(expression: IrBlock): ArmRenderingStatement {
-        val statements = expression.statements.mapNotNull { transformStatement(it) }
+        val statements = expression.statements.map { transformStatement(it) }
 
         return if (statements.size == 1) {
             statements[0]
         } else {
-            ArmSequence(armClass, fragmentIndex, closure, expression.startOffset, statements)
+            ArmSequence(armClass, fragmentIndex, closure, expression.startOffset, statements).add()
         }
     }
 
@@ -118,7 +122,7 @@ class IrFunction2ArmClass(
     // For Loop
     // ---------------------------------------------------------------------------
 
-    fun transformForLoop(statement: IrBlock): ArmLoop {
+    fun transformForLoop(statement: IrBlock): ArmRenderingStatement {
 
         // BLOCK type=kotlin.Unit origin=FOR_LOOP
         //          VAR FOR_LOOP_ITERATOR name:tmp0_iterator type:kotlin.collections.IntIterator [val]
@@ -173,7 +177,7 @@ class IrFunction2ArmClass(
             condition,
             loopVariable,
             rendering
-        )
+        ).add()
     }
 
     fun transformDeclaration(declaration: IrDeclaration, origin: ArmDeclarationOrigin): ArmDeclaration =
@@ -186,7 +190,7 @@ class IrFunction2ArmClass(
     // Call
     // ---------------------------------------------------------------------------
 
-    fun transformCall(irCall: IrCall): ArmCall {
+    fun transformCall(irCall: IrCall): ArmRenderingStatement {
 
         if (!irCall.isAdaptive(adaptiveContext)) {
             throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
@@ -201,7 +205,7 @@ class IrFunction2ArmClass(
             armCall.arguments += transformValueArgument(argumentIndex, parameter, expression)
         }
 
-        return armCall
+        return armCall.add()
     }
 
     fun transformValueArgument(
@@ -276,7 +280,7 @@ class IrFunction2ArmClass(
      * }
      * ```
      */
-    fun transformWhen(statement: IrBlock): ArmSelect {
+    fun transformWhen(statement: IrBlock): ArmRenderingStatement {
         // TODO convert checks into non-exception throwing, but contracting functions
         check(statement.statements.size == 2)
 
@@ -289,7 +293,7 @@ class IrFunction2ArmClass(
         return transformWhen(evaluation, subject)
     }
 
-    fun transformWhen(statement: IrWhen, subject: IrVariable? = null): ArmSelect {
+    fun transformWhen(statement: IrWhen, subject: IrVariable? = null): ArmRenderingStatement {
 
         val armSelect = ArmSelect(armClass, fragmentIndex, closure, statement.startOffset)
 
@@ -302,7 +306,7 @@ class IrFunction2ArmClass(
             )
         }
 
-        return armSelect
+        return armSelect.add()
     }
 
     fun transformExpression(expression: IrExpression, origin: ArmExpressionOrigin): ArmExpression {

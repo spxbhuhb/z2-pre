@@ -23,8 +23,7 @@ class AdaptiveSequence<BT>(
 
         createClosure.owner.patchExternal(this)
 
-        @Suppress("UNCHECKED_CAST")
-        for (itemIndex in state[0] as Array<Int>) {
+        for (itemIndex in state[0] as IntArray) {
             fragments += createClosure.owner.build(this, itemIndex)
         }
 

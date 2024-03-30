@@ -89,7 +89,7 @@ open class ClassBoundIrBuilder(
     // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    fun irConstructorCallFromBuild(target : FqName): IrExpression {
+    fun irConstructorCallFromBuild(target: FqName): IrExpression {
         val buildFun = airClass.build
         val classSymbol = pluginContext.classSymbol(target)
 
@@ -112,7 +112,7 @@ open class ClassBoundIrBuilder(
         return constructorCall
     }
 
-    fun irFragmentFactoryFromPatch(index : Int): IrExpression {
+    fun irFragmentFactoryFromPatch(index: Int): IrExpression {
         val patchFun = airClass.patchExternal
 
         val constructorCall =
@@ -127,20 +127,20 @@ open class ClassBoundIrBuilder(
 
         constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter!!))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter !!))
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX, irConst(index))
 
         return constructorCall
     }
 
-    fun irSetStateVariable(stateVariableIndex : Int, value : IrExpression) =
+    fun irSetStateVariable(stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
             pluginContext.setStateVariable,
             typeArgumentsCount = 0,
-            valueArgumentsCount = 1
+            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also { call ->
 
             call.dispatchReceiver = irGet(airClass.patchExternal.valueParameters.first())
@@ -156,10 +156,10 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun IrExpression.transformStateAccess(closure : ArmClosure, irGetFragment : () -> IrExpression) : IrExpression =
+    fun IrExpression.transformStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
         transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null)
 
-    fun IrStatement.transformStateAccess(closure : ArmClosure, irGetFragment : () -> IrExpression) : IrStatement =
+    fun IrStatement.transformStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrStatement =
         transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null) as IrStatement
 
     // --------------------------------------------------------------------------------------------------------
@@ -251,7 +251,7 @@ open class ClassBoundIrBuilder(
     fun irGetValue(irProperty: IrProperty, receiver: IrExpression?): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irProperty.backingField !!.type,
+            irProperty.getter !!.returnType,
             irProperty.getter !!.symbol,
             0, 0,
             origin = IrStatementOrigin.GET_PROPERTY

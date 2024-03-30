@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.adaptive
 
-interface AdaptiveAdapter<BT> {
+interface AdaptiveAdapter<BT> : Adaptive {
 
     val rootBridge: AdaptiveBridge<BT>
 
