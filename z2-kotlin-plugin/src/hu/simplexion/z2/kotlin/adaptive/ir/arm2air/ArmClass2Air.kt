@@ -15,10 +15,8 @@ import org.jetbrains.kotlin.ir.builders.declarations.*
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrTypeParameterImpl
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrInstanceInitializerCallImpl
-import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
@@ -193,38 +191,7 @@ class ArmClass2Air(
             irClass.declarations += initFun
 
             initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
-                armClass.originalInitializationStatements.forEach { statement ->
-                    + statement.transformStateAccess(armClass.stateVariables) { irGet(irClass.thisReceiver !!) }
-                }
-            }
-        }
 
-    /**
-     * Adds a constructor parameter and a property with the same name. The property
-     * is initialized from the constructor parameter.
-     */
-    fun addPropertyWithConstructorParameter(
-        inName: Name,
-        inType: IrType,
-        inIsVar: Boolean = false,
-        overridden: List<IrPropertySymbol>? = null,
-        inVarargElementType: IrType? = null
-    ): IrProperty =
-
-        with(irClass.constructors.first()) {
-
-            addValueParameter {
-                name = inName
-                type = inType
-                varargElementType = inVarargElementType
-            }.let {
-                addIrProperty(
-                    inName,
-                    inType,
-                    inIsVar,
-                    irGet(it, origin = IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER),
-                    overridden
-                )
             }
         }
 

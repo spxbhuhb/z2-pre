@@ -22,23 +22,8 @@ class ArmSequence2Air(
         airClass.patchBranches += AirPatchBranch(armSequence.index) { irPatchItemIndices() }
     }
 
-    //           CALL 'public final fun intArrayOf (vararg elements: kotlin.Int): kotlin.IntArray declared in kotlin' type=kotlin.IntArray origin=null
-    //            elements: VARARG type=kotlin.IntArray varargElementType=kotlin.Int
-    //              CONST Int type=kotlin.Int value=1
-    //              CONST Int type=kotlin.Int value=2
-    //              CONST Int type=kotlin.Int value=3
-
-    //    value: CALL 'public final fun intArrayOf (vararg elements: kotlin.Int): kotlin.IntArray declared in kotlin' type=kotlin.IntArray origin=null
-    //                  elements: VARARG type=kotlin.Array<kotlin.Int> varargElementType=kotlin.Int
-    // IrConstantArrayImpl(
-    //                startOffset = SYNTHETIC_OFFSET,
-    //                endOffset = SYNTHETIC_OFFSET,
-    //                irBuiltIns.intArray.defaultType,
-    //                armSequence.statements.map { IrConstantPrimitiveImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irConst(it.index)) }
-    //            )
-
     private fun irPatchItemIndices(): IrExpression = // FIXME do not patch sequence when unnecessary
-        irSetStateVariable(
+        irSetDescendantStateVariable(
             Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,

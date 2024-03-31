@@ -50,6 +50,15 @@ class DumpArmTreeVisitor(
         }
     }
 
+    override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) {
+        indented {
+            with(statement) {
+                println { "STATE_DEFINITION_STATEMENT startOffset:${irStatement.startOffset} className:${irStatement::class.simpleName}" }
+            }
+            super.visitStateDefinitionStatement(statement)
+        }
+    }
+
     override fun visitSequence(statement: ArmSequence) {
         indented {
             with(statement) {
@@ -71,7 +80,7 @@ class DumpArmTreeVisitor(
     override fun visitWhen(statement: ArmSelect) {
         indented {
             with(statement) {
-                println { "WHEN index:$index startOffset:${statement.startOffset}" }
+                println { "SELECT index:$index startOffset:${statement.startOffset} indices:${statement.branches.map { it.index }}" }
             }
             super.visitWhen(statement)
         }
@@ -89,7 +98,7 @@ class DumpArmTreeVisitor(
     override fun visitBranch(branch: ArmBranch) {
         indented {
             with(branch) {
-                println { "RENDERING type:BRANCH index:$index" }
+                println { "BRANCH index:$index ${condition.dependencies.withLabel("conditionDependencies")}" }
             }
             super.visitBranch(branch)
         }

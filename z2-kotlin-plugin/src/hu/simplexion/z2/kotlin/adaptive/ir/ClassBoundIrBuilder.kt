@@ -133,7 +133,7 @@ open class ClassBoundIrBuilder(
         return constructorCall
     }
 
-    fun irSetStateVariable(stateVariableIndex: Int, value: IrExpression) =
+    fun irSetDescendantStateVariable(stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
@@ -144,6 +144,29 @@ open class ClassBoundIrBuilder(
         ).also { call ->
 
             call.dispatchReceiver = irGet(airClass.patchDescendant.valueParameters.first())
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_INDEX,
+                irConst(stateVariableIndex)
+            )
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_VALUE,
+                value
+            )
+        }
+
+    fun irSetInternalStateVariable(stateVariableIndex: Int, value: IrExpression) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET,
+            SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            pluginContext.setStateVariable,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+        ).also { call ->
+
+            call.dispatchReceiver = irGet(airClass.patchInternal.dispatchReceiverParameter!!)
 
             call.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,

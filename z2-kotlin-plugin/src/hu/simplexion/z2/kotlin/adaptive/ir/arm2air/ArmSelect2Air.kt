@@ -25,7 +25,7 @@ class ArmSelect2Air(
     }
 
     private fun irPatchBranch(): IrExpression =
-        irSetStateVariable(
+        irSetDescendantStateVariable(
             Indices.ADAPTIVE_SELECT_BRANCH,
             irSelectWhen()
         )
@@ -42,7 +42,7 @@ class ArmSelect2Air(
             }
 
             // add "else" if the last condition is not a constant true
-            branches.last().condition.let {
+            armSelect.branches.last().condition.irExpression.let {
                 if (! (it is IrConst<*> && it.value is Boolean && it.value == true)) {
                     branches += irElseBranch()
                 }
@@ -52,10 +52,7 @@ class ArmSelect2Air(
     private fun irConditionBranch(branchIndex: Int, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irEqual(
-                irConst(branchIndex),
-                branch.condition.irExpression.transformStateAccess(armSelect.closure) { irGet(airClass.patchDescendant.dispatchReceiverParameter !!) }
-            ),
+            branch.condition.irExpression.transformStateAccess(armSelect.closure) { irGet(airClass.patchDescendant.valueParameters.first()) },
             irConst(branch.index)
         )
 

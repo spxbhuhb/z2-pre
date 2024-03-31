@@ -3,10 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmExternalStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
+import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_VARIABLE
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_STATE_VARIABLE_SHADOW
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
@@ -35,18 +33,22 @@ class StateDefinitionTransform(
 
             if (index < skipParameters) return@forEachIndexed
 
-            ArmExternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, valueParameter).register(valueParameter)
-
+            ArmExternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, valueParameter).apply {
+                register(valueParameter)
+            }
         }
 
         armClass.originalStatements.forEach { statement ->
             when {
                 statement is IrVariable -> {
-                    ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement).register(statement)
+                    armClass.stateDefinitionStatements +=
+                        ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement).apply {
+                            register(statement)
+                        }
                 }
 
                 statement.startOffset < armClass.boundary.startOffset -> {
-                    armClass.originalInitializationStatements += statement
+                    armClass.stateDefinitionStatements += ArmStateDefinitionStatement(statement)
                 }
 
                 else -> {
@@ -57,6 +59,8 @@ class StateDefinitionTransform(
     }
 
     fun ArmStateVariable.register(declaration: IrDeclaration) {
+
+        check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
 
         if (declaration.startOffset >= armClass.boundary.startOffset) {
             ADAPTIVE_IR_RENDERING_VARIABLE.report(armClass, declaration)
@@ -69,7 +73,7 @@ class StateDefinitionTransform(
             return
         }
 
-        stateVariableIndex++
+        stateVariableIndex ++
         names += name
         armClass.stateVariables += this
     }

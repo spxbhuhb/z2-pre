@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
+import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.util.*
@@ -248,6 +249,8 @@ class IrFunction2ArmClass(
 
         closures.push(states.flatten())
 
+        check(closure.size < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables in any closure is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
+
         // transform the anonymous function itself with the new closure
 
         fragmentFactory.closure = closure
@@ -292,10 +295,9 @@ class IrFunction2ArmClass(
 
         val armSelect = ArmSelect(armClass, fragmentIndex, closure, statement.startOffset)
 
-        statement.branches.forEach { irBranch ->
+        armSelect.branches += statement.branches.map { irBranch ->
             ArmBranch(
-                armClass, fragmentIndex,
-                irBranch,
+                armClass,
                 transformExpression(irBranch.condition, ArmExpressionOrigin.BRANCH_CONDITION),
                 transformStatement(irBranch.result)
             )
@@ -304,8 +306,9 @@ class IrFunction2ArmClass(
         return armSelect.add()
     }
 
-    fun transformExpression(expression: IrExpression, origin: ArmExpressionOrigin): ArmExpression {
-        return ArmExpression(armClass, expression, origin, expression.dependencies())
+    fun transformExpression(condition: IrExpression, origin: ArmExpressionOrigin): ArmExpression {
+        // add "else" if the last condition is not a constant true
+        return ArmExpression(armClass, condition, origin, condition.dependencies())
     }
 
 }

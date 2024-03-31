@@ -40,7 +40,7 @@ class ArmValueArgument2Air(
     }
 
     fun patchBody(): IrExpression =
-        irSetStateVariable(
+        irSetDescendantStateVariable(
             valueArgument.index,
             valueArgument.irExpression.transformStateAccess(closure) { irGet(fragment) }
         )

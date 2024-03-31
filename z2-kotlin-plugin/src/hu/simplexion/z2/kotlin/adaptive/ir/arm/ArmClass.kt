@@ -27,7 +27,7 @@ class ArmClass(
 
     val originalStatements = checkNotNull(originalFunction.body?.statements) { "missing function body" }
 
-    val originalInitializationStatements = mutableListOf<IrStatement>()
+    val stateDefinitionStatements = mutableListOf<ArmStateDefinitionStatement>()
     val originalRenderingStatements = mutableListOf<IrStatement>()
 
     val stateVariables = mutableListOf<ArmStateVariable>()
@@ -40,7 +40,8 @@ class ArmClass(
         visitor.visitClass(this, data)
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-        stateVariables.forEach { it.accept(visitor, data) }
+        stateVariables.filterIsInstance<ArmExternalStateVariable>().forEach { it.accept(visitor, data) }
+        stateDefinitionStatements.forEach { it.accept(visitor, data) }
         rendering.forEach { it.accept(visitor, data) }
     }
 }

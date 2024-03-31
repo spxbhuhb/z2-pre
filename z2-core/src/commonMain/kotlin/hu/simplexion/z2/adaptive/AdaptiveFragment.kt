@@ -32,8 +32,15 @@ interface AdaptiveFragment<BT> {
 
     fun create()
     fun mount(bridge: AdaptiveBridge<BT>)
+
+    fun patch() {
+        patchExternal()
+        patchInternal()
+    }
+
     fun patchExternal()
     fun patchInternal()
+
     fun unmount(bridge: AdaptiveBridge<BT>)
     fun dispose()
 

@@ -24,7 +24,8 @@ interface AdaptiveStructuralFragment<BT> : AdaptiveFragment<BT> {
     }
 
     override fun patchExternal() {
+        if (adapter.trace) traceWithState("beforePatchExternal")
         createClosure.owner.patchDescendant(this)
-        if (adapter.trace) traceWithState("patchExternal")
+        if (adapter.trace) traceWithState("afterPatchExternal")
     }
 }

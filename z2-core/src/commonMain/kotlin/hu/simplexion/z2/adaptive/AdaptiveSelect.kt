@@ -13,8 +13,7 @@ class AdaptiveSelect<BT>(
 
     val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
 
-    // 0: The branch to show
-    override val state = arrayOfNulls<Any>(1)
+    override val state = arrayOf<Any?>(null, -1)
 
     override var dirtyMask = adaptiveInitStateMask
 
@@ -30,7 +29,11 @@ class AdaptiveSelect<BT>(
      *     if (condition) div {  }
      * ```
      */
-    var shownBranch = - 1 // -1 means that there is nothing shown, like:
+    var shownBranch // -1 means that there is nothing shown, like:
+        get() = state[1] as Int
+        set(v) { state[1] = v }
+
+    var mounted = false
 
     /**
      * The fragment that is currently shown.
@@ -40,51 +43,47 @@ class AdaptiveSelect<BT>(
     override fun create() {
         if (adapter.trace) trace("create")
 
-        patchExternal()
-        // no internals for structural fragments
-
-        if (stateBranch != shownBranch) {
-            createClosure.owner.build(this, stateBranch)
-            shownBranch = stateBranch
-        }
+        patch()
 
         dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
         if (adapter.trace) trace("mount", bridge)
+        mounted = true
         bridge.add(placeholder)
         shownFragment?.mount(placeholder)
     }
 
     override fun patchInternal() {
-        patchExternal() // this will update the branch in the state
-
-        if (adapter.trace) traceWithState("patchInternal")
+        if (adapter.trace) traceWithState("beforePatchInternal")
 
         if (stateBranch == shownBranch) {
-            shownFragment?.patchInternal()
+            shownFragment?.patch()
         } else {
-            shownFragment?.unmount(placeholder)
+            if (mounted) shownFragment?.unmount(placeholder)
             shownFragment?.dispose()
 
             if (stateBranch == - 1) {
                 shownFragment = null
             } else {
                 shownFragment = createClosure.owner.build(this, stateBranch)
-                shownFragment?.mount(placeholder)
+                if (mounted) shownFragment?.mount(placeholder)
             }
 
             shownBranch = stateBranch
         }
 
         dirtyMask = adaptiveCleanStateMask
+
+        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("unmount", bridge)
         shownFragment?.unmount(placeholder)
         bridge.remove(placeholder)
+        mounted = false
+        if (adapter.trace) trace("unmount", bridge)
     }
 
     override fun dispose() {

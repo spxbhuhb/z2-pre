@@ -21,7 +21,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
     }
 
     override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
-        // this from patchExternal, would be double patch
+        // this from patchExternal, would be double trace
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
@@ -39,12 +39,14 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
     }
 
     override fun patchExternal() {
+        traceWithState("beforePatchExternal")
         createClosure?.owner?.patchDescendant(this)
-        traceWithState("patchExternal")
+        traceWithState("afterPatchExternal")
     }
 
     override fun patchInternal() {
-        traceWithState("patchInternal")
+        traceWithState("beforePatchInternal")
+        traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -159,8 +161,9 @@ class AdaptiveH1<BT>(
     }
 
     override fun patchInternal() {
-        super.patchInternal()
+        traceWithState("beforePatchInternal")
         fragment0.patchInternal()
+        traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -240,8 +243,9 @@ class AdaptiveH2<BT>(
     }
 
     override fun patchInternal() {
-        super.patchInternal()
+        traceWithState("beforePatchInternal")
         fragment0.patchInternal()
+        traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -284,13 +288,15 @@ class AdaptiveEH1A<BT>(
         set(v) { state[1] = v }
 
     override fun patchInternal() {
+        traceWithState("beforePatchInternal")
+
         if (p0 % 2 == 0) {
             eventHandler.invoke(p0)
         }
 
         dirtyMask = 0
 
-        super.patchInternal()
+        traceWithState("afterPatchInternal")
     }
 
 }

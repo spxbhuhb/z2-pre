@@ -45,17 +45,47 @@ class HigherOrderTest {
             "OK", AdaptiveTestAdapter.assert(
                 listOf(
                     TraceEvent("HigherOrderTestComponent", 2, "create", ""),
+                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
                     TraceEvent("HigherFun", 3, "create", ""),
+                    TraceEvent("HigherFun", 3, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
+                    TraceEvent("HigherFun", 3, "afterPatchExternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("HigherFun", 3, "beforePatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("HigherFun", 3, "afterPatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
                     TraceEvent("HigherFunInner", 4, "create", ""),
+                    TraceEvent("HigherFunInner", 4, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
+                    TraceEvent("HigherFunInner", 4, "afterPatchExternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
+                    TraceEvent("HigherFunInner", 4, "beforePatchInternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
+                    TraceEvent("HigherFunInner", 4, "afterPatchInternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
                     TraceEvent("AdaptiveAnonymous", 5, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 5, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "afterPatchExternal", "closureDirtyMask: 0 state: [25]"),
                     TraceEvent("AdaptiveAnonymous", 6, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 6, "beforePatchExternal", "closureDirtyMask: -4 state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 6, "afterPatchExternal", "closureDirtyMask: -4 state: [37]"),
                     TraceEvent("HigherFun", 7, "create", ""),
+                    TraceEvent("HigherFun", 7, "beforePatchExternal", "closureDirtyMask: -1 state: [null, null]"),
+                    TraceEvent("HigherFun", 7, "afterPatchExternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
+                    TraceEvent("HigherFun", 7, "beforePatchInternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
+                    TraceEvent("HigherFun", 7, "afterPatchInternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
                     TraceEvent("HigherFunInner", 8, "create", ""),
+                    TraceEvent("HigherFunInner", 8, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
+                    TraceEvent("HigherFunInner", 8, "afterPatchExternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
+                    TraceEvent("HigherFunInner", 8, "beforePatchInternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
+                    TraceEvent("HigherFunInner", 8, "afterPatchInternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
                     TraceEvent("AdaptiveAnonymous", 9, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 9, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "afterPatchExternal", "closureDirtyMask: 0 state: [75]"),
                     TraceEvent("AdaptiveAnonymous", 10, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 10, "beforePatchExternal", "closureDirtyMask: -4 state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 10, "afterPatchExternal", "closureDirtyMask: -4 state: [112]"),
                     TraceEvent("AdaptiveT1", 11, "create", ""),
-                    TraceEvent("AdaptiveT1", 11, "patchExternal", "closureDirtyMask: -1 state: [149]"),
-                    TraceEvent("AdaptiveT1", 11, "patchInternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "beforePatchExternal", "closureDirtyMask: -1 state: [null]"),
+                    TraceEvent("AdaptiveT1", 11, "afterPatchExternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "beforePatchInternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "afterPatchInternal", "closureDirtyMask: -1 state: [149]"),
                     TraceEvent("HigherOrderTestComponent", 2, "mount", "bridge: 1"),
                     TraceEvent("HigherFun", 3, "mount", "bridge: 1"),
                     TraceEvent("HigherFunInner", 4, "mount", "bridge: 1"),
@@ -111,6 +141,7 @@ class HigherOrderTestComponent(
                     fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))
                 }
             }
+
             1 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
                     fragment.setStateVariable(0, fragment.getClosureVariable(0) as Int)
@@ -119,11 +150,13 @@ class HigherOrderTestComponent(
                     fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 2))
                 }
             }
+
             2 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_2_0)) {
                     fragment.setStateVariable(0, (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariable(1) as Int))
                 }
             }
+
             else -> invalidIndex(fragment.index)
         }
     }
@@ -160,10 +193,12 @@ class HigherFun(
                 fragment.state[0] = higherI * 2
                 fragment.state[1] = AdaptiveFragmentFactory(this, 1)
             }
+
             1 -> {
                 // higherI + lowerFunInnerI
                 fragment.state[0] = (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariableFromLast(0) as Int)
             }
+
             else -> invalidIndex(fragment.index)
         }
     }
@@ -198,6 +233,7 @@ class HigherFunInner(
             0 -> {
                 fragment.state[0] = innerI + 1
             }
+
             else -> invalidIndex(fragment.index)
         }
     }

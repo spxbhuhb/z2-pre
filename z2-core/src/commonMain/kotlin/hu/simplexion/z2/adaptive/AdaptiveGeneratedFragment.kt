@@ -34,8 +34,7 @@ abstract class AdaptiveGeneratedFragment<BT>(
     override fun create() {
         if (adapter.trace) trace("create")
 
-        patchExternal()
-        patchInternal()
+        patch()
 
         containedFragment = build(this, 0)
 
@@ -48,13 +47,23 @@ abstract class AdaptiveGeneratedFragment<BT>(
     }
 
     override fun patchExternal() {
-        if (adapter.trace && dirtyMask != adaptiveInitStateMask) traceWithState("patchExternal")
+        if (adapter.trace) traceWithState("beforePatchExternal")
         createClosure?.owner?.patchDescendant(this)
+        if (adapter.trace) traceWithState("afterPatchExternal")
     }
 
     override fun patchInternal() {
-        if (adapter.trace && dirtyMask != adaptiveInitStateMask) traceWithState("patchInternal")
-        containedFragment?.patchInternal()
+        patchInternalStart()
+        patchInternalEnd()
+    }
+
+    fun patchInternalStart() {
+        if (adapter.trace) traceWithState("beforePatchInternal")
+    }
+
+    fun patchInternalEnd() {
+        containedFragment?.patch()
+        if (adapter.trace) traceWithState("afterPatchInternal")
         dirtyMask = adaptiveCleanStateMask
     }
 

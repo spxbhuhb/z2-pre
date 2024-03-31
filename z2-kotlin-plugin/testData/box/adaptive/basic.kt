@@ -22,10 +22,20 @@ fun box() : String {
 
     return AdaptiveTestAdapter.assert(listOf(
         TraceEvent("<root>", 2, "create", ""),
+        TraceEvent("<root>", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("<root>", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("<root>", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("<root>", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
         TraceEvent("AdaptiveBasic", 3, "create", ""),
+        TraceEvent("AdaptiveBasic", 3, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveBasic", 3, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveBasic", 3, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveBasic", 3, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
         TraceEvent("AdaptiveT0", 4, "create", ""),
-        TraceEvent("AdaptiveT0", 4, "patchExternal", "closureDirtyMask: -1 state: []"),
-        TraceEvent("AdaptiveT0", 4, "patchInternal", "closureDirtyMask: -1 state: []"),
+        TraceEvent("AdaptiveT0", 4, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveT0", 4, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveT0", 4, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("AdaptiveT0", 4, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
         TraceEvent("<root>", 2, "mount", "bridge: 1"),
         TraceEvent("AdaptiveBasic", 3, "mount", "bridge: 1"),
         TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1")

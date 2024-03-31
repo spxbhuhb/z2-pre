@@ -6,15 +6,9 @@ package hu.simplexion.z2.kotlin.adaptive.success
 import hu.simplexion.z2.adaptive.Adaptive
 import hu.simplexion.z2.adaptive.adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
-import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
-import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapterFactory
-import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter.TraceEvent
-import hu.simplexion.z2.adaptive.testing.T0
-import hu.simplexion.z2.adaptive.testing.T1
-import hu.simplexion.z2.adaptive.testing.RunOnMount
+import hu.simplexion.z2.adaptive.testing.*
 
-@Adaptive
-fun IfElsePatch(i : Int) {
+fun Adaptive.IfElsePatch(i : Int) {
     if (i % 2 == 0) {
         T0()
     } else {

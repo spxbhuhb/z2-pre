@@ -37,9 +37,10 @@ class AdaptiveSequence<BT>(
     }
 
     override fun patchInternal() {
-        if (adapter.trace) traceWithState("patchInternal")
-        fragments.forEach { it.patchInternal() }
+        if (adapter.trace) traceWithState("beforePatchInternal")
+        fragments.forEach { it.patch() }
         dirtyMask = adaptiveCleanStateMask
+        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -53,6 +54,6 @@ class AdaptiveSequence<BT>(
     }
 
     override fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${(state[0] as IntArray).contentToString()}")
+        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${(state[0] as? IntArray).contentToString()}")
     }
 }

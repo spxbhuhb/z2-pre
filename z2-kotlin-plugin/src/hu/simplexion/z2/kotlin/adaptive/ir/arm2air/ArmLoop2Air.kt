@@ -28,12 +28,12 @@ class ArmLoop2Air(
 
                  val iteratorInitializer = ((armLoop.iterator.irDeclaration as IrVariable).initializer!!)
 
-                 block.statements += irSetStateVariable(
+                 block.statements += irSetDescendantStateVariable(
                      Indices.ADAPTIVE_LOOP_ITERATOR,
                      iteratorInitializer.transformStateAccess(armLoop.closure) { irGet(function.dispatchReceiverParameter !!) }
                  )
 
-                 block.statements += irSetStateVariable(
+                 block.statements += irSetDescendantStateVariable(
                      Indices.ADAPTIVE_LOOP_FACTORY,
                      irFragmentFactoryFromPatch(armLoop.body.index)
                  )

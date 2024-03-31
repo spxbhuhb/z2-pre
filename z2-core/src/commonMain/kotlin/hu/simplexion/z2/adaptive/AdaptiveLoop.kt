@@ -66,7 +66,7 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun patchInternal() {
-        if (adapter.trace) traceWithState("patchInternal")
+        if (adapter.trace) traceWithState("beforePatchInternal")
 
         // TODO think about re-running iterators, we should not do that
         if (dirtyMask != 0) {
@@ -76,6 +76,8 @@ class AdaptiveLoop<BT, IT>(
         }
 
         dirtyMask = adaptiveCleanStateMask
+
+        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     fun patchStructure() {
@@ -87,7 +89,7 @@ class AdaptiveLoop<BT, IT>(
                 f.mount(placeholder)
             } else {
                 fragments[index].also {
-                    it.patchInternal()
+                    it.patch()
                 }
             }
             index ++
@@ -102,7 +104,7 @@ class AdaptiveLoop<BT, IT>(
 
     fun patchContent() {
         for (fragment in fragments) {
-            fragment.patchInternal()
+            fragment.patch()
         }
     }
 
@@ -124,7 +126,9 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: [${iterator::class.simpleName},$builder]")
+        val s0 = state[0]?.let { it::class.simpleName } ?: "null"
+        val s1 = state[1]?.toString() ?: "null"
+        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: [$s0,$s1]")
     }
 
 }

@@ -25,8 +25,11 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable) = visitElement(stateVariable)
     override fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable, data: Nothing?) = visitInternalStateVariable(stateVariable)
 
-    fun visitStatement(statement: ArmRenderingStatement) = visitElement(statement)
-    override fun visitStatement(statement: ArmRenderingStatement, data: Nothing?) = visitStatement(statement)
+    fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) = visitElement(statement)
+    override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement, data: Nothing?) = visitStateDefinitionStatement(statement)
+
+    fun visitRenderingStatement(statement: ArmRenderingStatement) = visitElement(statement)
+    override fun visitRenderingStatement(statement: ArmRenderingStatement, data: Nothing?) = visitRenderingStatement(statement)
 
     fun visitSequence(statement: ArmSequence) = visitElement(statement)
     override fun visitSequence(statement: ArmSequence, data: Nothing?) = visitSequence(statement)

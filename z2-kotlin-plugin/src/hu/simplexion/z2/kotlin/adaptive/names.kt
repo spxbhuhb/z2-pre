@@ -32,6 +32,8 @@ object Strings {
     const val CREATE = "create"
     const val MOUNT = "mount"
     const val PATCH_INTERNAL = "patchInternal"
+    const val PATCH_INTERNAL_START = "patchInternalStart"
+    const val PATCH_INTERNAL_END = "patchInternalEnd"
 
     const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CLOSURE_DIRTY_MASK = "getClosureDirtyMask"
