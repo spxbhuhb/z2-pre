@@ -20,32 +20,39 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
         shouldNotRun()
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
-        adapter.trace(traceName, id, "patch(fragment)")
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        // this from patchExternal, would be double patch
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
-        adapter.trace(traceName, id, "invoke")
+        trace(supportFunction, arguments)
     }
 
     override fun create() {
-        adapter.trace(traceName, id, "create")
+        trace("create")
+        patchExternal()
+        patchInternal()
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        adapter.trace(traceName, id, "mount", "bridge:", bridge)
+        trace("mount", bridge)
+    }
+
+    override fun patchExternal() {
+        createClosure?.owner?.patchDescendant(this)
+        traceWithState("patchExternal")
     }
 
     override fun patchInternal() {
-        adapter.trace(traceName, id, "patch")
+        traceWithState("patchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        adapter.trace(traceName, id, "unmount", "bridge:", bridge)
+        trace("unmount", bridge)
     }
 
     override fun dispose() {
-        adapter.trace(traceName, id, "dispose")
+        trace("dispose")
     }
 
 }
@@ -95,16 +102,6 @@ class AdaptiveT1<BT>(
     val stateMask_p0: Int
         get() = 1
 
-    override fun create() {
-        createClosure?.owner?.patchExternal(this)
-        adapter.trace(traceName, id, "create", "p0:", p0)
-        dirtyMask = adaptiveCleanStateMask
-    }
-
-    override fun patchInternal() {
-        createClosure?.owner?.patchExternal(this)
-        adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
-    }
 }
 
 @Suppress("unused")
@@ -144,14 +141,14 @@ class AdaptiveH1<BT>(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
-        super.patchExternal(fragment)
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        super.patchDescendant(fragment)
         fragment0.patchInternal()
     }
 
     override fun create() {
         super.create()
-        createClosure!!.owner.patchExternal(this)
+        createClosure!!.owner.patchDescendant(this)
 
         fragment0 = build(this, 0) // 0 is the index of the `builder` call
     }
@@ -218,8 +215,8 @@ class AdaptiveH2<BT>(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
-        super.patchExternal(fragment)
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        super.patchDescendant(fragment)
 
         when (fragment.index) {
             0 -> {
@@ -232,7 +229,7 @@ class AdaptiveH2<BT>(
     override fun create() {
         super.create()
 
-        createClosure!!.owner.patchExternal(this)
+        createClosure!!.owner.patchDescendant(this)
 
         fragment0 = build(this, 0) // 0 is the index of the `builder` call
     }
@@ -287,13 +284,13 @@ class AdaptiveEH1A<BT>(
         set(v) { state[1] = v }
 
     override fun patchInternal() {
-        adapter.trace(traceName, id, "patch", "dirtyMask:", dirtyMask, "p0:", p0)
-
         if (p0 % 2 == 0) {
             eventHandler.invoke(p0)
         }
 
         dirtyMask = 0
+
+        super.patchInternal()
     }
 
 }

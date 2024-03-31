@@ -1,11 +1,12 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
 class AirPatchBranch(
     val index : Int,
-    val irExpression : IrExpression
+    val branchBuilder : (closureMask : IrVariable) -> IrExpression
 ) : AirElement {
 
 //    override fun toIr(parent: ClassBoundIrBuilder) = AirBuilderCall2Ir(parent, this).toIr()

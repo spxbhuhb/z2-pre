@@ -22,11 +22,12 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
-        TraceEvent("<root>", 2, "create"),
-        TraceEvent("AdaptiveEmpty", 3, "create"),
-        TraceEvent("AdaptiveSequence", 4, "create"),
-        TraceEvent("<root>", 2, "mount", "bridge", "1"),
-        TraceEvent("AdaptiveEmpty", 3, "mount", "bridge", "1"),
-        TraceEvent("AdaptiveSequence", 4, "mount", "bridge:", "1")
+        TraceEvent("<root>", 2, "create", ""),
+        TraceEvent("AdaptiveEmpty", 3, "create", ""),
+        TraceEvent("AdaptiveSequence", 4, "create", ""),
+        TraceEvent("AdaptiveSequence", 4, "patchExternal", "closureDirtyMask: -1 state: []"),
+        TraceEvent("<root>", 2, "mount", "bridge: 1"),
+        TraceEvent("AdaptiveEmpty", 3, "mount", "bridge: 1"),
+        TraceEvent("AdaptiveSequence", 4, "mount", "bridge: 1")
     ))
 }

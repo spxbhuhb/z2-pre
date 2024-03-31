@@ -19,9 +19,10 @@ class AdaptiveSequence<BT>(
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 
     override fun create() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "create")
+        if (adapter.trace) trace("create")
 
-        createClosure.owner.patchExternal(this)
+        patchExternal()
+        // no internals for structural fragments
 
         for (itemIndex in state[0] as IntArray) {
             fragments += createClosure.owner.build(this, itemIndex)
@@ -31,25 +32,27 @@ class AdaptiveSequence<BT>(
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "mount", "bridge:", bridge)
+        if (adapter.trace) trace("mount", bridge)
         fragments.forEach { it.mount(bridge) }
     }
 
     override fun patchInternal() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "adaptiveInternalPatch")
+        if (adapter.trace) traceWithState("patchInternal")
         fragments.forEach { it.patchInternal() }
         dirtyMask = adaptiveCleanStateMask
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "unmount", "bridge:", bridge)
+        if (adapter.trace) trace("unmount", bridge)
         fragments.forEach { it.unmount(bridge) }
     }
 
     override fun dispose() {
-        if (adapter.trace) adapter.trace("AdaptiveSequence", id, "dispose")
+        if (adapter.trace) trace("dispose")
         fragments.forEach { it.dispose() }
     }
 
-
+    override fun traceWithState(point : String) {
+        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${(state[0] as IntArray).contentToString()}")
+    }
 }

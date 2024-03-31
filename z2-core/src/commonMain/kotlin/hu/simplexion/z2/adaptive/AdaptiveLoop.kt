@@ -31,7 +31,7 @@ class AdaptiveLoop<BT, IT>(
 
     val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
         // anonymous fragments are patched by `patch()` for loops
     }
 
@@ -43,9 +43,10 @@ class AdaptiveLoop<BT, IT>(
         }
 
     override fun create() {
-        if (adapter.trace) adapter.trace("AdaptiveLoop", id, "create")
+        if (adapter.trace) trace("create")
 
-        createClosure.owner.patchExternal(this)
+        patchExternal()
+        // no internal for structural fragments
 
         for (loopVariable in iterator) {
             addAnonymous(loopVariable)
@@ -55,7 +56,7 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveLoop", id, "mount", "bridge:", bridge)
+        if (adapter.trace) trace("mount", bridge)
 
         bridge.add(placeholder)
 
@@ -65,7 +66,7 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun patchInternal() {
-        if (adapter.trace) adapter.trace("AdaptiveLoop", id, "patch")
+        if (adapter.trace) traceWithState("patchInternal")
 
         // TODO think about re-running iterators, we should not do that
         if (dirtyMask != 0) {
@@ -106,7 +107,7 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveLoop", id, "mount", "bridge:", bridge)
+        if (adapter.trace) trace("unmount", bridge)
 
         for (fragment in fragments) {
             fragment.unmount(placeholder)
@@ -115,10 +116,15 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun dispose() {
-        if (adapter.trace) adapter.trace("AdaptiveLoop", id, "dispose")
+        if (adapter.trace) trace("dispose")
 
         for (f in fragments) {
             f.dispose()
         }
     }
+
+    override fun traceWithState(point : String) {
+        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: [${iterator::class.simpleName},$builder]")
+    }
+
 }

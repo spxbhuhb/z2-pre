@@ -53,7 +53,7 @@ class DumpArmTreeVisitor(
     override fun visitSequence(statement: ArmSequence) {
         indented {
             with(statement) {
-                println { "SEQUENCE index:$index startOffset:${statement.startOffset}" }
+                println { "SEQUENCE index:$index startOffset:${statement.startOffset} indices:${statement.statements.map { it.index }}" }
             }
             super.visitSequence(statement)
         }

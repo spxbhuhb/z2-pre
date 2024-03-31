@@ -33,14 +33,19 @@ class SequenceTest {
             "OK",
             AdaptiveTestAdapter.assert(
                 listOf(
-                    TraceEvent("SequenceTestComponent", 2, "create"),
-                    TraceEvent("AdaptiveSequence", 3, "create"),
-                    TraceEvent("AdaptiveT0", 4, "create"),
-                    TraceEvent("AdaptiveT1", 5, "create", "p0:", "12"),
-                    TraceEvent("SequenceTestComponent", 2, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveSequence", 3, "mount", "bridge:", "1"),
-                    TraceEvent("AdaptiveT0", 4, "mount", "bridge:", "1"),
-                    TraceEvent("AdaptiveT1", 5, "mount", "bridge:", "1")
+                    TraceEvent("SequenceTestComponent", 2, "create", ""),
+                    TraceEvent("AdaptiveSequence", 3, "create", ""),
+                    TraceEvent("AdaptiveSequence", 3, "patchExternal", "closureDirtyMask: -1 state: [1, 2]"),
+                    TraceEvent("AdaptiveT0", 4, "create", ""),
+                    TraceEvent("AdaptiveT0", 4, "patchExternal", "closureDirtyMask: -1 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "patchInternal", "closureDirtyMask: -1 state: []"),
+                    TraceEvent("AdaptiveT1", 5, "create", ""),
+                    TraceEvent("AdaptiveT1", 5, "patchExternal", "closureDirtyMask: -1 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "patchInternal", "closureDirtyMask: -1 state: [12]"),
+                    TraceEvent("SequenceTestComponent", 2, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSequence", 3, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveT1", 5, "mount", "bridge: 1")
                 )
             )
         )
@@ -49,9 +54,9 @@ class SequenceTest {
 
 class SequenceTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 0) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
@@ -70,14 +75,14 @@ class SequenceTestComponent(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
         val closureMask = fragment.getClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
-                    fragment.setStateVariable(0, arrayOf(1, 2)) // indices of T0 and T1
+                    fragment.setStateVariable(0, intArrayOf(1, 2)) // indices of T0 and T1
                 }
             }
 
@@ -90,6 +95,6 @@ class SequenceTestComponent(
     }
 
     override fun patchInternal() {
-        containedFragment.patchInternal()
+        containedFragment?.patchInternal()
     }
 }

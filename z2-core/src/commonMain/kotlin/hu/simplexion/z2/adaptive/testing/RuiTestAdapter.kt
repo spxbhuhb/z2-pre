@@ -5,6 +5,7 @@ package hu.simplexion.z2.adaptive.testing
 
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveBridge
+import hu.simplexion.z2.adaptive.AdaptiveFragment
 
 open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
@@ -26,16 +27,9 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         return AdaptiveTestBridge(newId())
     }
 
-    override fun trace(name: String, id : Long, point: String, vararg data: Any?) {
-        // convert the data to string so later changes won't change the content
-        traceEvents += TraceEvent(name, id, point, data.map { it.asString() })
+    override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data : String) {
+        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data)
     }
-
-    fun Any?.asString(): String =
-        when (this) {
-            is AdaptiveTestBridge -> this.id.toString()
-            else -> this.toString()
-        }
 
     fun actual(): String =
         traceEvents.joinToString("\n")
@@ -55,11 +49,14 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         fun expected(expected: List<TraceEvent>) : String =
             expected.joinToString("\n")
 
+        fun toCode() : String =
+            lastTrace.joinToString(",\n") { it.toCode() }
+        
         fun assert(expected: List<TraceEvent>): String {
             return if (expected == lastTrace) {
                 "OK"
             } else {
-                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${lastTrace.joinToString(",\n") { it.toCode() }}"
+                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${toCode()}"
             }
         }
     }

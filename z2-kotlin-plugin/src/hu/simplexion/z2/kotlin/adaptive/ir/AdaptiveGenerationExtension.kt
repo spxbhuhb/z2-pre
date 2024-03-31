@@ -49,10 +49,7 @@ internal class AdaptiveGenerationExtension(
 
             armClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
             armEntryPoints.forEach { airEntryPoints += it.toAir(this) }
-
-            debug("AIR CLASSES") { "\n\n" + airClasses.values.joinToString("\n\n") { it.dump() } }
-            debug("AIR ENTRY POINTS") { "\n\n" + airEntryPoints.joinToString("\n\n") { it.dump() } }
-
+            
             // --------  AIR to IR  --------
 
             airClasses.values.forEach {

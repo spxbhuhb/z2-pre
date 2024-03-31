@@ -10,9 +10,9 @@ package hu.simplexion.z2.adaptive
  */
 abstract class AdaptiveGeneratedFragment<BT>(
     final override val adapter: AdaptiveAdapter<BT>,
-    override val parent : AdaptiveFragment<BT>?,
+    override val parent: AdaptiveFragment<BT>?,
     override val index: Int,
-    stateSize : Int
+    stateSize: Int
 ) : AdaptiveFragment<BT> {
 
     override val id = adapter.newId()
@@ -24,25 +24,18 @@ abstract class AdaptiveGeneratedFragment<BT>(
     @Suppress("LeakingThis") // closure won't do anything with components during init
     override val thisClosure = AdaptiveClosure(arrayOf(this), stateSize)
 
-    /**
-     * The top level fragment of this scope. This may be:
-     *
-     * - a structural fragment such as block, when or a loop
-     * - direct call to another adaptive function
-     *
-     * Set to [AdaptiveFragment.createClosure] by the initializer of the class
-     * that implements [AdaptiveGeneratedFragment].
-     */
-    lateinit var containedFragment: AdaptiveFragment<BT>
+    var containedFragment: AdaptiveFragment<BT>? = null
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
-        shouldNotRun() // this is overridden by the plugin
+        if (adapter.trace) trace(supportFunction, arguments)
+        return null // overwritten by the plugin
     }
 
     override fun create() {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "create")
+        if (adapter.trace) trace("create")
 
-        createClosure?.owner?.patchExternal(this)
+        patchExternal()
+        patchInternal()
 
         containedFragment = build(this, 0)
 
@@ -50,24 +43,29 @@ abstract class AdaptiveGeneratedFragment<BT>(
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "mount", "bridge", bridge)
-        containedFragment.mount(bridge)
+        if (adapter.trace) trace("mount", bridge)
+        containedFragment?.mount(bridge)
+    }
+
+    override fun patchExternal() {
+        if (adapter.trace && dirtyMask != adaptiveInitStateMask) traceWithState("patchExternal")
+        createClosure?.owner?.patchDescendant(this)
     }
 
     override fun patchInternal() {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "patch")
-        containedFragment.patchInternal()
+        if (adapter.trace && dirtyMask != adaptiveInitStateMask) traceWithState("patchInternal")
+        containedFragment?.patchInternal()
         dirtyMask = adaptiveCleanStateMask
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "unmount", "bridge", bridge)
-        containedFragment.unmount(bridge)
+        if (adapter.trace) trace("unmount", bridge)
+        containedFragment?.unmount(bridge)
     }
 
     override fun dispose() {
-        if (adapter.trace) adapter.trace(this::class.simpleName ?: "<generated>", id, "dispose")
-        containedFragment.dispose()
+        if (adapter.trace) trace("dispose")
+        containedFragment?.dispose()
     }
 
 }

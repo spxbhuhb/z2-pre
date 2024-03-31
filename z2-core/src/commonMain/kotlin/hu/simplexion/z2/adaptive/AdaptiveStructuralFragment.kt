@@ -15,7 +15,7 @@ interface AdaptiveStructuralFragment<BT> : AdaptiveFragment<BT> {
         shouldNotRun()
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
         shouldNotRun()
     }
 
@@ -23,4 +23,8 @@ interface AdaptiveStructuralFragment<BT> : AdaptiveFragment<BT> {
         shouldNotRun()
     }
 
+    override fun patchExternal() {
+        createClosure.owner.patchDescendant(this)
+        if (adapter.trace) traceWithState("patchExternal")
+    }
 }

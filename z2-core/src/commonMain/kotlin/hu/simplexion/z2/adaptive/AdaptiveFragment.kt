@@ -25,13 +25,14 @@ interface AdaptiveFragment<BT> {
     // functions that support the descendants of this fragment
 
     fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>
-    fun patchExternal(fragment: AdaptiveFragment<BT>)
+    fun patchDescendant(fragment: AdaptiveFragment<BT>)
     fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?
 
     // functions that operate on the fragment itself
 
     fun create()
     fun mount(bridge: AdaptiveBridge<BT>)
+    fun patchExternal()
     fun patchInternal()
     fun unmount(bridge: AdaptiveBridge<BT>)
     fun dispose()
@@ -60,4 +61,21 @@ interface AdaptiveFragment<BT> {
     fun invalidIndex(index: Int): Nothing {
         throw IllegalStateException("invalid index: $index")
     }
+
+    fun trace(point : String) {
+        adapter.trace(this, point, "")
+    }
+
+    fun trace(point : String, bridge: AdaptiveBridge<BT>) {
+        adapter.trace(this, point, "bridge: $bridge")
+    }
+
+    fun traceWithState(point : String) {
+        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${this.state.contentToString()}")
+    }
+
+    fun trace(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
+        adapter.trace(this, "invoke", "index: ${supportFunction.index} arguments: ${arguments.joinToString()}")
+    }
+
 }

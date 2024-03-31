@@ -113,7 +113,7 @@ open class ClassBoundIrBuilder(
     }
 
     fun irFragmentFactoryFromPatch(index: Int): IrExpression {
-        val patchFun = airClass.patchExternal
+        val patchFun = airClass.patchDescendant
 
         val constructorCall =
             IrConstructorCallImpl(
@@ -143,7 +143,7 @@ open class ClassBoundIrBuilder(
             valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also { call ->
 
-            call.dispatchReceiver = irGet(airClass.patchExternal.valueParameters.first())
+            call.dispatchReceiver = irGet(airClass.patchDescendant.valueParameters.first())
 
             call.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,

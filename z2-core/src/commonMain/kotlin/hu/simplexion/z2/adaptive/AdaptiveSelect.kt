@@ -38,9 +38,10 @@ class AdaptiveSelect<BT>(
     var shownFragment: AdaptiveFragment<BT>? = null
 
     override fun create() {
-        if (adapter.trace) adapter.trace("AdaptiveSelect", id, "create")
+        if (adapter.trace) trace("create")
 
-        createClosure.owner.patchExternal(this)
+        patchExternal()
+        // no internals for structural fragments
 
         if (stateBranch != shownBranch) {
             createClosure.owner.build(this, stateBranch)
@@ -51,15 +52,15 @@ class AdaptiveSelect<BT>(
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSelect", id, "mount", "bridge:", bridge)
+        if (adapter.trace) trace("mount", bridge)
         bridge.add(placeholder)
         shownFragment?.mount(placeholder)
     }
 
     override fun patchInternal() {
-        createClosure.owner.patchExternal(this) // this will update the branch in the state
+        patchExternal() // this will update the branch in the state
 
-        if (adapter.trace) adapter.trace("AdaptiveSelect", id, "patch", "shownBranch:", shownBranch, "stateBranch:", stateBranch)
+        if (adapter.trace) traceWithState("patchInternal")
 
         if (stateBranch == shownBranch) {
             shownFragment?.patchInternal()
@@ -67,7 +68,7 @@ class AdaptiveSelect<BT>(
             shownFragment?.unmount(placeholder)
             shownFragment?.dispose()
 
-            if (stateBranch == -1) {
+            if (stateBranch == - 1) {
                 shownFragment = null
             } else {
                 shownFragment = createClosure.owner.build(this, stateBranch)
@@ -81,13 +82,13 @@ class AdaptiveSelect<BT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) adapter.trace("AdaptiveSelect", id, "unmount", "bridge:", bridge)
+        if (adapter.trace) trace("unmount", bridge)
         shownFragment?.unmount(placeholder)
         bridge.remove(placeholder)
     }
 
     override fun dispose() {
-        if (adapter.trace) adapter.trace("AdaptiveSelect", id, "dispose")
+        if (adapter.trace) trace("dispose")
         shownFragment?.dispose()
     }
 

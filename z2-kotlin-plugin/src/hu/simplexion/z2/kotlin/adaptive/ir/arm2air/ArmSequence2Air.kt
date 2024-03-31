@@ -19,7 +19,7 @@ class ArmSequence2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armSequence.index, irConstructorCallFromBuild(armSequence.target))
-        airClass.patchBranches += AirPatchBranch(armSequence.index, irPatchItemIndices())
+        airClass.patchBranches += AirPatchBranch(armSequence.index) { irPatchItemIndices() }
     }
 
     //           CALL 'public final fun intArrayOf (vararg elements: kotlin.Int): kotlin.IntArray declared in kotlin' type=kotlin.IntArray origin=null
@@ -37,7 +37,7 @@ class ArmSequence2Air(
     //                armSequence.statements.map { IrConstantPrimitiveImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irConst(it.index)) }
     //            )
 
-    private fun irPatchItemIndices(): IrExpression =
+    private fun irPatchItemIndices(): IrExpression = // FIXME do not patch sequence when unnecessary
         irSetStateVariable(
             Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,
             IrCallImpl(

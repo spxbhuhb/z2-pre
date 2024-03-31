@@ -24,6 +24,6 @@ class ArmSequence(
         visitor.visitSequence(this, data)
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-        statements.forEach { it.accept(visitor, data) }
+
     }
 }

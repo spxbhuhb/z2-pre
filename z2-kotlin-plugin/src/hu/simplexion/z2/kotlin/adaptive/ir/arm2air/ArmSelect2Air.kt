@@ -21,7 +21,7 @@ class ArmSelect2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armSelect.index, irConstructorCallFromBuild(armSelect.target))
-        airClass.patchBranches += AirPatchBranch(armSelect.index, irPatchBranch())
+        airClass.patchBranches += AirPatchBranch(armSelect.index) { irPatchBranch() }
     }
 
     private fun irPatchBranch(): IrExpression =
@@ -54,7 +54,7 @@ class ArmSelect2Air(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irEqual(
                 irConst(branchIndex),
-                branch.condition.irExpression.transformStateAccess(armSelect.closure) { irGet(airClass.patchExternal.dispatchReceiverParameter !!) }
+                branch.condition.irExpression.transformStateAccess(armSelect.closure) { irGet(airClass.patchDescendant.dispatchReceiverParameter !!) }
             ),
             irConst(branch.index)
         )

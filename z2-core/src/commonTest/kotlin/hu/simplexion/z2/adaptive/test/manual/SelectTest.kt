@@ -30,7 +30,7 @@ class SelectTest {
         val root = AdaptiveTestBridge(1)
 
         SelectTestComponent(adapter, null, 0).apply {
-            v0 = 0
+            v0 = 0 // start with empty
 
             create()
             mount(root)
@@ -50,42 +50,54 @@ class SelectTest {
         }
 
         assertEquals(
-            adapter.actual(),
-            adapter.expected(
+            "OK", AdaptiveTestAdapter.assert(
                 listOf(
-                    TraceEvent("SelectTestComponent", 2, "create"),
-                    TraceEvent("AdaptiveSelect", 3, "create"),
+                    TraceEvent("SelectTestComponent", 2, "create", ""),
 
-                    TraceEvent("SelectTestComponent", 2, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveSelect", 3, "mount", "bridge:", "1"),
+                    TraceEvent("AdaptiveSelect", 3, "create", ""),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 0 state: [-1]"),
 
-                    TraceEvent("SelectTestComponent", 2, "patch"),
-                    TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "-1", "stateBranch:", "2"),
-                    TraceEvent("AdaptiveT1", 5, "create", "p0:", "21"),
-                    TraceEvent("AdaptiveT1", 5, "mount", "bridge:", "4"),
+                    TraceEvent("SelectTestComponent", 2, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSelect", 3, "mount", "bridge: 1"),
 
-                    TraceEvent("SelectTestComponent", 2, "patch"),
-                    TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "2", "stateBranch:", "1"),
-                    TraceEvent("AdaptiveT1", 5, "unmount", "bridge:", "4"),
-                    TraceEvent("AdaptiveT1", 5, "dispose"),
-                    TraceEvent("AdaptiveT1", 6, "create", "p0:", "12"),
-                    TraceEvent("AdaptiveT1", 6, "mount", "bridge:", "4"),
+                    TraceEvent("SelectTestComponent", 2, "patchInternal", "closureDirtyMask: 0 state: [1]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchInternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveT1", 5, "create", ""),
+                    TraceEvent("AdaptiveT1", 5, "patchExternal", "closureDirtyMask: 1 state: [21]"),
+                    TraceEvent("AdaptiveT1", 5, "patchInternal", "closureDirtyMask: 1 state: [21]"),
+                    TraceEvent("AdaptiveT1", 5, "mount", "bridge: 4"),
 
-                    TraceEvent("SelectTestComponent", 2, "patch"),
-                    TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "1", "stateBranch:", "2"),
-                    TraceEvent("AdaptiveT1", 6, "unmount", "bridge:", "4"),
-                    TraceEvent("AdaptiveT1", 6, "dispose"),
-                    TraceEvent("AdaptiveT1", 7, "create", "p0:", "23"),
-                    TraceEvent("AdaptiveT1", 7, "mount", "bridge:", "4"),
+                    TraceEvent("SelectTestComponent", 2, "patchInternal", "closureDirtyMask: 0 state: [2]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 1 state: [1]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchInternal", "closureDirtyMask: 1 state: [1]"),
+                    TraceEvent("AdaptiveT1", 5, "unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 5, "dispose", ""),
+                    TraceEvent("AdaptiveT1", 6, "create", ""),
+                    TraceEvent("AdaptiveT1", 6, "patchExternal", "closureDirtyMask: 1 state: [12]"),
+                    TraceEvent("AdaptiveT1", 6, "patchInternal", "closureDirtyMask: 1 state: [12]"),
+                    TraceEvent("AdaptiveT1", 6, "mount", "bridge: 4"),
 
-                    TraceEvent("SelectTestComponent", 2, "patch"),
-                    TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "2", "stateBranch:", "2"),
-                    TraceEvent("AdaptiveT1", 7, "patch", "dirtyMask:", "1", "p0:", "21"),
+                    TraceEvent("SelectTestComponent", 2, "patchInternal", "closureDirtyMask: 0 state: [3]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchInternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveT1", 6, "unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 6, "dispose", ""),
+                    TraceEvent("AdaptiveT1", 7, "create", ""),
+                    TraceEvent("AdaptiveT1", 7, "patchExternal", "closureDirtyMask: 1 state: [23]"),
+                    TraceEvent("AdaptiveT1", 7, "patchInternal", "closureDirtyMask: 1 state: [23]"),
+                    TraceEvent("AdaptiveT1", 7, "mount", "bridge: 4"),
 
-                    TraceEvent("SelectTestComponent", 2, "patch"),
-                    TraceEvent("AdaptiveSelect", 3, "patch", "shownBranch:", "2", "stateBranch:", "-1"),
-                    TraceEvent("AdaptiveT1", 7, "unmount", "bridge:", "4"),
-                    TraceEvent("AdaptiveT1", 7, "dispose")
+                    TraceEvent("SelectTestComponent", 2, "patchInternal", "closureDirtyMask: 0 state: [1]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchInternal", "closureDirtyMask: 1 state: [2]"),
+                    TraceEvent("AdaptiveT1", 7, "patchInternal", "closureDirtyMask: 1 state: [23]"),
+
+                    TraceEvent("SelectTestComponent", 2, "patchInternal", "closureDirtyMask: 0 state: [0]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchExternal", "closureDirtyMask: 1 state: [-1]"),
+                    TraceEvent("AdaptiveSelect", 3, "patchInternal", "closureDirtyMask: 1 state: [-1]"),
+                    TraceEvent("AdaptiveT1", 7, "unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 7, "dispose", "")
                 )
             )
         )
@@ -95,9 +107,9 @@ class SelectTest {
 
 class SelectTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 1) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 1) {
 
     var v0: Int
         get() = state[0] as Int
@@ -122,7 +134,7 @@ class SelectTestComponent(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
         val closureMask = fragment.getClosureDirtyMask()
 

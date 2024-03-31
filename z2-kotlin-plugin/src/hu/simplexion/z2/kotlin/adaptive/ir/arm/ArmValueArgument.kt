@@ -7,8 +7,8 @@ import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmValueArgument2Air
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 
 open class ArmValueArgument(
     armClass: ArmClass,
@@ -17,9 +17,8 @@ open class ArmValueArgument(
     dependencies: ArmDependencies
 ) : ArmExpression(armClass, value, ArmExpressionOrigin.VALUE_ARGUMENT, dependencies) {
 
-    fun toPatchExpression(classBuilder : ClassBoundIrBuilder, fragmentParameter: IrValueParameter, block: IrBlockImpl) {
-        ArmValueArgument2Air(classBuilder, this, fragmentParameter, block).toPatchExpression()
-    }
+    fun toPatchExpression(classBuilder : ClassBoundIrBuilder, closure : ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask : IrVariable) =
+        ArmValueArgument2Air(classBuilder, this, closure, fragmentParameter, closureDirtyMask).toPatchExpression()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitValueArgument(this, data)

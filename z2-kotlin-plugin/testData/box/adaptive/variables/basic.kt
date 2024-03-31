@@ -9,7 +9,7 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.testing.*
 
 fun Adaptive.Basic() {
-    T0()
+    T1(12)
 }
 
 fun box() : String {
@@ -21,13 +21,11 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
-        TraceEvent("<root>", 2, "create", ""),
-        TraceEvent("AdaptiveBasic", 3, "create", ""),
-        TraceEvent("AdaptiveT0", 4, "create", ""),
-        TraceEvent("AdaptiveT0", 4, "patchExternal", "closureDirtyMask: -1 state: []"),
-        TraceEvent("AdaptiveT0", 4, "patchInternal", "closureDirtyMask: -1 state: []"),
-        TraceEvent("<root>", 2, "mount", "bridge: 1"),
-        TraceEvent("AdaptiveBasic", 3, "mount", "bridge: 1"),
-        TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1")
+        TraceEvent("<root>", 2, "create"),
+        TraceEvent("AdaptiveBasic", 3, "create"),
+        TraceEvent("AdaptiveT1", 4, "create", "p0:", "12"),
+        TraceEvent("<root>", 2, "mount", "bridge", "1"),
+        TraceEvent("AdaptiveBasic", 3, "mount", "bridge", "1"),
+        TraceEvent("AdaptiveT1", 4, "mount", "bridge:", "1")
     ))
 }

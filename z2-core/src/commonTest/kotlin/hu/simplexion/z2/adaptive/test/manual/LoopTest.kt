@@ -33,35 +33,35 @@ class LoopTest {
         assertEquals(
             "OK", AdaptiveTestAdapter.assert(
                 listOf(
-                    TraceEvent("LoopTestComponent", 2, "create"),
-                    TraceEvent("AdaptiveLoop", 3, "create"),
-                    TraceEvent("AdaptiveAnonymous", 5, "create"),
-
-                    TraceEvent("AdaptiveT1", 6, "create", "p0:", "10"),
-                    TraceEvent("AdaptiveAnonymous", 7, "create"),
-
-                    TraceEvent("AdaptiveT1", 8, "create", "p0:", "11"),
-                    TraceEvent("AdaptiveAnonymous", 9, "create"),
-
-                    TraceEvent("AdaptiveT1", 10, "create", "p0:", "12"),
-                    TraceEvent("AdaptiveAnonymous", 11, "create"),
-
-                    TraceEvent("AdaptiveT1", 12, "create", "p0:", "13"),
-                    TraceEvent("LoopTestComponent", 2, "mount", "bridge", "1"),
-
-                    TraceEvent("AdaptiveLoop", 3, "mount", "bridge:", "1"),
-
-                    TraceEvent("AdaptiveAnonymous", 5, "mount", "bridge", "4"),
-                    TraceEvent("AdaptiveT1", 6, "mount", "bridge:", "4"),
-
-                    TraceEvent("AdaptiveAnonymous", 7, "mount", "bridge", "4"),
-                    TraceEvent("AdaptiveT1", 8, "mount", "bridge:", "4"),
-
-                    TraceEvent("AdaptiveAnonymous", 9, "mount", "bridge", "4"),
-                    TraceEvent("AdaptiveT1", 10, "mount", "bridge:", "4"),
-
-                    TraceEvent("AdaptiveAnonymous", 11, "mount", "bridge", "4"),
-                    TraceEvent("AdaptiveT1", 12, "mount", "bridge:", "4")
+                    TraceEvent("LoopTestComponent", 2, "create", ""),
+                    TraceEvent("AdaptiveLoop", 3, "create", ""),
+                    TraceEvent("AdaptiveLoop", 3, "patchExternal", "closureDirtyMask: 0 state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "create", ""),
+                    TraceEvent("AdaptiveT1", 6, "create", ""),
+                    TraceEvent("AdaptiveT1", 6, "patchExternal", "closureDirtyMask: -2 state: [10]"),
+                    TraceEvent("AdaptiveT1", 6, "patchInternal", "closureDirtyMask: -2 state: [10]"),
+                    TraceEvent("AdaptiveAnonymous", 7, "create", ""),
+                    TraceEvent("AdaptiveT1", 8, "create", ""),
+                    TraceEvent("AdaptiveT1", 8, "patchExternal", "closureDirtyMask: -2 state: [11]"),
+                    TraceEvent("AdaptiveT1", 8, "patchInternal", "closureDirtyMask: -2 state: [11]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "create", ""),
+                    TraceEvent("AdaptiveT1", 10, "create", ""),
+                    TraceEvent("AdaptiveT1", 10, "patchExternal", "closureDirtyMask: -2 state: [12]"),
+                    TraceEvent("AdaptiveT1", 10, "patchInternal", "closureDirtyMask: -2 state: [12]"),
+                    TraceEvent("AdaptiveAnonymous", 11, "create", ""),
+                    TraceEvent("AdaptiveT1", 12, "create", ""),
+                    TraceEvent("AdaptiveT1", 12, "patchExternal", "closureDirtyMask: -2 state: [13]"),
+                    TraceEvent("AdaptiveT1", 12, "patchInternal", "closureDirtyMask: -2 state: [13]"),
+                    TraceEvent("LoopTestComponent", 2, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveLoop", 3, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveAnonymous", 5, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 6, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveAnonymous", 7, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 8, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveAnonymous", 9, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 10, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveAnonymous", 11, "mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 12, "mount", "bridge: 4")
                 )
             )
         )
@@ -70,9 +70,9 @@ class LoopTest {
 
 class LoopTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 1) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 1) {
 
     var count : Int
         get() = state[0] as Int
@@ -94,7 +94,7 @@ class LoopTestComponent(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
         val closureMask = fragment.getClosureDirtyMask()
 

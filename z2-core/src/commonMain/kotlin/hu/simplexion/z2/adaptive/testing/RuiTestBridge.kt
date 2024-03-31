@@ -23,4 +23,7 @@ class AdaptiveTestBridge(
         receiver.appendChild(child.receiver)
     }
 
+    override fun toString(): String {
+        return id.toString()
+    }
 }

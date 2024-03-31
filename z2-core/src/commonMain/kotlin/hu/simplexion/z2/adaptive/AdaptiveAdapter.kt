@@ -13,8 +13,10 @@ interface AdaptiveAdapter<BT> : Adaptive {
 
     fun newId(): Long
 
-    fun trace(name: String, id : Long, point: String, vararg data: Any?) {
+    fun trace(fragment: AdaptiveFragment<BT>, point: String, data : String) {
         // FIXME should we escape the data string? think about security
-        println("[ ${name.padEnd(30)} @ $id ] ${point.padEnd(20)}  |  ${data.joinToString(" ") { it.toString() }}")
+        val name = (fragment::class.simpleName ?: "").padEnd(30)
+        val id = fragment.id.toString().padStart(4, ' ')
+        println("[ $name @ $id ] ${point.padEnd(20)}  |  $data")
     }
 }

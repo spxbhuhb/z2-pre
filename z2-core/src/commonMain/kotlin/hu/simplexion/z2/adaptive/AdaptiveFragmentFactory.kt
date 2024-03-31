@@ -10,4 +10,7 @@ class AdaptiveFragmentFactory<BT>(
     fun build(parent: AdaptiveFragment<BT>) : AdaptiveFragment<BT> {
         return declaringFragment.build(parent, declarationIndex)
     }
+
+    override fun toString() =
+        "AdaptiveFragmentFactory(${declaringFragment.id},$declarationIndex)"
 }

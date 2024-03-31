@@ -65,8 +65,9 @@ class ArmClass2Air(
         val constructor = constructor()
         val initializer = initializer()
         val build = build()
-        val patchExternal = patchExternal()
+        val patchDescendant = patchDescendant()
         val invoke = invoke()
+        val patchInternal = patchInternal()
 
         // this has to be before AirClass() (adds overridden properties)
 
@@ -78,8 +79,9 @@ class ArmClass2Air(
             constructor,
             initializer,
             build,
-            patchExternal,
-            invoke
+            patchDescendant,
+            invoke,
+            patchInternal
         )
 
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
@@ -272,13 +274,13 @@ class ArmClass2Air(
         )
 
     /**
-     * Defines a `patchExternal(fragment : AdaptiveFragment<BT>)`
+     * Defines a `patchDescendant(fragment : AdaptiveFragment<BT>)`
      */
-    fun patchExternal(): IrSimpleFunction =
+    fun patchDescendant(): IrSimpleFunction =
         function(
-            Names.PATCH_EXTERNAL,
+            Names.PATCH_DESCENDANT,
             irBuiltIns.unitType,
-            pluginContext.patchExternal,
+            pluginContext.patchDescendant,
             Names.FRAGMENT to classBoundFragmentType
         )
 
@@ -297,4 +299,15 @@ class ArmClass2Air(
                 type = irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType)
             }
         }
+
+    /**
+     * Defines a `patchInternal()`
+     */
+    fun patchInternal(): IrSimpleFunction =
+        function(
+            Names.PATCH_INTERNAL,
+            irBuiltIns.unitType,
+            pluginContext.patchInternal
+        )
+
 }

@@ -44,26 +44,28 @@ class HigherOrderTest {
         assertEquals(
             "OK", AdaptiveTestAdapter.assert(
                 listOf(
-                    TraceEvent("HigherOrderTestComponent", 2, "create"),
-                    TraceEvent("HigherFun", 3, "create"),
-                    TraceEvent("HigherFunInner", 4, "create"),
-                    TraceEvent("AdaptiveAnonymous", 5, "create"),
-                    TraceEvent("AdaptiveAnonymous", 6, "create"),
-                    TraceEvent("HigherFun", 7, "create"),
-                    TraceEvent("HigherFunInner", 8, "create"),
-                    TraceEvent("AdaptiveAnonymous", 9, "create"),
-                    TraceEvent("AdaptiveAnonymous", 10, "create"),
-                    TraceEvent("AdaptiveT1", 11, "create", "p0:", "149"), // <-- this is the important line
-                    TraceEvent("HigherOrderTestComponent", 2, "mount", "bridge", "1"),
-                    TraceEvent("HigherFun", 3, "mount", "bridge", "1"),
-                    TraceEvent("HigherFunInner", 4, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveAnonymous", 5, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveAnonymous", 6, "mount", "bridge", "1"),
-                    TraceEvent("HigherFun", 7, "mount", "bridge", "1"),
-                    TraceEvent("HigherFunInner", 8, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveAnonymous", 9, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveAnonymous", 10, "mount", "bridge", "1"),
-                    TraceEvent("AdaptiveT1", 11, "mount", "bridge:", "1")
+                    TraceEvent("HigherOrderTestComponent", 2, "create", ""),
+                    TraceEvent("HigherFun", 3, "create", ""),
+                    TraceEvent("HigherFunInner", 4, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 5, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 6, "create", ""),
+                    TraceEvent("HigherFun", 7, "create", ""),
+                    TraceEvent("HigherFunInner", 8, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 9, "create", ""),
+                    TraceEvent("AdaptiveAnonymous", 10, "create", ""),
+                    TraceEvent("AdaptiveT1", 11, "create", ""),
+                    TraceEvent("AdaptiveT1", 11, "patchExternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "patchInternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("HigherOrderTestComponent", 2, "mount", "bridge: 1"),
+                    TraceEvent("HigherFun", 3, "mount", "bridge: 1"),
+                    TraceEvent("HigherFunInner", 4, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveAnonymous", 5, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveAnonymous", 6, "mount", "bridge: 1"),
+                    TraceEvent("HigherFun", 7, "mount", "bridge: 1"),
+                    TraceEvent("HigherFunInner", 8, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveAnonymous", 9, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveAnonymous", 10, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveT1", 11, "mount", "bridge: 1")
                 )
             )
         )
@@ -72,9 +74,9 @@ class HigherOrderTest {
 
 class HigherOrderTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 0) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x00 // fragment index: 0, state variable index: 1
@@ -97,7 +99,7 @@ class HigherOrderTestComponent(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
         val closureMask = fragment.getClosureDirtyMask()
 
         when (fragment.index) {
@@ -129,9 +131,9 @@ class HigherOrderTestComponent(
 
 class HigherFun(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 2) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 2) {
 
     val higherI
         get() = state[0] as Int
@@ -143,7 +145,7 @@ class HigherFun(
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> HigherFunInner(adapter, parent, declarationIndex)
-            1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, builder, 1)
+            1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -152,7 +154,7 @@ class HigherFun(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
                 fragment.state[0] = higherI * 2
@@ -169,9 +171,9 @@ class HigherFun(
 
 class HigherFunInner(
     adapter: AdaptiveAdapter<TestNode>,
-    override val parent: AdaptiveFragment<TestNode>?,
-    override val index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, 2) {
+    parent: AdaptiveFragment<TestNode>?,
+    index: Int
+) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 2) {
 
     val innerI
         get() = state[0] as Int
@@ -182,7 +184,7 @@ class HigherFunInner(
 
     override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, builder, 1)
+            0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -191,7 +193,7 @@ class HigherFunInner(
         return fragment
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<TestNode>) {
+    override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
                 fragment.state[0] = innerI + 1

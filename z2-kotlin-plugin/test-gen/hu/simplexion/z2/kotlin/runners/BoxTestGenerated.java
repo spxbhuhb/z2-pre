@@ -65,6 +65,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/variables/basic.kt");
+            }
+
+            @Test
             @TestMetadata("many.kt")
             public void testMany() throws Exception {
                 runTest("testData/box/adaptive/variables/many.kt");

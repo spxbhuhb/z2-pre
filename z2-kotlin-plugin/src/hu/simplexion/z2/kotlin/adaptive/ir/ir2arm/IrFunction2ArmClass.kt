@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
-import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.util.statements
@@ -36,15 +35,15 @@ class IrFunction2ArmClass(
     lateinit var armClass: ArmClass
 
     var fragmentIndex = 0
-        get() = field++
+        get() = field ++
 
     var supportIndex = 0
-        get() = field++
+        get() = field ++
 
     val states: Stack<ArmState> = mutableListOf()
     val closures: Stack<ArmClosure> = mutableListOf()
 
-    val closure : ArmClosure
+    val closure: ArmClosure
         get() = closures.peek()
 
     fun transform(): ArmClass {
@@ -55,7 +54,9 @@ class IrFunction2ArmClass(
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
 
-        transformRoot()
+        transformBlock(armClass.originalRenderingStatements)
+
+        armClass.rendering.sortBy { it.index }
 
         adaptiveContext.armClasses += armClass
 
@@ -68,26 +69,16 @@ class IrFunction2ArmClass(
         return visitor.dependencies
     }
 
-    fun ArmRenderingStatement.add() : ArmRenderingStatement {
+    fun ArmRenderingStatement.add(): ArmRenderingStatement {
         armClass.rendering += this
         return this
-    }
-
-    fun transformRoot() {
-        val startOffset = armClass.originalFunction.startOffset
-        val endOffset = armClass.originalFunction.endOffset
-
-        val renderingBlock = IrBlockImpl(startOffset, endOffset, adaptiveContext.irContext.irBuiltIns.unitType)
-        renderingBlock.statements.addAll(armClass.originalRenderingStatements)
-
-       transformBlock(renderingBlock)
     }
 
     fun transformStatement(statement: IrStatement): ArmRenderingStatement =
         when (statement) {
             is IrBlock -> {
                 when (statement.origin) {
-                    IrStatementOrigin.FOR_LOOP -> transformForLoop(statement)
+                    IrStatementOrigin.FOR_LOOP -> transformLoop(statement)
                     IrStatementOrigin.WHEN -> transformWhen(statement)
                     else -> throw IllegalStateException("unsupported rendering structure")
                 }
@@ -108,13 +99,17 @@ class IrFunction2ArmClass(
     // Block (may be whatever block: when, if, loop)
     // ---------------------------------------------------------------------------
 
-    fun transformBlock(expression: IrBlock): ArmRenderingStatement {
-        val statements = expression.statements.map { transformStatement(it) }
-
+    fun transformBlock(statements : List<IrStatement>): ArmRenderingStatement {
         return if (statements.size == 1) {
-            statements[0]
+            transformStatement(statements.first())
         } else {
-            ArmSequence(armClass, fragmentIndex, closure, expression.startOffset, statements).add()
+            val sequenceIndex = fragmentIndex
+
+            ArmSequence(
+                armClass, sequenceIndex, closure,
+                armClass.boundary.startOffset,
+                statements.map { transformStatement(it) }
+            ).add()
         }
     }
 
@@ -122,7 +117,7 @@ class IrFunction2ArmClass(
     // For Loop
     // ---------------------------------------------------------------------------
 
-    fun transformForLoop(statement: IrBlock): ArmRenderingStatement {
+    fun transformLoop(statement: IrBlock): ArmRenderingStatement {
 
         // BLOCK type=kotlin.Unit origin=FOR_LOOP
         //          VAR FOR_LOOP_ITERATOR name:tmp0_iterator type:kotlin.collections.IntIterator [val]
@@ -192,7 +187,7 @@ class IrFunction2ArmClass(
 
     fun transformCall(irCall: IrCall): ArmRenderingStatement {
 
-        if (!irCall.isAdaptive(adaptiveContext)) {
+        if (! irCall.isAdaptive(adaptiveContext)) {
             throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
@@ -247,7 +242,7 @@ class IrFunction2ArmClass(
 
         states.push(
             expression.function.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmExternalStateVariable(armClass, stateVariableIndex++, indexInState, parameter)
+                ArmExternalStateVariable(armClass, stateVariableIndex ++, indexInState, parameter)
             }
         )
 

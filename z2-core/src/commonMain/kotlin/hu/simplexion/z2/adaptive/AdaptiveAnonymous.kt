@@ -20,8 +20,8 @@ class AdaptiveAnonymous<BT>(
         shouldNotRun()
     }
 
-    override fun patchExternal(fragment: AdaptiveFragment<BT>) {
-        factory.declaringFragment.patchExternal(fragment)
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        factory.declaringFragment.patchDescendant(fragment)
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
@@ -29,8 +29,8 @@ class AdaptiveAnonymous<BT>(
     }
 
     override fun create() {
-        if (adapter.trace) adapter.trace("AdaptiveAnonymous", id, "create")
-        createClosure.owner.patchExternal(this)
+        if (adapter.trace) adapter.trace(this, "create", "")
+        patchExternal()
         containedFragment = factory.build(this)
     }
 

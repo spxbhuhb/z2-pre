@@ -26,12 +26,14 @@ object Strings {
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
 
     const val BUILD = "build"
-    const val PATCH_EXTERNAL = "patchExternal"
+    const val PATCH_DESCENDANT = "patchDescendant"
     const val INVOKE = "invoke"
 
     const val CREATE = "create"
     const val MOUNT = "mount"
+    const val PATCH_INTERNAL = "patchInternal"
 
+    const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CLOSURE_DIRTY_MASK = "getClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CLOSURE_VARIABLE = "getClosureVariable"
@@ -68,8 +70,10 @@ object Names {
     val BT = Name.identifier(Strings.BT)
 
     val BUILD = Name.identifier(Strings.BUILD)
-    val PATCH_EXTERNAL = Name.identifier(Strings.PATCH_EXTERNAL)
+    val PATCH_DESCENDANT = Name.identifier(Strings.PATCH_DESCENDANT)
     val INVOKE = Name.identifier(Strings.INVOKE)
+
+    val PATCH_INTERNAL = Name.identifier(Strings.PATCH_INTERNAL)
 
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
     val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)

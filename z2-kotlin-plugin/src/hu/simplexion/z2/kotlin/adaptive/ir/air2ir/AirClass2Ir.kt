@@ -8,11 +8,9 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.builders.irTemporary
+import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -35,8 +33,9 @@ class AirClass2Ir(
         airClass.armClass.rendering.forEach { it.toAir(this) }
 
         build()
-        patchExternal()
+        patchDescendant()
         invoke()
+        patchInternal()
 
         return irClass
     }
@@ -75,7 +74,7 @@ class AirClass2Ir(
                 branches += irBuildConditionBranch(branch)
             }
 
-            branches += irInvalidIndexBranch(irGet(airClass.build.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+            branches += irInvalidIndexBranch(airClass.build, irGet(airClass.build.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
         }
 
     private fun irBuildConditionBranch(branch: AirBuildBranch) =
@@ -89,11 +88,11 @@ class AirClass2Ir(
         )
 
     // ---------------------------------------------------------------------------
-    // Patch
+    // Patch Descendants
     // ---------------------------------------------------------------------------
 
-    fun patchExternal() {
-        val patchFun = airClass.patchExternal
+    fun patchDescendant() {
+        val patchFun = airClass.patchDescendant
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
             val closureMask = irTemporary(
@@ -118,11 +117,11 @@ class AirClass2Ir(
                 }
             )
 
-            + patchExternalWhen(fragmentIndex, closureMask)
+            + patchDescendantWhen(fragmentIndex, closureMask)
         }
     }
 
-    private fun patchExternalWhen(fragmentIndex : IrVariable, closureMask: IrVariable): IrExpression =
+    private fun patchDescendantWhen(fragmentIndex : IrVariable, closureMask: IrVariable): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
@@ -130,20 +129,20 @@ class AirClass2Ir(
         ).apply {
 
             airClass.patchBranches.forEach { branch ->
-                branches += irPatchExternalBranch(branch, fragmentIndex, closureMask)
+                branches += irPatchDescendantBranch(branch, fragmentIndex, closureMask)
             }
 
-            //branches += irInvalidIndexBranch(irGet(fragmentIndex))
+            branches += irInvalidIndexBranch(airClass.patchDescendant, irGet(fragmentIndex))
         }
 
-    private fun irPatchExternalBranch(branch: AirPatchBranch, fragmentIndex: IrVariable, closureMask: IrVariable) =
+    private fun irPatchDescendantBranch(branch: AirPatchBranch, fragmentIndex: IrVariable, closureMask: IrVariable) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irEqual(
                 irGet(fragmentIndex),
                 irConst(branch.index)
             ),
-            branch.irExpression
+            branch.branchBuilder(closureMask)
         )
 
     // ---------------------------------------------------------------------------
@@ -159,10 +158,22 @@ class AirClass2Ir(
     }
 
     // ---------------------------------------------------------------------------
+    // Patch Internal
+    // ---------------------------------------------------------------------------
+
+    fun patchInternal() {
+        val patchFun = airClass.patchInternal
+
+        patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
+            + irReturn(irUnit())
+        }
+    }
+
+    // ---------------------------------------------------------------------------
     // Common
     // ---------------------------------------------------------------------------
 
-    private fun irInvalidIndexBranch(getIndex : IrExpression) =
+    private fun irInvalidIndexBranch(fromFun: IrSimpleFunction, getIndex : IrExpression) =
         IrElseBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irConst(true),
@@ -172,7 +183,7 @@ class AirClass2Ir(
                 airClass.irClass.getSimpleFunction(Strings.INVALID_INDEX)!!,
                 0, 1
             ).also {
-                it.dispatchReceiver = irGet(airClass.build.dispatchReceiverParameter!!)
+                it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter!!)
                 it.putValueArgument(
                     Indices.INVALID_INDEX_INDEX,
                     getIndex

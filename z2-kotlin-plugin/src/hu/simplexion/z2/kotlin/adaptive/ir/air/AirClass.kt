@@ -19,8 +19,9 @@ class AirClass(
     val initializer: IrAnonymousInitializer,
 
     val build: IrSimpleFunction,
-    val patchExternal: IrSimpleFunction,
-    val invoke: IrSimpleFunction
+    val patchDescendant: IrSimpleFunction,
+    val invoke: IrSimpleFunction,
+    val patchInternal: IrSimpleFunction
 
 ) : AirElement {
 
@@ -34,7 +35,7 @@ class AirClass(
     val adapter: IrProperty = irClass.property(Names.ADAPTER)
     val parent: IrProperty = irClass.property(Names.PARENT)
     val index: IrProperty = irClass.property(Names.INDEX)
-    val dirtyMask : IrProperty =irClass.property(Names.DIRTY_MASK)
+    val dirtyMask: IrProperty = irClass.property(Names.DIRTY_MASK)
 
     fun toIr(context: AdaptivePluginContext): IrClass = AirClass2Ir(context, this).toIr()
 

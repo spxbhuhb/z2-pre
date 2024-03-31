@@ -17,11 +17,11 @@ class ArmLoop2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armLoop.index, irConstructorCallFromBuild(armLoop.target))
-        airClass.patchBranches += AirPatchBranch(armLoop.index, irPatchIteratorAndFactory())
+        airClass.patchBranches += AirPatchBranch(armLoop.index) { irPatchIteratorAndFactory() }
     }
 
     fun irPatchIteratorAndFactory(): IrExpression {
-        val function = airClass.patchExternal
+        val function = airClass.patchDescendant
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->
