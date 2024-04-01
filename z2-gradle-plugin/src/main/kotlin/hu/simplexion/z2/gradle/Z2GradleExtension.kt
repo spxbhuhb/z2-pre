@@ -28,17 +28,15 @@ import java.nio.file.Paths
 open class Z2GradleExtension(objects: ObjectFactory) {
     /**
      * ```
-     * Category: Debug of generated code
+     * Category: Generated resources
      * ```
      *
-     * When `true` the plugin adds trace to the generated code. These traces contains all Adaptive related
-     * function calls and state variable changes. See the troubleshooting section of the documentation for
-     * more information.
+     * Generated resources are put into this directory.
      * ```
      *
-     * Default: `false`
+     * Default: `.`
      */
-    val adaptiveTrace: Property<Boolean> = objects.property(Boolean::class.java).also { it.set(false) }
+    val resourceDir: Property<Path> = objects.property(Path::class.java).also { it.set(Paths.get(".")) }
 
     /**
      * ```

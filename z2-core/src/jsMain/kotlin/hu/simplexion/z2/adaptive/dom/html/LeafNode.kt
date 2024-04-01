@@ -3,10 +3,7 @@
  */
 package hu.simplexion.z2.adaptive.dom.html
 
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveBridge
-import hu.simplexion.z2.adaptive.AdaptiveExternalPatchType
-import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.*
 import org.w3c.dom.Node
 
 /**
@@ -14,10 +11,23 @@ import org.w3c.dom.Node
  * is a good example.
  */
 abstract class LeafNode(
-    override val adapter: AdaptiveAdapter<Node>,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
-) : AdaptiveFragment<Node>, AdaptiveBridge<Node> {
+    adapter: AdaptiveAdapter<Node>,
+    parent: AdaptiveFragment<Node>?,
+    index: Int,
+    stateSize : Int
+) : AdaptiveGeneratedFragment<Node>(adapter, parent, index, stateSize), AdaptiveBridge<Node> {
 
+    override fun build(parent: AdaptiveFragment<Node>, declarationIndex: Int): AdaptiveFragment<Node>? {
+        shouldNotRun()
+    }
+
+    override fun patchDescendant(fragment: AdaptiveFragment<Node>) {
+        shouldNotRun()
+    }
+
+    override fun invoke(supportFunction: AdaptiveSupportFunction<Node>, arguments: Array<out Any?>): Any? {
+        shouldNotRun()
+    }
 
     override fun remove(child: AdaptiveBridge<Node>) {
         throw IllegalStateException()

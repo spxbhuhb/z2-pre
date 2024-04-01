@@ -49,6 +49,9 @@ interface AdaptiveFragment<BT> {
     fun haveToPatch(closureDirtyMask: AdaptiveStateVariableMask, dependencyMask: AdaptiveStateVariableMask): Boolean =
         (dirtyMask == adaptiveInitStateMask) || (closureDirtyMask and dependencyMask) != adaptiveCleanStateMask
 
+    fun getThisClosureDirtyMask(): AdaptiveStateVariableMask =
+        thisClosure.closureDirtyMask()
+
     fun getCreateClosureDirtyMask(): AdaptiveStateVariableMask =
         createClosure?.closureDirtyMask() ?: adaptiveCleanStateMask
 

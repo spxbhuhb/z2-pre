@@ -15,14 +15,14 @@ class Z2CommandLineProcessor : CommandLineProcessor {
 
     override val pluginOptions = listOf(
         OPTION_RESOURCE_DIR,
-        OPTION_ADAPTIVE_TRACE,
+        OPTION_PLUGIN_DEBUG,
         OPTION_PLUGIN_LOG_DIR
     )
 
     override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) {
         when (option) {
             OPTION_RESOURCE_DIR -> configuration.put(CONFIG_KEY_RESOURCE_DIR, value.toWritableDirectory())
-            OPTION_ADAPTIVE_TRACE -> configuration.put(CONFIG_KEY_ADAPTIVE_TRACE, value.toBooleanStrictOrNull() ?: false)
+            OPTION_PLUGIN_DEBUG -> configuration.put(CONFIG_KEY_PLUGIN_DEBUG, value.toBooleanStrictOrNull() ?: false)
             OPTION_PLUGIN_LOG_DIR -> configuration.put(CONFIG_KEY_PLUGIN_LOG_DIR, value.toWritableDirectory())
             else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
         }
@@ -37,25 +37,12 @@ class Z2CommandLineProcessor : CommandLineProcessor {
         // Resource directory
         // -------------------------------------------------------------------------------------------------
 
-        const val OPTION_NAME_RESOURCE_DIR = "resource-output-dir"
+        const val OPTION_NAME_RESOURCE_DIR = "resource-dir"
 
         val CONFIG_KEY_RESOURCE_DIR = CompilerConfigurationKey.create<File>(OPTION_NAME_RESOURCE_DIR)
 
         val OPTION_RESOURCE_DIR = CliOption(
             OPTION_NAME_RESOURCE_DIR, "string", "Path to the directory to write generated resources into.",
-            required = false, allowMultipleOccurrences = false
-        )
-
-        // -------------------------------------------------------------------------------------------------
-        // Adaptive trace
-        // -------------------------------------------------------------------------------------------------
-
-        const val OPTION_NAME_ADAPTIVE_TRACE = "adaptive-trace"
-
-        val CONFIG_KEY_ADAPTIVE_TRACE = CompilerConfigurationKey.create<Boolean>(OPTION_NAME_ADAPTIVE_TRACE)
-
-        val OPTION_ADAPTIVE_TRACE = CliOption(
-            OPTION_NAME_ADAPTIVE_TRACE, "boolean", "Add trace output to the generated code.",
             required = false, allowMultipleOccurrences = false
         )
 

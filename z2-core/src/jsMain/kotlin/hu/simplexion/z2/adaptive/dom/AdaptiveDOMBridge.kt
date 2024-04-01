@@ -10,7 +10,6 @@ import org.w3c.dom.Node
  * Base bridge class for W3C DOM Nodes. Web browser components such as
  * H1, Span etc. are descendants of this class.
  */
-@AdaptivePublicApi
 interface AdaptiveDOMBridge : AdaptiveBridge<Node> {
 
     override fun remove(child: AdaptiveBridge<Node>) {

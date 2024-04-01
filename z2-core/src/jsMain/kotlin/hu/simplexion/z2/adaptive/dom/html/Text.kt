@@ -5,38 +5,29 @@
 
 package hu.simplexion.z2.adaptive.dom.html
 
-import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.Adaptive
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveFragment
 import org.w3c.dom.Node
 
-@Adaptive
-@AdaptivePublicApi
-fun Text(content: String) {
+fun Adaptive.Text(@Suppress("UNUSED_PARAMETER") content: String) {
 }
 
-@AdaptivePublicApi
 class AdaptiveText(
-    adaptiveAdapter: AdaptiveAdapter<Node>,
-    override val createClosure: AdaptiveClosure<Node>?,
-    override val parent: AdaptiveFragment<Node>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
-    var content: String,
-) : LeafNode(adaptiveAdapter, adaptiveExternalPatch) {
+    adapter: AdaptiveAdapter<Node>,
+    parent : AdaptiveFragment<Node>,
+    index : Int
+) : LeafNode(adapter, parent, index, 1) {
 
     override val receiver = org.w3c.dom.Text()
 
-    var adaptiveDirty0 = 0L
-
-    @AdaptivePublicApi
-    fun adaptiveInvalidate0(mask: Long) {
-        adaptiveDirty0 = adaptiveDirty0 or mask
-    }
-
-    override fun create() {
-        receiver.data = content
-    }
+    val content: String
+        get() = state[0] as String
 
     override fun patchInternal() {
-        if (adaptiveDirty0 and 1L != 0L) {
+        val closureMask = getThisClosureDirtyMask()
+
+        if (haveToPatch(closureMask, 1)) {
             receiver.data = content
         }
     }
