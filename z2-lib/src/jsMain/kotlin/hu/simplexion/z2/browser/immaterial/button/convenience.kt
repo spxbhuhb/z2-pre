@@ -17,7 +17,8 @@ val filledButtonStyles = arrayOf(
     borderRadius20,
     whiteSpaceNoWrap,
     wMinContent,
-    labelLarge
+    labelLarge,
+    minWidthAuto
 )
 
 val textButtonStyles = arrayOf(
@@ -33,7 +34,8 @@ val textButtonStyles = arrayOf(
     whiteSpaceNoWrap,
     wMinContent,
     labelLarge,
-    borderRadius20
+    borderRadius20,
+    minWidthAuto
 )
 
 fun <T> Z2.filledSelectButton(options: List<T>, value: T, label: LocalizedText? = null, onSelectFun: (T) -> Unit) =

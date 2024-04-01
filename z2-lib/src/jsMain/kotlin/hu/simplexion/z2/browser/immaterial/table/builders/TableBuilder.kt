@@ -19,8 +19,9 @@ open class TableBuilder<T>(
 
     var rowId: ((row : T) -> Any)? = null
 
-    open fun title(builder : TitleBuilder<T>.() -> Unit) {
-        titleBuilder = TitleBuilder<T>().apply(builder)
+    open fun header(builder: HeaderBuilder<T>.() -> Unit) {
+        header = true
+        headerBuilder = HeaderBuilder<T>().apply(builder)
     }
 
     open fun column(builder : ColumnBuilder<T>.() -> Unit) : ColumnBuilder<T> {
@@ -74,15 +75,5 @@ open class TableBuilder<T>(
 //            }
 //        }
 
-//    fun Z2.searchBar() =
-//        div("table-search-bar-container") {
-//            val container = this
-//            icon(browserIcons.search, cssClass = "table-search-bar-leading-icon")
-//            input("table-search-bar-input", "body-medium", "text-select") {
-//                (htmlElement as HTMLInputElement).placeholder = browserStrings.searchHint.toString()
-//                onFocus { container.addClass("table-search-bar-active")}
-//                onBlur { container.removeClass("table-search-bar-active")}
-//            }
-//            icon(browserIcons.filter, cssClass = "table-search-bar-trailing-icon")
-//        }
+
 }

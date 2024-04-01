@@ -25,6 +25,6 @@ class SqlSettingProvider(
 
     override fun get(owner: UUID<Principal>?, path: String, children: Boolean): List<Setting> =
         transaction {
-            if(owner == null) emptyList() else table.get(owner, path, children)
+            if (owner == null) emptyList() else table.get(owner, path, children)
         }
 }

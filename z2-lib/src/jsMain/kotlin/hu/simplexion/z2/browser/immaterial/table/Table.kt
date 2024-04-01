@@ -32,7 +32,7 @@ class Table<T>(
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
-    arrayOf("table-outer-container".css),
+    tableOuterContainerStyles,
     null
 ) {
 
@@ -55,6 +55,7 @@ class Table<T>(
     var traceScroll = false
     var traceColumnResize = false
     var traceMultiLevel = false
+    var traceMatch = false
 
     var firstOnResume = true
 
@@ -139,7 +140,10 @@ class Table<T>(
             tableBuilder.state?.let { setData(it.value) }
         }
 
-        configuration.titleBuilder?.build(this)
+        configuration.headerBuilder?.build(this)
+
+        gridTemplateRows = if (configuration.header) "min-content 1fr" else "1fr"
+        gridTemplateColumns = "1fr"
 
         div("table-content-container".css) {
             contentContainer = this

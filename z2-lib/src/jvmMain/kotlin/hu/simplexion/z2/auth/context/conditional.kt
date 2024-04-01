@@ -1,6 +1,6 @@
 package hu.simplexion.z2.auth.context
 
-import hu.simplexion.z2.application.ApplicationSettings
+import hu.simplexion.z2.application.securityOfficerRole
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.auth.model.Session
@@ -167,8 +167,8 @@ fun ServiceImpl<*>.isSelf(principal : UUID<*>) : Boolean {
 }
 
 /**
- * True when the session has [ApplicationSettings.securityOfficerRoleUuid].
+ * True when the session has [securityOfficerRole].
  */
 val ServiceImpl<*>.isSecurityOfficer
-    get() = serviceContext.has(ApplicationSettings.securityOfficerRoleUuid).isAllowed
+    get() = serviceContext.has(securityOfficerRole.uuid).isAllowed
 

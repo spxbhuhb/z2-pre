@@ -2,7 +2,6 @@ package hu.simplexion.z2.setting.provider
 
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.setting.model.Setting
-import hu.simplexion.z2.setting.persistence.SettingTable.Companion.settingTable
 import hu.simplexion.z2.util.Lock
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.use

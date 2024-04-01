@@ -1,5 +1,6 @@
 package hu.simplexion.z2.site.boot
 
+import hu.simplexion.z2.application.applicationJvm
 import hu.simplexion.z2.auth.authJvm
 import hu.simplexion.z2.content.contentJvm
 import hu.simplexion.z2.email.emailJvm
@@ -54,6 +55,8 @@ fun Application.module(earlyConfig: Application.() -> Unit, siteConfig: Applicat
         maxFrameSize = Long.MAX_VALUE
         masking = false
     }
+
+    applicationJvm()
 
     historyJvm()
     earlyConfig()

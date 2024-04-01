@@ -3,14 +3,15 @@
  */
 package hu.simplexion.z2.browser.immaterial.table
 
+import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.labelMedium
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.util.uniqueNodeId
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaField
 import kotlinx.browser.window
 import kotlinx.dom.addClass
@@ -26,6 +27,7 @@ open class TableColumn<T>(
     val labelBuilder: Z2Builder,
     val renderer: Z2.(row: T) -> Unit,
     val comparator: (T, T) -> Int,
+    val filter: (T, String) -> Boolean,
     var initialSize: String = "1fr",
     val exportable: Boolean = true,
     val exportHeader: LocalizedText?,
@@ -228,7 +230,19 @@ open class TableColumn<T>(
      * Checks if this column of the given row matches the given string or not.
      */
     open fun matches(row: T, string: String?): Boolean {
-        return false
+        if (table.traceMatch && row is Schematic<*>) {
+            schemaField?.let {
+                println(
+                    "fieldName=${schemaField.name}  fieldValue=${schemaField.getValue(row)} result=${
+                        string == null || filter(
+                            row,
+                            string
+                        )
+                    }"
+                )
+            }
+        }
+        return string == null || filter(row, string)
     }
 
     open fun exportCsvHeader(): String {

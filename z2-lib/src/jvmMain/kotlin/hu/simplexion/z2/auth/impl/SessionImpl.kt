@@ -1,6 +1,5 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.application.ApplicationSettings.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -122,14 +121,14 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val principal = principalTable.getByNameOrNull(name)
 
         if (principal == null) {
-            securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
+            securityHistory(null, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
             throw AuthenticationFail("Unknown", false)
         }
 
         try {
             authenticate(principal.uuid, password, true, CredentialType.PASSWORD, authAdminImpl.getPolicy())
         } catch (ex: AuthenticationFail) {
-            securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
+            securityHistory(null, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
             throw ex
         }
 

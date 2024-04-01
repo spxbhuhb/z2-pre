@@ -174,12 +174,14 @@ open class Z2(
         icon(this@unaryPlus)
     }
 
-    infix fun Z2.gridRow(value : String) {
-        gridColumn = value
+    infix fun Z2.gridRow(value: String): Z2 {
+        gridRow = value
+        return this
     }
 
-    infix fun Z2.gridColumn(value : String) {
+    infix fun Z2.gridColumn(value: String): Z2 {
         gridColumn = value
+        return this
     }
 
 }

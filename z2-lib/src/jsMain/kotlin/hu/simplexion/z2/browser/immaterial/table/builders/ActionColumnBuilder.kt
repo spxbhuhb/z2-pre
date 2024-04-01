@@ -14,6 +14,7 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
 
     init {
         label = browserStrings.actions
+        filter = { _, _ -> false }
         exportable = false
         render = { actionRender(it, actions) }
     }
@@ -23,7 +24,18 @@ class ActionColumnBuilder<T> : ColumnBuilder<T>() {
     }
 
     override fun toColumn(table: Table<T>): TableColumn<T> {
-        return TableColumn(table, labelBuilder, render, comparator, initialSize, exportable, exportHeader, null, null)
+        return TableColumn(
+            table,
+            labelBuilder,
+            render,
+            comparator,
+            filter,
+            initialSize,
+            exportable,
+            exportHeader,
+            null,
+            null
+        )
     }
 
     fun <T> Z2.actionRender(row: T, actions: List<RowActionBuilder<T>>) {
