@@ -6,7 +6,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.*
@@ -100,7 +100,7 @@ class AirClass2Ir(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
-                    pluginContext.getClosureMask,
+                    pluginContext.getCreateClosureDirtyMask,
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_EXTERNAL_FRAGMENT])
@@ -129,14 +129,14 @@ class AirClass2Ir(
             IrStatementOrigin.WHEN
         ).apply {
 
-            airClass.patchBranches.forEach { branch ->
+            airClass.patchDescendantBranches.forEach { branch ->
                 branches += irPatchDescendantBranch(branch, fragmentIndex, closureMask)
             }
 
             branches += irInvalidIndexBranch(airClass.patchDescendant, irGet(fragmentIndex))
         }
 
-    private fun irPatchDescendantBranch(branch: AirPatchBranch, fragmentIndex: IrVariable, closureMask: IrVariable) =
+    private fun irPatchDescendantBranch(branch: AirPatchDescendantBranch, fragmentIndex: IrVariable, closureMask: IrVariable) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irEqual(
@@ -173,7 +173,7 @@ class AirClass2Ir(
 
             airClass.armClass.stateDefinitionStatements.forEach {
                 val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement
-                val transformedExpression = originalExpression.transformStateAccess(airClass.armClass.stateVariables) { irGet(airClass.irClass.thisReceiver !!) }
+                val transformedExpression = originalExpression.transformStateAccess(airClass.armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter!!) }
 
                 if (it is ArmInternalStateVariable) {
                     + irSetInternalStateVariable(it.indexInState, transformedExpression as IrExpression)

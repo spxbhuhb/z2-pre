@@ -77,4 +77,6 @@ abstract class AdaptiveGeneratedFragment<BT>(
         containedFragment?.dispose()
     }
 
+    override fun toString(): String =
+        "${this::class.simpleName ?: "<unknown>"}@$id"
 }

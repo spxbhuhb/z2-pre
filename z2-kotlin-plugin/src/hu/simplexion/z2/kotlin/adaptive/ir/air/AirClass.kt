@@ -29,7 +29,7 @@ class AirClass(
     lateinit var stateVariableList: List<AirStateVariable>
 
     val buildBranches = mutableListOf<AirBuildBranch>()
-    val patchBranches = mutableListOf<AirPatchBranch>()
+    val patchDescendantBranches = mutableListOf<AirPatchDescendantBranch>()
     val invokeBranches = mutableListOf<AirInvokeBranch>()
 
     val adapter: IrProperty = irClass.property(Names.ADAPTER)

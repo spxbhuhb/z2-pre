@@ -16,7 +16,7 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
     override val createClosure : AdaptiveClosure<BT>?
         get() = parent?.thisClosure
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
         shouldNotRun()
     }
 
@@ -131,7 +131,7 @@ class AdaptiveH1<BT>(
 
     lateinit var fragment0: AdaptiveFragment<BT>
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
 
         val fragment = when (declarationIndex) {
             0 -> builder.build(parent)
@@ -152,7 +152,7 @@ class AdaptiveH1<BT>(
         super.create()
         createClosure!!.owner.patchDescendant(this)
 
-        fragment0 = build(this, 0) // 0 is the index of the `builder` call
+        fragment0 = build(this, 0)!! // 0 is the index of the `builder` call
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -206,7 +206,7 @@ class AdaptiveH2<BT>(
 
     lateinit var fragment0: AdaptiveFragment<BT>
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
 
         val fragment = when (declarationIndex) {
             0 -> builder.build(this)
@@ -234,7 +234,7 @@ class AdaptiveH2<BT>(
 
         createClosure!!.owner.patchDescendant(this)
 
-        fragment0 = build(this, 0) // 0 is the index of the `builder` call
+        fragment0 = build(this, 0)!! // 0 is the index of the `builder` call
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {

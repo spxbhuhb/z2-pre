@@ -182,7 +182,7 @@ class SelectTestComponent(
     val dependencyMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
     val dependencyMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSelect(adapter, parent, declarationIndex)
             1 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -197,7 +197,7 @@ class SelectTestComponent(
 
     override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
-        val closureMask = fragment.getClosureDirtyMask()
+        val closureMask = fragment.getCreateClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {

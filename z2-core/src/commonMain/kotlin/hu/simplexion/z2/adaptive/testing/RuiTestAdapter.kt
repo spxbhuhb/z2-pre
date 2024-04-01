@@ -28,7 +28,7 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
     }
 
     override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data : String) {
-        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data)
+        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString())}
     }
 
     fun actual(): String =
@@ -51,7 +51,7 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
         fun toCode() : String =
             lastTrace.joinToString(",\n") { it.toCode() }
-        
+
         fun assert(expected: List<TraceEvent>): String {
             return if (expected == lastTrace) {
                 "OK"

@@ -24,7 +24,7 @@ interface AdaptiveFragment<BT> {
 
     // functions that support the descendants of this fragment
 
-    fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>
+    fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>?
     fun patchDescendant(fragment: AdaptiveFragment<BT>)
     fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?
 
@@ -49,14 +49,14 @@ interface AdaptiveFragment<BT> {
     fun haveToPatch(closureDirtyMask: AdaptiveStateVariableMask, dependencyMask: AdaptiveStateVariableMask): Boolean =
         (dirtyMask == adaptiveInitStateMask) || (closureDirtyMask and dependencyMask) != adaptiveCleanStateMask
 
-    fun getClosureDirtyMask(): AdaptiveStateVariableMask =
+    fun getCreateClosureDirtyMask(): AdaptiveStateVariableMask =
         createClosure?.closureDirtyMask() ?: adaptiveCleanStateMask
 
-    fun getClosureVariableFromLast(variableIndex: Int): Any? =
-        checkNotNull(createClosure).getFromLast(variableIndex)
+    fun getCreateClosureVariable(variableIndex: Int): Any? =
+        createClosure?.get(variableIndex)
 
-    fun getClosureVariable(variableIndex: Int): Any? =
-        checkNotNull(createClosure).get(variableIndex)
+    fun getThisClosureVariable(variableIndex: Int): Any? =
+        thisClosure.get(variableIndex)
 
     fun setStateVariable(index: Int, value: Any?) {
         state[index] = value
@@ -78,11 +78,11 @@ interface AdaptiveFragment<BT> {
     }
 
     fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${this.state.contentToString()}")
+        adapter.trace(this, point, "closureDirtyMask: ${getCreateClosureDirtyMask()} state: ${this.state.contentToString()}")
     }
 
-    fun trace(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
-        adapter.trace(this, "invoke", "index: ${supportFunction.index} arguments: ${arguments.joinToString()}")
+    fun trace(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) {
+        adapter.trace(this, "invoke", "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
     }
 
 }

@@ -4,6 +4,7 @@ import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -179,12 +180,17 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun IrExpression.transformStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null)
+    fun IrExpression.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrExpression =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null)
 
-    fun IrStatement.transformStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrStatement =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, irGetFragment), null) as IrStatement
+    fun IrStatement.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrStatement =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null) as IrStatement
 
+    fun ArmDependencies.toDirtyMask(): IrExpression {
+        var mask = 0
+        this.forEach { mask = mask or (1 shl it.indexInClosure) }
+        return irConst(mask)
+    }
     // --------------------------------------------------------------------------------------------------------
     // Properties
     // --------------------------------------------------------------------------------------------------------

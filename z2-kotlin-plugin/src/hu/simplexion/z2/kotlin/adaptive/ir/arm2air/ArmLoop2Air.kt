@@ -3,7 +3,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmLoop
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -17,10 +17,10 @@ class ArmLoop2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armLoop.index, irConstructorCallFromBuild(armLoop.target))
-        airClass.patchBranches += AirPatchBranch(armLoop.index) { irPatchIteratorAndFactory() }
+        airClass.patchDescendantBranches += AirPatchDescendantBranch(armLoop.index) { irPatchBranch() }
     }
 
-    fun irPatchIteratorAndFactory(): IrExpression {
+    fun irPatchBranch(): IrExpression {
         val function = airClass.patchDescendant
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
@@ -30,7 +30,7 @@ class ArmLoop2Air(
 
                  block.statements += irSetDescendantStateVariable(
                      Indices.ADAPTIVE_LOOP_ITERATOR,
-                     iteratorInitializer.transformStateAccess(armLoop.closure) { irGet(function.dispatchReceiverParameter !!) }
+                     iteratorInitializer.transformStateAccess(armLoop.closure, external = true) { irGet(function.dispatchReceiverParameter !!) }
                  )
 
                  block.statements += irSetDescendantStateVariable(

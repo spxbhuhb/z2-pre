@@ -12,8 +12,6 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.backend.jvm.functionByName
-import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions
@@ -26,8 +24,6 @@ class AdaptivePluginContext(
 ) : AbstractPluginContext(irContext, options) {
 
     override val runtimePackage = Strings.RUNTIME_PACKAGE
-
-    val withTrace = options.adaptiveTrace
 
     var compilationError = false
 
@@ -42,29 +38,17 @@ class AdaptivePluginContext(
     val airEntryPoints = mutableListOf<AirEntryPoint>()
 
     val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT)
-    val adaptiveFragmentType = adaptiveFragmentClass.defaultType
-
     val adaptiveGeneratedFragmentClass = classSymbol(FqNames.ADAPTIVE_GENERATED_FRAGMENT)
-
     val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER)
-    val adaptiveAdapterType = adaptiveAdapterClass.defaultType
-    val adaptiveAdapterTrace = adaptiveAdapterClass.functionByName(Strings.TRACE)
-
     val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE)
-
-    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE)
-    val adaptiveBridgeType = adaptiveBridgeClass.defaultType
 
     val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
     val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
 
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
 
-    val adapter = property(Strings.ADAPTER)
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
-
-    val dirtyMask = property(Strings.DIRTY_MASK)
 
     val build = function(Strings.BUILD)
     val patchDescendant = function(Strings.PATCH_DESCENDANT)
@@ -75,8 +59,9 @@ class AdaptivePluginContext(
     val patchInternal = function(Strings.PATCH_INTERNAL)
 
     val haveToPatch = function(Strings.HAVE_TO_PATCH)
-    val getClosureMask = function(Strings.GET_CLOSURE_DIRTY_MASK)
-    val getClosureVariable = function(Strings.GET_CLOSURE_VARIABLE)
+    val getCreateClosureDirtyMask = function(Strings.GET_CREATE_CLOSURE_DIRTY_MASK)
+    val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
+    val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
     val setStateVariable = function(Strings.SET_STATE_VARIABLE)
 
     private fun property(name: String) =

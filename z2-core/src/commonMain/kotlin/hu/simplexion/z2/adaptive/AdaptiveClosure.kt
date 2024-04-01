@@ -17,29 +17,6 @@ class AdaptiveClosure<BT>(
     var declarationScopeSize = owner.state.size
 
     /**
-     * Finds the first parent with `thisClosure` owned by [declaringComponent]. Then extends that closure with
-     * the component and returns with the extended closure.
-     *
-     * Anonymous components use this function to find their declaring closure and extend it with themselves.
-     */
-    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent: AdaptiveFragment<BT>): AdaptiveClosure<BT> {
-        var ancestor = component.parent
-
-        while (ancestor != null && ancestor.thisClosure.owner !== declaringComponent) {
-            ancestor = ancestor.parent
-        }
-
-        checkNotNull(ancestor) { "couldn't find declaring component for closure extension" }
-
-        val declaringClosure = ancestor.thisClosure
-
-        return AdaptiveClosure(
-            declaringClosure.components + component,
-            declaringClosure.closureSize + component.state.size
-        )
-    }
-
-    /**
      * Get a state variable by its index in the closure. Walks over the scopes in the
      * closure to find the state and then fetches the variable form that state.
      */

@@ -3,7 +3,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSelect
 import org.jetbrains.kotlin.ir.expressions.IrConst
@@ -21,7 +21,7 @@ class ArmSelect2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armSelect.index, irConstructorCallFromBuild(armSelect.target))
-        airClass.patchBranches += AirPatchBranch(armSelect.index) { irPatchBranch() }
+        airClass.patchDescendantBranches += AirPatchDescendantBranch(armSelect.index) { irPatchBranch() }
     }
 
     private fun irPatchBranch(): IrExpression =
@@ -37,8 +37,8 @@ class ArmSelect2Air(
             IrStatementOrigin.WHEN
         ).apply {
 
-            armSelect.branches.forEachIndexed { branchIndex, branch ->
-                branches += irConditionBranch(branchIndex, branch)
+            armSelect.branches.forEach { branch ->
+                branches += irConditionBranch(branch)
             }
 
             // add "else" if the last condition is not a constant true
@@ -49,10 +49,10 @@ class ArmSelect2Air(
             }
         }
 
-    private fun irConditionBranch(branchIndex: Int, branch: ArmBranch) =
+    private fun irConditionBranch(branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformStateAccess(armSelect.closure) { irGet(airClass.patchDescendant.valueParameters.first()) },
+            branch.condition.irExpression.transformStateAccess(armSelect.closure, external = true) { irGet(airClass.patchDescendant.valueParameters.first()) },
             irConst(branch.index)
         )
 

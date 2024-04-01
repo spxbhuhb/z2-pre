@@ -17,7 +17,7 @@ interface AirElementVisitor<out R, in D> {
 
     fun visitBuildBranch(branch: AirBuildBranch, data: D) = visitElement(branch, data)
 
-    fun visitPatchBranch(branch: AirPatchBranch, data: D) = visitElement(branch, data)
+    fun visitPatchBranch(branch: AirPatchDescendantBranch, data: D) = visitElement(branch, data)
 
     fun visitInvokeBranch(branch: AirInvokeBranch, data: D) = visitElement(branch, data)
 

@@ -22,8 +22,8 @@ interface AirElementVisitorVoid<out R> : AirElementVisitor<R, Nothing?> {
     fun visitBuildBranch(branch: AirBuildBranch) = visitElement(branch)
     override fun visitBuildBranch(branch: AirBuildBranch, data: Nothing?) = visitBuildBranch(branch)
 
-    fun visitPatchBranch(branch: AirPatchBranch) = visitElement(branch)
-    override fun visitPatchBranch(branch: AirPatchBranch, data: Nothing?) = visitPatchBranch(branch)
+    fun visitPatchBranch(branch: AirPatchDescendantBranch) = visitElement(branch)
+    override fun visitPatchBranch(branch: AirPatchDescendantBranch, data: Nothing?) = visitPatchBranch(branch)
 
     fun visitInvokeBranch(branch: AirInvokeBranch) = visitElement(branch)
     override fun visitInvokeBranch(branch: AirInvokeBranch, data: Nothing?) = visitInvokeBranch(branch)

@@ -2,7 +2,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmCall
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrBlock
@@ -16,7 +16,7 @@ class ArmCall2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armCall.index, irConstructorCallFromBuild(armCall.target))
-        airClass.patchBranches += AirPatchBranch(armCall.index) { irPatchExternalStateVariables(it) }
+        airClass.patchDescendantBranches += AirPatchDescendantBranch(armCall.index) { irPatchExternalStateVariables(it) }
         invokeBranchExpressions()
     }
 

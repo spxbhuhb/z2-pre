@@ -116,7 +116,7 @@ class HigherOrderTestComponent(
 
     val dependencyMask_2_0 = 0x00 // fragment index: 2, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
         val fragment = when (declarationIndex) {
             0 -> HigherFun(adapter, parent, declarationIndex)
             1 -> HigherFun(adapter, parent, declarationIndex)
@@ -130,7 +130,7 @@ class HigherOrderTestComponent(
     }
 
     override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
-        val closureMask = fragment.getClosureDirtyMask()
+        val closureMask = fragment.getCreateClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {
@@ -144,7 +144,7 @@ class HigherOrderTestComponent(
 
             1 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
-                    fragment.setStateVariable(0, fragment.getClosureVariable(0) as Int)
+                    fragment.setStateVariable(0, fragment.getCreateClosureVariable(0) as Int)
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
                     fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 2))
@@ -153,7 +153,7 @@ class HigherOrderTestComponent(
 
             2 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_2_0)) {
-                    fragment.setStateVariable(0, (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariable(1) as Int))
+                    fragment.setStateVariable(0, (fragment.getCreateClosureVariable(0) as Int) + (fragment.getCreateClosureVariable(1) as Int))
                 }
             }
 
@@ -175,7 +175,7 @@ class HigherFun(
     val builder
         get() = state[1] as AdaptiveFragmentFactory<TestNode>
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
         val fragment = when (declarationIndex) {
             0 -> HigherFunInner(adapter, parent, declarationIndex)
             1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
@@ -190,13 +190,15 @@ class HigherFun(
     override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
         when (fragment.index) {
             0 -> {
-                fragment.state[0] = higherI * 2
-                fragment.state[1] = AdaptiveFragmentFactory(this, 1)
+                // TODO haveToPatch
+                fragment.setStateVariable(0, higherI * 2)
+                fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))
             }
 
             1 -> {
+                // TODO haveToPatch
                 // higherI + lowerFunInnerI
-                fragment.state[0] = (fragment.getClosureVariable(0) as Int) + (fragment.getClosureVariableFromLast(0) as Int)
+                fragment.setStateVariable(0, (fragment.getCreateClosureVariable(0) as Int) + (fragment.getCreateClosureVariable(2) as Int))
             }
 
             else -> invalidIndex(fragment.index)
@@ -217,7 +219,7 @@ class HigherFunInner(
     val builder
         get() = state[1] as AdaptiveFragmentFactory<TestNode>
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception

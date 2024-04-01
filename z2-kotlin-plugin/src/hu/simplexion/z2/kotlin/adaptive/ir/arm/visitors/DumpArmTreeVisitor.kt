@@ -116,7 +116,7 @@ class DumpArmTreeVisitor(
     override fun visitValueArgument(valueArgument: ArmValueArgument) {
         indented {
             with(valueArgument) {
-                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+                println { "$origin $argumentIndex ${dependencies.withLabel("dependencies")}" }
             }
         }
     }
@@ -124,7 +124,7 @@ class DumpArmTreeVisitor(
     override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) {
         indented {
             with(supportFunctionArgument) {
-                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+                println { "$origin $argumentIndex ${dependencies.withLabel("dependencies")}" }
             }
         }
     }
@@ -132,7 +132,7 @@ class DumpArmTreeVisitor(
     override fun visitFragmentFactoryArgument(fragmentFactoryArgument: ArmFragmentFactoryArgument) {
         indented {
             with(fragmentFactoryArgument) {
-                println { "$origin index:$index type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
+                println { "$origin index:$argumentIndex type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
             }
         }
     }

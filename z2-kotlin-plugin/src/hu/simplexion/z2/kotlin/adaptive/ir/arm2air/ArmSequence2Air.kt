@@ -3,7 +3,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSequence
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -19,7 +19,7 @@ class ArmSequence2Air(
 
     fun toAir() {
         airClass.buildBranches += AirBuildBranch(armSequence.index, irConstructorCallFromBuild(armSequence.target))
-        airClass.patchBranches += AirPatchBranch(armSequence.index) { irPatchItemIndices() }
+        airClass.patchDescendantBranches += AirPatchDescendantBranch(armSequence.index) { irPatchItemIndices() }
     }
 
     private fun irPatchItemIndices(): IrExpression = // FIXME do not patch sequence when unnecessary

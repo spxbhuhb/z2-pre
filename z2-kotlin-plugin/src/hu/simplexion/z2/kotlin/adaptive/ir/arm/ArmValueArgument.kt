@@ -12,13 +12,13 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 
 open class ArmValueArgument(
     armClass: ArmClass,
-    val index: Int,
+    val argumentIndex: Int,
     val value: IrExpression,
     dependencies: ArmDependencies
 ) : ArmExpression(armClass, value, ArmExpressionOrigin.VALUE_ARGUMENT, dependencies) {
 
-    fun toPatchExpression(classBuilder : ClassBoundIrBuilder, closure : ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask : IrVariable) =
-        ArmValueArgument2Air(classBuilder, this, closure, fragmentParameter, closureDirtyMask).toPatchExpression()
+    open fun toPatchExpression(classBuilder : ClassBoundIrBuilder, closure : ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask : IrVariable) =
+        ArmValueArgument2Air(classBuilder, this, closure, fragmentParameter, closureDirtyMask).toPatchDescendantExpression()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitValueArgument(this, data)

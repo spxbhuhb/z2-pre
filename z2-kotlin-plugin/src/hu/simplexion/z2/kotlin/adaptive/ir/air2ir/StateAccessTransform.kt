@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
+    private val external: Boolean,
     private val irGetFragment: () -> IrExpression
 ) : IrElementTransformerVoidWithContext() {
 
@@ -36,7 +37,7 @@ class StateAccessTransform(
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 stateVariable.type,
-                pluginContext.getClosureVariable,
+                if (external) pluginContext.getCreateClosureVariable else pluginContext.getThisClosureVariable,
                 0,
                 Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
             ).also {

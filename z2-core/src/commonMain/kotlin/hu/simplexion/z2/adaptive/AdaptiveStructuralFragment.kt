@@ -11,7 +11,7 @@ interface AdaptiveStructuralFragment<BT> : AdaptiveFragment<BT> {
     override val thisClosure
         get() = createClosure
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
         shouldNotRun()
     }
 

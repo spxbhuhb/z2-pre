@@ -36,19 +36,21 @@ class SequenceTest {
                     TraceEvent("SequenceTestComponent", 2, "create", ""),
                     TraceEvent("SequenceTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
                     TraceEvent("SequenceTestComponent", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
                     TraceEvent("AdaptiveSequence", 3, "create", ""),
-                    TraceEvent("AdaptiveSequence", 3, "beforePatchExternal", "closureDirtyMask: -1 state: null"),
-                    TraceEvent("AdaptiveSequence", 3, "afterPatchExternal", "closureDirtyMask: -1 state: [1, 2]"),
+                    TraceEvent("AdaptiveSequence", 3, "beforePatchExternal", "closureDirtyMask: 0 state: null"),
+                    TraceEvent("AdaptiveSequence", 3, "afterPatchExternal", "closureDirtyMask: 0 state: [1, 2]"),
                     TraceEvent("AdaptiveT0", 4, "create", ""),
-                    TraceEvent("AdaptiveT0", 4, "beforePatchExternal", "closureDirtyMask: -1 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "afterPatchExternal", "closureDirtyMask: -1 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "beforePatchInternal", "closureDirtyMask: -1 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "afterPatchInternal", "closureDirtyMask: -1 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
                     TraceEvent("AdaptiveT1", 5, "create", ""),
-                    TraceEvent("AdaptiveT1", 5, "beforePatchExternal", "closureDirtyMask: -1 state: [null]"),
-                    TraceEvent("AdaptiveT1", 5, "afterPatchExternal", "closureDirtyMask: -1 state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "beforePatchInternal", "closureDirtyMask: -1 state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "afterPatchInternal", "closureDirtyMask: -1 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
+                    TraceEvent("AdaptiveT1", 5, "afterPatchExternal", "closureDirtyMask: 0 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "beforePatchInternal", "closureDirtyMask: 0 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "afterPatchInternal", "closureDirtyMask: 0 state: [12]"),
                     TraceEvent("SequenceTestComponent", 2, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequence", 3, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1"),
@@ -68,7 +70,7 @@ class SequenceTestComponent(
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSequence(adapter, parent, declarationIndex)
@@ -84,7 +86,7 @@ class SequenceTestComponent(
 
     override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
-        val closureMask = fragment.getClosureDirtyMask()
+        val closureMask = fragment.getCreateClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {
@@ -99,9 +101,5 @@ class SequenceTestComponent(
                 }
             }
         }
-    }
-
-    override fun patchInternal() {
-        containedFragment?.patchInternal()
     }
 }

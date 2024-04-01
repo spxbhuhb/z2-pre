@@ -79,12 +79,12 @@ fun Z2.test() {
 Build method of `test`:
 
 ```kotlin
-override fun build(declarationClosure: AdaptiveClosure<BT>, parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
   
     val fragment = when (declarationIndex) {
-        0 -> AdaptiveSequence(adapter, parent, declarationClosure)
-        1 -> AdaptiveT0(adapter, parent, declarationClosure)
-        2 -> AdaptiveT1(adapter, parent, declarationClosure)
+        0 -> AdaptiveSequence(adapter, parent, declarationIndex)
+        1 -> AdaptiveT0(adapter, parent, declarationIndex)
+        2 -> AdaptiveT1(adapter, parent, declarationIndex)
         else -> invalidIndex(declarationIndex) // throws exception
     }
   
@@ -101,33 +101,35 @@ override fun build(declarationClosure: AdaptiveClosure<BT>, parent: AdaptiveFrag
 
 ```kotlin
 fun create() {
-    // initialize all external state variables
-    createClosure.owner.patch(this) 
-  
-    // initialize all internal state variables
-    TODO("this comes from the initialization part of the original function")
 
+    patch()
+  
     // build the contained fragment
-    containedFragment = build(thisClosure, this, 0)
+    containedFragment = build(this, 0)
 }
 ```
 
 ## Patch
 
-There are two patch methods for each fragment:
+There are four patch methods for each fragment:
 
-* `patch()` patches the fragment itself
-* `patch(descendant : AdaptiveFragment<BT>)` patches the external variables of a descendant fragment
+* `patch` patches the fragment itself, calls `patchExternal` and `patchInternal`
+* `patchExternal` patches the external state variables of the fragment, calls `createClosure.owner.patchDescendant`
+* `patchInternal` patches the internal state variables of the fragment and calls `patch` of its `containedFragment`
+* `patchDescendant` patches the external variables of a descendant fragment
 
-`patch()` calls `patch(descendant)` of the **creating** fragment this updates all external state variables.
-`patch(descendant)` is **call site dependent**, it uses the `index` of the fragment to identify the call site.
+Notes:
+
+* `patchExternal` calls `patchDescendant` of the **creating** fragment this updates all external state variables.
+* `patchDescendant`
+  * is **call site dependent**, it uses the `index` of the fragment to identify the call site
+  * always uses `createClosure` to calculate the value of state variables
+* `patchInternal`
+  * always uses `thisClosure` to calculate the value of state variables
 
 ```kotlin
-fun patch() {
-    // update external state variables
-    // set the updated external variables to dirty
-    createClosure.owner.patch(this) 
-  
+fun patchInternal() {
+
     TODO("update internal state variables if necessary")
 
     // at this point all variables that have been updated are set to dirty
@@ -139,8 +141,8 @@ fun patch() {
 ```
 
 ```kotlin
-fun patch(descendant : AdaptiveFragment<BT>) {
-    when (descendant.index) {
+fun patchDescendant(fragment : AdaptiveFragment<BT>) {
+    when (fragment.index) {
         1 -> {
             TODO("update external state variables of the fragment")
         }

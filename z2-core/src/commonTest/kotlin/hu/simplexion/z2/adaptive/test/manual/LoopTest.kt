@@ -103,7 +103,7 @@ class LoopTestComponent(
     val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x02 // fragment index: 1, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveLoop<TestNode, Int>(adapter, parent, declarationIndex)
             1 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -117,7 +117,7 @@ class LoopTestComponent(
 
     override fun patchDescendant(fragment: AdaptiveFragment<TestNode>) {
 
-        val closureMask = fragment.getClosureDirtyMask()
+        val closureMask = fragment.getCreateClosureDirtyMask()
 
         when (fragment.index) {
             0 -> {
@@ -131,7 +131,7 @@ class LoopTestComponent(
             1 -> {
                 // T1.createClosure is [ (count), (i) ]
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
-                    fragment.setStateVariable(0, (fragment.getClosureVariable(1) as Int) + 10)
+                    fragment.setStateVariable(0, (fragment.getCreateClosureVariable(1) as Int) + 10)
                 }
             }
             else -> invalidIndex(fragment.index)
@@ -139,9 +139,9 @@ class LoopTestComponent(
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<TestNode>, vararg arguments: Any?) : Any {
-        return when (supportFunction.index) {
+        return when (supportFunction.supportFunctionIndex) {
             0 -> (0..count).iterator()
-            else -> invalidIndex(supportFunction.index)
+            else -> invalidIndex(supportFunction.supportFunctionIndex)
         }
     }
 

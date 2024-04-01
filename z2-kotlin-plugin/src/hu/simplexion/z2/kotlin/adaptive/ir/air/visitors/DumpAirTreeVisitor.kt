@@ -50,7 +50,7 @@ class DumpAirTreeVisitor(
         }
     }
 
-    override fun visitPatchBranch(branch: AirPatchBranch) {
+    override fun visitPatchBranch(branch: AirPatchDescendantBranch) {
         indented {
             with(branch) {
                 println { "PATCH_BRANCH index:$index" }

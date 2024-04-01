@@ -36,9 +36,10 @@ object Strings {
     const val PATCH_INTERNAL_END = "patchInternalEnd"
 
     const val HAVE_TO_PATCH = "haveToPatch"
-    const val GET_CLOSURE_DIRTY_MASK = "getClosureDirtyMask"
+    const val GET_CREATE_CLOSURE_DIRTY_MASK = "getCreateClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
-    const val GET_CLOSURE_VARIABLE = "getClosureVariable"
+    const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
+    const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
     const val INVALID_INDEX = "invalidIndex"
 
     const val PARENT = "parent"
@@ -47,13 +48,8 @@ object Strings {
     const val FRAGMENT = "fragment"
     const val SUPPORT_FUNCTION = "supportFunction"
     const val ARGUMENTS = "arguments"
-    const val VARIABLE_INDEX = "variableIndex"
 
-    const val ID = "id"
     const val ADAPTER = "adapter"
-    const val CREATE_CLOSURE = "thisClosure"
-    const val THIS_CLOSURE = "thisClosure"
-    const val CONTAINED_FRAGMENT = "containedFragment"
     const val DIRTY_MASK = "dirtyMask"
 
     const val TRACE = "trace" // name of the trace function in the adapter class
@@ -152,7 +148,8 @@ object Indices {
     const val SET_STATE_VARIABLE_VALUE = 1
 
     /**
-     * `getClosureVariable(index)` arguments
+     * `getCreateClosureVariable(index)` arguments
+     * `getThisClosureVariable(index)` arguments
      */
     const val GET_CLOSURE_VARIABLE_ARGUMENT_COUNT = 1
 
@@ -179,6 +176,14 @@ object Indices {
 
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT = 0
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX = 1
+
+    /**
+     * AdaptiveSupportFunction constructor arguments
+     */
+    const val ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT = 2
+
+    const val ADAPTIVE_SUPPORT_FUNCTION_FRAGMENT = 0
+    const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 1
 
     /**
      * Structural fragment state indices

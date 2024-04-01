@@ -25,7 +25,7 @@ class AdaptiveSequence<BT>(
         // no internals for structural fragments
 
         for (itemIndex in state[0] as IntArray) {
-            fragments += createClosure.owner.build(this, itemIndex)
+            fragments += createClosure.owner.build(this, itemIndex)!!
         }
 
         dirtyMask = adaptiveCleanStateMask
@@ -54,6 +54,6 @@ class AdaptiveSequence<BT>(
     }
 
     override fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: ${(state[0] as? IntArray).contentToString()}")
+        adapter.trace(this, point, "closureDirtyMask: ${getCreateClosureDirtyMask()} state: ${(state[0] as? IntArray).contentToString()}")
     }
 }

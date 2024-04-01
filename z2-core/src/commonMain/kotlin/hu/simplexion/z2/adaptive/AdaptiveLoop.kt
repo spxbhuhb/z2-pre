@@ -128,7 +128,7 @@ class AdaptiveLoop<BT, IT>(
     override fun traceWithState(point : String) {
         val s0 = state[0]?.let { it::class.simpleName } ?: "null"
         val s1 = state[1]?.toString() ?: "null"
-        adapter.trace(this, point, "closureDirtyMask: ${getClosureDirtyMask()} state: [$s0,$s1]")
+        adapter.trace(this, point, "closureDirtyMask: ${getCreateClosureDirtyMask()} state: [$s0,$s1]")
     }
 
 }
