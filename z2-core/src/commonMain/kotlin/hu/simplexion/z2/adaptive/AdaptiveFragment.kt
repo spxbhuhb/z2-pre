@@ -68,6 +68,10 @@ interface AdaptiveFragment<BT> {
 
     // utility functions
 
+    fun shouldNotRun() : Nothing {
+        throw IllegalStateException("this code should not be reached, please open a bug report")
+    }
+
     fun invalidIndex(index: Int): Nothing {
         throw IllegalStateException("invalid index: $index")
     }
@@ -81,11 +85,15 @@ interface AdaptiveFragment<BT> {
     }
 
     fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getCreateClosureDirtyMask()} state: ${this.state.contentToString()}")
+        adapter.trace(this, point, "closureDirtyMask: ${getThisClosureDirtyMask()} state: ${this.state.contentToString()}")
     }
 
-    fun trace(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) {
-        adapter.trace(this, "invoke", "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
+    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) {
+        adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
+    }
+
+    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, result : Any?) {
+        adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} result: $result")
     }
 
 }

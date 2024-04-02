@@ -34,6 +34,8 @@ internal class AdaptiveGenerationExtension(
 //                )
 //            }
 
+            // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
+
             // --------  IR to ARM  --------
 
             moduleFragment.accept(OriginalFunctionTransform(this), null)
@@ -65,7 +67,7 @@ internal class AdaptiveGenerationExtension(
 
             // --------  finishing up  --------
             debug("KOTLIN LIKE") { "\n\n" + moduleFragment.dumpKotlinLike() }
-            //debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
+            // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }
 

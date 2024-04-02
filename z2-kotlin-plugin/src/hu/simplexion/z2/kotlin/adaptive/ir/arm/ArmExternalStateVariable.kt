@@ -21,7 +21,7 @@ class ArmExternalStateVariable(
 
     override val name = irValueParameter.name.identifier
 
-    override val type: IrType
+    override val originalType: IrType
         get() = irValueParameter.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irValueParameter.symbol)

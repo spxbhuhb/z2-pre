@@ -30,8 +30,7 @@ class SequenceTest {
         }
 
         assertEquals(
-            "OK",
-            AdaptiveTestAdapter.assert(
+            adapter.expected(
                 listOf(
                     TraceEvent("SequenceTestComponent", 2, "create", ""),
                     TraceEvent("SequenceTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
@@ -56,7 +55,8 @@ class SequenceTest {
                     TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveT1", 5, "mount", "bridge: 1")
                 )
-            )
+            ),
+            adapter.actual(dumpCode = true)
         )
     }
 }
@@ -102,4 +102,9 @@ class SequenceTestComponent(
             }
         }
     }
+
+    override fun generatedPatchInternal() {
+
+    }
+
 }

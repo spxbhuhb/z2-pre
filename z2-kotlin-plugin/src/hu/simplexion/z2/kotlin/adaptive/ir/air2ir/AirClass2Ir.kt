@@ -6,6 +6,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirInvokeBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -65,6 +66,7 @@ class AirClass2Ir(
     }
 
     private fun irBuildWhen(): IrExpression =
+
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             classBoundFragmentType,
@@ -79,6 +81,7 @@ class AirClass2Ir(
         }
 
     private fun irBuildConditionBranch(branch: AirBuildBranch) =
+
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irEqual(
@@ -96,6 +99,7 @@ class AirClass2Ir(
         val patchFun = airClass.patchDescendant
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
+
             val closureMask = irTemporary(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -151,39 +155,84 @@ class AirClass2Ir(
     // ---------------------------------------------------------------------------
 
     fun invoke() {
-        val invokeFun = airClass.invoke
+        val invokeFun = airClass.generatedInvoke
 
         invokeFun.body = DeclarationIrBuilder(irContext, invokeFun.symbol).irBlockBody {
-            + irReturn(irNull())
+
+            if (airClass.invokeBranches.isEmpty()) {
+                + irShouldNotRun(invokeFun)
+                return@irBlockBody
+            }
+
+
+            val supportFunctionIndex = irTemporary(
+                IrCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    irBuiltIns.intType,
+                    pluginContext.adaptiveSupportFunctionIndex,
+                    0, 0
+                ).also {
+                    it.dispatchReceiver = irGet(invokeFun.valueParameters.first())
+                }
+            )
+
+            val fragment = irTemporary(
+                IrCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    classBoundFragmentType,
+                    pluginContext.adaptiveSupportFunctionFragment,
+                    0, 0
+                ).also {
+                    it.dispatchReceiver = irGet(invokeFun.valueParameters.first())
+                }
+            )
+
+            + invokeWhen(invokeFun, supportFunctionIndex, fragment)
         }
     }
+
+    private fun invokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, closure: IrVariable): IrExpression =
+        IrWhenImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            IrStatementOrigin.WHEN
+        ).apply {
+
+            airClass.invokeBranches.forEach { branch ->
+                branches += irInvokeBranch(branch, supportFunctionIndex, closure)
+            }
+
+            branches += irInvalidIndexBranch(airClass.patchDescendant, irGet(supportFunctionIndex))
+        }
+
+    private fun irInvokeBranch(branch: AirInvokeBranch, supportFunctionIndex: IrVariable, closure: IrVariable) =
+        IrBranchImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irEqual(
+                irGet(supportFunctionIndex),
+                irConst(branch.index)
+            ),
+            branch.invokeBuilder(closure)
+        )
 
     // ---------------------------------------------------------------------------
     // Patch Internal
     // ---------------------------------------------------------------------------
 
     fun patchInternal() {
-        val patchFun = airClass.patchInternal
+        val patchFun = airClass.generatedPatchInternal
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
-            + irCall(irClass.getSimpleFunction(Strings.PATCH_INTERNAL_START)!!).also {
-                it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!)
-            }
-
             airClass.armClass.stateDefinitionStatements.forEach {
                 val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement
-                val transformedExpression = originalExpression.transformStateAccess(airClass.armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter!!) }
+                val transformedExpression = originalExpression.transformStateAccess(airClass.armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 if (it is ArmInternalStateVariable) {
                     + irSetInternalStateVariable(it.indexInState, transformedExpression as IrExpression)
                 } else {
                     + transformedExpression
                 }
-            }
-
-            + irCall(irClass.getSimpleFunction(Strings.PATCH_INTERNAL_END)!!).also {
-                it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!)
             }
 
             + irReturn(irUnit())
@@ -193,6 +242,17 @@ class AirClass2Ir(
     // ---------------------------------------------------------------------------
     // Common
     // ---------------------------------------------------------------------------
+
+
+    private fun irShouldNotRun(fromFun: IrSimpleFunction) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.nothingType,
+            airClass.irClass.getSimpleFunction(Strings.SHOULD_NOT_RUN) !!,
+            0, 0
+        ).also {
+            it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
+        }
 
     private fun irInvalidIndexBranch(fromFun: IrSimpleFunction, getIndex: IrExpression) =
         IrElseBranchImpl(

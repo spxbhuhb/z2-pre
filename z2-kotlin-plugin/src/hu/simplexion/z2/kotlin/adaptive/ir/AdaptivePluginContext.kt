@@ -12,10 +12,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.ir.util.IrMessageLogger
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 
 class AdaptivePluginContext(
@@ -46,17 +43,20 @@ class AdaptivePluginContext(
     val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
 
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
+    val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.INVOKE))
+    val adaptiveSupportFunctionFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.FRAGMENT))
+    val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
 
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
 
     val build = function(Strings.BUILD)
     val patchDescendant = function(Strings.PATCH_DESCENDANT)
-    val invoke = function(Strings.INVOKE)
+    val generatedInvoke = function(Strings.GENERATED_INVOKE)
 
     val create = function(Strings.CREATE)
     val mount = function(Strings.MOUNT)
-    val patchInternal = function(Strings.PATCH_INTERNAL)
+    val generatedPatchInternal = function(Strings.GENERATED_PATCH_INTERNAL)
 
     val haveToPatch = function(Strings.HAVE_TO_PATCH)
     val getCreateClosureDirtyMask = function(Strings.GET_CREATE_CLOSURE_DIRTY_MASK)

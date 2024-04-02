@@ -160,6 +160,10 @@ class HigherOrderTestComponent(
             else -> invalidIndex(fragment.index)
         }
     }
+
+    override fun generatedPatchInternal() {
+
+    }
 }
 
 class HigherFun(
@@ -204,6 +208,11 @@ class HigherFun(
             else -> invalidIndex(fragment.index)
         }
     }
+
+    override fun generatedPatchInternal() {
+
+    }
+
 }
 
 class HigherFunInner(
@@ -240,4 +249,8 @@ class HigherFunInner(
         }
     }
 
+    override fun generatedPatchInternal() {
+
+    }
+    
 }

@@ -25,7 +25,6 @@ abstract class AdaptiveTracingFragment<BT>: AdaptiveFragment<BT> {
     }
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
-        trace(supportFunction, arguments)
     }
 
     override fun create() {

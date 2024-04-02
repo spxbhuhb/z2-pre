@@ -3,7 +3,10 @@
  */
 package hu.simplexion.z2.adaptive.test.manual
 
-import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.AdaptiveGeneratedFragment
+import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestBridge
 import hu.simplexion.z2.adaptive.testing.TestNode
@@ -12,9 +15,16 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * fun supportFunctionTest(i : Int, supportFun : (i : Int) -> Unit) {
+ * ```kotlin
+ * fun supportFunctionTest() {
+ *     val i = 13
+ *     supportFunctionInnerComponent(12) { i = 11 + it + i }
+ * }
+ *
+ * fun supportFunctionInnerComponent(i : Int, supportFun : (i : Int) -> Unit) {
  *     supportFun(i)
  * }
+ * ```
  */
 class SupportFunctionTest {
 
@@ -27,28 +37,31 @@ class SupportFunctionTest {
             create()
             mount(root)
         }.also {
-            assertEquals(23, it.state[0])
+            assertEquals(11 + 12 + 13, it.state[0])
         }
 
         assertEquals(
             adapter.expected(
                 listOf(
                     TraceEvent("SupportFunctionTestComponent", 2, "create", ""),
-                    TraceEvent("SupportFunctionTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "afterPatchExternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: [null]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "beforePatchExternal", "closureDirtyMask: -1 state: [null]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "afterPatchExternal", "closureDirtyMask: -1 state: [null]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "beforePatchInternal", "closureDirtyMask: -1 state: [null]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: [13]"),
                     TraceEvent("SupportFunctionInnerComponent", 3, "create", ""),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "afterPatchExternal", "closureDirtyMask: 0 state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "beforePatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "invoke", "index: 0 arguments: [12]"),
+                    TraceEvent("SupportFunctionInnerComponent", 3, "beforePatchExternal", "closureDirtyMask: -1 state: [null, null]"),
+                    TraceEvent("SupportFunctionInnerComponent", 3, "afterPatchExternal", "closureDirtyMask: -1 state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("SupportFunctionInnerComponent", 3, "beforePatchInternal", "closureDirtyMask: -1 state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "beforeInvoke", "index: 0 arguments: [12]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 1 state: [36]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: [36]"),
+                    TraceEvent("SupportFunctionTestComponent", 2, "afterInvoke", "index: 0 result: kotlin.Unit"),
                     TraceEvent("SupportFunctionInnerComponent", 3, "afterPatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveSupportFunction(2, 0)]"),
                     TraceEvent("SupportFunctionTestComponent", 2, "mount", "bridge: 1"),
                     TraceEvent("SupportFunctionInnerComponent", 3, "mount", "bridge: 1")
                 )
             ),
-            adapter.actual()
+            adapter.actual(dumpCode = false)
         )
     }
 }
@@ -84,17 +97,32 @@ class SupportFunctionTestComponent(
                     fragment.setStateVariable(0, 12)
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
-                    fragment.setStateVariable(1, AdaptiveSupportFunction(fragment, 0))
+                    fragment.setStateVariable(1, AdaptiveSupportFunction(this, 0))
                 }
             }
         }
     }
 
+    override fun generatedPatchInternal() {
+        val closureMask = getThisClosureDirtyMask()
+
+        if (haveToPatch(closureMask, 0)) {
+            setStateVariable(0, 13)
+        }
+    }
+
     @Suppress("RedundantNullableReturnType")
-    override fun invoke(supportFunction: AdaptiveSupportFunction<TestNode>, arguments: Array<out Any?>): Any? {
-        trace(supportFunction, arguments)
+    override fun generatedInvoke(supportFunction: AdaptiveSupportFunction<TestNode>, arguments: Array<out Any?>): Any? {
+
+        val fragment = supportFunction.fragment
+
         return when (supportFunction.supportFunctionIndex) {
-            0 -> { state[0] = (arguments[0] as Int) + 11 } // this is a bit dirty, but good enough for testing
+            0 -> {
+                fragment.setStateVariable(
+                    0,
+                    11 + (arguments[0] as Int) + (fragment.getThisClosureVariable(0) as Int)
+                )
+            }
             else -> invalidIndex(supportFunction.supportFunctionIndex)
         }
     }
@@ -114,9 +142,7 @@ class SupportFunctionInnerComponent(
         shouldNotRun()
     }
 
-    override fun patchInternal() {
-        patchInternalStart()
+    override fun generatedPatchInternal() {
         (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(getThisClosureVariable(0))
-        patchInternalEnd()
     }
 }

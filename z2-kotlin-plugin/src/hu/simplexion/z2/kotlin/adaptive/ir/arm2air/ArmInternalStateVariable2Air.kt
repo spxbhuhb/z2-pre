@@ -15,7 +15,7 @@ class ArmInternalStateVariable2Air(
                 indexInState,
                 indexInClosure,
                 name,
-                irVariable.type
+                stateVariableType(stateVariable)
             )
         }
 

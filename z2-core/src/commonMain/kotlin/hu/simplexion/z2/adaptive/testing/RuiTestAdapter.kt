@@ -27,14 +27,14 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         return AdaptiveTestBridge(newId())
     }
 
-    override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data : String) {
-        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString())}
+    override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
+        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
     }
 
-    fun actual(): String =
-        traceEvents.joinToString("\n")
+    fun actual(dumpCode: Boolean = false): String =
+        traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
 
-    fun expected(expected: List<TraceEvent>) : String =
+    fun expected(expected: List<TraceEvent>): String =
         expected.joinToString("\n")
 
     companion object {
@@ -46,10 +46,10 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         fun actual(): String =
             lastTrace.joinToString("\n")
 
-        fun expected(expected: List<TraceEvent>) : String =
+        fun expected(expected: List<TraceEvent>): String =
             expected.joinToString("\n")
 
-        fun toCode() : String =
+        fun toCode(): String =
             lastTrace.joinToString(",\n") { it.toCode() }
 
         fun assert(expected: List<TraceEvent>): String {

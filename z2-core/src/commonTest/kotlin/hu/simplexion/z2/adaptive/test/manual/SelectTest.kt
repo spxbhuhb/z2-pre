@@ -233,4 +233,8 @@ class SelectTestComponent(
         }
     }
 
+    override fun generatedPatchInternal() {
+
+    }
+
 }

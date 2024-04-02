@@ -20,8 +20,8 @@ class AirClass(
 
     val build: IrSimpleFunction,
     val patchDescendant: IrSimpleFunction,
-    val invoke: IrSimpleFunction,
-    val patchInternal: IrSimpleFunction
+    val generatedInvoke: IrSimpleFunction,
+    val generatedPatchInternal: IrSimpleFunction
 
 ) : AirElement {
 

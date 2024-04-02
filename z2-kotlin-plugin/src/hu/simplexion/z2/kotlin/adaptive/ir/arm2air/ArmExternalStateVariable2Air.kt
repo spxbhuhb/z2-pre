@@ -15,7 +15,7 @@ class ArmExternalStateVariable2Air(
                 indexInState,
                 indexInClosure,
                 name,
-                irValueParameter.type
+                stateVariableType(stateVariable)
             )
         }
 }

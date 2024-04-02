@@ -27,19 +27,18 @@ object Strings {
 
     const val BUILD = "build"
     const val PATCH_DESCENDANT = "patchDescendant"
-    const val INVOKE = "invoke"
+    const val GENERATED_INVOKE = "generatedInvoke"
 
     const val CREATE = "create"
     const val MOUNT = "mount"
-    const val PATCH_INTERNAL = "patchInternal"
-    const val PATCH_INTERNAL_START = "patchInternalStart"
-    const val PATCH_INTERNAL_END = "patchInternalEnd"
+    const val GENERATED_PATCH_INTERNAL = "generatedPatchInternal"
 
     const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CREATE_CLOSURE_DIRTY_MASK = "getCreateClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
+    const val SHOULD_NOT_RUN = "shouldNotRun"
     const val INVALID_INDEX = "invalidIndex"
 
     const val PARENT = "parent"
@@ -47,6 +46,8 @@ object Strings {
     const val DECLARATION_INDEX = "declarationIndex"
     const val FRAGMENT = "fragment"
     const val SUPPORT_FUNCTION = "supportFunction"
+    const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
+    const val SUPPORT_FUNCTION_CLOSURE = "supportFunctionClosure"
     const val ARGUMENTS = "arguments"
 
     const val ADAPTER = "adapter"
@@ -69,14 +70,16 @@ object Names {
 
     val BUILD = Name.identifier(Strings.BUILD)
     val PATCH_DESCENDANT = Name.identifier(Strings.PATCH_DESCENDANT)
-    val INVOKE = Name.identifier(Strings.INVOKE)
+    val GENERATED_INVOKE = Name.identifier(Strings.GENERATED_INVOKE)
 
-    val PATCH_INTERNAL = Name.identifier(Strings.PATCH_INTERNAL)
+    val PATCH_INTERNAL = Name.identifier(Strings.GENERATED_PATCH_INTERNAL)
 
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
     val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
     val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
     val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
+
+    val TRACE = Name.identifier(Strings.TRACE)
 }
 
 object FqNames {

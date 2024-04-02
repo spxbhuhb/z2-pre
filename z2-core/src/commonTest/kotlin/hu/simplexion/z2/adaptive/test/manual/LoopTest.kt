@@ -138,11 +138,8 @@ class LoopTestComponent(
         }
     }
 
-    override fun invoke(supportFunction: AdaptiveSupportFunction<TestNode>, vararg arguments: Any?) : Any {
-        return when (supportFunction.supportFunctionIndex) {
-            0 -> (0..count).iterator()
-            else -> invalidIndex(supportFunction.supportFunctionIndex)
-        }
+    override fun generatedPatchInternal() {
+
     }
 
 }

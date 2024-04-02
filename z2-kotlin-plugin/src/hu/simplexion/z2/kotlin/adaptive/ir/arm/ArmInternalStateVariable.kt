@@ -19,7 +19,7 @@ class ArmInternalStateVariable(
 
     override val name = irVariable.name.identifier
 
-    override val type: IrType
+    override val originalType: IrType
         get() = irVariable.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)

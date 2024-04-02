@@ -64,8 +64,8 @@ class ArmClass2Air(
         val initializer = initializer()
         val build = build()
         val patchDescendant = patchDescendant()
-        val invoke = invoke()
-        val patchInternal = patchInternal()
+        val generatedInvoke = generatedInvoke()
+        val generatedPatchInternal = generatedPatchInternal()
 
         // this has to be before AirClass() (adds overridden properties)
 
@@ -78,8 +78,8 @@ class ArmClass2Air(
             initializer,
             build,
             patchDescendant,
-            invoke,
-            patchInternal
+            generatedInvoke,
+            generatedPatchInternal
         )
 
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
@@ -252,13 +252,13 @@ class ArmClass2Air(
         )
 
     /**
-     * Defines a `invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments : Array<out Any?>) : Any?`
+     * Defines a `generatedInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments : Array<out Any?>) : Any?`
      */
-    fun invoke(): IrSimpleFunction =
+    fun generatedInvoke(): IrSimpleFunction =
         function(
-            Names.INVOKE,
+            Names.GENERATED_INVOKE,
             irBuiltIns.anyNType,
-            pluginContext.invoke,
+            pluginContext.generatedInvoke,
             Names.SUPPORT_FUNCTION to classBoundSupportFunctionType
         ).apply {
             addValueParameter {
@@ -268,13 +268,13 @@ class ArmClass2Air(
         }
 
     /**
-     * Defines a `patchInternal()`
+     * Defines a `generatedPatchInternal()`
      */
-    fun patchInternal(): IrSimpleFunction =
+    fun generatedPatchInternal(): IrSimpleFunction =
         function(
             Names.PATCH_INTERNAL,
             irBuiltIns.unitType,
-            pluginContext.patchInternal
+            pluginContext.generatedPatchInternal
         )
 
 }

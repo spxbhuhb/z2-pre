@@ -27,8 +27,20 @@ abstract class AdaptiveGeneratedFragment<BT>(
     var containedFragment: AdaptiveFragment<BT>? = null
 
     override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
-        if (adapter.trace) trace(supportFunction, arguments)
-        return null // overwritten by the plugin
+        if (adapter.trace) traceSupport("beforeInvoke", supportFunction, arguments)
+
+        val result = generatedInvoke(supportFunction, arguments)
+
+        if (supportFunction.fragment.thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
+            supportFunction.fragment.patchInternal()
+        }
+
+        if (adapter.trace) traceSupport("afterInvoke", supportFunction, result)
+        return result
+    }
+
+    open fun generatedInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) : Any? {
+        shouldNotRun()
     }
 
     override fun create() {
@@ -53,18 +65,18 @@ abstract class AdaptiveGeneratedFragment<BT>(
     }
 
     override fun patchInternal() {
-        patchInternalStart()
-        patchInternalEnd()
-    }
-
-    fun patchInternalStart() {
         if (adapter.trace) traceWithState("beforePatchInternal")
+
+        generatedPatchInternal()
+
+        containedFragment?.patch()
+        dirtyMask = adaptiveCleanStateMask
+
+        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
-    fun patchInternalEnd() {
-        containedFragment?.patch()
-        if (adapter.trace) traceWithState("afterPatchInternal")
-        dirtyMask = adaptiveCleanStateMask
+    open fun generatedPatchInternal() {
+        shouldNotRun()
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {

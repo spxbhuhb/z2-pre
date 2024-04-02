@@ -12,13 +12,17 @@ fun Adaptive.Basic(i : Int, supportFun : (i : Int) -> Unit) {
     supportFun(i)
 }
 
+var a = 0
+
 fun box() : String {
 
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
     adaptive {
-        Basic(12) { check(it == 12) }
+        Basic(12) { a = it }
     }
+
+    if (a != 12) return "Fail: a != 12"
 
     return AdaptiveTestAdapter.assert(listOf(
 

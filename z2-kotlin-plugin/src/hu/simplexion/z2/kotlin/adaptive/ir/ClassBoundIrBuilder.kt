@@ -5,6 +5,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -26,10 +27,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.defaultType
-import org.jetbrains.kotlin.ir.util.parentAsClass
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.util.OperatorNameConventions
@@ -167,7 +165,7 @@ open class ClassBoundIrBuilder(
             valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also { call ->
 
-            call.dispatchReceiver = irGet(airClass.patchInternal.dispatchReceiverParameter!!)
+            call.dispatchReceiver = irGet(airClass.generatedPatchInternal.dispatchReceiverParameter !!)
 
             call.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,
@@ -191,6 +189,10 @@ open class ClassBoundIrBuilder(
         this.forEach { mask = mask or (1 shl it.indexInClosure) }
         return irConst(mask)
     }
+
+    fun stateVariableType(variable: ArmStateVariable): IrType =
+        if (variable.originalType.isFunction()) classBoundSupportFunctionType else variable.originalType
+
     // --------------------------------------------------------------------------------------------------------
     // Properties
     // --------------------------------------------------------------------------------------------------------
