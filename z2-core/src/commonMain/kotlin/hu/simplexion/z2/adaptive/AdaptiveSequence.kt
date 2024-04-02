@@ -4,30 +4,32 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveSequence<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val parent: AdaptiveFragment<BT>?,
-    override val index: Int,
-) : AdaptiveStructuralFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>?,
+    index: Int,
+) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
 
-    override val id = adapter.newId()
+    override val createClosure : AdaptiveClosure<BT>
+        get() = parent!!.thisClosure
 
-    // 0 : Array<Int>, the indices of sequence items
-    override val state = arrayOfNulls<Any?>(1)
-
-    override var dirtyMask = adaptiveInitStateMask
+    override val thisClosure = AdaptiveClosure(
+        createClosure.components + this,
+        createClosure.closureSize + state.size
+    )
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
+
+    val indices : IntArray
+        get() = state[0] as IntArray
 
     override fun create() {
         if (adapter.trace) trace("create")
 
         patch()
 
-        for (itemIndex in state[0] as IntArray) {
-            fragments += createClosure.owner.build(this, itemIndex)!!
+        for (itemIndex in indices) {
+            fragments += createClosure.owner.build(this, itemIndex)
         }
-
-        dirtyMask = adaptiveCleanStateMask
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -35,11 +37,8 @@ class AdaptiveSequence<BT>(
         fragments.forEach { it.mount(bridge) }
     }
 
-    override fun patchInternal() {
-        if (adapter.trace) traceWithState("beforePatchInternal")
+    override fun generatedPatchInternal() {
         fragments.forEach { it.patch() }
-        dirtyMask = adaptiveCleanStateMask
-        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -52,7 +51,7 @@ class AdaptiveSequence<BT>(
         fragments.forEach { it.dispose() }
     }
 
-    override fun traceWithState(point : String) {
-        adapter.trace(this, point, "closureDirtyMask: ${getThisClosureDirtyMask()} state: ${(state[0] as? IntArray).contentToString()}")
+    override fun stateToTraceString(): String {
+        return if (state[0] != null) indices.contentToString() else "[]"
     }
 }

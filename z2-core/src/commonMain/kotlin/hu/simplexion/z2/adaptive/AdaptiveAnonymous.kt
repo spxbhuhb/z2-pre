@@ -9,29 +9,23 @@ class AdaptiveAnonymous<BT>(
     index: Int,
     stateSize: Int,
     val factory: AdaptiveFragmentFactory<BT>,
-) : AdaptiveGeneratedFragment<BT>(adapter, parent, index, stateSize) {
+) : AdaptiveFragment<BT>(adapter, parent, index, stateSize) {
 
     override val createClosure : AdaptiveClosure<BT>
         get() = parent!!.thisClosure
 
     override val thisClosure = extendWith(this, factory.declaringFragment)
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
-        shouldNotRun()
-    }
-
     override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
         factory.declaringFragment.patchDescendant(fragment)
     }
 
-    override fun invoke(supportFunction: AdaptiveSupportFunction<BT>, vararg arguments: Any?) {
-        shouldNotRun()
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+        return factory.build(this)
     }
 
-    override fun create() {
-        if (adapter.trace) adapter.trace(this, "create", "")
-        patchExternal()
-        containedFragment = factory.build(this)
+    override fun generatedPatchInternal() {
+
     }
 
     /**

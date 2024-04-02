@@ -76,7 +76,11 @@ class AdaptiveClosure<BT>(
         var mask = 0
         var position = 0
         for (component in components) {
-            mask = mask or (component.dirtyMask shl position)
+            if (component.dirtyMask == adaptiveInitStateMask) {
+                mask = adaptiveInitStateMask
+            } else {
+                mask = mask or (component.dirtyMask shl position)
+            }
             position += component.state.size
         }
         return mask

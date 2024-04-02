@@ -3,7 +3,10 @@
  */
 package hu.simplexion.z2.adaptive.test.manual
 
-import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveAnonymous
+import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.AdaptiveFragmentFactory
 import hu.simplexion.z2.adaptive.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -42,50 +45,58 @@ class HigherOrderTest {
         }
 
         assertEquals(
-            "OK", AdaptiveTestAdapter.assert(
+            adapter.expected(
                 listOf(
                     TraceEvent("HigherOrderTestComponent", 2, "create", ""),
-                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("HigherOrderTestComponent", 2, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("HigherFun", 3, "create", ""),
-                    TraceEvent("HigherFun", 3, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
-                    TraceEvent("HigherFun", 3, "afterPatchExternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
-                    TraceEvent("HigherFun", 3, "beforePatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
-                    TraceEvent("HigherFun", 3, "afterPatchInternal", "closureDirtyMask: 0 state: [12, AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("HigherFun", 3, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("HigherFun", 3, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("HigherFun", 3, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("HigherFun", 3, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, AdaptiveFragmentFactory(2,1)]"),
                     TraceEvent("HigherFunInner", 4, "create", ""),
-                    TraceEvent("HigherFunInner", 4, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
-                    TraceEvent("HigherFunInner", 4, "afterPatchExternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
-                    TraceEvent("HigherFunInner", 4, "beforePatchInternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
-                    TraceEvent("HigherFunInner", 4, "afterPatchInternal", "closureDirtyMask: 0 state: [24, AdaptiveFragmentFactory(3,1)]"),
+                    TraceEvent("HigherFunInner", 4, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("HigherFunInner", 4, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [24, AdaptiveFragmentFactory(3,1)]"),
+                    TraceEvent("HigherFunInner", 4, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [24, AdaptiveFragmentFactory(3,1)]"),
+                    TraceEvent("HigherFunInner", 4, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [24, AdaptiveFragmentFactory(3,1)]"),
                     TraceEvent("AdaptiveAnonymous", 5, "create", ""),
-                    TraceEvent("AdaptiveAnonymous", 5, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("AdaptiveAnonymous", 5, "afterPatchExternal", "closureDirtyMask: 0 state: [25]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [25]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [25]"),
+                    TraceEvent("AdaptiveAnonymous", 5, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [25]"),
                     TraceEvent("AdaptiveAnonymous", 6, "create", ""),
-                    TraceEvent("AdaptiveAnonymous", 6, "beforePatchExternal", "closureDirtyMask: -4 state: [null]"),
-                    TraceEvent("AdaptiveAnonymous", 6, "afterPatchExternal", "closureDirtyMask: -4 state: [37]"),
+                    TraceEvent("AdaptiveAnonymous", 6, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 6, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [37]"),
+                    TraceEvent("AdaptiveAnonymous", 6, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [37]"),
+                    TraceEvent("AdaptiveAnonymous", 6, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [37]"),
                     TraceEvent("HigherFun", 7, "create", ""),
-                    TraceEvent("HigherFun", 7, "beforePatchExternal", "closureDirtyMask: -1 state: [null, null]"),
-                    TraceEvent("HigherFun", 7, "afterPatchExternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
-                    TraceEvent("HigherFun", 7, "beforePatchInternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
-                    TraceEvent("HigherFun", 7, "afterPatchInternal", "closureDirtyMask: -1 state: [37, AdaptiveFragmentFactory(2,2)]"),
+                    TraceEvent("HigherFun", 7, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("HigherFun", 7, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [37, AdaptiveFragmentFactory(2,2)]"),
+                    TraceEvent("HigherFun", 7, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [37, AdaptiveFragmentFactory(2,2)]"),
+                    TraceEvent("HigherFun", 7, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [37, AdaptiveFragmentFactory(2,2)]"),
                     TraceEvent("HigherFunInner", 8, "create", ""),
-                    TraceEvent("HigherFunInner", 8, "beforePatchExternal", "closureDirtyMask: 0 state: [null, null]"),
-                    TraceEvent("HigherFunInner", 8, "afterPatchExternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
-                    TraceEvent("HigherFunInner", 8, "beforePatchInternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
-                    TraceEvent("HigherFunInner", 8, "afterPatchInternal", "closureDirtyMask: 0 state: [74, AdaptiveFragmentFactory(7,1)]"),
+                    TraceEvent("HigherFunInner", 8, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("HigherFunInner", 8, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [74, AdaptiveFragmentFactory(7,1)]"),
+                    TraceEvent("HigherFunInner", 8, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [74, AdaptiveFragmentFactory(7,1)]"),
+                    TraceEvent("HigherFunInner", 8, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [74, AdaptiveFragmentFactory(7,1)]"),
                     TraceEvent("AdaptiveAnonymous", 9, "create", ""),
-                    TraceEvent("AdaptiveAnonymous", 9, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("AdaptiveAnonymous", 9, "afterPatchExternal", "closureDirtyMask: 0 state: [75]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [75]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [75]"),
+                    TraceEvent("AdaptiveAnonymous", 9, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [75]"),
                     TraceEvent("AdaptiveAnonymous", 10, "create", ""),
-                    TraceEvent("AdaptiveAnonymous", 10, "beforePatchExternal", "closureDirtyMask: -4 state: [null]"),
-                    TraceEvent("AdaptiveAnonymous", 10, "afterPatchExternal", "closureDirtyMask: -4 state: [112]"),
+                    TraceEvent("AdaptiveAnonymous", 10, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveAnonymous", 10, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [112]"),
+                    TraceEvent("AdaptiveAnonymous", 10, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [112]"),
+                    TraceEvent("AdaptiveAnonymous", 10, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [112]"),
                     TraceEvent("AdaptiveT1", 11, "create", ""),
-                    TraceEvent("AdaptiveT1", 11, "beforePatchExternal", "closureDirtyMask: -1 state: [null]"),
-                    TraceEvent("AdaptiveT1", 11, "afterPatchExternal", "closureDirtyMask: -1 state: [149]"),
-                    TraceEvent("AdaptiveT1", 11, "beforePatchInternal", "closureDirtyMask: -1 state: [149]"),
-                    TraceEvent("AdaptiveT1", 11, "afterPatchInternal", "closureDirtyMask: -1 state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveT1", 11, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [149]"),
+                    TraceEvent("AdaptiveT1", 11, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [149]"),
                     TraceEvent("HigherOrderTestComponent", 2, "mount", "bridge: 1"),
                     TraceEvent("HigherFun", 3, "mount", "bridge: 1"),
                     TraceEvent("HigherFunInner", 4, "mount", "bridge: 1"),
@@ -97,7 +108,8 @@ class HigherOrderTest {
                     TraceEvent("AdaptiveAnonymous", 10, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveT1", 11, "mount", "bridge: 1")
                 )
-            )
+            ),
+            adapter.actual(dumpCode = false)
         )
     }
 }
@@ -106,7 +118,7 @@ class HigherOrderTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 0) {
+) : AdaptiveFragment<TestNode>(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x00 // fragment index: 0, state variable index: 1
@@ -116,7 +128,7 @@ class HigherOrderTestComponent(
 
     val dependencyMask_2_0 = 0x00 // fragment index: 2, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> HigherFun(adapter, parent, declarationIndex)
             1 -> HigherFun(adapter, parent, declarationIndex)
@@ -143,7 +155,7 @@ class HigherOrderTestComponent(
             }
 
             1 -> {
-                if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
+                if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
                     fragment.setStateVariable(0, fragment.getCreateClosureVariable(0) as Int)
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_1)) {
@@ -170,7 +182,7 @@ class HigherFun(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 2) {
+) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
 
     val higherI
         get() = state[0] as Int
@@ -179,7 +191,7 @@ class HigherFun(
     val builder
         get() = state[1] as AdaptiveFragmentFactory<TestNode>
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> HigherFunInner(adapter, parent, declarationIndex)
             1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
@@ -219,7 +231,7 @@ class HigherFunInner(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 2) {
+) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
 
     val innerI
         get() = state[0] as Int
@@ -228,7 +240,7 @@ class HigherFunInner(
     val builder
         get() = state[1] as AdaptiveFragmentFactory<TestNode>
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
@@ -252,5 +264,5 @@ class HigherFunInner(
     override fun generatedPatchInternal() {
 
     }
-    
+
 }

@@ -5,7 +5,6 @@ package hu.simplexion.z2.adaptive.test.manual
 
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptiveGeneratedFragment
 import hu.simplexion.z2.adaptive.AdaptiveSequence
 import hu.simplexion.z2.adaptive.testing.*
 import kotlin.test.Test
@@ -33,30 +32,32 @@ class SequenceTest {
             adapter.expected(
                 listOf(
                     TraceEvent("SequenceTestComponent", 2, "create", ""),
-                    TraceEvent("SequenceTestComponent", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("SequenceTestComponent", 2, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveSequence", 3, "create", ""),
-                    TraceEvent("AdaptiveSequence", 3, "beforePatchExternal", "closureDirtyMask: 0 state: null"),
-                    TraceEvent("AdaptiveSequence", 3, "afterPatchExternal", "closureDirtyMask: 0 state: [1, 2]"),
+                    TraceEvent("AdaptiveSequence", 3, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequence", 3, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
+                    TraceEvent("AdaptiveSequence", 3, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
+                    TraceEvent("AdaptiveSequence", 3, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1, 2]"),
                     TraceEvent("AdaptiveT0", 4, "create", ""),
-                    TraceEvent("AdaptiveT0", 4, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("AdaptiveT0", 4, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
-                    TraceEvent("AdaptiveT1", 5, "create", ""),
-                    TraceEvent("AdaptiveT1", 5, "beforePatchExternal", "closureDirtyMask: 0 state: [null]"),
-                    TraceEvent("AdaptiveT1", 5, "afterPatchExternal", "closureDirtyMask: 0 state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "beforePatchInternal", "closureDirtyMask: 0 state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "afterPatchInternal", "closureDirtyMask: 0 state: [12]"),
+                    TraceEvent("AdaptiveT0", 4, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+                    TraceEvent("AdaptiveT1", 7, "create", ""),
+                    TraceEvent("AdaptiveT1", 7, "beforePatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveT1", 7, "afterPatchExternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 7, "beforePatchInternal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 7, "afterPatchInternal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("SequenceTestComponent", 2, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequence", 3, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 5, "mount", "bridge: 1")
+                    TraceEvent("AdaptiveT1", 7, "mount", "bridge: 1")
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 }
@@ -65,12 +66,12 @@ class SequenceTestComponent(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int
-) : AdaptiveGeneratedFragment<TestNode>(adapter, parent, index, 0) {
+) : AdaptiveFragment<TestNode>(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
 
-    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode>? {
+    override fun build(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSequence(adapter, parent, declarationIndex)

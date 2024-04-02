@@ -4,32 +4,25 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveSelect<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val parent: AdaptiveFragment<BT>?,
-    override val index: Int,
-) : AdaptiveStructuralFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>?,
+    index: Int,
+) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
 
-    override val id = adapter.newId()
+    override val createClosure : AdaptiveClosure<BT>
+        get() = parent!!.thisClosure
+
+    override val thisClosure = AdaptiveClosure(
+        createClosure.components + this,
+        createClosure.closureSize + state.size
+    )
 
     val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
-
-    override val state = arrayOf<Any?>(null, -1)
-
-    override var dirtyMask = adaptiveInitStateMask
 
     val stateBranch
         get() = state[0] as Int
 
-    /**
-     * The branch currently shown on the UI, a statement index in the
-     * declaring component. -1 means that there is nothing shown,
-     * like in the following code when `condition` is false.
-     *
-     * ```kotlin
-     *     if (condition) div {  }
-     * ```
-     */
-    var shownBranch // -1 means that there is nothing shown, like:
+    var shownBranch // -1 means that there is nothing shown, like: `if (condition) div {  }`
         get() = state[1] as Int
         set(v) { state[1] = v }
 
@@ -43,9 +36,9 @@ class AdaptiveSelect<BT>(
     override fun create() {
         if (adapter.trace) trace("create")
 
-        patch()
+        state[1] = -1 // initialize showBranch so that we don't have a shown branch
 
-        dirtyMask = adaptiveCleanStateMask
+        patch()
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -55,9 +48,7 @@ class AdaptiveSelect<BT>(
         shownFragment?.mount(placeholder)
     }
 
-    override fun patchInternal() {
-        if (adapter.trace) traceWithState("beforePatchInternal")
-
+    override fun generatedPatchInternal() {
         if (stateBranch == shownBranch) {
             shownFragment?.patch()
         } else {
@@ -73,10 +64,6 @@ class AdaptiveSelect<BT>(
 
             shownBranch = stateBranch
         }
-
-        dirtyMask = adaptiveCleanStateMask
-
-        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {

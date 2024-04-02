@@ -4,18 +4,21 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveLoop<BT, IT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val parent: AdaptiveFragment<BT>?,
-    override val index: Int
-) : AdaptiveStructuralFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>?,
+    index: Int,
+) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
 
-    override val id = adapter.newId()
+    override val createClosure : AdaptiveClosure<BT>
+        get() = parent!!.thisClosure
 
-    // 0: AdaptiveIteratorFactory
-    // 1: AdaptiveFragmentFactory
-    override val state = arrayOfNulls<Any>(2)
+//    override val thisClosure
+//        get() = createClosure
 
-    override var dirtyMask = adaptiveInitStateMask
+//    override val thisClosure = AdaptiveClosure(
+//        createClosure.components + this,
+//        createClosure.closureSize + state.size
+//    )
 
     @Suppress("UNCHECKED_CAST")
     val iterator
@@ -25,34 +28,23 @@ class AdaptiveLoop<BT, IT>(
     val builder
         get() = state[1] as AdaptiveFragmentFactory<BT>
 
-    override val thisClosure = AdaptiveClosure(arrayOf(this), state.size)
-
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 
     val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
 
-    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
-        // anonymous fragments are patched by `patch()` for loops
-    }
-
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment<BT> =
         AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
             fragments.add(it)
-            it.state[0] = iteratorValue
-            it.create()
+            it.setStateVariable(0, iteratorValue)
         }
+
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        // anonymous fragment iterator is read only, and it is set during create
+    }
 
     override fun create() {
         if (adapter.trace) trace("create")
-
-        patchExternal()
-        // no internal for structural fragments
-
-        for (loopVariable in iterator) {
-            addAnonymous(loopVariable)
-        }
-
-        dirtyMask = adaptiveCleanStateMask
+        patch()
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
@@ -65,19 +57,13 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun patchInternal() {
-        if (adapter.trace) traceWithState("beforePatchInternal")
-
+    override fun generatedPatchInternal() {
         // TODO think about re-running iterators, we should not do that
         if (dirtyMask != 0) {
             patchStructure()
         } else {
             patchContent()
         }
-
-        dirtyMask = adaptiveCleanStateMask
-
-        if (adapter.trace) traceWithState("afterPatchInternal")
     }
 
     fun patchStructure() {
@@ -114,6 +100,7 @@ class AdaptiveLoop<BT, IT>(
         for (fragment in fragments) {
             fragment.unmount(placeholder)
         }
+
         bridge.remove(placeholder)
     }
 
@@ -125,10 +112,10 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun traceWithState(point : String) {
+    override fun stateToTraceString(): String {
         val s0 = state[0]?.let { it::class.simpleName } ?: "null"
         val s1 = state[1]?.toString() ?: "null"
-        adapter.trace(this, point, "closureDirtyMask: ${getCreateClosureDirtyMask()} state: [$s0,$s1]")
+        return "[$s0,$s1]"
     }
 
 }

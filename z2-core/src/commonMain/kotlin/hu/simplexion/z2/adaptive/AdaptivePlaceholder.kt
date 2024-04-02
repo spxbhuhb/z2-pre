@@ -3,24 +3,11 @@
  */
 package hu.simplexion.z2.adaptive
 
-@Suppress("unused")
 class AdaptivePlaceholder<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
-    override val parent: AdaptiveFragment<BT>,
-) : AdaptiveStructuralFragment<BT> {
-
-    override val id = adapter.newId()
-
-    override val index: Int
-        get() = shouldNotRun()
-
-    override val state: Array<Any?> = emptyArray()
-
-    override var dirtyMask: Int
-        get() = shouldNotRun()
-        set(@Suppress("UNUSED_PARAMETER") v) {
-            shouldNotRun()
-        }
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>,
+    index: Int
+) : AdaptiveFragment<BT>(adapter, parent, index, 0) {
 
     val bridge = adapter.createPlaceholder()
 
