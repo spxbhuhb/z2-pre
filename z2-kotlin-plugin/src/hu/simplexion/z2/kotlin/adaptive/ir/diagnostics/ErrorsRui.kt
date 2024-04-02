@@ -21,7 +21,7 @@ object ErrorsAdaptive {
     val ADAPTIVE_IR_INVALID_RENDERING_STATEMENT = AdaptiveIrError(3, "Statement is not allowed in the rendering part.")
 
     //    val RIU_IR_RENDERING_NO_LOOP_BODY = AdaptiveIrError(4, "Statement is not allowed in the rendering part.")
-    val RIU_IR_RENDERING_NON_ADAPTIVE_CALL = AdaptiveIrError(5, "Calls to non-Adaptive functions is not allowed in the rendering part.")
+    val ADAPTIVE_IR_RENDERING_NON_ADAPTIVE_CALL = AdaptiveIrError(5, "Calls to non-Adaptive functions is not allowed in the rendering part.")
     val ADAPTIVE_IR_MISSING_EXPRESSION_ARGUMENT = AdaptiveIrError(6, "Missing expression argument. Most probably this is a plugin bug, please open an issue for this on GitHub.")
 
     //    val ADAPTIVE_IR_RENDERING_INVALID_LOOP_BODY = AdaptiveIrError(7, "This loop body is not allowed in the rendering part.")

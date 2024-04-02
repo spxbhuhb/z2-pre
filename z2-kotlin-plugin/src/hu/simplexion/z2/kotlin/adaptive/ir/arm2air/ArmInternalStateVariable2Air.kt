@@ -9,19 +9,14 @@ class ArmInternalStateVariable2Air(
     val stateVariable: ArmInternalStateVariable
 ) : ClassBoundIrBuilder(parent) {
 
-    fun toAir(): AirStateVariable = with(stateVariable) {
-
-        val property = addIrProperty(
-            name,
-            irVariable.type,
-            inIsVar = true,
-            inInitializer = irVariable.initializer
-        )
-
-        return AirStateVariable(
-            this,
-            property
-        )
-    }
+    fun toAir(): AirStateVariable =
+        with(stateVariable) {
+            AirStateVariable(
+                indexInState,
+                indexInClosure,
+                name,
+                stateVariableType(stateVariable)
+            )
+        }
 
 }

@@ -1,9 +1,11 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
-import hu.simplexion.z2.kotlin.adaptive.Names
-import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
+import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -25,10 +27,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.defaultType
-import org.jetbrains.kotlin.ir.util.parentAsClass
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.util.OperatorNameConventions
@@ -72,60 +71,131 @@ open class ClassBoundIrBuilder(
     val classBoundClosureType: IrType
         get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
 
-    val classBoundFunction0Type: IrType
-        get() = irBuiltIns.functionN(0).typeWith(classBoundFragmentType)
-
-    val classBoundBuilderType: IrType
-        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, classBoundFragmentType)
-
-    val classBoundExternalPatchType: IrType
-        get() = irBuiltIns.functionN(1).typeWith(classBoundFragmentType, irBuiltIns.unitType)
+    val classBoundSupportFunctionType: IrType
+        get() = pluginContext.adaptiveSupportFunctionClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundFragmentFactoryType: IrType
-        get() = irBuiltIns.functionN(2).typeWith(classBoundFragmentType, irBuiltIns.intType, classBoundNullableFragmentType)
+        get() = pluginContext.adaptiveFragmentFactoryClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
-
-    val FqName.symbolMap: AdaptiveClassSymbols
-        get() = pluginContext.adaptiveSymbolMap.getSymbolMap(this)
 
     // FIXME check uses of irThisReceiver
     fun irThisReceiver(): IrExpression =
         IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irClass.thisReceiver !!.symbol)
 
     // --------------------------------------------------------------------------------------------------------
-    // Properties
+    // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    /**
-     * Adds a constructor parameter and a property with the same name. The property
-     * is initialized from the constructor parameter.
-     */
-    fun addPropertyWithConstructorParameter(
-        inName: Name,
-        inType: IrType,
-        inIsVar: Boolean = false,
-        overridden: List<IrPropertySymbol>? = null,
-        inVarargElementType: IrType? = null
-    ): IrProperty =
+    fun irConstructorCallFromBuild(target: FqName): IrExpression {
+        val buildFun = airClass.build
+        val classSymbol = pluginContext.airClasses[target]?.irClass?.symbol ?: pluginContext.classSymbol(target)
 
-        with(irClass.constructors.first()) {
+        val constructorCall =
+            IrConstructorCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                classSymbol.defaultType,
+                classSymbol.constructors.single(),
+                typeArgumentsCount = 1, // bridge type
+                constructorTypeArgumentsCount = 0,
+                Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+            )
 
-            addValueParameter {
-                name = inName
-                type = inType
-                varargElementType = inVarargElementType
-            }.let {
-                addIrProperty(
-                    inName,
-                    inType,
-                    inIsVar,
-                    irGet(it, origin = IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER),
-                    overridden
-                )
-            }
+        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
+
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(airClass.adapter, irGet(buildFun.dispatchReceiverParameter !!)))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+
+        return constructorCall
+    }
+
+    fun irFragmentFactoryFromPatch(index: Int): IrExpression {
+        val patchFun = airClass.patchDescendant
+
+        val constructorCall =
+            IrConstructorCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                classBoundFragmentType,
+                pluginContext.adaptiveFragmentFactoryConstructor,
+                typeArgumentsCount = 1, // bridge type
+                constructorTypeArgumentsCount = 0,
+                Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT
+            )
+
+        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
+
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter !!))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX, irConst(index))
+
+        return constructorCall
+    }
+
+    fun irSetDescendantStateVariable(stateVariableIndex: Int, value: IrExpression) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET,
+            SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            pluginContext.setStateVariable,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+        ).also { call ->
+
+            call.dispatchReceiver = irGet(airClass.patchDescendant.valueParameters.first())
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_INDEX,
+                irConst(stateVariableIndex)
+            )
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_VALUE,
+                value
+            )
         }
+
+    fun irSetInternalStateVariable(stateVariableIndex: Int, value: IrExpression) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET,
+            SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            pluginContext.setStateVariable,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+        ).also { call ->
+
+            call.dispatchReceiver = irGet(airClass.generatedPatchInternal.dispatchReceiverParameter !!)
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_INDEX,
+                irConst(stateVariableIndex)
+            )
+
+            call.putValueArgument(
+                Indices.SET_STATE_VARIABLE_VALUE,
+                value
+            )
+        }
+
+    fun IrExpression.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrExpression =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null)
+
+    fun IrStatement.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrStatement =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null) as IrStatement
+
+    fun ArmDependencies.toDirtyMask(): IrExpression {
+        var mask = 0
+        this.forEach { mask = mask or (1 shl it.indexInClosure) }
+        return irConst(mask)
+    }
+
+    fun stateVariableType(variable: ArmStateVariable): IrType =
+        if (variable.originalType.isFunction()) classBoundSupportFunctionType else variable.originalType
+
+    // --------------------------------------------------------------------------------------------------------
+    // Properties
+    // --------------------------------------------------------------------------------------------------------
 
     /**
      * Adds a property to [irClass].
@@ -212,7 +282,7 @@ open class ClassBoundIrBuilder(
     fun irGetValue(irProperty: IrProperty, receiver: IrExpression?): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irProperty.backingField !!.type,
+            irProperty.getter !!.returnType,
             irProperty.getter !!.symbol,
             0, 0,
             origin = IrStatementOrigin.GET_PROPERTY
@@ -229,81 +299,6 @@ open class ClassBoundIrBuilder(
         ).apply {
             dispatchReceiver = receiver
             putValueArgument(0, value)
-        }
-
-    // --------------------------------------------------------------------------------------------------------
-    // Functions
-    // --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Defines a `fun adaptiveBuilderNNN() : AdaptiveFragment<BT>` function (NNN = [startOffset])
-     */
-    fun builder(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_BUILDER_FUN}$startOffset")
-            returnType = classBoundFragmentType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter(Strings.ADAPTIVE_BUILDER_PARENT_ARG, classBoundFragmentType)
-
-            function.parent = irClass
-            irClass.declarations += function
-        }
-
-    /**
-     * Defines a `adaptiveExternalPatchNNN(it : AdaptiveFragment<BT>)` function (NNN = [startOffset])
-     */
-    fun externalPatch(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_EXTERNAL_PATCH_FUN}$startOffset")
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_EXTERNAL_PATCH_FRAGMENT_ARG
-                type = classBoundFragmentType
-            }
-
-            function.parent = irClass
-            irClass.declarations += function
-        }
-
-    /**
-     * Defines a `adaptiveFragmentFactoryNNN(parent : AdaptiveFragment<BT>, index : Int)` function (NNN = [startOffset])
-     */
-    fun fragmentFactory(startOffset: Int): IrSimpleFunction =
-        irFactory.buildFun {
-            name = Name.identifier("${Strings.ADAPTIVE_FRAGMENT_FACTORY_FUN}$startOffset")
-            returnType = classBoundFragmentType.makeNullable()
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_FRAGMENT_FACTORY_PARENT_ARG
-                type = classBoundFragmentType
-            }
-
-            function.addValueParameter {
-                name = Names.ADAPTIVE_FRAGMENT_FACTORY_INDEX_ARG
-                type = irBuiltIns.intType
-            }
-
-            function.parent = irClass
-            irClass.declarations += function
         }
 
     // --------------------------------------------------------------------------------------------------------
@@ -496,54 +491,54 @@ open class ClassBoundIrBuilder(
     // Trace
     // --------------------------------------------------------------------------------------------------------
 
-    fun irTrace(point: String, parameters: List<IrExpression>): IrStatement {
-        return irTrace(irThisReceiver(), point, parameters)
-    }
-
-    fun irTrace(function: IrFunction, point: String, parameters: List<IrExpression>): IrStatement {
-        return irTrace(irGet(function.dispatchReceiverParameter !!), point, parameters)
-    }
-
-    fun irTrace(fragment: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
-        return irTraceDirect(irGetValue(airClass.adapter, fragment), point, parameters)
-    }
-
-    /**
-     * @param dispatchReceiver The `AdaptiveAdapter` instance to use for the trace.
-     */
-    fun irTraceDirect(dispatchReceiver: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
-        return IrCallImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.unitType,
-            pluginContext.adaptiveAdapterTrace,
-            typeArgumentsCount = 0,
-            Indices.ADAPTIVE_TRACE_ARGUMENT_COUNT,
-        ).also {
-            it.dispatchReceiver = dispatchReceiver
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_NAME, irConst(irClass.name.identifier))
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_POINT, irConst(point))
-            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_DATA, buildTraceVarArg(parameters))
-        }
-    }
-
-    fun buildTraceVarArg(parameters: List<IrExpression>): IrExpression {
-        return IrVarargImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
-            pluginContext.adaptiveFragmentType,
-        ).also { vararg ->
-            parameters.forEach {
-                vararg.addElement(it)
-            }
-        }
-    }
+//    fun irTrace(point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTrace(irThisReceiver(), point, parameters)
+//    }
+//
+//    fun irTrace(function: IrFunction, point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTrace(irGet(function.dispatchReceiverParameter !!), point, parameters)
+//    }
+//
+//    fun irTrace(fragment: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
+//        return irTraceDirect(irGetValue(airClass.adapter, fragment), point, parameters)
+//    }
+//
+//    /**
+//     * @param dispatchReceiver The `AdaptiveAdapter` instance to use for the trace.
+//     */
+//    fun irTraceDirect(dispatchReceiver: IrExpression, point: String, parameters: List<IrExpression>): IrStatement {
+//        return IrCallImpl(
+//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+//            irBuiltIns.unitType,
+//            pluginContext.adaptiveAdapterTrace,
+//            typeArgumentsCount = 0,
+//            Indices.ADAPTIVE_TRACE_ARGUMENT_COUNT,
+//        ).also {
+//            it.dispatchReceiver = dispatchReceiver
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_NAME, irConst(irClass.name.identifier))
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_POINT, irConst(point))
+//            it.putValueArgument(Indices.ADAPTIVE_TRACE_ARGUMENT_DATA, buildTraceVarArg(parameters))
+//        }
+//    }
+//
+//    fun buildTraceVarArg(parameters: List<IrExpression>): IrExpression {
+//        return IrVarargImpl(
+//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+//            irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
+//            pluginContext.adaptiveFragmentType,
+//        ).also { vararg ->
+//            parameters.forEach {
+//                vararg.addElement(it)
+//            }
+//        }
+//    }
 
     // --------------------------------------------------------------------------------------------------------
     // Misc
     // --------------------------------------------------------------------------------------------------------
 
     val String.function: IrFunction
-        get() = airClass.irClass.declarations.first { it is IrFunction && it.name.asString() == this } as IrFunction
+        get() = irClass.declarations.first { it is IrFunction && it.name.asString() == this } as IrFunction
 
     val String.name: Name
         get() = Name.identifier(this)

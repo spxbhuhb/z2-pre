@@ -56,12 +56,62 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/adaptive/select")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Select {
+            @Test
+            public void testAllFilesPresentInSelect() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/select"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("ifElse.kt")
+            public void testIfElse() throws Exception {
+                runTest("testData/box/adaptive/select/ifElse.kt");
+            }
+
+            @Test
+            @TestMetadata("ifElsePatch.kt")
+            public void testIfElsePatch() throws Exception {
+                runTest("testData/box/adaptive/select/ifElsePatch.kt");
+            }
+
+            @Test
+            @TestMetadata("ifOnly.kt")
+            public void testIfOnly() throws Exception {
+                runTest("testData/box/adaptive/select/ifOnly.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/support")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Support {
+            @Test
+            public void testAllFilesPresentInSupport() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/support/basic.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/adaptive/variables")
         @TestDataPath("$PROJECT_ROOT")
         public class Variables {
             @Test
             public void testAllFilesPresentInVariables() throws Exception {
                 KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/variables"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/variables/basic.kt");
             }
 
             @Test
@@ -86,34 +136,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("variables.kt")
             public void testVariables() throws Exception {
                 runTest("testData/box/adaptive/variables/variables.kt");
-            }
-        }
-
-        @Nested
-        @TestMetadata("testData/box/adaptive/when")
-        @TestDataPath("$PROJECT_ROOT")
-        public class When {
-            @Test
-            public void testAllFilesPresentInWhen() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/when"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-            }
-
-            @Test
-            @TestMetadata("ifElse.kt")
-            public void testIfElse() throws Exception {
-                runTest("testData/box/adaptive/when/ifElse.kt");
-            }
-
-            @Test
-            @TestMetadata("ifElsePatch.kt")
-            public void testIfElsePatch() throws Exception {
-                runTest("testData/box/adaptive/when/ifElsePatch.kt");
-            }
-
-            @Test
-            @TestMetadata("ifOnly.kt")
-            public void testIfOnly() throws Exception {
-                runTest("testData/box/adaptive/when/ifOnly.kt");
             }
         }
     }

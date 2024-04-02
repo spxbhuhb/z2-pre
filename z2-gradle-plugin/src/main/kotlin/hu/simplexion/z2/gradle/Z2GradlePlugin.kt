@@ -82,7 +82,12 @@ class Z2GradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         val options = mutableListOf<SubpluginOption>()
 
-        // options += InternalSubpluginOption("resource-output-dir", getResourceOutputDir(project, sourceSetName, target).path)
+        options += SubpluginOption(key = "resource-dir", extension.resourceDir.get().toString())
+        options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.get().toString())
+
+        extension.pluginLogDir.get()?.let {
+            options += SubpluginOption(key = "plugin-log-dir", it.toString())
+        }
 
         return project.provider { options }
     }

@@ -6,10 +6,7 @@ data class SchematicValidationResult(
     val valid : Boolean,
     val validForCreate : Boolean,
     val fieldResults : Map<String, FieldValidationResult>
-) {
-    fun failedFields(forCreate : Boolean) : List<String> =
-        fieldResults.values.filter { ! if (forCreate) it.validForCreate else it.valid }.map { it.path }
-}
+)
 
 data class FieldValidationResult(
     val path : String,
@@ -26,10 +23,9 @@ open class ValidationFailInfo(
     }
 }
 
+@Suppress("UNUSED_PARAMETER")
 fun fail(template : LocalizedText, vararg parameters : Any) : ValidationFailInfo {
     return ValidationFailInfo(
         template.toString() // TODO convert the template into a text
     )
 }
-
-object ValidationFailInfoNull : ValidationFailInfo(validationStrings.nullFail.toString())

@@ -35,99 +35,36 @@ class DumpAirTreeVisitor(
     override fun visitStateVariable(stateVariable: AirStateVariable) {
         indented {
             with(stateVariable) {
-                println { "STATE_VARIABLE name:${irProperty.name}" }
+                println { "STATE_VARIABLE indexInFragment: $indexInFragment indexInClosure: $indexInClosure name:$name" }
             }
             super.visitStateVariable(stateVariable)
         }
     }
 
-    override fun visitDirtyMask(dirtyMask: AirDirtyMask) {
+    override fun visitBuildBranch(branch: AirBuildBranch) {
         indented {
-            with(dirtyMask) {
-                println { "DIRTY_MASK name:${irProperty.name}" }
+            with(branch) {
+                println { "BUILD_BRANCH index:$index" }
             }
-            super.visitDirtyMask(dirtyMask)
+            super.visitBuildBranch(branch)
         }
     }
 
-    override fun visitBuilderSequence(builder: AirBuilderSequence) {
+    override fun visitPatchBranch(branch: AirPatchDescendantBranch) {
         indented {
-            with(builder) {
-                println { "BUILDER type:SEQUENCE name:${irFunction.name} externalPatch:${externalPatch.irFunction.name}" }
+            with(branch) {
+                println { "PATCH_BRANCH index:$index" }
             }
-            super.visitBuilderSequence(builder)
+            super.visitPatchBranch(branch)
         }
     }
 
-    override fun visitBuilderCall(builder: AirBuilderCall) {
+    override fun visitInvokeBranch(branch: AirInvokeBranch) {
         indented {
-            with(builder) {
-                println { "BUILDER type:CALL name:${irFunction.name} externalPatch:${externalPatch.irFunction.name} target:${armElement.target}" }
+            with(branch) {
+                println { "INVOKE_BRANCH index:$index" }
             }
-            super.visitBuilderCall(builder)
-        }
-    }
-
-    override fun visitBuilderForLoop(builder: AirBuilderForLoop) {
-        indented {
-            with(builder) {
-                println { "BUILDER type:FOR_LOOP name:${irFunction.name} externalPatch:${externalPatch.irFunction.name}" }
-            }
-            super.visitBuilderForLoop(builder)
-        }
-    }
-
-    override fun visitBuilderWhen(builder: AirBuilderWhen) {
-        indented {
-            with(builder) {
-                println { "BUILDER type:WHEN name:${irFunction.name} externalPatch:${externalPatch.irFunction.name}" }
-            }
-            super.visitBuilderWhen(builder)
-        }
-    }
-
-    override fun visitExternalPatchSequence(externalPatch: AirExternalPatchSequence) {
-        indented {
-            with(externalPatch) {
-                println { "EXTERNAL_PATCH type:SEQUENCE name:${irFunction.name}" }
-            }
-            super.visitExternalPatchSequence(externalPatch)
-        }
-    }
-
-    override fun visitExternalPatchCall(externalPatch: AirExternalPatchCall) {
-        indented {
-            with(externalPatch) {
-                println { "EXTERNAL_PATCH type:CALL name:${irFunction.name} target:${externalPatch.armElement.target}" }
-            }
-            super.visitExternalPatchCall(externalPatch)
-        }
-    }
-
-    override fun visitExternalPatchForLoop(externalPatch: AirExternalPatchForLoop) {
-        indented {
-            with(externalPatch) {
-                println { "EXTERNAL_PATCH type:FOR_LOOP name:${irFunction.name}" }
-            }
-            super.visitExternalPatchForLoop(externalPatch)
-        }
-    }
-
-    override fun visitExternalPatchWhen(externalPatch: AirExternalPatchWhen) {
-        indented {
-            with(externalPatch) {
-                println { "EXTERNAL_PATCH type:WHEN name:${irFunction.name}" }
-            }
-            super.visitExternalPatchWhen(externalPatch)
-        }
-    }
-
-    override fun visitFragmentFactory(fragmentFactory: AirFragmentFactory) {
-        indented {
-            with(fragmentFactory) {
-                println { "FRAGMENT_FACTORY name:${irFunction.name}" }
-            }
-            super.visitFragmentFactory(fragmentFactory)
+            super.visitInvokeBranch(branch)
         }
     }
 

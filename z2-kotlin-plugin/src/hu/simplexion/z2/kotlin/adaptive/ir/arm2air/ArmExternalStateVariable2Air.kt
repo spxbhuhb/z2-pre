@@ -9,20 +9,13 @@ class ArmExternalStateVariable2Air(
     val stateVariable: ArmExternalStateVariable
 ) : ClassBoundIrBuilder(parent) {
 
-    fun toAir(): AirStateVariable = with(stateVariable) {
-
-        val property = addPropertyWithConstructorParameter(
-            name,
-            irValueParameter.type,
-            inIsVar = true,
-            inVarargElementType = irValueParameter.varargElementType
-        )
-
-        return AirStateVariable(
-            this,
-            property
-        )
-    }
-
-
+    fun toAir(): AirStateVariable =
+        with(stateVariable) {
+            AirStateVariable(
+                indexInState,
+                indexInClosure,
+                name,
+                stateVariableType(stateVariable)
+            )
+        }
 }

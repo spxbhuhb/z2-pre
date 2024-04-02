@@ -7,6 +7,6 @@ interface SchematicEntityCompanion<T : SchematicEntity<T>> : SchematicCompanion<
 
     var schematicEntityStore: SchematicEntityStore<T>
         get() = placeholder()
-        set(value) = placeholder()
+        set(@Suppress("UNUSED_PARAMETER") value) = placeholder()
 
 }

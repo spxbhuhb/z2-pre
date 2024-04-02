@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive.testing
 
@@ -9,44 +9,11 @@ import hu.simplexion.z2.adaptive.AdaptiveFragment
 
 open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
-    class TraceEvent(
-        val name: String,
-        val point: String,
-        val data: List<String>
-    ) {
-
-        constructor(name: String, point: String, vararg data: Any?) : this(name, point, data.map { it.toString() })
-
-        override fun toString(): String {
-            return "[ ${name.padEnd(30)} ]  ${point.padEnd(20)}  |  ${data.joinToString(" ")}"
-        }
-
-        fun toCode(): String {
-            val nameOrRoot = if (name.startsWith("AdaptiveRoot")) "<root>" else name
-            return "TraceEvent(\"$nameOrRoot\", \"${point}\", ${data.joinToString(", ") { "\"$it\"" }})"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (other == null) return false
-            if (other !is TraceEvent) return false
-            if (other.point != this.point) return false
-            if (other.data != this.data) return false
-            if (other.name == this.name) return true
-
-            if (this.name == "<root>" && other.name.startsWith("AdaptiveRoot")) return true
-            if (other.name == "<root>" && this.name.startsWith("AdaptiveRoot")) return true
-
-            return false
-        }
-    }
-
-    val fragments = mutableListOf<AdaptiveFragment<TestNode>>()
-
-    var nextId = 1
+    var nextId = 1L
 
     override val trace = true
 
-    final override fun newId(): Int = nextId ++ // This is not thread safe, OK for testing, but beware.
+    final override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override val rootBridge = AdaptiveTestBridge(newId())
 
@@ -60,16 +27,15 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         return AdaptiveTestBridge(newId())
     }
 
-    override fun trace(name: String, point: String, vararg data: Any?) {
-        // convert the data to string so later changes won't change the content
-        traceEvents += TraceEvent(name, point, data.map { it.asString() })
+    override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
+        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
     }
 
-    fun Any?.asString(): String =
-        when (this) {
-            is AdaptiveTestBridge -> this.id.toString()
-            else -> this.toString()
-        }
+    fun actual(dumpCode: Boolean = false): String =
+        traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
+
+    fun expected(expected: List<TraceEvent>): String =
+        expected.joinToString("\n")
 
     companion object {
         // Unit tests use this property when they run the generated fragment.
@@ -77,11 +43,20 @@ open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
         // clear this field before running the generated code.
         var lastTrace: MutableList<TraceEvent> = mutableListOf()
 
+        fun actual(): String =
+            lastTrace.joinToString("\n")
+
+        fun expected(expected: List<TraceEvent>): String =
+            expected.joinToString("\n")
+
+        fun toCode(): String =
+            lastTrace.joinToString(",\n") { it.toCode() }
+
         fun assert(expected: List<TraceEvent>): String {
             return if (expected == lastTrace) {
                 "OK"
             } else {
-                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${lastTrace.joinToString(",\n") { it.toCode() }}"
+                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${toCode()}"
             }
         }
     }

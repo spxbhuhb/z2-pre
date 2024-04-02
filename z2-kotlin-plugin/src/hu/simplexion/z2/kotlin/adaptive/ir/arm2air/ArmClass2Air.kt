@@ -1,26 +1,30 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 
+import hu.simplexion.z2.kotlin.adaptive.AdaptivePluginKey
+import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.declarations.*
+import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrTypeParameterImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrInstanceInitializerCallImpl
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
-import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.addFakeOverrides
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.file
 import org.jetbrains.kotlin.name.Name
@@ -39,7 +43,7 @@ class ArmClass2Air(
         irClass = pluginContext.irContext.irFactory.buildClass {
             startOffset = originalFunction.startOffset
             endOffset = originalFunction.endOffset
-            origin = IrDeclarationOrigin.DEFINED
+            origin = AdaptivePluginKey.origin
             name = armClass.name
             kind = ClassKind.CLASS
             visibility = originalFunction.visibility
@@ -53,44 +57,40 @@ class ArmClass2Air(
         irClass.metadata = armClass.originalFunction.metadata
 
         thisReceiver()
+
+        // these have to be before addFakeOverrides()
+
         val constructor = constructor()
-        val patch = patch()
-
-        val adapter = addPropertyWithConstructorParameter(Names.ADAPTIVE_ADAPTER_PROP, classBoundAdapterType, overridden = pluginContext.adaptiveAdapter)
-        val closure = addPropertyWithConstructorParameter(Names.ADAPTIVE_CLOSURE_PROP, classBoundClosureType.makeNullable(), overridden = pluginContext.adaptiveClosure)
-        val parent = addPropertyWithConstructorParameter(Names.ADAPTIVE_PARENT_PROP, classBoundFragmentType.makeNullable(), overridden = pluginContext.adaptiveParent)
-        val externalPatch = addPropertyWithConstructorParameter(Names.ADAPTIVE_EXTERNAL_PATCH_PROP, classBoundExternalPatchType, overridden = pluginContext.adaptiveExternalPatch)
-
-        val fragment = addIrProperty(Names.ADAPTIVE_CONTAINED_FRAGMENT_PROP, pluginContext.adaptiveFragmentType, inIsVar = false, overridden = pluginContext.adaptiveFragment)
-
         val initializer = initializer()
+        val build = build()
+        val patchDescendant = patchDescendant()
+        val generatedInvoke = generatedInvoke()
+        val generatedPatchInternal = generatedPatchInternal()
 
-        create()
-        mount()
-        unmount()
-        dispose()
+        // this has to be before AirClass() (adds overridden properties)
+
+        irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 
         airClass = AirClass(
             armClass,
-            armClass.parentScope?.fqName,
             irClass,
-            adapter,
-            closure,
-            parent,
-            externalPatch,
-            fragment,
             constructor,
             initializer,
-            patch
+            build,
+            patchDescendant,
+            generatedInvoke,
+            generatedPatchInternal
         )
 
-        airClass.rendering = armClass.rendering.toAir(this)
         airClass.stateVariableList = armClass.stateVariables.map { it.toAir(this@ArmClass2Air) }
-        airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.armElement.originalName }
-        airClass.dirtyMasks = armClass.dirtyMasks.map { it.toAir(this@ArmClass2Air) }
+        airClass.stateVariableMap = airClass.stateVariableList.associateBy { it.name }
 
         return airClass
     }
+
+    // --------------------------------------------------------------------------------------------------------
+    // Declaration and initialization
+    // --------------------------------------------------------------------------------------------------------
 
     private fun typeParameters() {
         irClass.typeParameters = listOf(
@@ -99,7 +99,7 @@ class ArmClass2Air(
                 SYNTHETIC_OFFSET,
                 IrDeclarationOrigin.BRIDGE_SPECIAL,
                 IrTypeParameterSymbolImpl(),
-                Names.ADAPTIVE_BT,
+                Names.BT,
                 index = 0,
                 isReified = false,
                 variance = Variance.IN_VARIANCE,
@@ -139,16 +139,37 @@ class ArmClass2Air(
         }.apply {
             parent = irClass
 
+            val adapter = addValueParameter {
+                name = Names.ADAPTER
+                type = classBoundAdapterType
+            }
+
+            val parent = addValueParameter {
+                name = Names.PARENT
+                type = classBoundFragmentType.makeNullable()
+            }
+
+            val index = addValueParameter {
+                name = Names.INDEX
+                type = irBuiltIns.intType
+            }
+
             body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
                 statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
                     SYNTHETIC_OFFSET,
                     SYNTHETIC_OFFSET,
-                    irBuiltIns.anyType,
-                    irBuiltIns.anyClass.constructors.first(),
-                    typeArgumentsCount = 0,
-                    valueArgumentsCount = 0
-                )
+                    pluginContext.adaptiveGeneratedFragmentClass.typeWith(classBoundFragmentType),
+                    pluginContext.adaptiveGeneratedFragmentClass.constructors.first(),
+                    typeArgumentsCount = 1,
+                    valueArgumentsCount = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                ).apply {
+                    putTypeArgument(0, classBoundFragmentType)
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_ADAPTER, irGet(adapter))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_PARENT, irGet(parent))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_INDEX, irGet(index))
+                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
+                }
 
                 statements += IrInstanceInitializerCallImpl(
                     SYNTHETIC_OFFSET,
@@ -160,124 +181,100 @@ class ArmClass2Air(
         }
 
     private fun initializer(): IrAnonymousInitializer =
-
         irFactory.createAnonymousInitializer(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             origin = IrDeclarationOrigin.DEFINED,
             symbol = IrAnonymousInitializerSymbolImpl(),
             isStatic = false
+        ).also { initFun ->
+            initFun.parent = irClass
+            irClass.declarations += initFun
+
+            initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
+
+            }
+        }
+
+    // --------------------------------------------------------------------------------------------------------
+    // Child fragment handling functions
+    // --------------------------------------------------------------------------------------------------------
+
+    fun function(
+        inName: Name,
+        inReturnType: IrType,
+        overridden: IrSimpleFunctionSymbol,
+        vararg parameters: Pair<Name, IrType>
+    ): IrSimpleFunction =
+        irFactory.buildFun {
+            name = inName
+            returnType = inReturnType
+            modality = Modality.OPEN
+        }.also { function ->
+
+            function.overriddenSymbols = listOf(overridden)
+
+            function.addDispatchReceiver {
+                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
+            }
+
+            for (parameter in parameters) {
+                function.addValueParameter {
+                    name = parameter.first
+                    type = parameter.second
+                }
+            }
+
+            function.parent = irClass
+            irClass.declarations += function
+        }
+
+    /**
+     * Defines a `build(parent : AdaptiveFragment<BT>, declarationIndex : Int) : AdaptiveFragment<BT>`
+     */
+    fun build(): IrSimpleFunction =
+        function(
+            Names.BUILD,
+            classBoundFragmentType,
+            pluginContext.build,
+            Names.PARENT to classBoundFragmentType,
+            Names.DECLARATION_INDEX to irBuiltIns.intType
+        )
+
+    /**
+     * Defines a `patchDescendant(fragment : AdaptiveFragment<BT>)`
+     */
+    fun patchDescendant(): IrSimpleFunction =
+        function(
+            Names.PATCH_DESCENDANT,
+            irBuiltIns.unitType,
+            pluginContext.patchDescendant,
+            Names.FRAGMENT to classBoundFragmentType
+        )
+
+    /**
+     * Defines a `generatedInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments : Array<out Any?>) : Any?`
+     */
+    fun generatedInvoke(): IrSimpleFunction =
+        function(
+            Names.GENERATED_INVOKE,
+            irBuiltIns.anyNType,
+            pluginContext.generatedInvoke,
+            Names.SUPPORT_FUNCTION to classBoundSupportFunctionType
         ).apply {
-            parent = irClass
-            // we should not add the initializer here as it should be the last
-            // declaration of the class to be able to access all properties
-            // it is added in finalize
+            addValueParameter {
+                name = Names.ARGUMENTS
+                type = irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType)
+            }
         }
 
-    private fun create(): IrSimpleFunction =
-
-        irFactory.buildFun {
-            name = Names.ADAPTIVE_CREATE_FUN
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-            isFakeOverride = true
-        }.also { function ->
-
-            function.overriddenSymbols = pluginContext.adaptiveCreate
-            function.parent = irClass
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            irClass.declarations += function
-        }
-
-    @Suppress("DuplicatedCode")  // I don't want to merge mount and unmount
-    private fun mount(): IrSimpleFunction =
-
-        irFactory.buildFun {
-            name = Names.ADAPTIVE_MOUNT_FUN
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-            isFakeOverride = true
-        }.also { function ->
-
-            function.overriddenSymbols = pluginContext.adaptiveMount
-            function.parent = irClass
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Name.identifier("bridge")
-                type = pluginContext.adaptiveBridgeType
-            }
-
-            irClass.declarations += function
-        }
-
-    private fun patch(): IrSimpleFunction =
-
-        irFactory.buildFun {
-            name = Names.ADAPTIVE_PATCH_FUN
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.overriddenSymbols = pluginContext.adaptivePatch
-            function.parent = irClass
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            irClass.declarations += function
-
-        }
-
-    @Suppress("DuplicatedCode")  // I don't want to merge mount and unmount
-    private fun unmount(): IrSimpleFunction =
-
-        irFactory.buildFun {
-            name = Names.ADAPTIVE_UNMOUNT_FUN
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-            isFakeOverride = true
-        }.also { function ->
-
-            function.overriddenSymbols = pluginContext.adaptiveUnmount
-            function.parent = irClass
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            function.addValueParameter {
-                name = Name.identifier("bridge")
-                type = pluginContext.adaptiveBridgeType
-            }
-
-            irClass.declarations += function
-        }
-
-    private fun dispose(): IrSimpleFunction =
-
-        irFactory.buildFun {
-            name = Names.ADAPTIVE_DISPOSE_FUN
-            returnType = irBuiltIns.unitType
-            modality = Modality.OPEN
-            isFakeOverride = true
-        }.also { function ->
-
-            function.overriddenSymbols = pluginContext.adaptiveDispose
-            function.parent = irClass
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            irClass.declarations += function
-        }
+    /**
+     * Defines a `generatedPatchInternal()`
+     */
+    fun generatedPatchInternal(): IrSimpleFunction =
+        function(
+            Names.PATCH_INTERNAL,
+            irBuiltIns.unitType,
+            pluginContext.generatedPatchInternal
+        )
 
 }

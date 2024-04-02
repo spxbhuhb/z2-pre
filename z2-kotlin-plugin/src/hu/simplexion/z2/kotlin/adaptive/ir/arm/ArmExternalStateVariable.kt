@@ -10,15 +10,19 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmExternalStateVariable2Air
 import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.types.IrType
 
 class ArmExternalStateVariable(
     override val armClass: ArmClass,
-    override val index: Int,
+    override val indexInState: Int,
+    override val indexInClosure: Int,
     val irValueParameter: IrValueParameter
 ) : ArmStateVariable {
 
-    override val originalName = irValueParameter.name.identifier
-    override val name = irValueParameter.name
+    override val name = irValueParameter.name.identifier
+
+    override val originalType: IrType
+        get() = irValueParameter.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irValueParameter.symbol)
 
@@ -30,11 +34,14 @@ class ArmExternalStateVariable(
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
 
     init {
-        ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES.check(armClass, irValueParameter) { index <= ADAPTIVE_STATE_VARIABLE_LIMIT }
+        ADAPTIVE_IR_TOO_MANY_STATE_VARIABLES.check(
+            armClass,
+            irValueParameter
+        ) { indexInClosure <= ADAPTIVE_STATE_VARIABLE_LIMIT }
     }
 
     override fun toString(): String {
-        return "EXTERNAL_STATE_VARIABLE index:$index name:$name"
+        return "EXTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:${indexInClosure} name:$name"
     }
 
 }

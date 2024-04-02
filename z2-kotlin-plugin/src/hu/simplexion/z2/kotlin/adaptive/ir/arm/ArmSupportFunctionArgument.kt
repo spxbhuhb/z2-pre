@@ -3,7 +3,11 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
+import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSupportFunctionArgument2Air
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 
 /**
@@ -11,10 +15,14 @@ import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
  */
 class ArmSupportFunctionArgument(
     armClass: ArmClass,
-    index: Int,
+    argumentIndex: Int,
+    val supportFunctionIndex: Int,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,
-) : ArmValueArgument(armClass, index, value, dependencies) {
+) : ArmValueArgument(armClass, argumentIndex, value, dependencies) {
+
+    override fun toPatchExpression(classBuilder: ClassBoundIrBuilder, closure: ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask: IrVariable) =
+        ArmSupportFunctionArgument2Air(classBuilder, this, closure, fragmentParameter, closureDirtyMask).toPatchDescendantExpression()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitSupportFunctionArgument(this, data)

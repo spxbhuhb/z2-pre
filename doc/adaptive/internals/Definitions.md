@@ -2,18 +2,16 @@
 
 ### General
 
-#### compiler plugin
+compiler plugin
+: The Z2 compiler plugin which transforms *original functions* into *component classes*.
 
-The Z2 compiler plugin which transforms *original functions* into *component classes*.
-
-#### entry point
-
-A call to the `adaptive` function. The lambda passed to this call is a *root original function*.
-
+entry point
+: A call to the `adaptive` function. The lambda passed to this call is a *root original function*.
+ 
 ```kotlin
-fun main() {
-    // the call below is the entry point
-    adaptive { // this lambda is the root original function
+ fun main() {
+     // the call below is the entry point
+     adaptive { // this lambda is the root original function
         Text("Hello World")
     }
 }
@@ -21,9 +19,8 @@ fun main() {
 
 ### Functions
 
-#### original function
-
-A Kotlin function with the receiver `ADAPTIVE`. These functions are transformed into *components classes* by the *compiler plugin*.
+original function
+: A Kotlin function with the receiver `ADAPTIVE`. These functions are transformed into *components classes* by the *compiler plugin*.
 
 Types of original functions:
 
@@ -32,9 +29,8 @@ Types of original functions:
 - *higher order original function*
 - *anonymous original function*
 
-#### named original function
-
-An *original function* that is not a lambda.
+named original function
+: An *original function* that is not a lambda.
 
 Name of the *component class* is `Adaptive<function-name>` where `<function-name>` is the capitalized name of the
 *named original function*.
@@ -45,9 +41,8 @@ fun ADAPTIVE.a(p1 : Int) { // transformed into class AdaptiveA
 }
 ```
 
-#### root original function
-
-An *original function* that is passed to the `adaptive` function at an *entry point*. The *compiler plugin* transforms
+root original function
+: An *original function* that is passed to the `adaptive` function at an *entry point*. The *compiler plugin* transforms
 the *root original function* into a *component class*.
 
 Name of the *component class* is `AdaptiveRootFFFNNN` where `FFF` is the name of the source file (without the '.kt' extension) and
@@ -88,6 +83,16 @@ fun ADAPTIVE.higherOrderCall() { // transformed into class AdaptiveHigherOrderCa
     }
 }
 ```
+
+### Components
+
+#### named component
+
+A component created from a named original function by the plugin.
+
+#### anonymous component
+
+A component created from an anonymous function that is declared in an original function by the plugin.
 
 ### Classes
 

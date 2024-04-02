@@ -3,17 +3,15 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.AdaptiveClassSymbols
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuilder
 
 abstract class ArmRenderingStatement(
     val armClass: ArmClass,
     val index: Int,
+    val closure : ArmClosure,
+    val startOffset: Int
 ) : ArmElement {
 
-    abstract fun symbolMap(irBuilder: ClassBoundIrBuilder): AdaptiveClassSymbols
-
-    abstract fun toAir(parent: ClassBoundIrBuilder): AirBuilder
+    abstract fun toAir(parent: ClassBoundIrBuilder)
 
 }

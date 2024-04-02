@@ -25,7 +25,6 @@ class Z2CompilerPluginRegistrar : CompilerPluginRegistrar() {
 
         val options = Z2Options(
             resourceOutputDir = configuration.get(Z2CommandLineProcessor.CONFIG_KEY_RESOURCE_DIR),
-            adaptiveTrace = configuration.get(Z2CommandLineProcessor.CONFIG_KEY_ADAPTIVE_TRACE) ?: false,
             pluginDebug = configuration.get(Z2CommandLineProcessor.CONFIG_KEY_PLUGIN_DEBUG) ?: false,
             pluginLogDir = configuration.get(Z2CommandLineProcessor.CONFIG_KEY_PLUGIN_LOG_DIR)
         )

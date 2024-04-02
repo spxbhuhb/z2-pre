@@ -26,7 +26,7 @@ class DumpArmTreeVisitor(
     override fun visitClass(armClass: ArmClass) {
         indented {
             with(armClass) {
-                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex}) parentScope:${parentScope?.fqName}" }
+                println { "CLASS name:$name boundary:(${boundary.startOffset},${boundary.statementIndex})" }
             }
             super.visitClass(armClass)
         }
@@ -35,7 +35,7 @@ class DumpArmTreeVisitor(
     override fun visitExternalStateVariable(stateVariable: ArmExternalStateVariable) {
         indented {
             with(stateVariable) {
-                println { "EXTERNAL_STATE_VARIABLE index:$index name:$name" }
+                println { "EXTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name" }
             }
             super.visitStateVariable(stateVariable)
         }
@@ -44,25 +44,25 @@ class DumpArmTreeVisitor(
     override fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable) {
         indented {
             with(stateVariable) {
-                println { "INTERNAL_STATE_VARIABLE index:$index name:$name" }
+                println { "INTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name" }
             }
             super.visitStateVariable(stateVariable)
         }
     }
 
-    override fun visitDirtyMask(dirtyMask: ArmDirtyMask) {
+    override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) {
         indented {
-            with(dirtyMask) {
-                println { "DIRTY_MASK index:$index" }
+            with(statement) {
+                println { "STATE_DEFINITION_STATEMENT startOffset:${irStatement.startOffset} className:${irStatement::class.simpleName}" }
             }
-            super.visitDirtyMask(dirtyMask)
+            super.visitStateDefinitionStatement(statement)
         }
     }
 
     override fun visitSequence(statement: ArmSequence) {
         indented {
             with(statement) {
-                println { "RENDERING type:SEQUENCE index:$index startOffset: ${statement.irBlock.startOffset}" }
+                println { "SEQUENCE index:$index startOffset:${statement.startOffset} indices:${statement.statements.map { it.index }}" }
             }
             super.visitSequence(statement)
         }
@@ -71,62 +71,34 @@ class DumpArmTreeVisitor(
     override fun visitCall(statement: ArmCall) {
         indented {
             with(statement) {
-                println { "RENDERING type:CALL index:$index startOffset: ${statement.irCall.startOffset} type:<$target>" }
+                println { "CALL index:$index startOffset:${statement.startOffset} type:<$target>" }
             }
             super.visitCall(statement)
         }
     }
 
-    override fun visitCallbackFunctionCall(statement: ArmSupportFunctionCall) {
+    override fun visitWhen(statement: ArmSelect) {
         indented {
             with(statement) {
-                println { "RENDERING type:CALLBACK_CALL index:$index startOffset: ${statement.irCall.startOffset} type:<$target>" }
-            }
-            super.visitCallbackFunctionCall(statement)
-        }
-    }
-
-    override fun visitHigherOrderCall(statement: ArmHigherOrderCall) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:HIGHER_ORDER_CALL index:$index type:<$target>" }
-            }
-            super.visitHigherOrderCall(statement)
-        }
-    }
-
-
-    override fun visitParameterFunctionCall(statement: ArmParameterFunctionCall) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:PARAMETER_FUNCTION_CALL index:$index" }
-            }
-            super.visitParameterFunctionCall(statement)
-        }
-    }
-
-    override fun visitWhen(statement: ArmWhen) {
-        indented {
-            with(statement) {
-                println { "RENDERING type:WHEN index:$index" }
+                println { "SELECT index:$index startOffset:${statement.startOffset} indices:${statement.branches.map { it.index }}" }
             }
             super.visitWhen(statement)
         }
     }
 
-    override fun visitForLoop(statement: ArmForLoop) {
+    override fun visitLoop(statement: ArmLoop) {
         indented {
             with(statement) {
-                println { "RENDERING type:FOR_LOOP index:$index" }
+                println { "LOOP index:$index startOffset:${statement.startOffset}" }
             }
-            super.visitForLoop(statement)
+            super.visitLoop(statement)
         }
     }
 
     override fun visitBranch(branch: ArmBranch) {
         indented {
             with(branch) {
-                println { "RENDERING type:BRANCH index:$index" }
+                println { "BRANCH index:$index ${condition.dependencies.withLabel("conditionDependencies")}" }
             }
             super.visitBranch(branch)
         }
@@ -144,7 +116,7 @@ class DumpArmTreeVisitor(
     override fun visitValueArgument(valueArgument: ArmValueArgument) {
         indented {
             with(valueArgument) {
-                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+                println { "$origin $argumentIndex ${dependencies.withLabel("dependencies")}" }
             }
         }
     }
@@ -152,15 +124,15 @@ class DumpArmTreeVisitor(
     override fun visitSupportFunctionArgument(supportFunctionArgument: ArmSupportFunctionArgument) {
         indented {
             with(supportFunctionArgument) {
-                println { "$origin $index ${dependencies.withLabel("dependencies")}" }
+                println { "$origin $argumentIndex ${dependencies.withLabel("dependencies")}" }
             }
         }
     }
 
-    override fun visitHigherOrderArgument(higherOrderArgument: ArmHigherOrderArgument) {
+    override fun visitFragmentFactoryArgument(fragmentFactoryArgument: ArmFragmentFactoryArgument) {
         indented {
-            with(higherOrderArgument) {
-                println { "$origin $index type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
+            with(fragmentFactoryArgument) {
+                println { "$origin index:$argumentIndex type:${armClass.name} ${dependencies.withLabel("dependencies")}" }
             }
         }
     }

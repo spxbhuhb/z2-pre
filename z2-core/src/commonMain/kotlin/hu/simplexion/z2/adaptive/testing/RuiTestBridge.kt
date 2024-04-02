@@ -1,12 +1,12 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive.testing
 
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 
 class AdaptiveTestBridge(
-    val id: Int
+    val id: Long
 ) : AdaptiveBridge<TestNode> {
 
     override val receiver = TestNode()
@@ -23,4 +23,7 @@ class AdaptiveTestBridge(
         receiver.appendChild(child.receiver)
     }
 
+    override fun toString(): String {
+        return id.toString()
+    }
 }

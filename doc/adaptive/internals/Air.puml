@@ -8,23 +8,21 @@ class AirClass {
     irClass : IrClass
 
     adapter : IrProperty
-    scope : IrProperty
-    externalPatch : IrProperty
-    fragment : IrProperty
+    parent : IrProperty
+    index : IrProperty
+    containedFragment : IrProperty
 
     constructor : IrConstructor
     initializer : IrAnonymousInitializer
 
+    build : IrSimpleFunction
     patch : IrSimpleFunction
+    invoke : IrSimpleFunction
 
     stateVariableMap : AirStateVariable {}
     stateVariableList : AirStateVariable []
 
     dirtyMasks : AirDirtyMask []
-
-    rendering: AirBuilder
-
-    functions : AirFunction []
 }
 AirElement <|-- AirClass
 
@@ -34,46 +32,16 @@ class AirEntryPoint {
 }
 AirElement <|-- AirEntryPoint
 
-class AirBuilderBlock {
-    armElement : ArmBlock
-}
-AirBuilder <|-- AirBuilderBlock
-
-class AirBuilderCall {
-    armElement : ArmCall
-}
-AirBuilder <|-- AirBuilderCall
-
-class AirBuilderWhen {
-    armElement : ArmWhen
-    fragmentFactory : AirFragmentFactory
-}
-AirBuilder <|-- AirBuilderWhen
-
-interface AirBuilder {
-    externalPatch : AirExternalPatch
-    subBuilders : AirBuilder[]
+class AirBuilder {
+    index : Int
 }
 AirFunction <|-- AirBuilder
-
-class AirExternalPatchBlock {
-    armElement : ArmBlock
-}
-AirExternalPatch <|-- AirExternalPatchBlock
 
 interface AirFragmentFactory {
     armElement : ArmWhen,
     subBuilders: AirBuilder[]
 }
 AirFunction <|-- AirFragmentFactory
-
-class AirExternalPatchCall {
-    armElement : ArmCall
-}
-AirExternalPatch <|-- AirExternalPatchCall
-
-interface AirExternalPatch
-AirFunction <|-- AirExternalPatch
 
 class AirSelect {
     armElement : ArmWhen
@@ -90,19 +58,13 @@ AirElement <|-- AirFunction
 class AirStateVariable {
     armElement : ArmStateVariable
 }
-AirProperty <|-- AirStateVariable
+AirElement <|-- AirStateVariable
 
 class AirDirtyMask {
     armElement : ArmDirtyMask
     invalidate : IrSimpleFunction
 }
-AirProperty <|-- AirDirtyMask
-
-interface AirProperty {
-    armElement: ArmElement
-    irProperty : IrProperty
-}
-AirElement <|-- AirProperty
+AirElement <|-- AirDirtyMask
 
 interface AirElement {
     armElement : ArmElement

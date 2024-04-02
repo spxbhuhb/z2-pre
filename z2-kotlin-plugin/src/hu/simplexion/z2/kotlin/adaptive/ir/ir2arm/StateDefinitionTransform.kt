@@ -33,21 +33,26 @@ class StateDefinitionTransform(
 
             if (index < skipParameters) return@forEachIndexed
 
-            ArmExternalStateVariable(armClass, stateVariableIndex, valueParameter).register(valueParameter)
+            ArmExternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, valueParameter).apply {
+                register(valueParameter)
+            }
         }
 
         armClass.originalStatements.forEach { statement ->
             when {
                 statement is IrVariable -> {
-                    ArmInternalStateVariable(armClass, stateVariableIndex, statement).register(statement)
+                    armClass.stateDefinitionStatements +=
+                        ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement).apply {
+                            register(statement)
+                        }
                 }
 
                 statement.startOffset < armClass.boundary.startOffset -> {
-                    armClass.initializerStatements += statement
+                    armClass.stateDefinitionStatements += ArmStateDefinitionStatement(statement)
                 }
 
                 else -> {
-                    armClass.renderingStatements += statement
+                    armClass.originalRenderingStatements += statement
                 }
             }
         }
@@ -55,27 +60,22 @@ class StateDefinitionTransform(
 
     fun ArmStateVariable.register(declaration: IrDeclaration) {
 
+        check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
+
         if (declaration.startOffset >= armClass.boundary.startOffset) {
             ADAPTIVE_IR_RENDERING_VARIABLE.report(armClass, declaration)
             return
         }
 
-        if (originalName in names) {
+        if (name in names) {
             // variable shadowing is a bad practice anyway, no big loss to forbid it
             ADAPTIVE_IR_STATE_VARIABLE_SHADOW.report(armClass, declaration)
             return
         }
 
-        stateVariableIndex++
-        names += originalName
+        stateVariableIndex ++
+        names += name
         armClass.stateVariables += this
-
-        val maskNumber = this.index / ADAPTIVE_STATE_VARIABLE_LIMIT
-
-        if (armClass.dirtyMasks.size <= maskNumber) {
-            armClass.dirtyMasks += ArmDirtyMask(armClass, maskNumber)
-        }
-
     }
 
 }

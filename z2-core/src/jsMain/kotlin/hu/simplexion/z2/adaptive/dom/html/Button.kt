@@ -5,50 +5,40 @@
 
 package hu.simplexion.z2.adaptive.dom.html
 
-import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.Adaptive
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 import kotlinx.browser.document
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
-import org.w3c.dom.events.MouseEvent
 
-@Adaptive
-@AdaptivePublicApi
-fun Button(title: String, onClick: () -> Unit) {
+fun Adaptive.Button(title: String, onClick: () -> Unit) {
 }
 
-@AdaptivePublicApi
 class AdaptiveButton(
-    adaptiveAdapter: AdaptiveAdapter<Node>,
-    override val adaptiveParent: AdaptiveFragment<Node>?,
-    adaptiveScope: AdaptiveFragment<Node>?,
-    adaptiveExternalPatch: AdaptiveExternalPatchType<Node>,
-    var label: String,
-    var onClick: (MouseEvent) -> Unit,
-) : LeafNode(adaptiveAdapter, adaptiveExternalPatch) {
+    adapter: AdaptiveAdapter<Node>,
+    parent : AdaptiveFragment<Node>,
+    index : Int
+) : LeafNode(adapter, parent, index, 2) {
+
+    val label: String
+        get() = state[0] as String
+
+    val onClick : AdaptiveSupportFunction<*>
+        get() = state[1] as AdaptiveSupportFunction<*>
 
     override val receiver = document.createElement("button") as HTMLButtonElement
 
-    var adaptiveDirty0 = 0L
+    override fun patchInternal() {
+        val closureMask = getThisClosureDirtyMask()
 
-    override val adaptiveClosure: AdaptiveClosure<Node>?
-        get() = TODO("Not yet implemented")
-
-    @AdaptivePublicApi
-    fun adaptiveInvalidate0(mask: Long) {
-        adaptiveDirty0 = adaptiveDirty0 or mask
-    }
-
-    override fun adaptiveCreate() {
-        receiver.innerText = label
-        receiver.onclick = onClick
-    }
-
-    override fun adaptivePatch() {
-        if (adaptiveDirty0 and 1L != 0L) {
+        if (haveToPatch(closureMask, 1)) {
             receiver.innerText = label
         }
-        if (adaptiveDirty0 and 2L != 0L) {
-            receiver.onclick = onClick
+
+        if (haveToPatch(closureMask, 2)) {
+            receiver.onclick = { onClick.invoke() }
         }
     }
 

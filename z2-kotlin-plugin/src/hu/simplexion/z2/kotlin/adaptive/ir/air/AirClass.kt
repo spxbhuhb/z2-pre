@@ -1,43 +1,41 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.air
 
+import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.air.visitors.AirElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirClass2Ir
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.name.FqName
 
 class AirClass(
 
     val armClass: ArmClass,
-    val scopeClassName : FqName?,
 
     val irClass: IrClass,
 
-    val adapter: IrProperty,
-    val closure: IrProperty,
-    val parent: IrProperty,
-    val externalPatch: IrProperty,
-    val fragment: IrProperty,
-
     val constructor: IrConstructor,
+
     val initializer: IrAnonymousInitializer,
 
-    val patch: IrSimpleFunction
+    val build: IrSimpleFunction,
+    val patchDescendant: IrSimpleFunction,
+    val generatedInvoke: IrSimpleFunction,
+    val generatedPatchInternal: IrSimpleFunction
 
 ) : AirElement {
-
-    override val armElement
-        get() = armClass
 
     lateinit var stateVariableMap: Map<String, AirStateVariable>
     lateinit var stateVariableList: List<AirStateVariable>
 
-    lateinit var dirtyMasks: List<AirDirtyMask>
+    val buildBranches = mutableListOf<AirBuildBranch>()
+    val patchDescendantBranches = mutableListOf<AirPatchDescendantBranch>()
+    val invokeBranches = mutableListOf<AirInvokeBranch>()
 
-    lateinit var rendering: AirBuilder
-
-    val functions = mutableListOf<AirFunction>()
+    val adapter: IrProperty = irClass.property(Names.ADAPTER)
+    val parent: IrProperty = irClass.property(Names.PARENT)
+    val index: IrProperty = irClass.property(Names.INDEX)
+    val dirtyMask: IrProperty = irClass.property(Names.DIRTY_MASK)
 
     fun toIr(context: AdaptivePluginContext): IrClass = AirClass2Ir(context, this).toIr()
 
@@ -46,20 +44,18 @@ class AirClass(
 
     override fun <D> acceptChildren(visitor: AirElementVisitor<Unit, D>, data: D) {
         stateVariableList.forEach { it.accept(visitor, data) }
-        dirtyMasks.forEach { it.accept(visitor, data) }
-        functions.forEach { it.accept(visitor, data) }
     }
 
-    fun findStateVariable(context : AdaptivePluginContext, name : String) : Pair<AirStateVariable, List<AirClass>>? {
-        var scope : AirClass? = this
-        val path = mutableListOf<AirClass>()
-        while (scope != null) {
-            path += scope
-            scope.stateVariableMap[name]?.let {
-                return (it to path)
-            }
-            scope = this.scopeClassName?.let { context.airClasses[it] }
-        }
-        return null
-    }
+//    fun findStateVariable(context: AdaptivePluginContext, name: String): Pair<AirStateVariable, List<AirClass>>? {
+//        var scope: AirClass? = this
+//        val path = mutableListOf<AirClass>()
+//        while (scope != null) {
+//            path += scope
+//            scope.stateVariableMap[name]?.let {
+//                return (it to path)
+//            }
+//            scope = this.scopeClassName?.let { context.airClasses[it] }
+//        }
+//        return null
+//    }
 }

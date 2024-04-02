@@ -12,12 +12,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.backend.jvm.functionByName
-import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.util.IrMessageLogger
-import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getPropertySetter
-import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 
 class AdaptivePluginContext(
@@ -25,13 +20,13 @@ class AdaptivePluginContext(
     options: Z2Options
 ) : AbstractPluginContext(irContext, options) {
 
-    override val runtimePackage = Strings.ADAPTIVE_RUNTIME_PACKAGE
-
-    val withTrace = options.adaptiveTrace
+    override val runtimePackage = Strings.RUNTIME_PACKAGE
 
     var compilationError = false
 
     val messages = mutableListOf<PluginMessage>()
+
+    val adaptiveNamespaceClass = classSymbol(FqNames.ADAPTIVE_NAMESPACE)
 
     val armClasses = mutableListOf<ArmClass>()
     val armEntryPoints = mutableListOf<ArmEntryPoint>()
@@ -39,47 +34,41 @@ class AdaptivePluginContext(
     val airClasses = mutableMapOf<FqName, AirClass>()
     val airEntryPoints = mutableListOf<AirEntryPoint>()
 
-    val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_CLASS)
-    val adaptiveFragmentType = adaptiveFragmentClass.defaultType
+    val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT)
+    val adaptiveGeneratedFragmentClass = classSymbol(FqNames.ADAPTIVE_GENERATED_FRAGMENT)
+    val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER)
+    val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE)
 
-    val adaptiveGeneratedFragmentClass = classSymbol(FqNames.ADAPTIVE_GENERATED_FRAGMENT_CLASS)
+    val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
+    val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
 
-    val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER_CLASS)
-    val adaptiveAdapterType = adaptiveAdapterClass.defaultType
-    val adaptiveAdapterTrace = adaptiveAdapterClass.functionByName(Strings.ADAPTIVE_ADAPTER_TRACE_FUN)
+    val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
+    val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.INVOKE))
+    val adaptiveSupportFunctionFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.FRAGMENT))
+    val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
 
-    val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE_CLASS)
+    val index = property(Strings.INDEX)
+    val parent = property(Strings.PARENT)
 
-    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE_CLASS)
-    val adaptiveBridgeType = adaptiveBridgeClass.defaultType
+    val build = function(Strings.BUILD)
+    val patchDescendant = function(Strings.PATCH_DESCENDANT)
+    val generatedInvoke = function(Strings.GENERATED_INVOKE)
 
-    val adaptiveSequenceClass = Strings.ADAPTIVE_SEQUENCE_CLASS.runtimeClass()
-    val adaptiveSequenceAddFun = adaptiveSequenceClass.functionByName(Strings.ADAPTIVE_SEQUENCE_ADD_FUN)
+    val create = function(Strings.CREATE)
+    val mount = function(Strings.MOUNT)
+    val generatedPatchInternal = function(Strings.GENERATED_PATCH_INTERNAL)
 
-    val adaptiveWhenClass = Strings.ADAPTIVE_WHEN_CLASS.runtimeClass()
-    val adaptiveWhenNewBranchSetter = requireNotNull(adaptiveWhenClass.getPropertySetter(Strings.ADAPTIVE_WHEN_NEW_BRANCH_PROP))
-
-    val adaptiveAdapter = property(Strings.ADAPTIVE_ADAPTER_PROP)
-    val adaptiveClosure = property(Strings.ADAPTIVE_CLOSURE_PROP)
-    val adaptiveParent = property(Strings.ADAPTIVE_PARENT_PROP)
-    val adaptiveExternalPatch = property(Strings.ADAPTIVE_EXTERNAL_PATCH_PROP)
-    val adaptiveFragment = property(Strings.ADAPTIVE_CONTAINED_FRAGMENT_PROP)
-
-    val adaptiveCreate = function(Strings.ADAPTIVE_CREATE_FUN)
-    val adaptiveMount = function(Strings.ADAPTIVE_MOUNT_FUN)
-    val adaptivePatch = function(Strings.ADAPTIVE_PATCH_FUN)
-    val adaptiveDispose = function(Strings.ADAPTIVE_DISPOSE_FUN)
-    val adaptiveUnmount = function(Strings.ADAPTIVE_UNMOUNT_FUN)
-
-    val adaptiveSymbolMap = AdaptiveSymbolMap(this)
-
-    val implicit0SymbolMap = adaptiveSymbolMap.getSymbolMap(FqNames.ADAPTIVE_ANONYMOUS_CLASS)
+    val haveToPatch = function(Strings.HAVE_TO_PATCH)
+    val getCreateClosureDirtyMask = function(Strings.GET_CREATE_CLOSURE_DIRTY_MASK)
+    val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
+    val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
+    val setStateVariable = function(Strings.SET_STATE_VARIABLE)
 
     private fun property(name: String) =
         adaptiveGeneratedFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()
 
     private fun function(name: String) =
-        listOf(adaptiveGeneratedFragmentClass.functions.single { it.owner.name.asString() == name })
+        adaptiveGeneratedFragmentClass.functions.single { it.owner.name.asString() == name }
 
     class PluginMessage(
         val severity: IrMessageLogger.Severity,

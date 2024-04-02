@@ -10,7 +10,6 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.addChild
-import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.file
 
@@ -35,6 +34,8 @@ internal class AdaptiveGenerationExtension(
 //                )
 //            }
 
+            // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
+
             // --------  IR to ARM  --------
 
             moduleFragment.accept(OriginalFunctionTransform(this), null)
@@ -49,16 +50,13 @@ internal class AdaptiveGenerationExtension(
 
             armClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
             armEntryPoints.forEach { airEntryPoints += it.toAir(this) }
-
-            debug("AIR CLASSES") { "\n\n" + airClasses.values.joinToString("\n\n") { it.dump() } }
-            debug("AIR ENTRY POINTS") { "\n\n" + airEntryPoints.joinToString("\n\n") { it.dump() } }
-
+            
             // --------  AIR to IR  --------
 
             airClasses.values.forEach {
                 it.toIr(this)
                 if (! it.armClass.compilationError) {
-                    it.armElement.originalFunction.file.addChild(it.irClass)
+                    it.armClass.originalFunction.file.addChild(it.irClass)
                 }
             }
             airEntryPoints.forEach {
@@ -69,7 +67,7 @@ internal class AdaptiveGenerationExtension(
 
             // --------  finishing up  --------
             debug("KOTLIN LIKE") { "\n\n" + moduleFragment.dumpKotlinLike() }
-            debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
+            // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }
 

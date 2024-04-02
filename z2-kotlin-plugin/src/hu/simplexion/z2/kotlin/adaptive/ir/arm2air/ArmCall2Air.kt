@@ -1,32 +1,39 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
 
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuilderCall
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirExternalPatchCall
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
+import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmCall
+import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.expressions.IrBlock
+import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 class ArmCall2Air(
     parent: ClassBoundIrBuilder,
     val armCall: ArmCall
 ) : ClassBoundIrBuilder(parent) {
 
-    fun toAir(): AirBuilderCall = with(armCall) {
+    fun toAir() {
+        airClass.buildBranches += AirBuildBranch(armCall.index, irConstructorCallFromBuild(armCall.target))
+        airClass.patchDescendantBranches += AirPatchDescendantBranch(armCall.index) { irPatchExternalStateVariables(it) }
+        invokeBranchExpressions()
+    }
 
-        val externalPatch = AirExternalPatchCall(
-            armCall,
-            externalPatch(irCall.startOffset)
-        )
-        airClass.functions += externalPatch
+    fun irPatchExternalStateVariables(closureMask : IrVariable): IrBlock {
+        val function = airClass.patchDescendant
+        val fragmentParameter = function.valueParameters.first()
 
-        val builder = AirBuilderCall(
-            armCall,
-            builder(irCall.startOffset),
-            externalPatch,
-            emptyList()
-        )
-        airClass.functions += builder
+        return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
+            .also { block ->
+                armCall.arguments.forEach {
+                    block.statements += it.toPatchExpression(this, armCall.closure, fragmentParameter, closureMask)
+                }
+            }
+    }
 
-        return builder
+    fun invokeBranchExpressions() {
+
     }
 
 }

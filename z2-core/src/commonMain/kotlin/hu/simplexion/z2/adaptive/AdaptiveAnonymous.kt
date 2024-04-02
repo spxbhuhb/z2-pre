@@ -1,35 +1,54 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive
 
 class AdaptiveAnonymous<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveClosure: AdaptiveClosure<BT>,
-    override val adaptiveParent: AdaptiveFragment<BT>?,
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT>,
-    val adaptiveState: Array<Any?>,
-) : AdaptiveGeneratedFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>,
+    index: Int,
+    stateSize: Int,
+    val factory: AdaptiveFragmentFactory<BT>,
+) : AdaptiveFragment<BT>(adapter, parent, index, stateSize) {
 
-    override lateinit var containedFragment: AdaptiveFragment<BT>
+    override val createClosure : AdaptiveClosure<BT>
+        get() = parent!!.thisClosure
 
-    val extendedClosure = adaptiveClosure.extendWith(this)
+    override val thisClosure = extendWith(this, factory.declaringFragment)
 
-    /**
-     * Invalidate a state variable of this *anonymous component instance*.
-     *
-     * @param  stateVariableIndex  The index of the state variable in [adaptiveState]. It shall not take
-     *                             [adaptiveClosure] into account, it is relative to `this`.
-     */
-    fun adaptiveInvalidate(stateVariableIndex: Int) {
-        extendedClosure.invalidate(adaptiveClosure.closureSize + stateVariableIndex)
+    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+        factory.declaringFragment.patchDescendant(fragment)
     }
 
-    override fun adaptivePatch() {
-        extendedClosure.copyFrom(adaptiveClosure)
-        containedFragment.adaptiveExternalPatch(containedFragment)
-        containedFragment.adaptivePatch()
-        extendedClosure.clear()
+    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+        return factory.build(this)
+    }
+
+    override fun generatedPatchInternal() {
+
+    }
+
+    /**
+     * Finds the first parent with `thisClosure` owned by [declaringComponent]. Then extends that closure with
+     * the component and returns with the extended closure.
+     *
+     * Anonymous components use this function to find their declaring closure and extend it with themselves.
+     */
+    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent: AdaptiveFragment<BT>): AdaptiveClosure<BT> {
+        var ancestor = component.parent
+
+        while (ancestor != null && ancestor.thisClosure.owner !== declaringComponent) {
+            ancestor = ancestor.parent
+        }
+
+        checkNotNull(ancestor) { "couldn't find declaring component for closure extension" }
+
+        val declaringClosure = ancestor.thisClosure
+
+        return AdaptiveClosure(
+            declaringClosure.components + component,
+            declaringClosure.closureSize + component.state.size
+        )
     }
 
 }

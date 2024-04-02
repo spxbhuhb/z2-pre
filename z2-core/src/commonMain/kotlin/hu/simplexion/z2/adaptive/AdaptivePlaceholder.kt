@@ -1,35 +1,33 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 package hu.simplexion.z2.adaptive
 
 class AdaptivePlaceholder<BT>(
-    override val adaptiveAdapter: AdaptiveAdapter<BT>,
-    override val adaptiveParent: AdaptiveFragment<BT>,
-) : AdaptiveFragment<BT> {
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>,
+    index: Int
+) : AdaptiveFragment<BT>(adapter, parent, index, 0) {
 
-    override val adaptiveClosure: AdaptiveClosure<BT>? = null
-    override val adaptiveExternalPatch: AdaptiveExternalPatchType<BT> = {  }
+    val bridge = adapter.createPlaceholder()
 
-    val bridge = adaptiveAdapter.createPlaceholder()
-
-    override fun adaptiveCreate() {
+    override fun create() {
 
     }
 
-    override fun adaptiveMount(bridge: AdaptiveBridge<BT>) {
+    override fun mount(bridge: AdaptiveBridge<BT>) {
         bridge.add(this.bridge)
     }
 
-    override fun adaptivePatch() {
+    override fun patchInternal() {
 
     }
 
-    override fun adaptiveUnmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
         bridge.remove(this.bridge)
     }
 
-    override fun adaptiveDispose() {
+    override fun dispose() {
 
     }
 

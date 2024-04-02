@@ -6,7 +6,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.AirEntryPoint2Ir
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 
 class AirEntryPoint(
-    override val armElement: ArmEntryPoint,
+    val armElement: ArmEntryPoint,
     val airClass: AirClass
 ) : AirElement {
 
