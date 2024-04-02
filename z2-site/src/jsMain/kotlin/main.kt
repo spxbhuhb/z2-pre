@@ -95,7 +95,6 @@ object componentRouter : NavRouter(loggedIn = false) {
     val enum             by render(strings.enum)             { enumDemo() }
     val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
-    val modal            by render(strings.modal)            { modalDemo() }
     val navigationDrawer by render(strings.navigationDrawer) { navigationDrawerDemo() }
     val popup            by render(strings.popup)            { popupDemo() }
     val radioButton      by render(strings.radioButton)      { radioButtonDemo() }
@@ -117,6 +116,7 @@ object adaptiveRouter : NavRouter(loggedIn = false) {
     // @formatter:off
     val text           by render(strings.textField)         { textFieldPlayground() }
     val entitySelect   by render(strings.entitySelect)      { entitySelectDemo() }
+    val modal          by render(strings.modal)             { hu.simplexion.z2.adaptive.modal.modalDemo(this) }
     val select         by render(strings.select)            { selectFieldPlayground() }
     // @formatter:on
 }

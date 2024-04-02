@@ -9,9 +9,9 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.util.EditMode
-import hu.simplexion.z2.util.localLaunch
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.util.localLaunch
 import kotlinx.browser.document
 import kotlinx.coroutines.channels.Channel
 import org.w3c.dom.HTMLElement
@@ -34,11 +34,13 @@ open class ModalBase<T : Any?>(
 
     override fun main() : ModalBase<T> {
         if (defaultModalGrid) {
-            addCss(displayGrid)
+            addCss(displayGrid, positionRelative, overflowHidden)
             gridTemplateColumns = "1fr"
-            gridTemplateRows = "min-content 1fr min-content"
+            gridTemplateRows = "min-content 1fr"
         }
-        mainBuilder() // FIXME clear up the confusion between builder and main
+
+        mainBuilder()
+
         return this
     }
 
@@ -66,7 +68,7 @@ open class ModalBase<T : Any?>(
         }
 
     fun Z2.body(builder : Z2Builder) =
-        div(pl24, pr24, positionRelative) {
+        div(pl24, pr24, positionRelative, overflowYAuto) {
             builder()
         }
 
@@ -114,13 +116,21 @@ open class ModalBase<T : Any?>(
         localLaunch { show() }
     }
 
-    fun ModalBase<Unit>.save(label : LocalizedText? = null, saveFun : suspend () -> Unit) {
+    fun Z2.save(label: LocalizedText? = null, saveFun: suspend () -> Unit) {
         buttons {
-            textButton(browserStrings.cancel) { closeWith(Unit) }
+            textButton(browserStrings.cancel) { modalBaseParent().closeWith(Unit) }
             filledLaunchButton(label ?: saveLabel()) {
                 saveFun()
             }
         }
+    }
+
+    fun Z2.modalBaseParent(): ModalBase<Unit> {
+        var p = parent
+        while (p != null && p !is ModalBase<*>) {
+            p = p.parent
+        }
+        return p as ModalBase<Unit>
     }
 
     fun ModalBase<Unit>.close() {
