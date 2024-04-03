@@ -4,7 +4,9 @@
 package hu.simplexion.z2.localization.locales
 
 import kotlinx.datetime.*
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.round
 
 abstract class AbstractLocalizedFormats(
     val config: LocalizationConfig
@@ -82,6 +84,7 @@ abstract class AbstractLocalizedFormats(
         return when {
             value.isNaN() -> "NaN"
             value.isInfinite() -> if (value < 0) "-Inf" else "+Inf"
+
             decimals == 0 -> {
                 round(value).toString().substringBefore('.').withSeparators(config.thousandSeparator).let {
                     if (it == "-0") "0" else it
@@ -89,15 +92,19 @@ abstract class AbstractLocalizedFormats(
             }
 
             else -> {
-                val integral = if (value < 0.0) {
-                    ceil(value)
-                } else {
-                    floor(value)
-                }
+                val shifted = abs(round(value * shifts[decimals]))
+                if (shifted > Int.MAX_VALUE) return value.toString()
 
-                val decimal = abs(round((value - integral) * shifts[decimals])).toLong().toString().padStart(decimals, '0')
+                val s = shifted.toInt().toString().padStart(decimals + 1, '0')
+                val cutAt = s.length - decimals
 
-                return integral.toString().substringBefore('.').withSeparators(" ") + config.decimalSeparator + decimal
+                val sign = if (value < 0.0) "-" else ""
+                val integral = s.substring(0, cutAt).withSeparators(config.thousandSeparator)
+                val decimal = s.substring(cutAt)
+
+                println("$value $s $cutAt $decimals sign:$sign integral:$integral decimal:$decimal")
+
+                return sign + integral + config.decimalSeparator + decimal
             }
         }
     }
