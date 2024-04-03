@@ -48,7 +48,7 @@ class AdaptiveSelect<BT>(
         shownFragment?.mount(placeholder)
     }
 
-    override fun generatedPatchInternal() {
+    override fun genPatchInternal() {
         if (stateBranch == shownBranch) {
             shownFragment?.patch()
         } else {
@@ -58,7 +58,7 @@ class AdaptiveSelect<BT>(
             if (stateBranch == - 1) {
                 shownFragment = null
             } else {
-                shownFragment = createClosure.owner.build(this, stateBranch)
+                shownFragment = createClosure.owner.genBuild(this, stateBranch)
                 if (mounted) shownFragment?.mount(placeholder)
             }
 

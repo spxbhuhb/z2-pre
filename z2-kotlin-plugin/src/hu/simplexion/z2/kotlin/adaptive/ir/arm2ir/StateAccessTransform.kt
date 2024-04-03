@@ -1,7 +1,7 @@
 /*
  * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.kotlin.adaptive.ir.air2ir
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
@@ -90,7 +90,7 @@ class StateAccessTransform(
     }
 
     /**
-     * Transform calls in `patchInternal`:
+     * Transform calls in `genPatchInternal`:
      *
      * ```kotlin
      * fun Adaptive.Basic(i : Int, supportFun : (i : Int) -> Unit) {
@@ -105,6 +105,8 @@ class StateAccessTransform(
      * ```
      */
     override fun visitCall(expression: IrCall): IrExpression {
+        if (external) return super.visitCall(expression)
+
         val getValue = expression.dispatchReceiver as? IrGetValue ?: return expression
         val valueParameterSymbol = getValue.symbol as? IrValueParameterSymbol ?: return expression
 

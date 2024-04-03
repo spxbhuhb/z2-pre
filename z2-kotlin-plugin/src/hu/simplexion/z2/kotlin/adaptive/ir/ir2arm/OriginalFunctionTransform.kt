@@ -4,12 +4,12 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_MISSING_FUNCTION_BODY
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockBodyImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.isAnonymousFunction
 import org.jetbrains.kotlin.name.SpecialNames
 
@@ -29,14 +29,11 @@ class OriginalFunctionTransform(
     override fun visitFunctionNew(declaration: IrFunction): IrFunction {
         if (declaration.isAnonymousFunction || declaration.name == SpecialNames.ANONYMOUS) return declaration
 
-        if (!declaration.isAdaptiveFunction()) {
+        if (! declaration.isAdaptiveFunction()) {
             return super.visitFunctionNew(declaration) as IrFunction
         }
 
-        if (declaration.body == null) {
-            ADAPTIVE_IR_MISSING_FUNCTION_BODY.report(pluginContext, declaration)
-            return super.visitFunctionNew(declaration) as IrFunction
-        }
+        check(declaration.body != null) { "missing function body\${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
         IrFunction2ArmClass(pluginContext, declaration).transform()
 

@@ -16,15 +16,15 @@ class AdaptiveAnonymous<BT>(
 
     override val thisClosure = extendWith(this, factory.declaringFragment)
 
-    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
-        factory.declaringFragment.patchDescendant(fragment)
+    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+        factory.declaringFragment.genPatchDescendant(fragment)
     }
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
         return factory.build(this)
     }
 
-    override fun generatedPatchInternal() {
+    override fun genPatchInternal() {
 
     }
 

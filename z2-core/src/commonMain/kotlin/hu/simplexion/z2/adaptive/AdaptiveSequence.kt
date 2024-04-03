@@ -28,7 +28,7 @@ class AdaptiveSequence<BT>(
         patch()
 
         for (itemIndex in indices) {
-            fragments += createClosure.owner.build(this, itemIndex)
+            fragments += createClosure.owner.genBuild(this, itemIndex)
         }
     }
 
@@ -37,7 +37,7 @@ class AdaptiveSequence<BT>(
         fragments.forEach { it.mount(bridge) }
     }
 
-    override fun generatedPatchInternal() {
+    override fun genPatchInternal() {
         fragments.forEach { it.patch() }
     }
 

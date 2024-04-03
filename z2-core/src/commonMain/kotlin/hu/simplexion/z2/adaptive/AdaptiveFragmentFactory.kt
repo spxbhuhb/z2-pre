@@ -8,7 +8,7 @@ class AdaptiveFragmentFactory<BT>(
     val declarationIndex : Int
 ) {
     fun build(parent: AdaptiveFragment<BT>) : AdaptiveFragment<BT> {
-        return declaringFragment.build(parent, declarationIndex)!!
+        return declaringFragment.genBuild(parent, declarationIndex)
     }
 
     override fun toString() =

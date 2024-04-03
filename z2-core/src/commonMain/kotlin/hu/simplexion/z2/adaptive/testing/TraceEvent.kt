@@ -13,7 +13,7 @@ class TraceEvent(
     constructor(name: String, id: Long, point: String, vararg data: Any?) : this(name, id, point, data.map { it.toString() })
 
     override fun toString(): String {
-        return "[ ${name.padEnd(30)} ${id.toString().padStart(4)} ]  ${point.padEnd(20)}  |  ${data.joinToString(" ")}"
+        return "[ ${name.padEnd(30)} ${id.toString().padStart(4)} ]  ${point.padEnd(25)}  |  ${data.joinToString(" ")}"
     }
 
     fun toCode(): String {

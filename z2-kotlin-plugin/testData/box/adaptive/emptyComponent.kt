@@ -22,21 +22,27 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
-        TraceEvent("<root>", 2, "create", ""),
-        TraceEvent("<root>", 2, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("<root>", 2, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("<root>", 2, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("<root>", 2, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("AdaptiveEmpty", 3, "create", ""),
-        TraceEvent("AdaptiveEmpty", 3, "beforePatchExternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("AdaptiveEmpty", 3, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("AdaptiveEmpty", 3, "beforePatchInternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("AdaptiveEmpty", 3, "afterPatchInternal", "closureDirtyMask: 0 state: []"),
+        TraceEvent("<root>", 2, "before-Create", ""),
+        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("AdaptiveEmpty", 3, "before-Create", ""),
+        TraceEvent("AdaptiveEmpty", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveEmpty", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveEmpty", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveEmpty", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
         TraceEvent("AdaptiveSequence", 4, "create", ""),
-        TraceEvent("AdaptiveSequence", 4, "beforePatchExternal", "closureDirtyMask: 0 state: null"),
-        TraceEvent("AdaptiveSequence", 4, "afterPatchExternal", "closureDirtyMask: 0 state: []"),
-        TraceEvent("<root>", 2, "mount", "bridge: 1"),
-        TraceEvent("AdaptiveEmpty", 3, "mount", "bridge: 1"),
-        TraceEvent("AdaptiveSequence", 4, "mount", "bridge: 1")
+        TraceEvent("AdaptiveSequence", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveSequence", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveSequence", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveSequence", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("AdaptiveEmpty", 3, "after-Create", ""),
+        TraceEvent("<root>", 2, "after-Create", ""),
+        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveEmpty", 3, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveSequence", 4, "mount", "bridge: 1"),
+        TraceEvent("AdaptiveEmpty", 3, "after-Mount", "bridge: 1"),
+        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
     ))
 }

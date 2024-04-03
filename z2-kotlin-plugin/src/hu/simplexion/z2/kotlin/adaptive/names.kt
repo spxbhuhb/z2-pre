@@ -16,7 +16,6 @@ object Strings {
     const val ADAPTIVE_ANONYMOUS = "AdaptiveAnonymous"
     const val ADAPTIVE_FRAGMENT = "AdaptiveFragment"
     const val ADAPTIVE_CLOSURE = "AdaptiveClosure"
-    const val ADAPTIVE_GENERATED_FRAGMENT = "AdaptiveGeneratedFragment"
     const val ADAPTIVE_ADAPTER = "AdaptiveAdapter"
     const val ADAPTIVE_BRIDGE = "AdaptiveBridge"
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
@@ -25,20 +24,19 @@ object Strings {
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
 
-    const val BUILD = "build"
-    const val PATCH_DESCENDANT = "patchDescendant"
-    const val GENERATED_INVOKE = "generatedInvoke"
+    const val GEN_BUILD = "genBuild"
+    const val GEN_PATCH_DESCENDANT = "genPatchDescendant"
+    const val GEN_INVOKE = "genInvoke"
 
     const val CREATE = "create"
     const val MOUNT = "mount"
-    const val GENERATED_PATCH_INTERNAL = "generatedPatchInternal"
+    const val GEN_PATCH_INTERNAL = "genPatchInternal"
 
     const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CREATE_CLOSURE_DIRTY_MASK = "getCreateClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
-    const val SHOULD_NOT_RUN = "shouldNotRun"
     const val INVALID_INDEX = "invalidIndex"
 
     const val PARENT = "parent"
@@ -53,6 +51,7 @@ object Strings {
     const val ADAPTER = "adapter"
     const val DIRTY_MASK = "dirtyMask"
 
+    const val SUPPORT_FUNCTION_INVOKE = "invoke"
     const val TRACE = "trace" // name of the trace function in the adapter class
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
@@ -68,11 +67,11 @@ object Names {
 
     val BT = Name.identifier(Strings.BT)
 
-    val BUILD = Name.identifier(Strings.BUILD)
-    val PATCH_DESCENDANT = Name.identifier(Strings.PATCH_DESCENDANT)
-    val GENERATED_INVOKE = Name.identifier(Strings.GENERATED_INVOKE)
+    val GEN_BUILD = Name.identifier(Strings.GEN_BUILD)
+    val GEN_PATCH_DESCENDANT = Name.identifier(Strings.GEN_PATCH_DESCENDANT)
+    val GEN_INVOKE = Name.identifier(Strings.GEN_INVOKE)
 
-    val PATCH_INTERNAL = Name.identifier(Strings.GENERATED_PATCH_INTERNAL)
+    val GEN_PATCH_INTERNAL = Name.identifier(Strings.GEN_PATCH_INTERNAL)
 
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
     val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
@@ -89,7 +88,6 @@ object FqNames {
     val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
-    val ADAPTIVE_GENERATED_FRAGMENT = Strings.ADAPTIVE_GENERATED_FRAGMENT.runtime
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.runtime
     val ADAPTIVE_BRIDGE = Strings.ADAPTIVE_BRIDGE.runtime
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.runtime

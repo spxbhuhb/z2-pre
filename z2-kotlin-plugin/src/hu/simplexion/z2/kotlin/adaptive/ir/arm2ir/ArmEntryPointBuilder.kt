@@ -1,28 +1,28 @@
-package hu.simplexion.z2.kotlin.adaptive.ir.air2ir
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirEntryPoint
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
-class AirEntryPoint2Ir(
-    pluginContext: AdaptivePluginContext,
-    entryPoint: AirEntryPoint
-) : ClassBoundIrBuilder(pluginContext, entryPoint.airClass) {
+class ArmEntryPointBuilder(
+    context: AdaptivePluginContext,
+    val entryPoint: ArmEntryPoint
+) : ClassBoundIrBuilder(context) {
 
-    val function = entryPoint.armEntryPoint.irFunction
-    val armClass = airClass.armClass
-
-    fun toIr() {
+    fun entryPointBody() {
+        val function = entryPoint.irFunction
+        irClass = pluginContext.irClasses[entryPoint.armClass.fqName]!!
 
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
 
@@ -38,8 +38,8 @@ class AirEntryPoint2Ir(
 
             val instance = IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                airClass.irClass.defaultType,
-                airClass.constructor.symbol,
+                irClass.defaultType,
+                irClass.constructors.single().symbol,
                 0, 0,
                 Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
             ).also { call ->
@@ -60,7 +60,7 @@ class AirEntryPoint2Ir(
                 dispatchReceiver = irGet(root),
                 args = arrayOf(
                     irCall(
-                        this@AirEntryPoint2Ir.pluginContext.adaptiveAdapterClass.getPropertyGetter(Strings.ROOT_BRIDGE) !!.owner.symbol,
+                        pluginContext.adaptiveAdapterClass.getPropertyGetter(Strings.ROOT_BRIDGE) !!.owner.symbol,
                         dispatchReceiver = irGet(adapter)
                     )
                 )

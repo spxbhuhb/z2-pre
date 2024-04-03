@@ -12,6 +12,8 @@ abstract class AdaptiveFragment<BT>(
 
     val id: Long = adapter.newId()
 
+    var trace : Boolean = adapter.trace
+
     open val createClosure: AdaptiveClosure<BT>?
         get() = parent?.thisClosure
 
@@ -28,29 +30,30 @@ abstract class AdaptiveFragment<BT>(
     // Functions that support the descendants of this fragment
     // --------------------------------------------------------------------------
 
-    open fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
-        shouldNotRun()
+    open fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+        pluginGenerated()
     }
 
-    open fun patchDescendant(fragment: AdaptiveFragment<BT>) {
-        shouldNotRun()
+    open fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+        pluginGenerated()
     }
 
     open fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
-        if (adapter.trace) traceSupport("beforeInvoke", supportFunction, arguments)
+        if (trace) traceSupport("before-Invoke", supportFunction, arguments)
 
-        val result = generatedInvoke(supportFunction, arguments)
+        val result = genInvoke(supportFunction, arguments)
 
         if (supportFunction.fragment.thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
             supportFunction.fragment.patchInternal()
         }
 
-        if (adapter.trace) traceSupport("afterInvoke", supportFunction, result)
+        if (trace) traceSupport("after-Invoke", supportFunction, result)
+
         return result
     }
 
-    open fun generatedInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
-        shouldNotRun()
+    open fun genInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+        pluginGenerated()
     }
 
     // --------------------------------------------------------------------------
@@ -58,18 +61,21 @@ abstract class AdaptiveFragment<BT>(
     // --------------------------------------------------------------------------
 
     open fun create() {
-        if (adapter.trace) trace("create")
+        if (trace) trace("before-Create")
 
         patch()
 
-        containedFragment = build(this, 0)
+        containedFragment = genBuild(this, 0)
 
-        dirtyMask = adaptiveCleanStateMask
+        if (trace) trace("after-Create")
     }
 
     open fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("mount", bridge)
+        if (trace) trace("before-Mount", bridge)
+
         containedFragment?.mount(bridge)
+
+        if (trace) trace("after-Mount", bridge)
     }
 
     open fun patch() {
@@ -78,37 +84,43 @@ abstract class AdaptiveFragment<BT>(
     }
 
     open fun patchExternal() {
-        if (adapter.trace) traceWithState("beforePatchExternal")
+        if (trace) traceWithState("before-Patch-External")
 
-        createClosure?.owner?.patchDescendant(this)
+        createClosure?.owner?.genPatchDescendant(this)
 
-        if (adapter.trace) traceWithState("afterPatchExternal")
+        if (trace) traceWithState("after-Patch-External")
     }
 
     open fun patchInternal() {
-        if (adapter.trace) traceWithState("beforePatchInternal")
+        if (trace) traceWithState("before-Patch-Internal")
 
-        generatedPatchInternal()
+        genPatchInternal()
 
         containedFragment?.patch()
 
         dirtyMask = adaptiveCleanStateMask
 
-        if (adapter.trace) traceWithState("afterPatchInternal")
+        if (trace) traceWithState("after-Patch-Internal")
     }
 
-    open fun generatedPatchInternal() {
-        shouldNotRun()
+    open fun genPatchInternal() {
+        pluginGenerated()
     }
 
     open fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("unmount", bridge)
+        if (trace) trace("before-Unmount", bridge)
+
         containedFragment?.unmount(bridge)
+
+        if (trace) trace("after-Unmount", bridge)
     }
 
     open fun dispose() {
-        if (adapter.trace) trace("dispose")
+        if (trace) trace("before-Dispose")
+
         containedFragment?.dispose()
+
+        if (trace) trace("after-Dispose")
     }
 
     // --------------------------------------------------------------------------
@@ -139,8 +151,8 @@ abstract class AdaptiveFragment<BT>(
     // Utility functions
     // --------------------------------------------------------------------------
 
-    fun shouldNotRun(): Nothing {
-        throw IllegalStateException("this code should not be reached, please open a bug report, fragment: $this")
+    fun pluginGenerated(): Nothing {
+        throw IllegalStateException("this code should be replaced by the compiler plugin, please open a bug report, fragment: $this")
     }
 
     fun invalidIndex(index: Int): Nothing {

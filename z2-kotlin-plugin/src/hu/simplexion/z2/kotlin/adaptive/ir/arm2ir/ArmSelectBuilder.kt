@@ -1,11 +1,11 @@
-package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSelect
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -14,23 +14,22 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrWhenImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
-class ArmSelect2Air(
+class ArmSelectBuilder(
     parent: ClassBoundIrBuilder,
     val armSelect: ArmSelect
-) : ClassBoundIrBuilder(parent) {
+) : ClassBoundIrBuilder(parent), BranchBuilder {
 
-    fun toAir() {
-        airClass.buildBranches += AirBuildBranch(armSelect.index, irConstructorCallFromBuild(armSelect.target))
-        airClass.patchDescendantBranches += AirPatchDescendantBranch(armSelect.index) { irPatchBranch() }
-    }
+    override fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression =
+        irConstructorCallFromBuild(buildFun, armSelect.target)
 
-    private fun irPatchBranch(): IrExpression =
+    override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irSetDescendantStateVariable(
+            patchFun,
             Indices.ADAPTIVE_SELECT_BRANCH,
-            irSelectWhen()
+            irSelectWhen(patchFun)
         )
 
-    private fun irSelectWhen(): IrExpression =
+    private fun irSelectWhen(patchFun: IrSimpleFunction): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.intType,
@@ -38,7 +37,7 @@ class ArmSelect2Air(
         ).apply {
 
             armSelect.branches.forEach { branch ->
-                branches += irConditionBranch(branch)
+                branches += irConditionBranch(patchFun, branch)
             }
 
             // add "else" if the last condition is not a constant true
@@ -49,10 +48,10 @@ class ArmSelect2Air(
             }
         }
 
-    private fun irConditionBranch(branch: ArmBranch) =
+    private fun irConditionBranch(patchFun: IrSimpleFunction, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformStateAccess(armSelect.closure, external = true) { irGet(airClass.patchDescendant.valueParameters.first()) },
+            branch.condition.irExpression.transformStateAccess(armSelect.closure, external = true) { irGet(patchFun.valueParameters.first()) },
             irConst(branch.index)
         )
 

@@ -6,7 +6,8 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmLoop2Air
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmLoopBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 
 class ArmLoop(
     armClass: ArmClass,
@@ -21,7 +22,8 @@ class ArmLoop(
 
     val target = FqNames.ADAPTIVE_LOOP
 
-    override fun toAir(parent: ClassBoundIrBuilder) = ArmLoop2Air(parent, this).toAir()
+    override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
+        ArmLoopBuilder(parent, this)
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitLoop(this, data)

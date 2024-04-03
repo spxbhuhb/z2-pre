@@ -38,7 +38,7 @@ class AdaptiveLoop<BT, IT>(
             it.setStateVariable(0, iteratorValue)
         }
 
-    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
         // anonymous fragment iterator is read only, and it is set during create
     }
 
@@ -57,7 +57,7 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun generatedPatchInternal() {
+    override fun genPatchInternal() {
         // TODO think about re-running iterators, we should not do that
         if (dirtyMask != 0) {
             patchStructure()

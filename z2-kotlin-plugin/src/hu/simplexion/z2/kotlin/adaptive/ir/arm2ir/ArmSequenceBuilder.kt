@@ -1,10 +1,10 @@
-package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirBuildBranch
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirPatchDescendantBranch
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSequence
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
@@ -12,18 +12,17 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.name.Name
 
-class ArmSequence2Air(
+class ArmSequenceBuilder(
     parent: ClassBoundIrBuilder,
     val armSequence: ArmSequence
-) : ClassBoundIrBuilder(parent) {
+) : ClassBoundIrBuilder(parent), BranchBuilder {
 
-    fun toAir() {
-        airClass.buildBranches += AirBuildBranch(armSequence.index, irConstructorCallFromBuild(armSequence.target))
-        airClass.patchDescendantBranches += AirPatchDescendantBranch(armSequence.index) { irPatchItemIndices() }
-    }
+    override fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression =
+        irConstructorCallFromBuild(buildFun, armSequence.target)
 
-    private fun irPatchItemIndices(): IrExpression = // FIXME do not patch sequence when unnecessary
+    override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irSetDescendantStateVariable(
+            patchFun,
             Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,

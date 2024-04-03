@@ -1,13 +1,14 @@
-package hu.simplexion.z2.kotlin.adaptive.ir.arm2air
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmValueArgument
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
-class ArmValueArgument2Air(
+open class ArmValueArgumentBuilder(
     parent: ClassBoundIrBuilder,
     val valueArgument: ArmValueArgument,
     val closure: ArmClosure,
@@ -15,10 +16,10 @@ class ArmValueArgument2Air(
     val closureDirtyMask: IrVariable
 ) : ClassBoundIrBuilder(parent) {
 
-    fun toPatchDescendantExpression(): IrExpression =
+    fun genPatchDescendantExpression(patchFun : IrSimpleFunction): IrExpression =
         irIf(
             patchCondition(),
-            patchBody()
+            patchBody(patchFun)
         )
 
     fun patchCondition(): IrExpression =
@@ -31,8 +32,9 @@ class ArmValueArgument2Air(
             )
         )
 
-    fun patchBody(): IrExpression =
+    open fun patchBody(patchFun : IrSimpleFunction): IrExpression =
         irSetDescendantStateVariable(
+            patchFun,
             valueArgument.argumentIndex,
             valueArgument.irExpression.transformStateAccess(closure, external = true) { irGet(fragment) }
         )

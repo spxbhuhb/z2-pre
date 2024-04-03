@@ -6,7 +6,6 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
-import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -33,20 +32,11 @@ class EntryPointTransform(
             return super.visitCall(expression)
         }
 
-        fun report(message: String): IrExpression {
-            ErrorsAdaptive.ADAPTIVE_IR_INTERNAL_PLUGIN_ERROR.report(adaptiveContext, currentFile.fileEntry, expression.startOffset, message)
-            return super.visitCall(expression)
-        }
-
-        if (expression.valueArgumentsCount == 0) {
-            return report("${expression.symbol} value arguments count == 0")
-        }
+        check(expression.valueArgumentsCount != 0) { "${expression.symbol} value arguments count == 0" }
 
         val block = expression.getValueArgument(expression.valueArgumentsCount - 1)
 
-        if (block !is IrFunctionExpression) {
-            return report("${expression.symbol} last parameter is not a function expression")
-        }
+        check(block is IrFunctionExpression) { "${expression.symbol} last parameter is not a function expression" }
 
         val function = block.function
 

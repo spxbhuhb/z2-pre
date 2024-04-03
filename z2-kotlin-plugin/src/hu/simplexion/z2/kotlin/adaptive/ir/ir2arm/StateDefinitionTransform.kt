@@ -5,10 +5,10 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
-import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_RENDERING_VARIABLE
-import hu.simplexion.z2.kotlin.adaptive.ir.diagnostics.ErrorsAdaptive.ADAPTIVE_IR_STATE_VARIABLE_SHADOW
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.util.dump
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 
 /**
  * Transforms function parameters and top-level variable declarations into
@@ -62,16 +62,9 @@ class StateDefinitionTransform(
 
         check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
 
-        if (declaration.startOffset >= armClass.boundary.startOffset) {
-            ADAPTIVE_IR_RENDERING_VARIABLE.report(armClass, declaration)
-            return
-        }
+        check(declaration.startOffset < armClass.boundary.startOffset) { "declaration in rendering at:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
-        if (name in names) {
-            // variable shadowing is a bad practice anyway, no big loss to forbid it
-            ADAPTIVE_IR_STATE_VARIABLE_SHADOW.report(armClass, declaration)
-            return
-        }
+        check (name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
         stateVariableIndex ++
         names += name

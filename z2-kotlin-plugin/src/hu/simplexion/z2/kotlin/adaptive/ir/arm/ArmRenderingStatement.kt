@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 
 abstract class ArmRenderingStatement(
     val armClass: ArmClass,
@@ -12,6 +13,8 @@ abstract class ArmRenderingStatement(
     val startOffset: Int
 ) : ArmElement {
 
-    abstract fun toAir(parent: ClassBoundIrBuilder)
+    abstract fun branchBuilder(parent: ClassBoundIrBuilder) : BranchBuilder
+
+    var hasInvokeBranch : Boolean = false
 
 }

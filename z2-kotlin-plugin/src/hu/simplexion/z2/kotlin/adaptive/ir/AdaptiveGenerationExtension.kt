@@ -4,6 +4,8 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.Z2Options
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmClassBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmEntryPointBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.EntryPointTransform
 import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.OriginalFunctionTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
@@ -24,46 +26,23 @@ internal class AdaptiveGenerationExtension(
             options,
         ).apply {
 
-            // --------  preparations  --------
-
-//            pluginLogDir?.let {
-//                report(
-//                    IrMessageLogger.Severity.WARNING,
-//                    "adaptive.pluginLogDir is set to: $it",
-//                    IrMessageLogger.Location(moduleFragment.name.asString(), 1, 1)
-//                )
-//            }
-
-            // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
-
-            // --------  IR to ARM  --------
-
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)
-
-            if (compilationError) return // prevent the plugin to go on if there is an error that would result in an incorrect IR tree
 
             debug("ARM CLASSES") { "\n\n" + armClasses.joinToString("\n\n") { it.dump() } }
             debug("ARM ENTRY POINTS") { "\n\n" + armEntryPoints.joinToString("\n\n") { it.dump() } }
 
-            // --------  ARM to AIR  --------
-
-            armClasses.forEach { airClasses[it.fqName] = it.toAir(this) }
-            armEntryPoints.forEach { airEntryPoints += it.toAir(this) }
-            
-            // --------  AIR to IR  --------
-
-            airClasses.values.forEach {
-                it.toIr(this)
-                if (! it.armClass.compilationError) {
+            armClasses
+                .map {
+                    ArmClassBuilder(this, it).apply { buildIrClassWithoutGenBodies() }
+                }
+                .forEach {
+                    it.buildGenFunctionBodies()
                     it.armClass.originalFunction.file.addChild(it.irClass)
                 }
-            }
-            airEntryPoints.forEach {
-                if (! it.airClass.armClass.compilationError) {
-                    it.toIr(this)
-                }
-            }
+
+            armEntryPoints
+                .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }
 
             // --------  finishing up  --------
             debug("KOTLIN LIKE") { "\n\n" + moduleFragment.dumpKotlinLike() }

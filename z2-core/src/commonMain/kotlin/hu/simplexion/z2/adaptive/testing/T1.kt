@@ -22,15 +22,15 @@ class AdaptiveT1<BT>(
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
 
-    override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
         return AdaptivePlaceholder(adapter, parent, -1)
     }
 
-    override fun patchDescendant(fragment: AdaptiveFragment<BT>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
 
     }
 
-    override fun generatedPatchInternal() {
+    override fun genPatchInternal() {
 
     }
 

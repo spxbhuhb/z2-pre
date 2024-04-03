@@ -77,9 +77,15 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
-            @TestMetadata("ifOnly.kt")
-            public void testIfOnly() throws Exception {
-                runTest("testData/box/adaptive/select/ifOnly.kt");
+            @TestMetadata("ifOnlyFalse.kt")
+            public void testIfOnlyFalse() throws Exception {
+                runTest("testData/box/adaptive/select/ifOnlyFalse.kt");
+            }
+
+            @Test
+            @TestMetadata("ifOnlyTrue.kt")
+            public void testIfOnlyTrue() throws Exception {
+                runTest("testData/box/adaptive/select/ifOnlyTrue.kt");
             }
         }
 

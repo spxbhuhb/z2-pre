@@ -201,6 +201,8 @@ class IrFunction2ArmClass(
             armCall.arguments += transformValueArgument(argumentIndex, parameter, expression)
         }
 
+        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
+
         return armCall.add()
     }
 

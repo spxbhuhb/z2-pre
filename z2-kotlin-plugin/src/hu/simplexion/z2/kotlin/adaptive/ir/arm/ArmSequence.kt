@@ -6,7 +6,8 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmSequence2Air
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmSequenceBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 
 class ArmSequence(
     armClass: ArmClass,
@@ -18,7 +19,8 @@ class ArmSequence(
 
     val target = FqNames.ADAPTIVE_SEQUENCE
 
-    override fun toAir(parent: ClassBoundIrBuilder) = ArmSequence2Air(parent, this).toAir()
+    override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
+        ArmSequenceBuilder(parent, this)
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitSequence(this, data)

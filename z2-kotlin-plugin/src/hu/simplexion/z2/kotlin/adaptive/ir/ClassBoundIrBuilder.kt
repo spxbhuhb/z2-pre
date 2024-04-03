@@ -1,11 +1,12 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirClass
-import hu.simplexion.z2.kotlin.adaptive.ir.air2ir.StateAccessTransform
+import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.StateAccessTransform
+import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -38,17 +39,9 @@ open class ClassBoundIrBuilder(
 
     constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext) {
         this.irClass = parent.irClass
-        this.airClass = parent.airClass
-    }
-
-    constructor(context: AdaptivePluginContext, airClass: AirClass) : this(context) {
-        this.irClass = airClass.irClass
-        this.airClass = airClass
     }
 
     lateinit var irClass: IrClass
-
-    lateinit var airClass: AirClass
 
     val irContext
         get() = pluginContext.irContext
@@ -80,17 +73,12 @@ open class ClassBoundIrBuilder(
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
 
-    // FIXME check uses of irThisReceiver
-    fun irThisReceiver(): IrExpression =
-        IrGetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irClass.thisReceiver !!.symbol)
-
     // --------------------------------------------------------------------------------------------------------
     // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    fun irConstructorCallFromBuild(target: FqName): IrExpression {
-        val buildFun = airClass.build
-        val classSymbol = pluginContext.airClasses[target]?.irClass?.symbol ?: pluginContext.classSymbol(target)
+    fun irConstructorCallFromBuild(buildFun : IrSimpleFunction, target: FqName): IrExpression {
+        val classSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.classSymbol(target)
 
         val constructorCall =
             IrConstructorCallImpl(
@@ -104,16 +92,14 @@ open class ClassBoundIrBuilder(
 
         constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(airClass.adapter, irGet(buildFun.dispatchReceiverParameter !!)))
+        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
 
         return constructorCall
     }
 
-    fun irFragmentFactoryFromPatch(index: Int): IrExpression {
-        val patchFun = airClass.patchDescendant
-
+    fun irFragmentFactoryFromPatch(patchFun : IrSimpleFunction, index: Int): IrExpression {
         val constructorCall =
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -132,7 +118,7 @@ open class ClassBoundIrBuilder(
         return constructorCall
     }
 
-    fun irSetDescendantStateVariable(stateVariableIndex: Int, value: IrExpression) =
+    fun irSetDescendantStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
@@ -142,7 +128,7 @@ open class ClassBoundIrBuilder(
             valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also { call ->
 
-            call.dispatchReceiver = irGet(airClass.patchDescendant.valueParameters.first())
+            call.dispatchReceiver = irGet(patchFun.valueParameters.first())
 
             call.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,
@@ -155,7 +141,7 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun irSetInternalStateVariable(stateVariableIndex: Int, value: IrExpression) =
+    fun irSetInternalStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
@@ -165,7 +151,7 @@ open class ClassBoundIrBuilder(
             valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also { call ->
 
-            call.dispatchReceiver = irGet(airClass.generatedPatchInternal.dispatchReceiverParameter !!)
+            call.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
 
             call.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,

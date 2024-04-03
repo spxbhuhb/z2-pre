@@ -3,18 +3,13 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.air.AirEntryPoint
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2air.ArmEntryPoint2Air
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 class ArmEntryPoint(
     val armClass: ArmClass,
     val irFunction: IrSimpleFunction,
 ) : ArmElement {
-
-    fun toAir(context: AdaptivePluginContext): AirEntryPoint = ArmEntryPoint2Air(context, this).toAir()
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitEntryPoint(this, data)
