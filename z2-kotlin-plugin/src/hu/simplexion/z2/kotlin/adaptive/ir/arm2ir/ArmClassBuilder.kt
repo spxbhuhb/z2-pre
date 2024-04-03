@@ -5,7 +5,6 @@ import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.ClassBoundIrBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmRenderingStatement
@@ -153,13 +152,13 @@ class ArmClassBuilder(
                     pluginContext.adaptiveFragmentClass.typeWith(classBoundFragmentType),
                     pluginContext.adaptiveFragmentClass.constructors.first(),
                     typeArgumentsCount = 1,
-                    valueArgumentsCount = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                    valueArgumentsCount = Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
                 ).apply {
                     putTypeArgument(0, classBoundFragmentType)
-                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_ADAPTER, irGet(adapter))
-                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_PARENT, irGet(parent))
-                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_INDEX, irGet(index))
-                    putValueArgument(Indices.ADAPTIVE_GENERATED_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(adapter))
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(parent))
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(index))
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
                 }
 
                 statements += IrInstanceInitializerCallImpl(

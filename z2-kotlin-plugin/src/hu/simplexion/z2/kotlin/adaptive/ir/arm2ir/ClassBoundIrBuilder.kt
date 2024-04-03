@@ -1,11 +1,11 @@
-package hu.simplexion.z2.kotlin.adaptive.ir
+package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
+import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.StateAccessTransform
 import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -87,7 +87,7 @@ open class ClassBoundIrBuilder(
                 classSymbol.constructors.single(),
                 typeArgumentsCount = 1, // bridge type
                 constructorTypeArgumentsCount = 0,
-                Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
             )
 
         constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)

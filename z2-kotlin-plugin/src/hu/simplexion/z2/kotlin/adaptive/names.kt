@@ -103,25 +103,17 @@ object Indices {
 
     /**
      * Fragment constructor arguments.
-     *
-     * 1. adapter
-     * 2. parent
-     * 3. index
      */
-    const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 3
+    const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 3
+    const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 4
+    const val ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT = 5
+
 
     const val ADAPTIVE_FRAGMENT_ADAPTER = 0
     const val ADAPTIVE_FRAGMENT_PARENT = 1
     const val ADAPTIVE_FRAGMENT_INDEX = 2
-
-    /**
-     * AdaptiveGeneratedFragment constructor arguments
-     */
-    const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 4
-    const val ADAPTIVE_GENERATED_FRAGMENT_ADAPTER = 0
-    const val ADAPTIVE_GENERATED_FRAGMENT_PARENT = 1
-    const val ADAPTIVE_GENERATED_FRAGMENT_INDEX = 2
-    const val ADAPTIVE_GENERATED_FRAGMENT_STATE_SIZE = 3
+    const val ADAPTIVE_FRAGMENT_STATE_SIZE = 3
+    const val ADAPTIVE_FRAGMENT_FACTORY = 4
 
     /**
      * `build(parent, declarationIndex)` arguments
