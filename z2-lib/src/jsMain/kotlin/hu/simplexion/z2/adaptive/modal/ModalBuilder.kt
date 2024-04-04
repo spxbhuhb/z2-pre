@@ -19,7 +19,7 @@ class ModalBuilder {
 
     var headerBuilder: Z2Builder = {
         if (title != null) {
-            div(pb16, pt16, mb24, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
+            div(pb16, pt16, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
                 span(pl24, pr24) { +title?.localeCapitalized }
             }
         }
