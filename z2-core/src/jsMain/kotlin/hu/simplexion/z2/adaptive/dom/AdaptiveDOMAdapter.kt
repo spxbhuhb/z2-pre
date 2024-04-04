@@ -6,6 +6,7 @@ package hu.simplexion.z2.adaptive.dom
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.AdaptiveBridge
+import hu.simplexion.z2.adaptive.AdaptiveFragment
 import kotlinx.browser.window
 import org.w3c.dom.Node
 
@@ -17,6 +18,8 @@ open class AdaptiveDOMAdapter(
 ) : AdaptiveAdapter<Node> {
 
     var nextId = 1L
+
+    override lateinit var rootFragment: AdaptiveFragment<Node>
 
     override val rootBridge = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)

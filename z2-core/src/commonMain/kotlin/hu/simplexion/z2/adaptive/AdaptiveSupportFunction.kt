@@ -13,8 +13,9 @@ class AdaptiveSupportFunction<BT>(
      * may be somewhere in anonymous components, the function execution may need variables from the
      * closure of those anonymous fragments.
      */
-    fun invoke(callingFragment: AdaptiveFragment<BT>, vararg arguments: Any?) : Any? {
-        return declaringFragment.invoke(this, callingFragment, arguments)
+    fun invoke(callingFragment: AdaptiveFragment<*>, vararg arguments: Any?): Any? {
+        @Suppress("UNCHECKED_CAST")
+        return declaringFragment.invoke(this, callingFragment as AdaptiveFragment<BT>, arguments)
     }
 
     override fun toString() =

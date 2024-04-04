@@ -38,7 +38,7 @@ class AdaptiveButton(
         }
 
         if (haveToPatch(closureMask, 2)) {
-            receiver.onclick = { onClick.invoke() }
+            receiver.onclick = { onClick.invoke(this) }
         }
     }
 
