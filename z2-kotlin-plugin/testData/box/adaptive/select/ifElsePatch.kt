@@ -10,9 +10,9 @@ import hu.simplexion.z2.adaptive.testing.*
 
 fun Adaptive.IfElsePatch(i : Int) {
     if (i % 2 == 0) {
-        T0()
+        T1(i + 200)
     } else {
-        T1(i)
+        T1(i + 100)
     }
 }
 
@@ -21,38 +21,65 @@ fun box() : String {
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
     adaptive {
-        var v1 = 5
+        var v1 = 1005
         IfElsePatch(v1)
-        RunOnMount { v1 = 6 }
+    }.apply {
+        rootFragment.setStateVariable(0, 1006)
+        rootFragment.patchInternal()
     }
 
     return AdaptiveTestAdapter.assert(listOf(
-        TraceEvent("<root>", "init", ),
-        TraceEvent("AdaptiveSequence", "init", ),
-        TraceEvent("AdaptiveIfElsePatch", "init", ),
-        TraceEvent("AdaptiveWhen", "init", "newBranch:", "1"),
-        TraceEvent("AdaptiveT1", "init", ),
-        TraceEvent("AdaptiveRunOnMount", "init", ),
-
-        TraceEvent("<root>", "create", ),
-        TraceEvent("AdaptiveSequence", "create", ),
-        TraceEvent("AdaptiveIfElsePatch", "create", ),
-        TraceEvent("AdaptiveWhen", "create", ),
-        TraceEvent("AdaptiveT1", "create", "p0:", "5"),
-        TraceEvent("AdaptiveRunOnMount", "create", ),
-
-        TraceEvent("<root>", "mount", "bridge", "1"),
-        TraceEvent("AdaptiveSequence", "mount", "bridge:", "1"),
-        TraceEvent("AdaptiveIfElsePatch", "mount", "bridge", "1"),
-        TraceEvent("AdaptiveWhen", "mount", "bridge:", "1"),
-        TraceEvent("AdaptiveT1", "mount", "bridge:", "2"),
-        TraceEvent("AdaptiveRunOnMount", "mount", "bridge:", "1"),
-
-        TraceEvent("<root>", "patch", ),
-        TraceEvent("AdaptiveSequence", "patch", ),
-        TraceEvent("AdaptiveIfElsePatch", "patch", ),
-        TraceEvent("AdaptiveWhen", "patch", "branch:", "1", "newBranch:", "1"),
-        TraceEvent("AdaptiveT1", "patch", "adaptiveDirty0:", "(size=1, value=0)", "p0:", "5"),
-        TraceEvent("AdaptiveRunOnMount", "patch", )
+        TraceEvent("<root>", 2, "before-Create", ""),
+        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1005]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Create", ""),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1005]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1005]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1005]"),
+        TraceEvent("AdaptiveSelect", 4, "create", ""),
+        TraceEvent("AdaptiveSelect", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, -1]"),
+        TraceEvent("AdaptiveSelect", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
+        TraceEvent("AdaptiveSelect", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
+        TraceEvent("AdaptiveT1", 6, "before-Create", ""),
+        TraceEvent("AdaptiveT1", 6, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveT1", 6, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [1105]"),
+        TraceEvent("AdaptiveT1", 6, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [1105]"),
+        TraceEvent("AdaptiveT1", 6, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [1105]"),
+        TraceEvent("AdaptiveT1", 6, "after-Create", ""),
+        TraceEvent("AdaptiveSelect", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2, 2]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Create", ""),
+        TraceEvent("<root>", 2, "after-Create", ""),
+        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveSelect", 4, "mount", "bridge: 1"),
+        TraceEvent("AdaptiveT1", 6, "before-Mount", "bridge: 5"),
+        TraceEvent("AdaptiveT1", 6, "after-Mount", "bridge: 5"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Mount", "bridge: 1"),
+        TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [1006]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [1005]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [1006]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1006]"),
+        TraceEvent("AdaptiveSelect", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [2, 2]"),
+        TraceEvent("AdaptiveSelect", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [1, 2]"),
+        TraceEvent("AdaptiveSelect", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [1, 2]"),
+        TraceEvent("AdaptiveT1", 6, "before-Unmount", "bridge: 5"),
+        TraceEvent("AdaptiveT1", 6, "after-Unmount", "bridge: 5"),
+        TraceEvent("AdaptiveT1", 6, "before-Dispose", ""),
+        TraceEvent("AdaptiveT1", 6, "after-Dispose", ""),
+        TraceEvent("AdaptiveT1", 9, "before-Create", ""),
+        TraceEvent("AdaptiveT1", 9, "before-Patch-External", "createMask: 0x00000003 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveT1", 9, "after-Patch-External", "createMask: 0x00000003 thisMask: 0xffffffff state: [1206]"),
+        TraceEvent("AdaptiveT1", 9, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0xffffffff state: [1206]"),
+        TraceEvent("AdaptiveT1", 9, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [1206]"),
+        TraceEvent("AdaptiveT1", 9, "after-Create", ""),
+        TraceEvent("AdaptiveT1", 9, "before-Mount", "bridge: 5"),
+        TraceEvent("AdaptiveT1", 9, "after-Mount", "bridge: 5"),
+        TraceEvent("AdaptiveSelect", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1, 1]"),
+        TraceEvent("AdaptiveIfElsePatch", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [1006]"),
+        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1006]")
     ))
 }
