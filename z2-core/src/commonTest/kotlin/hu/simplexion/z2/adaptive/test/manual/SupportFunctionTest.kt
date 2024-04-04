@@ -118,7 +118,7 @@ class SupportFunctionTestComponent(
     @Suppress("RedundantNullableReturnType")
     override fun genInvoke(supportFunction: AdaptiveSupportFunction<TestNode>, arguments: Array<out Any?>): Any? {
 
-        val fragment = supportFunction.fragment
+        val fragment = supportFunction.declaringFragment
 
         return when (supportFunction.supportFunctionIndex) {
             0 -> {

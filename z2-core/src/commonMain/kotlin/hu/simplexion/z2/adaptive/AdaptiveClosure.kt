@@ -64,12 +64,6 @@ class AdaptiveClosure<BT>(
     }
 
     /**
-     * Get a state variable from the last component in [components].
-     */
-    fun getFromLast(variableIndex: Int): Any? =
-        components.last().state[variableIndex]
-
-    /**
      * Calculate the complete closure mask (or of components masks).
      */
     fun closureDirtyMask(): AdaptiveStateVariableMask {
@@ -84,6 +78,10 @@ class AdaptiveClosure<BT>(
             position += component.state.size
         }
         return mask
+    }
+
+    override fun toString(): String {
+        return "$owner"
     }
 
 }

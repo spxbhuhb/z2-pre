@@ -3,14 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
+import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.*
-
-fun Adaptive.Basic(i : Int, supportFun : (i : Int) -> Unit) {
-    supportFun(i)
-}
 
 var a = 0
 
@@ -18,13 +12,17 @@ fun box() : String {
 
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
-    adaptive {
-        Basic(12) { a = it }
-    }
+    @Suppress("UNCHECKED_CAST")
+    val adapter = adaptive {
+        val b = 12
+        S1 { a = it + b }
+    } as AdaptiveAdapter<TestNode>
 
-    if (a != 12) return "Fail: a != 12"
+    val s1 = adapter.rootFragment.containedFragment as AdaptiveS1<TestNode>
 
-    return AdaptiveTestAdapter.assert(listOf(
+    s1.s0.invoke(adapter.rootFragment, 13)
 
-    ))
+    if (a != 25) return "Fail: a != 25"
+
+    return "OK"
 }

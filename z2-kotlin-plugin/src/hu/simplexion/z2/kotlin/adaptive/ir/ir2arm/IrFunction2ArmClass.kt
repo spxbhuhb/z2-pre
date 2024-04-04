@@ -224,7 +224,7 @@ class IrFunction2ArmClass(
 
             parameter.type.isFunction() -> {
                 if (expression is IrFunctionExpression) {
-                    ArmSupportFunctionArgument(armClass, argumentIndex, supportIndex, expression, expression.dependencies())
+                    ArmSupportFunctionArgument(armClass, argumentIndex, supportIndex, closure, expression, expression.dependencies())
                 } else {
                     ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
                 }

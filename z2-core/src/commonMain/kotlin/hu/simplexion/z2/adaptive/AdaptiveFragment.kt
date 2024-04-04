@@ -38,13 +38,13 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated()
     }
 
-    open fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
-        if (trace) traceSupport("before-Invoke", supportFunction, arguments)
+    open fun invoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any? {
+        if (trace) traceSupport("before-Invoke", supportFunction, callingFragment, arguments)
 
-        val result = genInvoke(supportFunction, arguments)
+        val result = genInvoke(supportFunction, callingFragment, arguments)
 
-        if (supportFunction.fragment.thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
-            supportFunction.fragment.patchInternal()
+        if (thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
+            patchInternal()
         }
 
         if (trace) traceSupport("after-Invoke", supportFunction, result)
@@ -52,7 +52,7 @@ abstract class AdaptiveFragment<BT>(
         return result
     }
 
-    open fun genInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+    open fun genInvoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any? {
         pluginGenerated()
     }
 
@@ -177,8 +177,8 @@ abstract class AdaptiveFragment<BT>(
     open fun stateToTraceString() : String =
         this.state.contentToString()
 
-    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) {
-        adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
+    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>) {
+        adapter.trace(this, point, "callingFragment: $callingFragment index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
     }
 
     fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, result: Any?) {

@@ -5,17 +5,15 @@
 
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptivePlaceholder
+import hu.simplexion.z2.adaptive.*
 
 @Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.T1(p0: Int) {
+fun Adaptive.S1(supportFun : (i : Int) -> Unit) {
 
 }
 
-class AdaptiveT1<BT>(
+@Suppress("unused")
+class AdaptiveS1<BT>(
     adapter: AdaptiveAdapter<BT>,
     parent: AdaptiveFragment<BT>?,
     index: Int
@@ -32,5 +30,10 @@ class AdaptiveT1<BT>(
     override fun genPatchInternal() {
 
     }
+
+    @Suppress("UNCHECKED_CAST")
+    var s0 : AdaptiveSupportFunction<BT>
+        get() = state[0] as AdaptiveSupportFunction<BT>
+        set(v) { state[0] = v }
 
 }

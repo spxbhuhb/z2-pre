@@ -18,6 +18,7 @@ class ArmSupportFunctionArgument(
     armClass: ArmClass,
     argumentIndex: Int,
     val supportFunctionIndex: Int,
+    val supportFunctionClosure: ArmClosure,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,
 ) : ArmValueArgument(armClass, argumentIndex, value, dependencies, ArmExpressionOrigin.SUPPORT_FUNCTION_ARGUMENT) {

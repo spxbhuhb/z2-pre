@@ -4,14 +4,19 @@
 package hu.simplexion.z2.adaptive
 
 class AdaptiveSupportFunction<BT>(
-    val fragment: AdaptiveFragment<BT>,
+    val declaringFragment: AdaptiveFragment<BT>,
     val supportFunctionIndex : Int
 ) {
 
-    fun invoke(vararg arguments : Any?) : Any? {
-        return fragment.invoke(this, arguments)
+    /**
+     * Invokes the function in the closure of [callingFragment]. As the function declaration
+     * may be somewhere in anonymous components, the function execution may need variables from the
+     * closure of those anonymous fragments.
+     */
+    fun invoke(callingFragment: AdaptiveFragment<BT>, vararg arguments: Any?) : Any? {
+        return declaringFragment.invoke(this, callingFragment, arguments)
     }
 
     override fun toString() =
-        "AdaptiveSupportFunction(${fragment.id}, $supportFunctionIndex)"
+        "AdaptiveSupportFunction(${declaringFragment.id}, $supportFunctionIndex)"
 }

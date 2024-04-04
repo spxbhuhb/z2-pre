@@ -50,6 +50,16 @@ class DumpArmTreeVisitor(
         }
     }
 
+
+    override fun visitSupportStateVariable(stateVariable: ArmSupportStateVariable) {
+        indented {
+            with(stateVariable) {
+                println { "SUPPORT_STATE_VARIABLE indexInClosure:$indexInClosure name:$name" }
+            }
+            super.visitStateVariable(stateVariable)
+        }
+    }
+
     override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) {
         indented {
             with(statement) {

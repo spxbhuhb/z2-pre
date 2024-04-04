@@ -32,7 +32,7 @@ class ArmSupportFunctionArgumentBuilder(
                 Indices.ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT,
             ).apply {
                 putTypeArgument(0, classBoundBridgeType.defaultType)
-                putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_FRAGMENT, irGet(fragment))
+                putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_FRAGMENT, irGet(patchFun.dispatchReceiverParameter!!))
                 putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_INDEX, irConst(argument.supportFunctionIndex))
             }
         )

@@ -250,7 +250,8 @@ class ArmClassBuilder(
             Names.GEN_INVOKE,
             irBuiltIns.anyNType,
             pluginContext.genInvoke,
-            Names.SUPPORT_FUNCTION to classBoundSupportFunctionType
+            Names.SUPPORT_FUNCTION to classBoundSupportFunctionType,
+            Names.CALLING_FRAGMENT to classBoundFragmentType
         ).apply {
             addValueParameter {
                 name = Names.ARGUMENTS
@@ -403,26 +404,23 @@ class ArmClassBuilder(
                     pluginContext.adaptiveSupportFunctionIndex,
                     0, 0
                 ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters.first())
+                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
                 }
             )
 
-            val fragment = irTemporary(
-                IrCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    classBoundFragmentType,
-                    pluginContext.adaptiveSupportFunctionFragment,
-                    0, 0
-                ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters.first())
-                }
+            val callingFragment = irTemporary(
+                irGet(invokeFun.valueParameters[Indices.INVOKE_CALLING_FRAGMENT])
             )
 
-            + genInvokeWhen(invokeFun, supportFunctionIndex, fragment)
+            val arguments = irTemporary(
+                irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
+            )
+
+            + genInvokeWhen(invokeFun, supportFunctionIndex, callingFragment, arguments)
         }
     }
 
-    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, closure: IrVariable): IrExpression =
+    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, callingFragment: IrVariable, arguments: IrVariable): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
@@ -431,22 +429,12 @@ class ArmClassBuilder(
 
             armClass.rendering.forEach { branch ->
                 if (branch.hasInvokeBranch) {
-                    branches += genInvokeBranch(invokeFun, branch, supportFunctionIndex, closure)
+                    branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, callingFragment, arguments)
                 }
             }
 
             branches += irInvalidIndexBranch(invokeFun, irGet(supportFunctionIndex))
         }
-
-    private fun genInvokeBranch(invokeFun: IrSimpleFunction, statement: ArmRenderingStatement, supportFunctionIndex: IrVariable, closure: IrVariable) =
-        IrBranchImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irEqual(
-                irGet(supportFunctionIndex),
-                irConst(statement.index)
-            ),
-            statement.branchBuilder(this).genInvokeBranch(invokeFun, closure)
-        )
 
     // ---------------------------------------------------------------------------
     // Patch Internal
@@ -469,7 +457,8 @@ class ArmClassBuilder(
             )
 
             armClass.stateDefinitionStatements.forEach {
-                val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression // FIXME casting a statement into an expression in internal patch
+                val originalExpression =
+                    if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression // FIXME casting a statement into an expression in internal patch
                 val transformedExpression = originalExpression.transformStateAccess(armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 + genPatchInternalExpression(

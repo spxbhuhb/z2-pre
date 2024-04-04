@@ -40,7 +40,7 @@ class AdaptivePluginContext(
 
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
     val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.SUPPORT_FUNCTION_INVOKE))
-    val adaptiveSupportFunctionFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.FRAGMENT))
+    val adaptiveSupportFunctionDeclaringFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_DECLARING_FRAGMENT))
     val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
 
     val index = property(Strings.INDEX)
@@ -60,6 +60,8 @@ class AdaptivePluginContext(
     val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
     val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
     val setStateVariable = function(Strings.SET_STATE_VARIABLE)
+
+    val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
     private fun property(name: String) =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()

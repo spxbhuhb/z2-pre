@@ -42,20 +42,18 @@ object Strings {
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
     const val INVALID_INDEX = "invalidIndex"
 
+    const val ADAPTER = "adapter"
     const val PARENT = "parent"
     const val INDEX = "index"
     const val DECLARATION_INDEX = "declarationIndex"
     const val FRAGMENT = "fragment"
     const val SUPPORT_FUNCTION = "supportFunction"
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
-    const val SUPPORT_FUNCTION_CLOSURE = "supportFunctionClosure"
+    const val SUPPORT_FUNCTION_DECLARING_FRAGMENT = "declaringFragment"
+    const val CALLING_FRAGMENT = "callingFragment"
     const val ARGUMENTS = "arguments"
 
-    const val ADAPTER = "adapter"
-    const val DIRTY_MASK = "dirtyMask"
-
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
-    const val TRACE = "trace" // name of the trace function in the adapter class
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
     const val ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
@@ -66,7 +64,6 @@ object Names {
     val INDEX = Name.identifier(Strings.INDEX)
 
     val ADAPTER = Name.identifier(Strings.ADAPTER)
-    val DIRTY_MASK = Name.identifier(Strings.DIRTY_MASK)
 
     val BT = Name.identifier(Strings.BT)
 
@@ -79,9 +76,8 @@ object Names {
     val FRAGMENT = Name.identifier(Strings.FRAGMENT)
     val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
     val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
+    val CALLING_FRAGMENT = Name.identifier(Strings.CALLING_FRAGMENT)
     val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
-
-    val TRACE = Name.identifier(Strings.TRACE)
 }
 
 object FqNames {
@@ -129,10 +125,11 @@ object Indices {
     const val PATCH_EXTERNAL_FRAGMENT = 0
 
     /**
-     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?` arguments
+     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any?` arguments
      */
     const val INVOKE_SUPPORT_FUNCTION = 0
-    const val INVOKE_ARGUMENTS = 1
+    const val INVOKE_CALLING_FRAGMENT = 1
+    const val INVOKE_ARGUMENTS = 2
 
     /**
      * `setStateVariable(index, value)` arguments
