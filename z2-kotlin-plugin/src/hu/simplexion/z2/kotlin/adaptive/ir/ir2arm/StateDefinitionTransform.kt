@@ -5,6 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
+import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.util.dump
@@ -27,6 +28,12 @@ class StateDefinitionTransform(
 
     var stateVariableIndex = 0
 
+    fun IrElement.dependencies(): List<ArmStateVariable> {
+        val visitor = DependencyVisitor(armClass.stateVariables)
+        accept(visitor, null)
+        return visitor.dependencies
+    }
+
     fun transform() {
 
         armClass.originalFunction.valueParameters.forEachIndexed { index, valueParameter ->
@@ -42,13 +49,13 @@ class StateDefinitionTransform(
             when {
                 statement is IrVariable -> {
                     armClass.stateDefinitionStatements +=
-                        ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement).apply {
+                        ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement, statement.dependencies()).apply {
                             register(statement)
                         }
                 }
 
                 statement.startOffset < armClass.boundary.startOffset -> {
-                    armClass.stateDefinitionStatements += ArmStateDefinitionStatement(statement)
+                    armClass.stateDefinitionStatements += ArmStateDefinitionStatement(statement, statement.dependencies())
                 }
 
                 else -> {

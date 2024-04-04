@@ -56,6 +56,7 @@ class AdaptivePluginContext(
 
     val haveToPatch = function(Strings.HAVE_TO_PATCH)
     val getCreateClosureDirtyMask = function(Strings.GET_CREATE_CLOSURE_DIRTY_MASK)
+    val getThisClosureDirtyMask = function(Strings.GET_THIS_CLOSURE_DIRTY_MASK)
     val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
     val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
     val setStateVariable = function(Strings.SET_STATE_VARIABLE)

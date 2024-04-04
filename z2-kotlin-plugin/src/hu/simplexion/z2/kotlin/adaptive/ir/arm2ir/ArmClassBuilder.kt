@@ -6,6 +6,7 @@ import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmRenderingStatement
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
@@ -444,7 +445,7 @@ class ArmClassBuilder(
                 irGet(supportFunctionIndex),
                 irConst(statement.index)
             ),
-            statement.branchBuilder(this).genInvokeBranch(invokeFun,closure)
+            statement.branchBuilder(this).genInvokeBranch(invokeFun, closure)
         )
 
     // ---------------------------------------------------------------------------
@@ -456,20 +457,52 @@ class ArmClassBuilder(
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
+            val closureMask = irTemporary(
+                IrCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    irBuiltIns.intType,
+                    pluginContext.getThisClosureDirtyMask,
+                    0, 0
+                ).also {
+                    it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
+                }
+            )
+
             armClass.stateDefinitionStatements.forEach {
-                val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement
+                val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression // FIXME casting a statement into an expression in internal patch
                 val transformedExpression = originalExpression.transformStateAccess(armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter !!) }
 
-                if (it is ArmInternalStateVariable) {
-                    + irSetInternalStateVariable(patchFun, it.indexInState, transformedExpression as IrExpression)
-                } else {
-                    + transformedExpression
-                }
+                + genPatchInternalExpression(
+                    patchFun,
+                    closureMask,
+                    if (it is ArmInternalStateVariable) {
+                        irSetInternalStateVariable(patchFun, it.indexInState, transformedExpression)
+                    } else {
+                        transformedExpression
+                    },
+                    it.dependencies
+                )
             }
 
             + irReturn(irUnit())
         }
     }
+
+    fun genPatchInternalExpression(patchFun: IrSimpleFunction, closureMask: IrVariable, expression: IrExpression, dependencies: ArmDependencies): IrExpression =
+        irIf(
+            genPatchInternalCondition(patchFun, closureMask, dependencies),
+            expression
+        )
+
+    fun genPatchInternalCondition(patchFun: IrSimpleFunction, closureMask: IrVariable, dependencies: ArmDependencies): IrExpression =
+        irCall(
+            symbol = pluginContext.haveToPatch,
+            dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
+            args = arrayOf(
+                irGet(closureMask),
+                dependencies.toDirtyMask()
+            )
+        )
 
     // ---------------------------------------------------------------------------
     // Common

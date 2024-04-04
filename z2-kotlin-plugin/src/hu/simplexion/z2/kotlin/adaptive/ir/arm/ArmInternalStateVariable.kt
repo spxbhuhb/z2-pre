@@ -13,7 +13,8 @@ class ArmInternalStateVariable(
     override val indexInState: Int,
     override val indexInClosure: Int,
     val irVariable: IrVariable,
-) : ArmStateDefinitionStatement(irVariable), ArmStateVariable {
+    dependencies: ArmDependencies
+) : ArmStateDefinitionStatement(irVariable, dependencies), ArmStateVariable {
 
     override val name = irVariable.name.identifier
 

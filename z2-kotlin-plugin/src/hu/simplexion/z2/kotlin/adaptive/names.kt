@@ -36,6 +36,7 @@ object Strings {
 
     const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CREATE_CLOSURE_DIRTY_MASK = "getCreateClosureDirtyMask"
+    const val GET_THIS_CLOSURE_DIRTY_MASK = "getThisClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
