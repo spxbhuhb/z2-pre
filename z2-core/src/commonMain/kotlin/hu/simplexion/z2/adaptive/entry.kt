@@ -8,7 +8,6 @@ package hu.simplexion.z2.adaptive
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
-fun adaptive(block: Adaptive.() -> Unit
-) {
-    AdaptiveAdapterRegistry.adapterFor().block()
+fun adaptive(block: Adaptive.() -> Unit) : AdaptiveAdapter<*> {
+    return AdaptiveAdapterRegistry.adapterFor().apply { block() }
 }

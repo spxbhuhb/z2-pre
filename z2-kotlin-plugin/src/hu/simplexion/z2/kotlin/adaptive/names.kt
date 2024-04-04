@@ -24,6 +24,8 @@ object Strings {
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
 
+    const val ROOT_FRAGMENT = "rootFragment"
+
     const val GEN_BUILD = "genBuild"
     const val GEN_PATCH_DESCENDANT = "genPatchDescendant"
     const val GEN_INVOKE = "genInvoke"
@@ -107,7 +109,6 @@ object Indices {
     const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 3
     const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 4
     const val ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT = 5
-
 
     const val ADAPTIVE_FRAGMENT_ADAPTER = 0
     const val ADAPTIVE_FRAGMENT_PARENT = 1

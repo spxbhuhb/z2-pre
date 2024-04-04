@@ -7,13 +7,15 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
 
-open class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
+class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     var nextId = 1L
 
     override val trace = true
 
-    final override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
+    override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
+
+    override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
     override val rootBridge = AdaptiveTestBridge(newId())
 

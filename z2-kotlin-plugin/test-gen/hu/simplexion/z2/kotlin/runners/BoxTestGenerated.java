@@ -50,6 +50,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("root.kt")
+        public void testRoot() throws Exception {
+            runTest("testData/box/adaptive/root.kt");
+        }
+
+        @Test
         @TestMetadata("sequence.kt")
         public void testSequence() throws Exception {
             runTest("testData/box/adaptive/sequence.kt");

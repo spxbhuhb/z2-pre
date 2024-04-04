@@ -9,10 +9,7 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.defaultType
-import org.jetbrains.kotlin.ir.util.getPropertyGetter
+import org.jetbrains.kotlin.ir.util.*
 
 class ArmEntryPointBuilder(
     context: AdaptivePluginContext,
@@ -40,7 +37,7 @@ class ArmEntryPointBuilder(
                 irClass.defaultType,
                 irClass.constructors.single().symbol,
                 0, 0,
-                Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
             ).also { call ->
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(adapter))
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irNull())
@@ -48,6 +45,14 @@ class ArmEntryPointBuilder(
             }
 
             val root = irTemporary(instance).also { it.parent = function }
+
+            + irCall(
+                pluginContext.adaptiveAdapterClass.getPropertySetter(Strings.ROOT_FRAGMENT)!!,
+                dispatchReceiver = irGet(adapter),
+                args = arrayOf(
+                    irGet(root)
+                )
+            )
 
             + irCall(
                 pluginContext.create,

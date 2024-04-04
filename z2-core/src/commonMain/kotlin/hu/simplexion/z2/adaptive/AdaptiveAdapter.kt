@@ -5,6 +5,8 @@ package hu.simplexion.z2.adaptive
 
 interface AdaptiveAdapter<BT> : Adaptive {
 
+    var rootFragment : AdaptiveFragment<BT>
+
     val rootBridge: AdaptiveBridge<BT>
 
     val trace : Boolean
@@ -19,4 +21,5 @@ interface AdaptiveAdapter<BT> : Adaptive {
         val id = fragment.id.toString().padStart(4, ' ')
         println("[ $name @ $id ] ${point.padEnd(20)}  |  $data")
     }
+
 }
