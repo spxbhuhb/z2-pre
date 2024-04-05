@@ -1,11 +1,13 @@
-package hu.simplexion.z2.localization
+package hu.simplexion.z2.schematic.util
 
+import hu.simplexion.z2.localization.fallbackNamespace
+import hu.simplexion.z2.localization.localizedTextStore
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.localization.text.StaticText
+import hu.simplexion.z2.localization.traceLocalization
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaField
 
-@Deprecated("use the one from core instead")
 fun SchemaField<*>.label(schematic : Schematic<*>) : LocalizedText {
     val key = "${schematic.schematicFqName}/$name"
     val value = localizedTextStore[key]

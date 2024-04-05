@@ -20,7 +20,7 @@ class ModalBuilder {
     var headerBuilder: Z2Builder = {
         if (title != null) {
             div(pb16, pt16, displayFlex, alignItemsCenter, headlineSmall, borderBottomOutlineVariant) {
-                span(pl24, pr24) { +title?.localeCapitalized }
+                span(pl24, pr24) { + title?.localeCapitalized }
             }
         }
     }
@@ -66,22 +66,39 @@ class ModalBuilder {
 
     fun save(saveFun: suspend () -> Unit) {
         footerBuilder = {
-            div(borderTopOutlineVariant) {
-                grid(
-                    pl16,
-                    pr16,
-                    pt12,
-                    pb12,
-                    gridAutoFlowColumn,
-                    gridAutoColumnsMinContent,
-                    gridGap16,
-                    justifyContentSpaceBetween
-                ) {
-                    textButton(browserStrings.cancel) { close() }
-                    filledLaunchButton(browserStrings.save) {
-                        saveFun()
-                    }
+            defaultFooter {
+                textButton(browserStrings.cancel) { close() }
+                filledLaunchButton(browserStrings.save) {
+                    saveFun()
                 }
+            }
+        }
+    }
+
+    fun ok() {
+        footerBuilder = {
+            defaultFooter {
+                div { }
+                filledLaunchButton(browserStrings.ok) {
+                    close()
+                }
+            }
+        }
+    }
+
+    fun Z2.defaultFooter(insideFun: Z2Builder) {
+        div(borderTopOutlineVariant) {
+            grid(
+                pl16,
+                pr16,
+                pt12,
+                pb12,
+                gridAutoFlowColumn,
+                gridAutoColumnsMinContent,
+                gridGap16,
+                justifyContentSpaceBetween
+            ) {
+                insideFun()
             }
         }
     }

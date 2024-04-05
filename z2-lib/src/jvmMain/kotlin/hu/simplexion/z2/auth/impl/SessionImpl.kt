@@ -95,7 +95,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         }
 
         private fun Session.history(event: LocalizedText) {
-            securityHistory(principal, baseStrings.session, event, baseStrings.session, uuid, baseStrings.account, principal)
+            securityHistory(principal, baseStrings.session, event, uuid, baseStrings.session, principal, baseStrings.account)
         }
 
         init {
@@ -121,14 +121,14 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val principal = principalTable.getByNameOrNull(name)
 
         if (principal == null) {
-            securityHistory(null, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
+            securityHistory(baseStrings.account, baseStrings.authenticateFail, UUID.NIL, baseStrings.accountNotFound)
             throw AuthenticationFail("Unknown", false)
         }
 
         try {
             authenticate(principal.uuid, password, true, CredentialType.PASSWORD, authAdminImpl.getPolicy())
         } catch (ex: AuthenticationFail) {
-            securityHistory(null, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
+            securityHistory(baseStrings.account, baseStrings.authenticateFail, UUID.NIL, ex.reason, ex.locked)
             throw ex
         }
 
@@ -207,7 +207,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         password: String,
         checkCredentials: Boolean,
         credentialType: String,
-        policy : SecurityPolicy
+        policy: SecurityPolicy
     ) {
 
         // FIXME check credential expiration
@@ -261,7 +261,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     private fun lockState(principalId: UUID<Principal>) {
         var success = false
-        for (tryNumber in 1..5) {
+        for (tryNumber in 1 .. 5) {
             success = authenticateLock.withLock {
                 if (principalId in authenticateInProgress) {
                     Thread.sleep(100)

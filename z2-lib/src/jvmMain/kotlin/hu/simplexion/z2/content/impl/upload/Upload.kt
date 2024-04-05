@@ -1,9 +1,9 @@
 package hu.simplexion.z2.content.impl.upload
 
+import hu.simplexion.z2.content.impl.ContentImpl.Companion.traceUpload
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.encodeInto
 import hu.simplexion.z2.util.toLong
-import hu.simplexion.z2.content.impl.ContentImpl.Companion.traceUpload
 import java.io.RandomAccessFile
 import java.nio.file.Files
 import java.nio.file.Path
@@ -51,7 +51,7 @@ class Upload(
     var notes = listOf<ChunkNote>()
 
     val isComplete
-        get() = (notes.size == 1 && notes.first().offset == 0L && notes.first().length == size)
+        get() = (notes.size == 1 && notes.first().offset == 0L && notes.first().length == size) || (size == 0L)
 
     fun start() {
         dataFile = RandomAccessFile(dataPath.toFile(), "rw")
