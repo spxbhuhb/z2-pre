@@ -30,9 +30,36 @@ class StateAccessTransform(
 
     override fun visitGetValue(expression: IrGetValue): IrExpression {
 
-        val name = expression.symbol.owner.name.identifier
+        //  FUN name:higherFun visibility:public modality:FINAL <> ($receiver:hu.simplexion.z2.adaptive.Adaptive, higherI:kotlin.Int, lowerFun:@[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunI')] kotlin.Int, kotlin.Unit>) returnType:kotlin.Unit
+        //      $receiver: VALUE_PARAMETER name:<this> type:hu.simplexion.z2.adaptive.Adaptive
+        //      VALUE_PARAMETER name:higherI index:0 type:kotlin.Int
+        //      VALUE_PARAMETER name:lowerFun index:1 type:@[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunI')] kotlin.Int, kotlin.Unit>
+        //      BLOCK_BODY
+        //        CALL 'public final fun higherFunInner (innerI: kotlin.Int, lowerFunInner: @[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunInnerI')] kotlin.Int, kotlin.Unit>): kotlin.Unit declared in hu.simplexion.z2.kotlin.adaptive.success' type=kotlin.Unit origin=null
+        //          $receiver: GET_VAR '<this>: hu.simplexion.z2.adaptive.Adaptive declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun' type=hu.simplexion.z2.adaptive.Adaptive origin=null
+        //          innerI: CALL 'public final fun times (other: kotlin.Int): kotlin.Int [operator] declared in kotlin.Int' type=kotlin.Int origin=MUL
+        //            $this: GET_VAR 'higherI: kotlin.Int declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun' type=kotlin.Int origin=null
+        //            other: CONST Int type=kotlin.Int value=2
+        //          lowerFunInner: FUN_EXPR type=@[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunInnerI')] kotlin.Int, kotlin.Unit> origin=LAMBDA
+        //            FUN LOCAL_FUNCTION_FOR_LAMBDA name:<anonymous> visibility:local modality:FINAL <> ($receiver:hu.simplexion.z2.adaptive.Adaptive, lowerFunInnerI:@[ParameterName(name = 'lowerFunInnerI')] kotlin.Int) returnType:kotlin.Unit
+        //              $receiver: VALUE_PARAMETER name:$this$higherFunInner type:hu.simplexion.z2.adaptive.Adaptive
+        //              VALUE_PARAMETER name:lowerFunInnerI index:0 type:@[ParameterName(name = 'lowerFunInnerI')] kotlin.Int
+        //              BLOCK_BODY
+        //                CALL 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 [operator] declared in kotlin.Function2' type=kotlin.Unit origin=INVOKE
+        //                  $this: GET_VAR 'lowerFun: @[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunI')] kotlin.Int, kotlin.Unit> declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun' type=@[ExtensionFunctionType] kotlin.Function2<hu.simplexion.z2.adaptive.Adaptive, @[ParameterName(name = 'lowerFunI')] kotlin.Int, kotlin.Unit> origin=VARIABLE_AS_FUNCTION
+        //                  p1: GET_VAR '$this$higherFunInner: hu.simplexion.z2.adaptive.Adaptive declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun.<anonymous>' type=hu.simplexion.z2.adaptive.Adaptive origin=null
+        //                  p2: CALL 'public final fun plus (other: kotlin.Int): kotlin.Int [operator] declared in kotlin.Int' type=kotlin.Int origin=PLUS
+        //                    $this: GET_VAR 'higherI: kotlin.Int declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun' type=kotlin.Int origin=null
+        //                    other: GET_VAR 'lowerFunInnerI: @[ParameterName(name = 'lowerFunInnerI')] kotlin.Int declared in hu.simplexion.z2.kotlin.adaptive.success.higherFun.<anonymous>' type=@[ParameterName(name = 'lowerFunInnerI')] kotlin.Int origin=null
 
-        val stateVariable = closure.firstOrNull { it.name == name } ?: return expression
+        val name = expression.symbol.owner.name
+        if (name.isSpecial) {
+            return expression
+        }
+
+        val id = name.identifier
+
+        val stateVariable = closure.firstOrNull { it.name == id } ?: return expression
 
         return getStateVariable(stateVariable)
     }

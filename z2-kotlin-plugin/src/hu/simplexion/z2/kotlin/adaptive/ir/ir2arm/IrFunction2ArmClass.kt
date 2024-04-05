@@ -36,10 +36,11 @@ class IrFunction2ArmClass(
     lateinit var armClass: ArmClass
 
     var fragmentIndex = 0
-        get() = field ++
+
+    val nextFragmentIndex
+        get() = fragmentIndex++
 
     var supportIndex = 0
-        get() = field ++
 
     val states: Stack<ArmState> = mutableListOf()
     val closures: Stack<ArmClosure> = mutableListOf()
@@ -89,7 +90,13 @@ class IrFunction2ArmClass(
 
             is IrWhen -> transformWhen(statement)
 
-            is IrReturn -> ArmSequence(armClass, fragmentIndex, closure, statement.startOffset, emptyList()).add() // TODO better check on return statement
+            is IrReturn -> ArmSequence(
+                armClass,
+                nextFragmentIndex,
+                closure,
+                statement.startOffset,
+                emptyList()
+            ).add() // TODO better check on return statement
 
             else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}")
 
@@ -100,11 +107,11 @@ class IrFunction2ArmClass(
     // Block (may be whatever block: when, if, loop)
     // ---------------------------------------------------------------------------
 
-    fun transformBlock(statements : List<IrStatement>): ArmRenderingStatement {
+    fun transformBlock(statements: List<IrStatement>): ArmRenderingStatement {
         return if (statements.size == 1) {
             transformStatement(statements.first())
         } else {
-            val sequenceIndex = fragmentIndex
+            val sequenceIndex = nextFragmentIndex
 
             ArmSequence(
                 armClass, sequenceIndex, closure,
@@ -166,7 +173,7 @@ class IrFunction2ArmClass(
 
         return ArmLoop(
             armClass,
-            fragmentIndex,
+            nextFragmentIndex,
             closure,
             statement.startOffset,
             iterator,
@@ -188,11 +195,14 @@ class IrFunction2ArmClass(
 
     fun transformCall(irCall: IrCall): ArmRenderingStatement {
 
-        if (! irCall.isAdaptive(adaptiveContext)) {
+        val isDirect = irCall.isDirectAdaptiveCall(adaptiveContext)
+        val isArgument = irCall.isArgumentAdaptiveCall(adaptiveContext)
+
+        if (!isDirect && !isArgument) {
             throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
-        val armCall = ArmCall(armClass, fragmentIndex, closure, irCall)
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, isDirect, irCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
@@ -212,11 +222,19 @@ class IrFunction2ArmClass(
         expression: IrExpression
     ): ArmValueArgument =
         when {
-            parameter.isAdaptive() -> {
+            parameter.isAdaptive(adaptiveContext) -> {
                 if (expression is IrFunctionExpression) {
-                    ArmFragmentFactoryArgument(armClass, fragmentIndex, expression, expression.dependencies()).also {
-                        transformFragmentFactoryArgument(it, expression)
-                    }
+                    val renderingStatement = transformFragmentFactoryArgument(expression)
+
+                    ArmFragmentFactoryArgument(
+                        armClass,
+                        argumentIndex,
+                        parameter.name,
+                        renderingStatement.index,
+                        renderingStatement.closure,
+                        expression,
+                        expression.dependencies()
+                    )
                 } else {
                     ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
                 }
@@ -224,7 +242,14 @@ class IrFunction2ArmClass(
 
             parameter.type.isFunction() -> {
                 if (expression is IrFunctionExpression) {
-                    ArmSupportFunctionArgument(armClass, argumentIndex, supportIndex, closure, expression, expression.dependencies())
+                    ArmSupportFunctionArgument(
+                        armClass,
+                        argumentIndex,
+                        supportIndex++,
+                        closure,
+                        expression,
+                        expression.dependencies()
+                    )
                 } else {
                     ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
                 }
@@ -236,16 +261,15 @@ class IrFunction2ArmClass(
         }
 
     fun transformFragmentFactoryArgument(
-        fragmentFactory: ArmFragmentFactoryArgument,
         expression: IrFunctionExpression
-    ) {
+    ): ArmRenderingStatement {
         // add the anonymous function parameters to the closure
 
-        var stateVariableIndex = states.last().last().indexInClosure + 1
+        var stateVariableIndex = closure.size + 1
 
         states.push(
             expression.function.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmExternalStateVariable(armClass, stateVariableIndex ++, indexInState, parameter)
+                ArmExternalStateVariable(armClass, stateVariableIndex++, indexInState, parameter)
             }
         )
 
@@ -255,16 +279,13 @@ class IrFunction2ArmClass(
 
         // transform the anonymous function itself with the new closure
 
-        fragmentFactory.closure = closure
-
-        expression.function.body?.statements?.forEach {
-            transformStatement(it)
-        }
+        val result = transformBlock(expression.function.body!!.statements)
 
         // remove the anonymous function parameters from the closure
-
         closures.pop()
         states.pop()
+
+        return result
     }
 
     // ---------------------------------------------------------------------------
@@ -295,7 +316,7 @@ class IrFunction2ArmClass(
 
     fun transformWhen(statement: IrWhen, subject: IrVariable? = null): ArmRenderingStatement {
 
-        val armSelect = ArmSelect(armClass, fragmentIndex, closure, statement.startOffset)
+        val armSelect = ArmSelect(armClass, nextFragmentIndex, closure, statement.startOffset)
 
         armSelect.branches += statement.branches.map { irBranch ->
             ArmBranch(

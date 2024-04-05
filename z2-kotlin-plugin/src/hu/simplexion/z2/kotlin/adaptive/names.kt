@@ -45,6 +45,7 @@ object Strings {
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
     const val INDEX = "index"
+    const val STATE = "state"
     const val DECLARATION_INDEX = "declarationIndex"
     const val FRAGMENT = "fragment"
     const val SUPPORT_FUNCTION = "supportFunction"

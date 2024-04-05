@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 
 /**
  * ```kotlin
- * fun Z2.higherOrderTest() {
+ * fun Adaptive.higherOrderTest() {
  *     higherFun(12) { lowerFunI1 ->
  *         higherFun(lowerFunI1) { lowerFunI2 ->
  *             T1(lowerFunI1 + lowerFunI2)
@@ -21,13 +21,13 @@ import kotlin.test.assertEquals
  *     }
  * }
  *
- * fun Z3.higherFun(higherI : Int, lowerFun : Z3.(lowerFunI : Int) -> Unit) {
+ * fun Adaptive.higherFun(higherI : Int, lowerFun : Adaptive.(lowerFunI : Int) -> Unit) {
  *     higherFunInner(higherI*2) { lowerFunInnerI ->
  *         lowerFun(higherI + lowerFunInnerI)
  *     }
  * }
  *
- * fun Z3.higherFunInner(innerI : Int, lowerFunInner : Z3.(lowerFunInnerI : Int) -> Unit) {
+ * fun Adaptive.higherFunInner(innerI : Int, lowerFunInner : Adaptive.(lowerFunInnerI : Int) -> Unit) {
  *     lowerFunInner(innerI + 1) // Anonymous 1, Anonymous 3
  * }
  * ```

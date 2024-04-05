@@ -34,9 +34,12 @@ class AdaptivePluginContext(
     val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT)
     val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER)
     val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE)
+    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE)
 
     val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
     val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
+
+    val adaptiveAnonymousClass = classSymbol(FqNames.ADAPTIVE_ANONYMOUS)
 
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
     val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.SUPPORT_FUNCTION_INVOKE))

@@ -62,6 +62,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/adaptive/higherOrder")
+        @TestDataPath("$PROJECT_ROOT")
+        public class HigherOrder {
+            @Test
+            public void testAllFilesPresentInHigherOrder() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/higherOrder"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/higherOrder/basic.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/adaptive/select")
         @TestDataPath("$PROJECT_ROOT")
         public class Select {

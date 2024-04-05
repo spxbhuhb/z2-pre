@@ -14,6 +14,7 @@ open class ArmCall(
     armClass: ArmClass,
     index: Int,
     closure: ArmClosure,
+    val isDirect: Boolean,
     val irCall: IrCall,
 ) : ArmRenderingStatement(armClass, index, closure, irCall.startOffset) {
 

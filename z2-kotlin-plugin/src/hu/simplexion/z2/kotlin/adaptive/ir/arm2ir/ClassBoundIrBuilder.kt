@@ -20,10 +20,7 @@ import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
-import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
-import org.jetbrains.kotlin.ir.symbols.IrPropertySymbol
-import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
+import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
@@ -77,8 +74,12 @@ open class ClassBoundIrBuilder(
     // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    fun irConstructorCallFromBuild(buildFun : IrSimpleFunction, target: FqName): IrExpression {
-        val classSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.classSymbol(target)
+    fun irConstructorCallFromBuild(
+        buildFun: IrSimpleFunction,
+        target: FqName,
+        classSymbol: IrClassSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.classSymbol(target),
+        argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+    ): IrConstructorCallImpl {
 
         val constructorCall =
             IrConstructorCallImpl(
@@ -87,7 +88,7 @@ open class ClassBoundIrBuilder(
                 classSymbol.constructors.single(),
                 typeArgumentsCount = 1, // bridge type
                 constructorTypeArgumentsCount = 0,
-                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                argumentCount
             )
 
         constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
