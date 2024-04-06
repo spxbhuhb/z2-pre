@@ -3,12 +3,12 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.util
 
+import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import org.jetbrains.kotlin.backend.jvm.codegen.isExtensionFunctionType
 import org.jetbrains.kotlin.ir.declarations.IrValueDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
@@ -35,7 +35,5 @@ interface AdaptiveNonAnnotationBasedExtension {
             ?: false)
 
     fun IrCall.isArgumentAdaptiveCall(adaptiveContext: AdaptivePluginContext): Boolean =
-        dispatchReceiver.let { dr ->
-            dr is IrGetValue && dr.symbol.owner.isAdaptive(adaptiveContext)
-        }
+        symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver!!.type.isAdaptive(adaptiveContext) // TODO better check for kotlin invoke
 }

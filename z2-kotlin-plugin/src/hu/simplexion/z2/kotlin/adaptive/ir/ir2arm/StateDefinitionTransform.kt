@@ -20,8 +20,7 @@ import org.jetbrains.kotlin.ir.util.dumpKotlinLike
  *                            Used for entry points when the first parameter is the adapter.
  */
 class StateDefinitionTransform(
-    private val armClass: ArmClass,
-    private val skipParameters: Int
+    private val armClass: ArmClass
 ) {
 
     val names = mutableListOf<String>()
@@ -37,9 +36,6 @@ class StateDefinitionTransform(
     fun transform() {
 
         armClass.originalFunction.valueParameters.forEachIndexed { index, valueParameter ->
-
-            if (index < skipParameters) return@forEachIndexed
-
             ArmExternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, valueParameter).apply {
                 register(valueParameter)
             }

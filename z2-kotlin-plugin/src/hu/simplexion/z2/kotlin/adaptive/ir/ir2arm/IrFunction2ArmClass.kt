@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.util.statements
@@ -51,7 +52,7 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
 
-        StateDefinitionTransform(armClass, 0).transform()
+        StateDefinitionTransform(armClass).transform()
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
@@ -193,22 +194,46 @@ class IrFunction2ArmClass(
     // Call
     // ---------------------------------------------------------------------------
 
-    fun transformCall(irCall: IrCall): ArmRenderingStatement {
-
-        val isDirect = irCall.isDirectAdaptiveCall(adaptiveContext)
-        val isArgument = irCall.isArgumentAdaptiveCall(adaptiveContext)
-
-        if (!isDirect && !isArgument) {
-            throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
+    fun transformCall(irCall: IrCall): ArmRenderingStatement =
+        when {
+            irCall.isDirectAdaptiveCall(adaptiveContext) -> transformDirectCall(irCall)
+            irCall.isArgumentAdaptiveCall(adaptiveContext) -> transformArgumentCall(irCall)
+            else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
-        val armCall = ArmCall(armClass, nextFragmentIndex, closure, isDirect, irCall)
+    fun transformDirectCall(irCall: IrCall) : ArmRenderingStatement{
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
             val parameter = valueParameters[argumentIndex]
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
             armCall.arguments += transformValueArgument(argumentIndex, parameter, expression)
+        }
+
+        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
+
+        return armCall.add()
+    }
+
+    fun transformArgumentCall(irCall: IrCall) : ArmRenderingStatement{
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall)
+        val arguments = (irCall.dispatchReceiver!!.type as IrSimpleTypeImpl).arguments
+
+        // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]
+        //     kotlin.Function2<
+        //         hu.simplexion.z2.adaptive.Adaptive,
+        //         @[ParameterName(name = 'lowerFunI')] kotlin.Int,
+        //         kotlin.Unit
+        //     >
+        //
+        // skip the receiver, skip the return type
+
+        for (argumentIndex in 1 until arguments.size - 1) {
+            val expression = irCall.getValueArgument(argumentIndex) ?: continue
+            // TODO better handling of parameter function call arguments (it does not allow functions for now)
+            // this is a bit dirty for now
+            armCall.arguments += ArmValueArgument(armClass, argumentIndex - 1, expression, expression.dependencies())
         }
 
         armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
@@ -265,11 +290,11 @@ class IrFunction2ArmClass(
     ): ArmRenderingStatement {
         // add the anonymous function parameters to the closure
 
-        var stateVariableIndex = closure.size + 1
+        var stateVariableIndex = closure.size
 
         states.push(
             expression.function.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmExternalStateVariable(armClass, stateVariableIndex++, indexInState, parameter)
+                ArmExternalStateVariable(armClass, indexInState, stateVariableIndex++, parameter)
             }
         )
 

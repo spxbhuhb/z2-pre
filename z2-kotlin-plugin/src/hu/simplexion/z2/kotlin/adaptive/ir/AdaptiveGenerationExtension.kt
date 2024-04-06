@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.addChild
-import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.file
 
@@ -27,7 +26,7 @@ internal class AdaptiveGenerationExtension(
             options,
         ).apply {
 
-            debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
+            // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
 
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)

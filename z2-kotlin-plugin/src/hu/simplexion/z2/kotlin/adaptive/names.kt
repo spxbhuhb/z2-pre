@@ -58,6 +58,8 @@ object Strings {
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
     const val ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
+
+    const val KOTLIN_INVOKE = "invoke"
 }
 
 object Names {
@@ -79,6 +81,8 @@ object Names {
     val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
     val CALLING_FRAGMENT = Name.identifier(Strings.CALLING_FRAGMENT)
     val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
+
+    val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
 }
 
 object FqNames {
