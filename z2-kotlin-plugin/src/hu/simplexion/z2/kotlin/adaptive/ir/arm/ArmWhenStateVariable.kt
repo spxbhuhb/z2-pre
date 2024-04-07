@@ -8,15 +8,16 @@ import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 
-class ArmInternalStateVariable(
+/**
+ * A fake state variable created for `when(subject)` transformation.
+ */
+class ArmWhenStateVariable(
     override val armClass: ArmClass,
     override val indexInState: Int,
     override val indexInClosure: Int,
-    val irVariable: IrVariable,
-    dependencies: ArmDependencies
-) : ArmStateDefinitionStatement(irVariable, dependencies), ArmStateVariable {
-
-    override val name = irVariable.name.identifier
+    override val name: String,
+    val irVariable: IrVariable
+) : ArmStateDefinitionStatement(irVariable, emptyList()), ArmStateVariable {
 
     override val type: IrType
         get() = irVariable.type
@@ -24,11 +25,11 @@ class ArmInternalStateVariable(
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitInternalStateVariable(this, data)
+        visitor.visitWhenStateVariable(this, data)
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
 
     override fun toString(): String {
-        return "INTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name"
+        return "WHEN_STATE_VARIABLE indexInClosure:$indexInClosure name:$name"
     }
 }

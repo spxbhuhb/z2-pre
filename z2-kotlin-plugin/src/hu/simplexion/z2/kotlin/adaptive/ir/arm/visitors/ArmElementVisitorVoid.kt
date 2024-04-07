@@ -28,6 +28,9 @@ interface ArmElementVisitorVoid<out R> : ArmElementVisitor<R, Nothing?> {
     fun visitSupportStateVariable(stateVariable: ArmSupportStateVariable) = visitElement(stateVariable)
     override fun visitSupportStateVariable(stateVariable: ArmSupportStateVariable, data: Nothing?) = visitSupportStateVariable(stateVariable)
 
+    fun visitWhenStateVariable(stateVariable: ArmWhenStateVariable) = visitElement(stateVariable)
+    override fun visitWhenStateVariable(stateVariable: ArmWhenStateVariable, data: Nothing?) = visitWhenStateVariable(stateVariable)
+
     fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) = visitElement(statement)
     override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement, data: Nothing?) = visitStateDefinitionStatement(statement)
 

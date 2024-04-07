@@ -16,6 +16,7 @@ interface ArmElementVisitor<out R, in D> {
     fun visitExternalStateVariable(stateVariable: ArmExternalStateVariable, data: D) = visitStateVariable(stateVariable, data)
     fun visitInternalStateVariable(stateVariable: ArmInternalStateVariable, data: D) = visitStateVariable(stateVariable, data)
     fun visitSupportStateVariable(stateVariable: ArmSupportStateVariable, data: D) = visitStateVariable(stateVariable, data)
+    fun visitWhenStateVariable(stateVariable: ArmWhenStateVariable, data: D) = visitStateVariable(stateVariable, data)
 
     fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement, data: D) = visitElement(statement, data)
 

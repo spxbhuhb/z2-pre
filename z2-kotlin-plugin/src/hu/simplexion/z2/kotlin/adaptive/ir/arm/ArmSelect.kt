@@ -8,12 +8,15 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmSelectBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
+import org.jetbrains.kotlin.ir.symbols.IrSymbol
 
 class ArmSelect(
     armClass: ArmClass,
     index: Int,
     closure: ArmClosure,
-    startOffset : Int
+    startOffset: Int,
+    val subjectSymbol : IrSymbol?,
+    val subjectExpression: ArmExpression?
 ) : ArmRenderingStatement(armClass, index, closure, startOffset) {
 
     val target = FqNames.ADAPTIVE_SELECT

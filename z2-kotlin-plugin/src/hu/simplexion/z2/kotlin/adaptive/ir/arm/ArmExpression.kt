@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 open class ArmExpression(
     val armClass: ArmClass,
     var irExpression: IrExpression,
-    val origin: ArmExpressionOrigin,
     val dependencies: ArmDependencies
 ) : ArmElement {
 

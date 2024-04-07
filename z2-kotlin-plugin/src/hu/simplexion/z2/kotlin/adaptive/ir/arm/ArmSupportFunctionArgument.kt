@@ -21,7 +21,7 @@ class ArmSupportFunctionArgument(
     val supportFunctionClosure: ArmClosure,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,
-) : ArmValueArgument(armClass, argumentIndex, value, dependencies, ArmExpressionOrigin.SUPPORT_FUNCTION_ARGUMENT) {
+) : ArmValueArgument(armClass, argumentIndex, value, dependencies) {
 
     override fun toPatchExpression(classBuilder: ClassBoundIrBuilder, patchFun : IrSimpleFunction, closure: ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask: IrVariable) =
         ArmSupportFunctionArgumentBuilder(classBuilder, this, closure, fragmentParameter, closureDirtyMask).genPatchDescendantExpression(patchFun)

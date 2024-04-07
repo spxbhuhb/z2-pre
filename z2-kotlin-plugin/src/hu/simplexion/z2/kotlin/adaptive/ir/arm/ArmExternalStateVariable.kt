@@ -12,7 +12,7 @@ class ArmExternalStateVariable(
     override val indexInState: Int,
     override val indexInClosure: Int,
     override val name: String,
-    override val originalType : IrType,
+    override val type : IrType,
     val symbol : IrSymbol
 ) : ArmStateVariable {
 

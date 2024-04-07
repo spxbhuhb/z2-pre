@@ -178,7 +178,7 @@ open class ClassBoundIrBuilder(
     }
 
     fun stateVariableType(variable: ArmStateVariable): IrType =
-        if (variable.originalType.isFunction()) classBoundSupportFunctionType else variable.originalType
+        if (variable.type.isFunction()) classBoundSupportFunctionType else variable.type
 
     // --------------------------------------------------------------------------------------------------------
     // Properties

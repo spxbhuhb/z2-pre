@@ -6,6 +6,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmWhenStateVariable
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.backend.js.utils.valueArguments
 import org.jetbrains.kotlin.ir.expressions.*
@@ -36,7 +37,11 @@ class StateAccessTransform(
 
         val stateVariable = closure.firstOrNull { it.name == id } ?: return expression
 
-        return getStateVariable(stateVariable)
+        if (stateVariable is ArmWhenStateVariable) {
+            return irBuilder.irGet(stateVariable.irVariable)
+        } else {
+            return getStateVariable(stateVariable)
+        }
     }
 
     fun getStateVariable(stateVariable: ArmStateVariable): IrExpression {

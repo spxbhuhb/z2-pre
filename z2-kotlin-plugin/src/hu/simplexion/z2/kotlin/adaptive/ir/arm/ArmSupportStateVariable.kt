@@ -20,7 +20,7 @@ class ArmSupportStateVariable(
 
     override val name = irVariable.name.identifier
 
-    override val originalType: IrType
+    override val type: IrType
         get() = irVariable.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)

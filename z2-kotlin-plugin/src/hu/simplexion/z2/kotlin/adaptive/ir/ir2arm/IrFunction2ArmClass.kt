@@ -188,7 +188,7 @@ class IrFunction2ArmClass(
                 indexInState = 0,
                 indexInClosure = closure.size,
                 name = irLoopVariable.name.identifier,
-                originalType = irLoopVariable.type,
+                type = irLoopVariable.type,
                 symbol = irLoopVariable.symbol
             )
         )
@@ -359,22 +359,24 @@ class IrFunction2ArmClass(
 
     fun transformWhen(statement: IrWhen, subject: IrVariable? = null): ArmRenderingStatement {
 
-        val armSelect = ArmSelect(armClass, nextFragmentIndex, closure, statement.startOffset)
+        val armSelect = ArmSelect(
+            armClass,
+            nextFragmentIndex,
+            closure,
+            statement.startOffset,
+            subject?.symbol,
+            subject?.let { ArmExpression(armClass, it.initializer!!, it.initializer!!.dependencies()) }
+        )
 
         armSelect.branches += statement.branches.map { irBranch ->
             ArmBranch(
                 armClass,
-                transformExpression(irBranch.condition, ArmExpressionOrigin.BRANCH_CONDITION),
+                ArmExpression(armClass, irBranch.condition, irBranch.dependencies()),
                 transformStatement(irBranch.result)
             )
         }
 
         return armSelect.add()
-    }
-
-    fun transformExpression(condition: IrExpression, origin: ArmExpressionOrigin): ArmExpression {
-        // add "else" if the last condition is not a constant true
-        return ArmExpression(armClass, condition, origin, condition.dependencies())
     }
 
 }

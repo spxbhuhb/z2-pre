@@ -91,6 +91,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             public void testBasic() throws Exception {
                 runTest("testData/box/adaptive/loop/basic.kt");
             }
+
+            @Test
+            @TestMetadata("list.kt")
+            public void testList() throws Exception {
+                runTest("testData/box/adaptive/loop/list.kt");
+            }
         }
 
         @Nested
@@ -124,6 +130,30 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("ifOnlyTrue.kt")
             public void testIfOnlyTrue() throws Exception {
                 runTest("testData/box/adaptive/select/ifOnlyTrue.kt");
+            }
+
+            @Test
+            @TestMetadata("whenNoSubjectElse.kt")
+            public void testWhenNoSubjectElse() throws Exception {
+                runTest("testData/box/adaptive/select/whenNoSubjectElse.kt");
+            }
+
+            @Test
+            @TestMetadata("whenNoSubjectNoElse.kt")
+            public void testWhenNoSubjectNoElse() throws Exception {
+                runTest("testData/box/adaptive/select/whenNoSubjectNoElse.kt");
+            }
+
+            @Test
+            @TestMetadata("whenSubjectCalc.kt")
+            public void testWhenSubjectCalc() throws Exception {
+                runTest("testData/box/adaptive/select/whenSubjectCalc.kt");
+            }
+
+            @Test
+            @TestMetadata("whenSubjectConditions.kt")
+            public void testWhenSubjectConditions() throws Exception {
+                runTest("testData/box/adaptive/select/whenSubjectConditions.kt");
             }
         }
 

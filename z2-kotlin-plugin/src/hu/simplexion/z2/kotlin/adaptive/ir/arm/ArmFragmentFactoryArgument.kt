@@ -24,8 +24,7 @@ class ArmFragmentFactoryArgument(
     armClass,
     argumentIndex,
     value,
-    dependencies,
-    origin = ArmExpressionOrigin.FRAGMENT_FACTORY_ARGUMENT
+    dependencies
 ) {
 
     override fun toPatchExpression(

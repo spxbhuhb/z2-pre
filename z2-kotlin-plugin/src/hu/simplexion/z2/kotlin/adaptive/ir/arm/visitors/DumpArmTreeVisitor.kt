@@ -60,6 +60,15 @@ class DumpArmTreeVisitor(
         }
     }
 
+    override fun visitWhenStateVariable(stateVariable: ArmWhenStateVariable) {
+        indented {
+            with(stateVariable) {
+                println { "WHEN_STATE_VARIABLE indexInClosure:$indexInClosure name:$name" }
+            }
+            super.visitStateVariable(stateVariable)
+        }
+    }
+
     override fun visitStateDefinitionStatement(statement: ArmStateDefinitionStatement) {
         indented {
             with(statement) {
@@ -117,7 +126,7 @@ class DumpArmTreeVisitor(
     override fun visitExpression(expression: ArmExpression) {
         indented {
             with(expression) {
-                println { "$origin ${dependencies.withLabel("dependencies")}" }
+                println { "EXPRESSION ${dependencies.withLabel("dependencies")}" }
             }
             super.visitExpression(expression)
         }
