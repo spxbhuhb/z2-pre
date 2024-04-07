@@ -78,6 +78,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/adaptive/loop")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Loop {
+            @Test
+            public void testAllFilesPresentInLoop() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/loop"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/loop/basic.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/adaptive/select")
         @TestDataPath("$PROJECT_ROOT")
         public class Select {

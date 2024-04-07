@@ -116,7 +116,11 @@ class SupportFunctionTestComponent(
     }
 
     @Suppress("RedundantNullableReturnType")
-    override fun genInvoke(supportFunction: AdaptiveSupportFunction<TestNode>, arguments: Array<out Any?>): Any? {
+    override fun genInvoke(
+        supportFunction: AdaptiveSupportFunction<TestNode>,
+        callingFragment: AdaptiveFragment<TestNode>,
+        arguments: Array<out Any?>
+    ): Any? {
 
         val fragment = supportFunction.declaringFragment
 
@@ -143,7 +147,7 @@ class SupportFunctionInnerComponent(
     }
 
     override fun genPatchInternal() {
-        (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(getThisClosureVariable(0))
+        (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(this, getThisClosureVariable(0))
     }
 
 }

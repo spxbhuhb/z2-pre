@@ -39,7 +39,7 @@ class IrFunction2ArmClass(
     var fragmentIndex = 0
 
     val nextFragmentIndex
-        get() = fragmentIndex++
+        get() = fragmentIndex ++
 
     var supportIndex = 0
 
@@ -75,6 +75,20 @@ class IrFunction2ArmClass(
     fun ArmRenderingStatement.add(): ArmRenderingStatement {
         armClass.rendering += this
         return this
+    }
+
+    fun withClosure(state: ArmState, transform: () -> ArmRenderingStatement): ArmRenderingStatement {
+        states.push(state)
+        closures.push(states.flatten())
+
+        check(closure.size < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables in any closure is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
+
+        val result = transform()
+
+        closures.pop()
+        states.pop()
+
+        return result
     }
 
     fun transformStatement(statement: IrStatement): ArmRenderingStatement =
@@ -145,7 +159,6 @@ class IrFunction2ArmClass(
         //                CALL 'public final fun P1 (p0: kotlin.Int): kotlin.Unit declared in hu.simplexion.adaptive.kotlin.plugin' type=kotlin.Unit origin=null
         //                  p0: GET_VAR 'val i: kotlin.Int [val] declared in hu.simplexion.adaptive.kotlin.plugin.successes.Basic' type=kotlin.Int origin=null
 
-        // TODO convert checks into non-exception throwing, but contracting functions
         check(statement.statements.size == 2)
 
         val irIterator = statement.statements[0]
@@ -153,8 +166,6 @@ class IrFunction2ArmClass(
 
         check(irIterator is IrValueDeclaration && irIterator.origin == IrDeclarationOrigin.FOR_LOOP_ITERATOR)
         check(loop is IrWhileLoop && loop.origin == IrStatementOrigin.FOR_LOOP_INNER_WHILE)
-
-        val condition = transformExpression(loop.condition, ArmExpressionOrigin.FOR_LOOP_CONDITION)
 
         val body = loop.body
 
@@ -168,18 +179,30 @@ class IrFunction2ArmClass(
         check((block is IrBlock && block.origin == null) || block is IrCall) // TODO think for loop check details
 
         val iterator = transformDeclaration(irIterator, ArmDeclarationOrigin.FOR_LOOP_ITERATOR)
-        val loopVariable = transformDeclaration(irLoopVariable, ArmDeclarationOrigin.FOR_LOOP_VARIABLE)
 
-        val rendering = transformStatement(block)
+        val loopIndex = nextFragmentIndex
+
+        val renderingState = listOf(
+            ArmExternalStateVariable(
+                armClass,
+                indexInState = 0,
+                indexInClosure = closure.size,
+                name = irLoopVariable.name.identifier,
+                originalType = irLoopVariable.type,
+                symbol = irLoopVariable.symbol
+            )
+        )
+
+        val rendering = withClosure(renderingState) {
+            transformStatement(block)
+        }
 
         return ArmLoop(
             armClass,
-            nextFragmentIndex,
+            loopIndex,
             closure,
             statement.startOffset,
             iterator,
-            condition,
-            loopVariable,
             rendering
         ).add()
     }
@@ -201,7 +224,7 @@ class IrFunction2ArmClass(
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
-    fun transformDirectCall(irCall: IrCall) : ArmRenderingStatement{
+    fun transformDirectCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
@@ -216,9 +239,9 @@ class IrFunction2ArmClass(
         return armCall.add()
     }
 
-    fun transformArgumentCall(irCall: IrCall) : ArmRenderingStatement{
+    fun transformArgumentCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall)
-        val arguments = (irCall.dispatchReceiver!!.type as IrSimpleTypeImpl).arguments
+        val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
         // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]
         //     kotlin.Function2<
@@ -270,7 +293,7 @@ class IrFunction2ArmClass(
                     ArmSupportFunctionArgument(
                         armClass,
                         argumentIndex,
-                        supportIndex++,
+                        supportIndex ++,
                         closure,
                         expression,
                         expression.dependencies()
@@ -292,25 +315,20 @@ class IrFunction2ArmClass(
 
         var stateVariableIndex = closure.size
 
-        states.push(
-            expression.function.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmExternalStateVariable(armClass, indexInState, stateVariableIndex++, parameter)
-            }
-        )
+        val innerState = expression.function.valueParameters.mapIndexed { indexInState, parameter ->
+            ArmExternalStateVariable(
+                armClass,
+                indexInState,
+                stateVariableIndex ++,
+                parameter.name.identifier,
+                parameter.type,
+                parameter.symbol
+            )
+        }
 
-        closures.push(states.flatten())
-
-        check(closure.size < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables in any closure is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
-
-        // transform the anonymous function itself with the new closure
-
-        val result = transformBlock(expression.function.body!!.statements)
-
-        // remove the anonymous function parameters from the closure
-        closures.pop()
-        states.pop()
-
-        return result
+        return withClosure(innerState) {
+            transformBlock(expression.function.body !!.statements)
+        }
     }
 
     // ---------------------------------------------------------------------------

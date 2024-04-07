@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.backend.js.utils.valueArguments
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrValueParameterSymbol
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
@@ -18,7 +19,8 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
-    private val external: Boolean,
+    private val getVariableFunction: IrSimpleFunctionSymbol,
+    private val transformSupportCalls: Boolean,
     private val irGetFragment: () -> IrExpression
 ) : IrElementTransformerVoidWithContext() {
 
@@ -37,7 +39,7 @@ class StateAccessTransform(
         return getStateVariable(stateVariable)
     }
 
-    fun getStateVariable(stateVariable: ArmStateVariable) : IrExpression {
+    fun getStateVariable(stateVariable: ArmStateVariable): IrExpression {
         val type = irBuilder.stateVariableType(stateVariable)
 
         return irBuilder.irImplicitAs(
@@ -45,7 +47,7 @@ class StateAccessTransform(
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.anyNType,
-                if (external) pluginContext.getCreateClosureVariable else pluginContext.getThisClosureVariable,
+                getVariableFunction,
                 0,
                 Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
             ).also {
@@ -104,10 +106,10 @@ class StateAccessTransform(
      * ```
      */
     override fun visitCall(expression: IrCall): IrExpression {
-        if (external) return super.visitCall(expression)
+        if (! transformSupportCalls) return super.visitCall(expression)
 
-        val getValue = expression.dispatchReceiver as? IrGetValue ?: return expression
-        val valueParameterSymbol = getValue.symbol as? IrValueParameterSymbol ?: return expression
+        val getValue = expression.dispatchReceiver as? IrGetValue ?: return super.visitCall(expression)
+        val valueParameterSymbol = getValue.symbol as? IrValueParameterSymbol ?: return super.visitCall(expression)
 
         val stateVariable = closure.first { it.name == valueParameterSymbol.owner.name.identifier }
 

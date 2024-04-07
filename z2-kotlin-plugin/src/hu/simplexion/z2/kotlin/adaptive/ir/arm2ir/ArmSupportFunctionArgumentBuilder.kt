@@ -37,7 +37,4 @@ class ArmSupportFunctionArgumentBuilder(
             }
         )
 
-    fun invokeBranch() =
-        argument.irExpression.transformStateAccess(closure, external = false) { irGet(fragment) }
-
 }

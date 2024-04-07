@@ -50,7 +50,7 @@ class ArmSelectBuilder(
     private fun irConditionBranch(patchFun: IrSimpleFunction, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformStateAccess(armSelect.closure, external = true) { irGet(patchFun.valueParameters.first()) },
+            branch.condition.irExpression.transformCreateStateAccess(armSelect.closure) { irGet(patchFun.valueParameters.first()) },
             irConst(branch.index)
         )
 

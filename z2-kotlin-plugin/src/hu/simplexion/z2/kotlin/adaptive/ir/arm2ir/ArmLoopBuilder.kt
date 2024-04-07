@@ -25,7 +25,7 @@ class ArmLoopBuilder(
                  block.statements += irSetDescendantStateVariable(
                      patchFun,
                      Indices.ADAPTIVE_LOOP_ITERATOR,
-                     iteratorInitializer.transformStateAccess(armLoop.closure, external = true) { irGet(patchFun.dispatchReceiverParameter !!) }
+                     iteratorInitializer.transformThisStateAccess(armLoop.closure, transformInvoke = false) { irGet(patchFun.dispatchReceiverParameter !!) }
                  )
 
                  block.statements += irSetDescendantStateVariable(

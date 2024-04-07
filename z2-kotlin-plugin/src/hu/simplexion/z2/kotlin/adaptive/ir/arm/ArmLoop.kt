@@ -15,9 +15,7 @@ class ArmLoop(
     closure: ArmClosure,
     startOffset : Int,
     var iterator: ArmDeclaration,
-    val condition: ArmExpression,
-    val loopVariable: ArmDeclaration,
-    val body: ArmRenderingStatement,
+    val body: ArmRenderingStatement
 ) : ArmRenderingStatement(armClass, index, closure, startOffset) {
 
     val target = FqNames.ADAPTIVE_LOOP
@@ -30,8 +28,6 @@ class ArmLoop(
 
     override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
         iterator.accept(visitor, data)
-        condition.accept(visitor, data)
-        loopVariable.accept(visitor, data)
         body.accept(visitor, data)
     }
 }

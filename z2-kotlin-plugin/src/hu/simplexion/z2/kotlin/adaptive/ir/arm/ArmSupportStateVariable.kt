@@ -8,6 +8,9 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 
+/**
+ * A fake state variable created for support function transformation.
+ */
 class ArmSupportStateVariable(
     override val armClass: ArmClass,
     override val indexInState: Int,

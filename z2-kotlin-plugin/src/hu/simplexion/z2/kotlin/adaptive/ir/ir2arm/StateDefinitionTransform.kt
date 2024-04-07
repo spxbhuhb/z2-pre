@@ -25,6 +25,7 @@ class StateDefinitionTransform(
 
     val names = mutableListOf<String>()
 
+    // incremented by `register`
     var stateVariableIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
@@ -34,13 +35,28 @@ class StateDefinitionTransform(
     }
 
     fun transform() {
+        transformParameters()
+        transformStatements()
+    }
 
-        armClass.originalFunction.valueParameters.forEachIndexed { index, valueParameter ->
-            ArmExternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, valueParameter).apply {
+    fun transformParameters() {
+        armClass.originalFunction.valueParameters.forEach { valueParameter ->
+
+            ArmExternalStateVariable(
+                armClass,
+                stateVariableIndex,
+                stateVariableIndex,
+                valueParameter.name.identifier,
+                valueParameter.type,
+                valueParameter.symbol
+            ).apply {
                 register(valueParameter)
             }
-        }
 
+        }
+    }
+
+    fun transformStatements() {
         armClass.originalStatements.forEach { statement ->
             when {
                 statement is IrVariable -> {

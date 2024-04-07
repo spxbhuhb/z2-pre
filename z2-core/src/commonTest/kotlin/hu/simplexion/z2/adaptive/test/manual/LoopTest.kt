@@ -170,7 +170,7 @@ class LoopTestComponent(
         when (fragment.index) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
-                    fragment.setStateVariable(0, (0 .. count).iterator())
+                    fragment.setStateVariable(0, (0 .. (this.getThisClosureVariable(0) as Int)).iterator())
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
                     fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))

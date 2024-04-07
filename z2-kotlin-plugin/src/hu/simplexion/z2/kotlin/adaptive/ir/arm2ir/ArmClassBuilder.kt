@@ -457,9 +457,9 @@ class ArmClassBuilder(
             )
 
             armClass.stateDefinitionStatements.forEach {
-                val originalExpression =
-                    if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression // FIXME casting a statement into an expression in internal patch
-                val transformedExpression = originalExpression.transformStateAccess(armClass.stateVariables, external = false) { irGet(patchFun.dispatchReceiverParameter !!) }
+                // FIXME casting a statement into an expression in internal patch
+                val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression
+                val transformedExpression = originalExpression.transformThisStateAccess(armClass.stateVariables) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 + genPatchInternalExpression(
                     patchFun,

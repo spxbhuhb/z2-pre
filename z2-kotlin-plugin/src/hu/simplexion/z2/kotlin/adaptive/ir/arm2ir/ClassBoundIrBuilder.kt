@@ -165,11 +165,11 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun IrExpression.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrExpression =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null)
+    fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getCreateClosureVariable, false, irGetFragment), null)
 
-    fun IrStatement.transformStateAccess(closure: ArmClosure, external: Boolean, irGetFragment: () -> IrExpression): IrStatement =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, external, irGetFragment), null) as IrStatement
+    fun IrStatement.transformThisStateAccess(closure: ArmClosure, transformInvoke : Boolean = true, irGetFragment: () -> IrExpression): IrExpression =
+        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getThisClosureVariable, transformInvoke, irGetFragment), null) as IrExpression
 
     fun ArmDependencies.toDirtyMask(): IrExpression {
         var mask = 0

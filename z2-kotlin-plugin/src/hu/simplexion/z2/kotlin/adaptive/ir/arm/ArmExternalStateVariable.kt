@@ -4,7 +4,6 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
 
@@ -12,15 +11,12 @@ class ArmExternalStateVariable(
     override val armClass: ArmClass,
     override val indexInState: Int,
     override val indexInClosure: Int,
-    val irValueParameter: IrValueParameter
+    override val name: String,
+    override val originalType : IrType,
+    val symbol : IrSymbol
 ) : ArmStateVariable {
 
-    override val name = irValueParameter.name.identifier
-
-    override val originalType: IrType
-        get() = irValueParameter.type
-
-    override fun matches(symbol: IrSymbol): Boolean = (symbol == irValueParameter.symbol)
+    override fun matches(symbol: IrSymbol): Boolean = (symbol == this.symbol)
 
     override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
         visitor.visitExternalStateVariable(this, data)
