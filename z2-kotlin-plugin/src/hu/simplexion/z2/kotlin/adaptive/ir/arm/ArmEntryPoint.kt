@@ -3,18 +3,9 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 
 class ArmEntryPoint(
     val armClass: ArmClass,
     val irFunction: IrSimpleFunction,
-) : ArmElement {
-
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitEntryPoint(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-
-    }
-}
+) : ArmElement

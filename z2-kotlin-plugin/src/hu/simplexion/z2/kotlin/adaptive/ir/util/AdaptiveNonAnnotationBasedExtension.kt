@@ -6,34 +6,36 @@ package hu.simplexion.z2.kotlin.adaptive.ir.util
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import org.jetbrains.kotlin.backend.jvm.codegen.isExtensionFunctionType
-import org.jetbrains.kotlin.ir.declarations.IrValueDeclaration
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.isFunctionOrKFunction
 
 interface AdaptiveNonAnnotationBasedExtension {
 
-    fun IrValueDeclaration.isAdaptive(adaptiveContext: AdaptivePluginContext) =
-        type.isAdaptive(adaptiveContext)
+    val adaptiveContext: AdaptivePluginContext
 
-    fun IrValueParameter.isAdaptive(adaptiveContext: AdaptivePluginContext): Boolean =
-        type.isAdaptive(adaptiveContext)
+    val IrType.isAdaptive: Boolean
+        get() {
+            if (! isExtensionFunctionType) return false
+            if (this !is IrSimpleTypeImpl) return false
+            val receiver = arguments[0]
+            if (receiver !is IrType) return false
+            return receiver.isSubtypeOfClass(adaptiveContext.adaptiveNamespaceClass)
+        }
 
-    fun IrType.isAdaptive(adaptiveContext: AdaptivePluginContext): Boolean {
-        if (!isExtensionFunctionType) return false
-        if (this !is IrSimpleTypeImpl) return false
-        val receiver = arguments[0]
-        if (receiver !is IrType) return false
-        return receiver.isSubtypeOfClass(adaptiveContext.adaptiveNamespaceClass)
+    val IrCall.isDirectAdaptiveCall : Boolean
+        get() = (symbol.owner.extensionReceiverParameter?.let { it.type == adaptiveContext.adaptiveNamespaceClass.defaultType } ?: false)
+
+    val IrCall.isArgumentAdaptiveCall: Boolean
+        get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver !!.type.isAdaptive // TODO better check for kotlin invoke
+
+    fun IrType.isAccessSelector(previousType: IrType?): Boolean {
+        if (previousType == null) return false
+        if (! isFunctionOrKFunction()) return false
+        return previousType.isSubtypeOfClass(adaptiveContext.adaptiveAccessBindingClass)
     }
 
-    fun IrCall.isDirectAdaptiveCall(adaptiveContext: AdaptivePluginContext): Boolean =
-        (symbol.owner.extensionReceiverParameter?.let { it.type == adaptiveContext.adaptiveNamespaceClass.defaultType }
-            ?: false)
-
-    fun IrCall.isArgumentAdaptiveCall(adaptiveContext: AdaptivePluginContext): Boolean =
-        symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver!!.type.isAdaptive(adaptiveContext) // TODO better check for kotlin invoke
 }

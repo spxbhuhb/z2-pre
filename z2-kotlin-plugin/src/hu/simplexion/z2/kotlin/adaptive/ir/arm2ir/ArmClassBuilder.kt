@@ -5,10 +5,7 @@ import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmInternalStateVariable
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmRenderingStatement
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -458,16 +455,21 @@ class ArmClassBuilder(
 
             armClass.stateDefinitionStatements.forEach {
                 // FIXME casting a statement into an expression in internal patch
-                val originalExpression = if (it is ArmInternalStateVariable) it.irVariable.initializer !! else it.irStatement as IrExpression
+                val originalExpression = when (it) {
+                    is ArmInternalStateVariable -> it.irVariable.initializer !!
+                    is ArmDefaultValueStatement -> it.defaultValue
+                    else -> it.irStatement as IrExpression
+                }
+
                 val transformedExpression = originalExpression.transformThisStateAccess(armClass.stateVariables) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 + genPatchInternalExpression(
                     patchFun,
                     closureMask,
-                    if (it is ArmInternalStateVariable) {
-                        irSetInternalStateVariable(patchFun, it.indexInState, transformedExpression)
-                    } else {
-                        transformedExpression
+                    when (it) {
+                        is ArmInternalStateVariable -> irSetStateVariable(patchFun, it.indexInState, transformedExpression)
+                        is ArmDefaultValueStatement -> irSetStateVariable(patchFun, it.indexInState, transformedExpression)
+                        else -> transformedExpression
                     },
                     it.dependencies
                 )

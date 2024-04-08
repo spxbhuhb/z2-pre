@@ -1,19 +1,15 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.adaptive.test.manual
+package hu.simplexion.z2.adaptive
 
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptiveFragmentFactory
-import hu.simplexion.z2.adaptive.AdaptiveLoop
 import hu.simplexion.z2.adaptive.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
  * ```kotlin
- * fun loop(count : Int) {
+ * fun Adaptive.loop(count : Int) {
  *     for (i in 0 .. count) {
  *         T1(i + 10)
  *     }
@@ -27,7 +23,7 @@ class LoopTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        LoopTestComponent(adapter, null, 0).apply {
+        AdaptiveLoopTest(adapter, null, 0).apply {
             state[0] = 3 // count
             create()
             mount(root)
@@ -36,11 +32,11 @@ class LoopTest {
         assertEquals(
             adapter.expected(
                 listOf(
-                    TraceEvent("LoopTestComponent", 2, "before-Create", ""),
-                    TraceEvent("LoopTestComponent", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
-                    TraceEvent("LoopTestComponent", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
-                    TraceEvent("LoopTestComponent", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
-                    TraceEvent("LoopTestComponent", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Create", ""),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
                     TraceEvent("AdaptiveLoop", 3, "create", ""),
                     TraceEvent("AdaptiveLoop", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,null]"),
                     TraceEvent("AdaptiveLoop", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
@@ -110,8 +106,8 @@ class LoopTest {
                     TraceEvent("AdaptiveT1", 18, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveAnonymous", 17, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveLoop", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
-                    TraceEvent("LoopTestComponent", 2, "after-Create", ""),
-                    TraceEvent("LoopTestComponent", 2, "before-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveLoopTest", 2, "after-Create", ""),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveLoop", 3, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveAnonymous", 5, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 6, "before-Mount", "bridge: 4"),
@@ -129,7 +125,7 @@ class LoopTest {
                     TraceEvent("AdaptiveT1", 18, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 18, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveAnonymous", 17, "after-Mount", "bridge: 4"),
-                    TraceEvent("LoopTestComponent", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveLoopTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -137,7 +133,7 @@ class LoopTest {
     }
 }
 
-class LoopTestComponent(
+class AdaptiveLoopTest(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int

@@ -3,7 +3,6 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
@@ -23,12 +22,4 @@ class ArmInternalStateVariable(
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
 
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitInternalStateVariable(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
-
-    override fun toString(): String {
-        return "INTERNAL_STATE_VARIABLE indexInState:$indexInState indexInClosure:$indexInClosure name:$name"
-    }
 }

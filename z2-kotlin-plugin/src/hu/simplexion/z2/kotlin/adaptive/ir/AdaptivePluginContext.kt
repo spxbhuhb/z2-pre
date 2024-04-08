@@ -21,8 +21,6 @@ class AdaptivePluginContext(
 
     override val runtimePackage = Strings.RUNTIME_PACKAGE
 
-    var compilationError = false
-
     val messages = mutableListOf<PluginMessage>()
 
     val adaptiveNamespaceClass = classSymbol(FqNames.ADAPTIVE_NAMESPACE)
@@ -34,17 +32,16 @@ class AdaptivePluginContext(
     val adaptiveFragmentClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT)
     val adaptiveAdapterClass = classSymbol(FqNames.ADAPTIVE_ADAPTER)
     val adaptiveClosureClass = classSymbol(FqNames.ADAPTIVE_CLOSURE)
-    val adaptiveBridgeClass = classSymbol(FqNames.ADAPTIVE_BRIDGE)
 
     val adaptiveFragmentFactoryClass = classSymbol(FqNames.ADAPTIVE_FRAGMENT_FACTORY)
     val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
 
-    val adaptiveAnonymousClass = classSymbol(FqNames.ADAPTIVE_ANONYMOUS)
-
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
     val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.SUPPORT_FUNCTION_INVOKE))
-    val adaptiveSupportFunctionDeclaringFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_DECLARING_FRAGMENT))
     val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
+
+    val adaptiveAccessBindingClass = classSymbol(FqNames.ADAPTIVE_ACCESS_BINDING)
+    val adaptivePropertyMetadataClass = classSymbol(FqNames.ADAPTIVE_PROPERTY_METADATA)
 
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)

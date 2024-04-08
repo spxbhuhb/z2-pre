@@ -1,12 +1,8 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.adaptive.test.manual
+package hu.simplexion.z2.adaptive
 
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptivePlaceholder
-import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestBridge
 import hu.simplexion.z2.adaptive.testing.TestNode
@@ -16,12 +12,12 @@ import kotlin.test.assertEquals
 
 /**
  * ```kotlin
- * fun supportFunctionTest() {
+ * fun Adaptive.supportFunctionTest() {
  *     val i = 13
- *     supportFunctionInnerComponent(12) { i = 11 + it + i }
+ *     supportFunctionInner(12) { i = 11 + it + i }
  * }
  *
- * fun supportFunctionInnerComponent(i : Int, supportFun : (i : Int) -> Unit) {
+ * fun Adaptive.supportFunctionInner(i : Int, supportFun : (i : Int) -> Unit) {
  *     supportFun(i)
  * }
  * ```
@@ -33,7 +29,7 @@ class SupportFunctionTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        SupportFunctionTestComponent(adapter, null, 0).apply {
+        AdaptiveSupportFunctionTest(adapter, null, 0).apply {
             create()
             mount(root)
         }.also {
@@ -43,26 +39,26 @@ class SupportFunctionTest {
         assertEquals(
             adapter.expected(
                 listOf(
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Create", ""),
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "before-Create", ""),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Invoke", "index: 0 arguments: [12]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [36]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [36]"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Invoke", "index: 0 result: kotlin.Unit"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "after-Create", ""),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Create", ""),
-                    TraceEvent("SupportFunctionTestComponent", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("SupportFunctionInnerComponent", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("SupportFunctionTestComponent", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Create", ""),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Create", ""),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Invoke", "index: 0 arguments: [12]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [36]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [36]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Invoke", "index: 0 result: kotlin.Unit"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Create", ""),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Create", ""),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -70,7 +66,7 @@ class SupportFunctionTest {
     }
 }
 
-class SupportFunctionTestComponent(
+class AdaptiveSupportFunctionTest(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int
@@ -82,7 +78,7 @@ class SupportFunctionTestComponent(
     override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
 
         val fragment = when (declarationIndex) {
-            0 -> SupportFunctionInnerComponent(adapter, parent, declarationIndex)
+            0 -> AdaptiveSupportFunctionInner(adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -136,7 +132,7 @@ class SupportFunctionTestComponent(
     }
 }
 
-class SupportFunctionInnerComponent(
+class AdaptiveSupportFunctionInner(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int

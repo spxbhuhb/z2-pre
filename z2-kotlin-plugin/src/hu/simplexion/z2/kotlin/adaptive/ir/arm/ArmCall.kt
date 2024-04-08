@@ -3,7 +3,6 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmCallBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
@@ -24,12 +23,5 @@ open class ArmCall(
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmCallBuilder(parent, this)
-
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitCall(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-        arguments.forEach { it.accept(visitor, data) }
-    }
 
 }

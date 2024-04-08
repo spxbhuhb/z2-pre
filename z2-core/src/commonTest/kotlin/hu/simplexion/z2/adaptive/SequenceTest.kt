@@ -1,17 +1,14 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.adaptive.test.manual
+package hu.simplexion.z2.adaptive
 
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptiveSequence
 import hu.simplexion.z2.adaptive.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 /**
- * fun sequenceTestComponent() {
+ * fun Adaptive.sequenceTest() {
  *     T0()
  *     T1(12)
  * }
@@ -23,7 +20,7 @@ class SequenceTest {
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        SequenceTestComponent(adapter, null, 0).apply {
+        AdaptiveSequenceTest(adapter, null, 0).apply {
             create()
             mount(root)
         }
@@ -31,11 +28,11 @@ class SequenceTest {
         assertEquals(
             adapter.expected(
                 listOf(
-                    TraceEvent("SequenceTestComponent", 2, "before-Create", ""),
-                    TraceEvent("SequenceTestComponent", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("SequenceTestComponent", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Create", ""),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveSequence", 3, "create", ""),
                     TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
                     TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
@@ -53,14 +50,14 @@ class SequenceTest {
                     TraceEvent("AdaptiveT1", 7, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
                     TraceEvent("AdaptiveT1", 7, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveT1", 7, "after-Create", ""),
-                    TraceEvent("SequenceTestComponent", 2, "after-Create", ""),
-                    TraceEvent("SequenceTestComponent", 2, "before-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Create", ""),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequence", 3, "mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT1", 7, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT1", 7, "after-Mount", "bridge: 1"),
-                    TraceEvent("SequenceTestComponent", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
             adapter.actual(dumpCode = true)
@@ -68,7 +65,7 @@ class SequenceTest {
     }
 }
 
-class SequenceTestComponent(
+class AdaptiveSequenceTest(
     adapter: AdaptiveAdapter<TestNode>,
     parent: AdaptiveFragment<TestNode>?,
     index: Int

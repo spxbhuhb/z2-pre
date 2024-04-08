@@ -62,18 +62,36 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
-        @TestMetadata("testData/box/adaptive/higherOrder")
+        @TestMetadata("testData/box/adaptive/call")
         @TestDataPath("$PROJECT_ROOT")
-        public class HigherOrder {
+        public class Call {
             @Test
-            public void testAllFilesPresentInHigherOrder() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/higherOrder"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            @TestMetadata("accessBinding.kt")
+            public void testAccessBinding() throws Exception {
+                runTest("testData/box/adaptive/call/accessBinding.kt");
             }
 
             @Test
-            @TestMetadata("basic.kt")
-            public void testBasic() throws Exception {
-                runTest("testData/box/adaptive/higherOrder/basic.kt");
+            public void testAllFilesPresentInCall() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/call"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("higherOrder.kt")
+            public void testHigherOrder() throws Exception {
+                runTest("testData/box/adaptive/call/higherOrder.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunction.kt")
+            public void testSupportFunction() throws Exception {
+                runTest("testData/box/adaptive/call/supportFunction.kt");
+            }
+
+            @Test
+            @TestMetadata("withDefault.kt")
+            public void testWithDefault() throws Exception {
+                runTest("testData/box/adaptive/call/withDefault.kt");
             }
         }
 
@@ -154,22 +172,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("whenSubjectConditions.kt")
             public void testWhenSubjectConditions() throws Exception {
                 runTest("testData/box/adaptive/select/whenSubjectConditions.kt");
-            }
-        }
-
-        @Nested
-        @TestMetadata("testData/box/adaptive/support")
-        @TestDataPath("$PROJECT_ROOT")
-        public class Support {
-            @Test
-            public void testAllFilesPresentInSupport() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-            }
-
-            @Test
-            @TestMetadata("basic.kt")
-            public void testBasic() throws Exception {
-                runTest("testData/box/adaptive/support/basic.kt");
             }
         }
 

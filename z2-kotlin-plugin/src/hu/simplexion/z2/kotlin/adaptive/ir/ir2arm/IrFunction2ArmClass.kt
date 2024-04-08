@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isFunction
@@ -30,7 +31,7 @@ import org.jetbrains.kotlin.ir.util.statements
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
 class IrFunction2ArmClass(
-    val adaptiveContext: AdaptivePluginContext,
+    override val adaptiveContext: AdaptivePluginContext,
     val irFunction: IrFunction
 ) : AdaptiveNonAnnotationBasedExtension {
 
@@ -52,7 +53,7 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
 
-        StateDefinitionTransform(armClass).transform()
+        StateDefinitionTransform(adaptiveContext, armClass).transform()
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
@@ -178,7 +179,7 @@ class IrFunction2ArmClass(
         check(irLoopVariable is IrVariable)
         check((block is IrBlock && block.origin == null) || block is IrCall) // TODO think for loop check details
 
-        val iterator = transformDeclaration(irIterator, ArmDeclarationOrigin.FOR_LOOP_ITERATOR)
+        val iterator = transformDeclaration(irIterator)
 
         val loopIndex = nextFragmentIndex
 
@@ -207,9 +208,9 @@ class IrFunction2ArmClass(
         ).add()
     }
 
-    fun transformDeclaration(declaration: IrDeclaration, origin: ArmDeclarationOrigin): ArmDeclaration =
+    fun transformDeclaration(declaration: IrDeclaration): ArmDeclaration =
         when (declaration) {
-            is IrValueDeclaration -> ArmDeclaration(armClass, declaration, origin, declaration.dependencies())
+            is IrValueDeclaration -> ArmDeclaration(armClass, declaration, declaration.dependencies())
             else -> throw IllegalStateException("invalid declaration in rendering: ${declaration.dumpKotlinLike()}")
         }
 
@@ -219,8 +220,8 @@ class IrFunction2ArmClass(
 
     fun transformCall(irCall: IrCall): ArmRenderingStatement =
         when {
-            irCall.isDirectAdaptiveCall(adaptiveContext) -> transformDirectCall(irCall)
-            irCall.isArgumentAdaptiveCall(adaptiveContext) -> transformArgumentCall(irCall)
+            irCall.isDirectAdaptiveCall -> transformDirectCall(irCall)
+            irCall.isArgumentAdaptiveCall -> transformArgumentCall(irCall)
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
@@ -231,7 +232,8 @@ class IrFunction2ArmClass(
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
             val parameter = valueParameters[argumentIndex]
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
-            armCall.arguments += transformValueArgument(argumentIndex, parameter, expression)
+            val argument = transformValueArgument(armCall, argumentIndex, parameter.type, expression)
+            if (argument != null) armCall.arguments += argument
         }
 
         armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
@@ -253,10 +255,11 @@ class IrFunction2ArmClass(
         // skip the receiver, skip the return type
 
         for (argumentIndex in 1 until arguments.size - 1) {
+            val parameter = (arguments[argumentIndex] as IrSimpleTypeImpl)
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
-            // TODO better handling of parameter function call arguments (it does not allow functions for now)
-            // this is a bit dirty for now
-            armCall.arguments += ArmValueArgument(armClass, argumentIndex - 1, expression, expression.dependencies())
+            val argument = transformValueArgument(armCall, argumentIndex - 1, parameter.type, expression)
+
+            if (argument != null) armCall.arguments += argument
         }
 
         armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
@@ -265,19 +268,19 @@ class IrFunction2ArmClass(
     }
 
     fun transformValueArgument(
+        armCall: ArmCall,
         argumentIndex: Int,
-        parameter: IrValueParameter,
+        parameterType: IrType,
         expression: IrExpression
-    ): ArmValueArgument =
+    ): ArmValueArgument? =
         when {
-            parameter.isAdaptive(adaptiveContext) -> {
+            parameterType.isAdaptive -> {
                 if (expression is IrFunctionExpression) {
                     val renderingStatement = transformFragmentFactoryArgument(expression)
 
                     ArmFragmentFactoryArgument(
                         armClass,
                         argumentIndex,
-                        parameter.name,
                         renderingStatement.index,
                         renderingStatement.closure,
                         expression,
@@ -288,7 +291,14 @@ class IrFunction2ArmClass(
                 }
             }
 
-            parameter.type.isFunction() -> {
+            parameterType.isAccessSelector(armCall.arguments.lastOrNull()?.irExpression?.type) -> {
+                // replaces the binding, which has to be the previous parameter
+                transformAccessSelector(armCall, argumentIndex, expression)
+                // selector is not transformed into a state variable
+                null
+            }
+
+            parameterType.isFunction() -> {
                 if (expression is IrFunctionExpression) {
                     ArmSupportFunctionArgument(
                         armClass,
@@ -331,6 +341,24 @@ class IrFunction2ArmClass(
         }
     }
 
+    private fun transformAccessSelector(armCall: ArmCall, argumentIndex: Int, expression: IrExpression) {
+        check(expression is IrFunctionExpression)
+
+        val indexInState = 0
+        val indexInClosure = 0
+
+        val argument = ArmAccessBindingArgument(
+            armClass,
+            argumentIndex,
+            indexInState,
+            indexInClosure,
+            expression,
+            expression.dependencies()
+        )
+
+        // replace the last argument which is a value argument for the binding
+        armCall.arguments[armCall.arguments.size - 1] = argument
+    }
     // ---------------------------------------------------------------------------
     // When
     // ---------------------------------------------------------------------------
@@ -365,7 +393,7 @@ class IrFunction2ArmClass(
             closure,
             statement.startOffset,
             subject?.symbol,
-            subject?.let { ArmExpression(armClass, it.initializer!!, it.initializer!!.dependencies()) }
+            subject?.let { ArmExpression(armClass, it.initializer !!, it.initializer !!.dependencies()) }
         )
 
         armSelect.branches += statement.branches.map { irBranch ->

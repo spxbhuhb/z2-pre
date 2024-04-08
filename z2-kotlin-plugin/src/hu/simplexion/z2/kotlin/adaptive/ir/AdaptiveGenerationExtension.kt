@@ -31,9 +31,6 @@ internal class AdaptiveGenerationExtension(
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)
 
-            debug("ARM CLASSES") { "\n\n" + armClasses.joinToString("\n\n") { it.dump() } }
-            debug("ARM ENTRY POINTS") { "\n\n" + armEntryPoints.joinToString("\n\n") { it.dump() } }
-
             armClasses
                 .map {
                     ArmClassBuilder(this, it).apply { buildIrClassWithoutGenBodies() }

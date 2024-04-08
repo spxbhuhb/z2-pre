@@ -5,8 +5,8 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
-open class ArmExpression(
-    val armClass: ArmClass,
-    var irExpression: IrExpression,
-    val dependencies: ArmDependencies
-) : ArmElement
+class ArmDefaultValueStatement(
+    val indexInState: Int,
+    val defaultValue: IrExpression,
+    dependencies: ArmDependencies
+) : ArmStateDefinitionStatement(defaultValue, dependencies)

@@ -4,7 +4,6 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.FqNames
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmSequenceBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.BranchBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
@@ -22,10 +21,4 @@ class ArmSequence(
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmSequenceBuilder(parent, this)
 
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitSequence(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-
-    }
 }

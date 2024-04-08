@@ -142,7 +142,7 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun irSetInternalStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
+    fun irSetStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,

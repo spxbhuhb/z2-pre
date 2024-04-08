@@ -3,7 +3,6 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmValueArgumentBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
@@ -18,13 +17,19 @@ open class ArmValueArgument(
     dependencies: ArmDependencies
 ) : ArmExpression(armClass, value, dependencies) {
 
-    open fun toPatchExpression(classBuilder: ClassBoundIrBuilder, patchFun: IrSimpleFunction, closure: ArmClosure, fragmentParameter: IrValueParameter, closureDirtyMask: IrVariable) =
-        ArmValueArgumentBuilder(classBuilder, this, closure, fragmentParameter, closureDirtyMask).genPatchDescendantExpression(patchFun)
-
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitValueArgument(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) = Unit
+    open fun toPatchExpression(
+        classBuilder: ClassBoundIrBuilder,
+        patchFun: IrSimpleFunction,
+        closure: ArmClosure,
+        fragmentParameter: IrValueParameter,
+        closureDirtyMask: IrVariable
+    ) =
+        ArmValueArgumentBuilder(
+            classBuilder,
+            this, closure,
+            fragmentParameter,
+            closureDirtyMask
+        ).genPatchDescendantExpression(patchFun)
 
 }
 

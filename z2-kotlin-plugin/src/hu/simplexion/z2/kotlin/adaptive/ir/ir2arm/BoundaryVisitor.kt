@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.ir.visitors.acceptVoid
  * Entry point is [findBoundary].
  */
 class BoundaryVisitor(
-    private val adaptiveContext: AdaptivePluginContext
+    override val adaptiveContext: AdaptivePluginContext
 ) : IrElementVisitorVoid, AdaptiveNonAnnotationBasedExtension {
 
     var found: Boolean = false
@@ -46,8 +46,8 @@ class BoundaryVisitor(
 
     override fun visitCall(expression: IrCall) {
         when {
-            expression.isDirectAdaptiveCall(adaptiveContext) -> found = true
-            expression.isArgumentAdaptiveCall(adaptiveContext) -> found = true
+            expression.isDirectAdaptiveCall -> found = true
+            expression.isArgumentAdaptiveCall -> found = true
             else -> super.visitCall(expression)
         }
     }

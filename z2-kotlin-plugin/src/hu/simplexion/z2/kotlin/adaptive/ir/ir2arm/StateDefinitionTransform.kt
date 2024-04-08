@@ -4,24 +4,25 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
+import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
+import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.deepCopyWithVariables
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+
 
 /**
  * Transforms function parameters and top-level variable declarations into
  * state variables.
- *
- * @property  skipParameters  Skip the first N parameter of the original function when
- *                            converting the function parameters into external state variables.
- *                            Used for entry points when the first parameter is the adapter.
  */
 class StateDefinitionTransform(
+    override val adaptiveContext: AdaptivePluginContext,
     private val armClass: ArmClass
-) {
+) : AdaptiveNonAnnotationBasedExtension {
 
     val names = mutableListOf<String>()
 
@@ -42,6 +43,12 @@ class StateDefinitionTransform(
     fun transformParameters() {
         armClass.originalFunction.valueParameters.forEach { valueParameter ->
 
+            // access selector function is not part of the state, it is for the plugin to know
+            // which state variable to access
+            // TODO add FIR checker to make sure the selector and the binding type arguments are the same
+
+            if (valueParameter.type.isAccessSelector(armClass.stateVariables.lastOrNull()?.type)) return@forEach
+
             ArmExternalStateVariable(
                 armClass,
                 stateVariableIndex,
@@ -51,8 +58,16 @@ class StateDefinitionTransform(
                 valueParameter.symbol
             ).apply {
                 register(valueParameter)
-            }
 
+                val defaultValue = valueParameter.defaultValue ?: return@forEach
+
+                armClass.stateDefinitionStatements +=
+                    ArmDefaultValueStatement(
+                        indexInState,
+                        defaultValue.expression.deepCopyWithVariables(),
+                        defaultValue.expression.dependencies()
+                    )
+            }
         }
     }
 
@@ -83,7 +98,7 @@ class StateDefinitionTransform(
 
         check(declaration.startOffset < armClass.boundary.startOffset) { "declaration in rendering at:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
-        check (name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
+        check(name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
         stateVariableIndex ++
         names += name

@@ -23,6 +23,8 @@ object Strings {
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
+    const val ADAPTIVE_ACCESS_BINDING = "AdaptiveAccessBinding"
+    const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -101,6 +103,8 @@ object FqNames {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
+    val ADAPTIVE_ACCESS_BINDING = Strings.ADAPTIVE_ACCESS_BINDING.runtime
+    val ADAPTIVE_PROPERTY_METADATA = Strings.ADAPTIVE_PROPERTY_METADATA.runtime
 }
 
 object Indices {
@@ -167,7 +171,7 @@ object Indices {
     const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
     /**
-     * Fragment factory arguments
+     * AdaptiveFragmentFactory constructor arguments
      */
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT = 2
 
@@ -181,6 +185,23 @@ object Indices {
 
     const val ADAPTIVE_SUPPORT_FUNCTION_FRAGMENT = 0
     const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 1
+
+    /**
+     * AdaptiveAccessBinding constructor arguments
+     */
+    const val ADAPTIVE_ACCESS_BINDING_ARGUMENT_COUNT = 4
+
+    const val ADAPTIVE_ACCESS_BINDING_OWNER = 0
+    const val ADAPTIVE_ACCESS_BINDING_INDEX_IN_STATE = 1
+    const val ADAPTIVE_ACCESS_BINDING_INDEX_IN_CLOSURE = 2
+    const val ADAPTIVE_ACCESS_BINDING_METADATA = 3
+
+    /**
+     * AdaptiveAccessBinding constructor arguments
+     */
+    const val ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT = 1
+
+    const val ADAPTIVE_PROPERTY_METADATA_TYPE = 0
 
     /**
      * Structural fragment state indices

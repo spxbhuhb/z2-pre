@@ -4,7 +4,6 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.visitors.ArmElementVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
@@ -30,12 +29,4 @@ class ArmClass(
 
     val rendering = mutableListOf<ArmRenderingStatement>()
 
-    override fun <R, D> accept(visitor: ArmElementVisitor<R, D>, data: D): R =
-        visitor.visitClass(this, data)
-
-    override fun <D> acceptChildren(visitor: ArmElementVisitor<Unit, D>, data: D) {
-        stateVariables.filterIsInstance<ArmExternalStateVariable>().forEach { it.accept(visitor, data) }
-        stateDefinitionStatements.forEach { it.accept(visitor, data) }
-        rendering.forEach { it.accept(visitor, data) }
-    }
 }
