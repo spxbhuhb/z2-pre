@@ -6,12 +6,16 @@ package hu.simplexion.z2.adaptive.testing
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.util.Lock
+import hu.simplexion.z2.util.use
 
 class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     var nextId = 1L
 
     override val trace = true
+
+    val traceLock = Lock()
 
     override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
@@ -30,11 +34,15 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
     }
 
     override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
-        traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
+        traceLock.use {
+            traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
+        }
     }
 
     fun actual(dumpCode: Boolean = false): String =
-        traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
+        traceLock.use {
+            traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
+        }
 
     fun expected(expected: List<TraceEvent>): String =
         expected.joinToString("\n")
