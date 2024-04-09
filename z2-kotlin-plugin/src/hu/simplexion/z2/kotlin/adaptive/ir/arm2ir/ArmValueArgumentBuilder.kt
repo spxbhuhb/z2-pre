@@ -15,7 +15,7 @@ open class ArmValueArgumentBuilder(
     val closureDirtyMask: IrVariable
 ) : ClassBoundIrBuilder(parent) {
 
-    fun genPatchDescendantExpression(patchFun : IrSimpleFunction): IrExpression =
+    open fun genPatchDescendantExpression(patchFun : IrSimpleFunction): IrExpression? =
         irIf(
             patchCondition(),
             patchBody(patchFun)

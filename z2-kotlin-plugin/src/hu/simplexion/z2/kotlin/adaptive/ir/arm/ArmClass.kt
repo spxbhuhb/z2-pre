@@ -29,4 +29,5 @@ class ArmClass(
 
     val rendering = mutableListOf<ArmRenderingStatement>()
 
+    var hasInvokeBranch = false
 }

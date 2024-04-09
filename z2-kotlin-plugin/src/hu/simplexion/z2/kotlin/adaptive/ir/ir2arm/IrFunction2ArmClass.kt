@@ -11,8 +11,11 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.util.statements
@@ -231,12 +234,15 @@ class IrFunction2ArmClass(
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
             val parameter = valueParameters[argumentIndex]
-            val expression = irCall.getValueArgument(argumentIndex) ?: continue
-            val argument = transformValueArgument(armCall, argumentIndex, parameter.type, expression)
+            val expression = irCall.getValueArgument(argumentIndex)
+            val argument = transformValueArgument(armCall, parameter.type, expression)
             if (argument != null) armCall.arguments += argument
         }
 
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
+        if (armCall.arguments.any { it is ArmSupportFunctionArgument }) {
+            armClass.hasInvokeBranch = true
+            armCall.hasInvokeBranch = true
+        }
 
         return armCall.add()
     }
@@ -257,7 +263,7 @@ class IrFunction2ArmClass(
         for (argumentIndex in 1 until arguments.size - 1) {
             val parameter = (arguments[argumentIndex] as IrSimpleTypeImpl)
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
-            val argument = transformValueArgument(armCall, argumentIndex - 1, parameter.type, expression)
+            val argument = transformValueArgument(armCall, parameter.type, expression)
 
             if (argument != null) armCall.arguments += argument
         }
@@ -269,31 +275,40 @@ class IrFunction2ArmClass(
 
     fun transformValueArgument(
         armCall: ArmCall,
-        argumentIndex: Int,
         parameterType: IrType,
-        expression: IrExpression
+        expression: IrExpression?
     ): ArmValueArgument? =
         when {
+            expression == null -> {
+                ArmDefaultValueArgument(
+                    armClass,
+                    armCall.arguments.size,
+                    parameterType,
+                    IrConstImpl.defaultValueForType(0, 0, adaptiveContext.irContext.irBuiltIns.nothingType)
+                )
+            }
+
             parameterType.isAdaptive -> {
                 if (expression is IrFunctionExpression) {
                     val renderingStatement = transformFragmentFactoryArgument(expression)
 
                     ArmFragmentFactoryArgument(
                         armClass,
-                        argumentIndex,
+                        armCall.arguments.size,
                         renderingStatement.index,
                         renderingStatement.closure,
+                        parameterType,
                         expression,
                         expression.dependencies()
                     )
                 } else {
-                    ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
+                    ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
                 }
             }
 
-            parameterType.isAccessSelector(armCall.arguments.lastOrNull()?.irExpression?.type) -> {
+            parameterType.isAccessSelector(armCall.arguments.lastOrNull()?.type) -> {
                 // replaces the binding, which has to be the previous parameter
-                transformAccessSelector(armCall, argumentIndex, expression)
+                transformAccessSelector(armCall, expression)
                 // selector is not transformed into a state variable
                 null
             }
@@ -302,19 +317,20 @@ class IrFunction2ArmClass(
                 if (expression is IrFunctionExpression) {
                     ArmSupportFunctionArgument(
                         armClass,
-                        argumentIndex,
+                        armCall.arguments.size,
                         supportIndex ++,
                         closure,
+                        parameterType,
                         expression,
                         expression.dependencies()
                     )
                 } else {
-                    ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
+                    ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
                 }
             }
 
             else -> {
-                ArmValueArgument(armClass, argumentIndex, expression, expression.dependencies())
+                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
             }
         }
 
@@ -341,17 +357,22 @@ class IrFunction2ArmClass(
         }
     }
 
-    private fun transformAccessSelector(armCall: ArmCall, argumentIndex: Int, expression: IrExpression) {
+    private fun transformAccessSelector(armCall: ArmCall, expression: IrExpression) {
         check(expression is IrFunctionExpression)
 
-        val indexInState = 0
-        val indexInClosure = 0
+        val stateVariableName = flattenGetValues(expression).last()
+
+        val indexInClosure = armCall.closure.indexOfFirst { it.name == stateVariableName }
+        val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != - 1 }
+        val indexInState = state.indexOfFirst { it.name == stateVariableName }
 
         val argument = ArmAccessBindingArgument(
             armClass,
-            argumentIndex,
+            armCall.arguments.size - 1,
             indexInState,
             indexInClosure,
+            expression.function.returnType,
+            adaptiveContext.adaptiveAccessBindingClass.defaultType,
             expression,
             expression.dependencies()
         )
@@ -359,6 +380,46 @@ class IrFunction2ArmClass(
         // replace the last argument which is a value argument for the binding
         armCall.arguments[armCall.arguments.size - 1] = argument
     }
+
+    fun flattenGetValues(expression: IrExpression): List<String> {
+        check(expression is IrFunctionExpression)
+
+        val body = checkNotNull(expression.function.body) { "missing function body: ${expression.dump()}" }
+        var current: IrStatement? = checkNotNull(body.statements.firstOrNull()) { "empty body: ${expression.dump()}" }
+
+        val result = mutableListOf<String>()
+
+        while (current != null) {
+            when (current) {
+                is IrGetValue -> {
+                    check(current.symbol.owner.parent == armClass.originalFunction) { "invalid access: ${expression.dump()}" }
+                    result += current.symbol.owner.name.identifier
+                    current = null
+                }
+
+                is IrCall -> {
+                    val symbol = current.symbol.owner.correspondingPropertySymbol
+                    checkNotNull(symbol) { "not a property access (1): ${expression.dump()}" }
+                    result += symbol.owner.name.identifier
+                    current = current.dispatchReceiver
+                }
+
+                is IrReturn -> {
+                    current = current.value
+                }
+
+                else -> {
+                    throw IllegalStateException("unknown access: ${expression.dump()}")
+                }
+            }
+        }
+
+        check(result.isNotEmpty()) { "not a property access (2): ${expression.dump()}" }
+
+        return result
+    }
+
+
     // ---------------------------------------------------------------------------
     // When
     // ---------------------------------------------------------------------------

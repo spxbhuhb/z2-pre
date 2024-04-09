@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.types.IrType
 
 /**
  * A function argument that is an AdaptiveAccessBinding.
@@ -18,9 +19,11 @@ class ArmAccessBindingArgument(
     argumentIndex: Int,
     val indexInState: Int,
     val indexInClosure: Int,
+    val boundType: IrType,
+    type : IrType,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,
-) : ArmValueArgument(armClass, argumentIndex, value, dependencies) {
+) : ArmValueArgument(armClass, argumentIndex, type, value, dependencies) {
 
     override fun toPatchExpression(
         classBuilder: ClassBoundIrBuilder,

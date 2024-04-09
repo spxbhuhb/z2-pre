@@ -39,12 +39,12 @@ class ArmAccessBindingArgumentBuilder(
                     Indices.ADAPTIVE_ACCESS_BINDING_METADATA,
                     IrConstructorCallImpl(
                         SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                        pluginContext.adaptiveAccessBindingClass.defaultType,
-                        pluginContext.adaptiveAccessBindingClass.constructors.first(),
+                        pluginContext.adaptivePropertyMetadataClass.defaultType,
+                        pluginContext.adaptivePropertyMetadataClass.constructors.first(),
                         0, 0,
                         Indices.ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT,
                     ).apply {
-                        putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(argument.value.type.classFqName!!.asString()))
+                        putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(argument.boundType.classFqName!!.asString()))
                     }
                 )
 

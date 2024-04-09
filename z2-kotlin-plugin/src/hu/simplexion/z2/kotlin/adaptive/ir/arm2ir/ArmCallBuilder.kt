@@ -64,14 +64,16 @@ class ArmCallBuilder(
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->
-                armCall.arguments.forEach {
-                    block.statements += it.toPatchExpression(
+                for (argument in armCall.arguments) {
+                    argument.toPatchExpression(
                         this,
                         patchFun,
                         armCall.closure,
                         fragmentParameter,
                         closureMask
-                    )
+                    )?.also {
+                        block.statements += it
+                    }
                 }
             }
     }

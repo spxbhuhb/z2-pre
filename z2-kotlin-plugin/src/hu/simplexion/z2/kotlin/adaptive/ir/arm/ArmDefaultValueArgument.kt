@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmValueArgumentBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmDefaultValueArgumentBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
@@ -11,27 +11,29 @@ import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.types.IrType
 
-open class ArmValueArgument(
+/**
+ * A function argument that uses the default value provided by the function definition.
+ */
+class ArmDefaultValueArgument(
     armClass: ArmClass,
-    val argumentIndex: Int,
-    val type : IrType,
-    val value: IrExpression,
-    dependencies: ArmDependencies
-) : ArmExpression(armClass, value, dependencies) {
+    argumentIndex: Int,
+    type: IrType,
+    value: IrExpression
+) : ArmValueArgument(armClass, argumentIndex, type, value, emptyList()) {
 
-    open fun toPatchExpression(
+    override fun toPatchExpression(
         classBuilder: ClassBoundIrBuilder,
         patchFun: IrSimpleFunction,
         closure: ArmClosure,
         fragmentParameter: IrValueParameter,
         closureDirtyMask: IrVariable
-    ) : IrExpression? =
-        ArmValueArgumentBuilder(
+    ) =
+        ArmDefaultValueArgumentBuilder(
             classBuilder,
-            this, closure,
+            this,
+            closure,
             fragmentParameter,
             closureDirtyMask
         ).genPatchDescendantExpression(patchFun)
 
 }
-

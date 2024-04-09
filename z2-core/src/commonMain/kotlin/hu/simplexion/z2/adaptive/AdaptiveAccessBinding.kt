@@ -12,7 +12,10 @@ class AdaptiveAccessBinding<T>(
     @Suppress("UNCHECKED_CAST")
     var value: T
         get() = owner.getThisClosureVariable(indexInClosure) as T
-        set(v) = owner.setStateVariable(indexInState, v)
+        set(v) {
+            owner.setStateVariable(indexInState, v)
+            owner.patchInternal()
+        }
 
     override fun toString(): String {
         return "AdaptiveAccessBinding(owner=$owner, indexInState=$indexInState, indexInClosure=$indexInClosure type=${metadata.type})"

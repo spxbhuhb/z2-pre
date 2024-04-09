@@ -31,6 +31,37 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
-
+        TraceEvent("<root>", 2, "before-Create", ""),
+        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("AdaptiveAccessTest", 3, "before-Create", ""),
+        TraceEvent("AdaptiveAccessTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveAccessTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveAccessTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveAccessTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Create", ""),
+        TraceEvent("AdaptiveAccessor", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveAccessBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int)]"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveAccessBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveAccessBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int)]"),
+        TraceEvent("AdaptiveT1", 5, "before-Create", ""),
+        TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+        TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+        TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+        TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+        TraceEvent("AdaptiveT1", 5, "after-Create", ""),
+        TraceEvent("AdaptiveAccessor", 4, "after-Create", ""),
+        TraceEvent("AdaptiveAccessTest", 3, "after-Create", ""),
+        TraceEvent("<root>", 2, "after-Create", ""),
+        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveAccessTest", 3, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveAccessTest", 3, "after-Mount", "bridge: 1"),
+        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
     ))
 }

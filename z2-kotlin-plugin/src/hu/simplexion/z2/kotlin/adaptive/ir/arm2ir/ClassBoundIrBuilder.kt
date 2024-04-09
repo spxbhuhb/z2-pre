@@ -165,6 +165,23 @@ open class ClassBoundIrBuilder(
             )
         }
 
+    fun irGetThisStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int) =
+        IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.anyNType,
+            pluginContext.getThisClosureVariable,
+            0,
+            Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
+        ).also {
+
+            it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!)
+
+            it.putValueArgument(
+                Indices.GET_CLOSURE_VARIABLE_INDEX,
+                irConst(stateVariableIndex)
+            )
+        }
+
     fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
         transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getCreateClosureVariable, false, irGetFragment), null)
 

@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.types.IrType
 
 /**
  * A function argument that is a function itself, but not an adaptive one.
@@ -18,9 +19,10 @@ class ArmSupportFunctionArgument(
     argumentIndex: Int,
     val supportFunctionIndex: Int,
     val supportFunctionClosure: ArmClosure,
+    type : IrType,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,
-) : ArmValueArgument(armClass, argumentIndex, value, dependencies) {
+) : ArmValueArgument(armClass, argumentIndex, type, value, dependencies) {
 
     override fun toPatchExpression(
         classBuilder: ClassBoundIrBuilder,

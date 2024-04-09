@@ -10,18 +10,18 @@ import hu.simplexion.z2.adaptive.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/**
- * ```kotlin
- * fun Adaptive.supportFunctionTest() {
- *     val i = 13
- *     supportFunctionInner(12) { i = 11 + it + i }
- * }
- *
- * fun Adaptive.supportFunctionInner(i : Int, supportFun : (i : Int) -> Unit) {
- *     supportFun(i)
- * }
- * ```
- */
+
+@Suppress("unused")
+fun Adaptive.supportFunctionTest() {
+    var i = 13
+    supportFunctionInner(12) { i += 11 + it }
+}
+
+@Suppress("UnusedReceiverParameter")
+fun Adaptive.supportFunctionInner(i: Int, supportFun: (i: Int) -> Unit) {
+    supportFun(i)
+}
+
 class SupportFunctionTest {
 
     @Test
@@ -127,6 +127,7 @@ class AdaptiveSupportFunctionTest(
                     11 + (arguments[0] as Int) + (fragment.getThisClosureVariable(0) as Int)
                 )
             }
+
             else -> invalidIndex(supportFunction.supportFunctionIndex)
         }
     }
@@ -139,7 +140,7 @@ class AdaptiveSupportFunctionInner(
 ) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
 
     override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
-        return AdaptivePlaceholder(adapter, this, -1)
+        return AdaptivePlaceholder(adapter, this, - 1)
     }
 
     override fun genPatchInternal() {
