@@ -71,7 +71,7 @@ class StateAccessTransform(
 
         val name = expression.symbol.owner.name.identifier
 
-        val stateVariable = closure.firstOrNull { it.name == name } ?: return expression
+        val stateVariable = closure.firstOrNull { it.name == name } ?: return super.visitSetValue(expression)
 
         return IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -90,7 +90,7 @@ class StateAccessTransform(
 
             it.putValueArgument(
                 Indices.SET_STATE_VARIABLE_VALUE,
-                expression
+                expression.value.transform(this, null)
             )
         }
     }

@@ -11,3 +11,12 @@ package hu.simplexion.z2.adaptive
 fun adaptive(block: Adaptive.() -> Unit) : AdaptiveAdapter<*> {
     return AdaptiveAdapterRegistry.adapterFor().apply { block() }
 }
+
+/**
+ * Entry point of an Adaptive component tree.
+ *
+ * **IMPORTANT** variables declared outside the block are **NOT** reactive
+ */
+fun <BT> adaptive(adapter: AdaptiveAdapter<BT>, block: Adaptive.() -> Unit) {
+    adapter.block()
+}

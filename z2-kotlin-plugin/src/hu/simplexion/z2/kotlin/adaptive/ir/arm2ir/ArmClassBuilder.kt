@@ -6,26 +6,29 @@ import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.builders.declarations.*
+import org.jetbrains.kotlin.ir.builders.declarations.UNDEFINED_PARAMETER_INDEX
+import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
+import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
+import org.jetbrains.kotlin.ir.builders.declarations.buildClass
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrTypeParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.*
-import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
+import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.types.makeNullable
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.types.Variance
 
@@ -59,18 +62,8 @@ class ArmClassBuilder(
         irClass.metadata = armClass.originalFunction.metadata
 
         thisReceiver()
-
-        // these have to be before addFakeOverrides()
-
         constructor()
         initializer()
-
-        genBuild()
-        genPatchDescendant()
-        genInvoke()
-        genPatchInternal()
-
-        // this has to be before AirClass() (adds overridden properties)
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 
@@ -185,92 +178,6 @@ class ArmClassBuilder(
         }
 
     // --------------------------------------------------------------------------------------------------------
-    // Child fragment handling functions
-    // --------------------------------------------------------------------------------------------------------
-
-    fun function(
-        inName: Name,
-        inReturnType: IrType,
-        overridden: IrSimpleFunctionSymbol,
-        vararg parameters: Pair<Name, IrType>
-    ): IrSimpleFunction =
-        irFactory.buildFun {
-            name = inName
-            returnType = inReturnType
-            modality = Modality.OPEN
-        }.also { function ->
-
-            function.overriddenSymbols = listOf(overridden)
-
-            function.addDispatchReceiver {
-                type = irClass.typeWith(irClass.typeParameters.first().defaultType)
-            }
-
-            for (parameter in parameters) {
-                function.addValueParameter {
-                    name = parameter.first
-                    type = parameter.second
-                }
-            }
-
-            function.parent = irClass
-            irClass.declarations += function
-        }
-
-    /**
-     * `genBuild(parent : AdaptiveFragment<BT>, declarationIndex : Int) : AdaptiveFragment<BT>`
-     */
-    fun genBuild(): IrSimpleFunction =
-        function(
-            Names.GEN_BUILD,
-            classBoundFragmentType,
-            pluginContext.genBuild,
-            Names.PARENT to classBoundFragmentType,
-            Names.DECLARATION_INDEX to irBuiltIns.intType
-        )
-
-    /**
-     * `genDatchDescendant(fragment : AdaptiveFragment<BT>)`
-     */
-    fun genPatchDescendant(): IrSimpleFunction =
-        function(
-            Names.GEN_PATCH_DESCENDANT,
-            irBuiltIns.unitType,
-            pluginContext.genPatchDescendant,
-            Names.FRAGMENT to classBoundFragmentType
-        )
-
-    /**
-     * `genInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments : Array<out Any?>) : Any?`
-     */
-    fun genInvoke() {
-        if (! armClass.hasInvokeBranch) return
-
-        function(
-            Names.GEN_INVOKE,
-            irBuiltIns.anyNType,
-            pluginContext.genInvoke,
-            Names.SUPPORT_FUNCTION to classBoundSupportFunctionType,
-            Names.CALLING_FRAGMENT to classBoundFragmentType
-        ).apply {
-            addValueParameter {
-                name = Names.ARGUMENTS
-                type = irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType)
-            }
-        }
-    }
-
-    /**
-     * `genPatchInternal()`
-     */
-    fun genPatchInternal(): IrSimpleFunction =
-        function(
-            Names.GEN_PATCH_INTERNAL,
-            irBuiltIns.unitType,
-            pluginContext.genPatchInternal
-        )
-
-    // --------------------------------------------------------------------------------------------------------
     // Second step of class generation: generated function bodies
     // --------------------------------------------------------------------------------------------------------
 
@@ -287,6 +194,8 @@ class ArmClassBuilder(
 
     fun genBuildBody() {
         val buildFun = irClass.getSimpleFunction(Strings.GEN_BUILD) !!.owner
+
+        buildFun.isFakeOverride = false
 
         buildFun.body = DeclarationIrBuilder(irContext, buildFun.symbol).irBlockBody {
             val fragment = irTemporary(genBuildWhen(buildFun))
@@ -336,6 +245,8 @@ class ArmClassBuilder(
 
     fun genPatchDescendantBody() {
         val patchFun = irClass.getSimpleFunction(Strings.GEN_PATCH_DESCENDANT) !!.owner
+
+        patchFun.isFakeOverride = false
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
@@ -398,6 +309,8 @@ class ArmClassBuilder(
 
         val invokeFun = irClass.getSimpleFunction(Strings.GEN_INVOKE) !!.owner
 
+        invokeFun.isFakeOverride = false
+
         invokeFun.body = DeclarationIrBuilder(irContext, invokeFun.symbol).irBlockBody {
 
             val supportFunctionIndex = irTemporary(
@@ -445,6 +358,8 @@ class ArmClassBuilder(
 
     fun genPatchInternalBody() {
         val patchFun = irClass.getSimpleFunction(Strings.GEN_PATCH_INTERNAL) !!.owner
+
+        patchFun.isFakeOverride = false
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 

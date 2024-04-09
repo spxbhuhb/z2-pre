@@ -38,13 +38,12 @@ internal class AdaptiveGenerationExtension(
                 .forEach {
                     it.buildGenFunctionBodies()
                     it.armClass.originalFunction.file.addChild(it.irClass)
+                    debug("KOTLIN LIKE") { "\n\n" + it.irClass.dumpKotlinLike() }
                 }
 
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }
 
-            // --------  finishing up  --------
-            debug("KOTLIN LIKE") { "\n\n" + moduleFragment.dumpKotlinLike() }
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }

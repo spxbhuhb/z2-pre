@@ -31,11 +31,11 @@ abstract class AdaptiveFragment<BT>(
     // --------------------------------------------------------------------------
 
     open fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
-        pluginGenerated()
+        pluginGenerated("genBuild")
     }
 
     open fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
-        pluginGenerated()
+        pluginGenerated("genPatchDescendant")
     }
 
     open fun invoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any? {
@@ -53,7 +53,7 @@ abstract class AdaptiveFragment<BT>(
     }
 
     open fun genInvoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any? {
-        pluginGenerated()
+        pluginGenerated("genInvoke")
     }
 
     // --------------------------------------------------------------------------
@@ -104,7 +104,7 @@ abstract class AdaptiveFragment<BT>(
     }
 
     open fun genPatchInternal() {
-        pluginGenerated()
+        pluginGenerated("genPatchInternal")
     }
 
     open fun unmount(bridge: AdaptiveBridge<BT>) {
@@ -151,8 +151,8 @@ abstract class AdaptiveFragment<BT>(
     // Utility functions
     // --------------------------------------------------------------------------
 
-    fun pluginGenerated(): Nothing {
-        throw IllegalStateException("this code should be replaced by the compiler plugin, please open a bug report, fragment: $this")
+    fun pluginGenerated(point: String): Nothing {
+        throw IllegalStateException("this code should be replaced by the compiler plugin, please open a bug report, fragment: $this, point: $point")
     }
 
     fun invalidIndex(index: Int): Nothing {

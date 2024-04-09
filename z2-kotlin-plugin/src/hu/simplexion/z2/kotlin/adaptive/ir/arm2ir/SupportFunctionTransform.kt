@@ -72,7 +72,7 @@ class SupportFunctionTransform(
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.anyNType,
-                pluginContext.getThisClosureVariable,
+                pluginContext.getCreateClosureVariable,
                 0,
                 Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
             ).also {
@@ -110,7 +110,7 @@ class SupportFunctionTransform(
 
             it.putValueArgument(
                 Indices.SET_STATE_VARIABLE_VALUE,
-                expression
+                expression.value.transform(this, null)
             )
         }
     }

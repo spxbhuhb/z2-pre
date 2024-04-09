@@ -42,7 +42,7 @@ abstract class AbstractPluginContext(
         if (pluginLogDir == null) return null
         var postFix = 0
         while (postFix < 10) {
-            val name = "z2-log-${this::class.simpleName !!.removeSuffix("PluginContext")}-$pluginLogTimestamp"
+            val name = "z2-log-${this::class.simpleName!!.removeSuffix("PluginContext")}-$pluginLogTimestamp-$postFix"
             val path = pluginLogDir.resolve("$name.txt")
             if (!path.exists()) {
                 println("plugin debug log file: ${pluginLogFile?.toAbsolutePath()}")

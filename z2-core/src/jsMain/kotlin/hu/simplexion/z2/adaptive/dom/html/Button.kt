@@ -5,10 +5,7 @@
 
 package hu.simplexion.z2.adaptive.dom.html
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
+import hu.simplexion.z2.adaptive.*
 import kotlinx.browser.document
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
@@ -30,7 +27,15 @@ class AdaptiveButton(
 
     override val receiver = document.createElement("button") as HTMLButtonElement
 
-    override fun patchInternal() {
+    override fun genBuild(parent: AdaptiveFragment<Node>, declarationIndex: Int): AdaptiveFragment<Node> {
+        return AdaptivePlaceholder(adapter, parent, -1)
+    }
+
+    override fun genPatchDescendant(fragment: AdaptiveFragment<Node>) {
+
+    }
+
+    override fun genPatchInternal() {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
@@ -38,7 +43,10 @@ class AdaptiveButton(
         }
 
         if (haveToPatch(closureMask, 2)) {
-            receiver.onclick = { onClick.invoke(this) }
+            receiver.onclick = {
+                onClick.invoke(this)
+                onClick.declaringFragment.patch()
+            }
         }
     }
 

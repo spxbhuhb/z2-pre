@@ -83,9 +83,15 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
-            @TestMetadata("supportFunction.kt")
-            public void testSupportFunction() throws Exception {
-                runTest("testData/box/adaptive/call/supportFunction.kt");
+            @TestMetadata("supportFunctionOutreach.kt")
+            public void testSupportFunctionOutreach() throws Exception {
+                runTest("testData/box/adaptive/call/supportFunctionOutreach.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionStateUpdate.kt")
+            public void testSupportFunctionStateUpdate() throws Exception {
+                runTest("testData/box/adaptive/call/supportFunctionStateUpdate.kt");
             }
 
             @Test

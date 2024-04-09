@@ -86,9 +86,10 @@ class ArmCallBuilder(
     ): List<IrBranch> =
         armCall.arguments
             .filterIsInstance<ArmSupportFunctionArgument>()
-            .map { genInvokeBranch(supportFunctionIndex, callingFragment, arguments, it) }
+            .map { genInvokeBranch(invokeFun, supportFunctionIndex, callingFragment, arguments, it) }
 
     private fun genInvokeBranch(
+        invokeFun: IrSimpleFunction,
         supportFunctionIndex: IrVariable,
         callingFragment: IrVariable,
         arguments: IrVariable,
@@ -100,10 +101,11 @@ class ArmCallBuilder(
                 irGet(supportFunctionIndex),
                 irConst(armSupportFunctionArgument.supportFunctionIndex)
             ),
-            genInvokeBranchBody(callingFragment, arguments, armSupportFunctionArgument)
+            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
         )
 
     private fun genInvokeBranchBody(
+        invokeFun: IrSimpleFunction,
         callingFragment: IrVariable,
         arguments: IrVariable,
         armSupportFunctionArgument: ArmSupportFunctionArgument
