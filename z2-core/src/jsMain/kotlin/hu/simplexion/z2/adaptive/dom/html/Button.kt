@@ -22,8 +22,8 @@ class AdaptiveButton(
     val label: String
         get() = state[0] as String
 
-    val onClick : AdaptiveSupportFunction<*>
-        get() = state[1] as AdaptiveSupportFunction<*>
+    val onClick: AdaptiveSupportFunction
+        get() = state[1] as AdaptiveSupportFunction
 
     override val receiver = document.createElement("button") as HTMLButtonElement
 
