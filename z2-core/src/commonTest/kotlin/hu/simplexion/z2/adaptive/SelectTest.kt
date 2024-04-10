@@ -161,7 +161,7 @@ class SelectTest {
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1]"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1]"),
-                    TraceEvent("AdaptiveSelect", 3, "create", ""),
+                    TraceEvent("AdaptiveSelect", 3, "before-Create", ""),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, -1]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
@@ -172,16 +172,17 @@ class SelectTest {
                     TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [21]"),
                     TraceEvent("AdaptiveT1", 5, "after-Create", ""),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2, 2]"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelect", 3, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 4"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Mount", "bridge: 1")
-
                 )
             ),
-            adapter.actual(dumpCode = false)
+            adapter.actual(dumpCode = true)
         )
     }
 

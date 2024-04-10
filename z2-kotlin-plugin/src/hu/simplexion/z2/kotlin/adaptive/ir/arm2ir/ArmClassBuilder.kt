@@ -340,16 +340,23 @@ class ArmClassBuilder(
                 irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
             )
 
-            + genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments)
+            +irReturn(genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments))
         }
     }
 
     private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, receivingFragment: IrVariable, arguments: IrVariable): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.unitType,
+            irBuiltIns.anyNType,
             IrStatementOrigin.WHEN
         ).apply {
+
+            armClass.stateVariables.forEach { stateVariable ->
+                val producer = (stateVariable as? ArmInternalStateVariable)?.producer ?: return@forEach
+                if ((invokeFun.isSuspend && producer.isSuspend) || (!invokeFun.isSuspend && !producer.isSuspend)) {
+                    branches += producer.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
+                }
+            }
 
             armClass.rendering.forEach { branch ->
                 if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (!invokeFun.isSuspend && branch.hasInvokeBranch)) {
@@ -385,7 +392,7 @@ class ArmClassBuilder(
             for (statement in armClass.stateDefinitionStatements) {
                 // FIXME casting a statement into an expression in internal patch
                 val originalExpression = when (statement) {
-                    is ArmInternalStateVariable -> statement.irVariable.initializer !!
+                    is ArmInternalStateVariable -> statement.builder(this@ArmClassBuilder).genInitializer(patchFun)
                     is ArmDefaultValueStatement -> statement.defaultValue
                     else -> statement.irStatement as IrExpression
                 }

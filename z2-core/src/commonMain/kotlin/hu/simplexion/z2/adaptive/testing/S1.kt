@@ -31,9 +31,8 @@ class AdaptiveS1<BT>(
 
     }
 
-    @Suppress("UNCHECKED_CAST")
-    var s0 : AdaptiveSupportFunction<BT>
-        get() = state[0] as AdaptiveSupportFunction<BT>
+    var s0: AdaptiveSupportFunction
+        get() = state[0] as AdaptiveSupportFunction
         set(v) { state[0] = v }
 
 }

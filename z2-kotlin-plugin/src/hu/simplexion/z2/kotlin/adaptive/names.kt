@@ -23,7 +23,7 @@ object Strings {
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
-    const val ADAPTIVE_ACCESS_BINDING = "AdaptiveAccessBinding"
+    const val ADAPTIVE_STATE_VALUE_BINDING = "AdaptiveStateValueBinding"
     const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
 
     const val ROOT_FRAGMENT = "rootFragment"
@@ -79,7 +79,6 @@ object FqNames {
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.runtime
-    val ADAPTIVE_BRIDGE = Strings.ADAPTIVE_BRIDGE.runtime
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.runtime
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.runtime
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.runtime
@@ -87,7 +86,7 @@ object FqNames {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
-    val ADAPTIVE_ACCESS_BINDING = Strings.ADAPTIVE_ACCESS_BINDING.runtime
+    val ADAPTIVE_STATE_VALUE_BINDING = Strings.ADAPTIVE_STATE_VALUE_BINDING.runtime
     val ADAPTIVE_PROPERTY_METADATA = Strings.ADAPTIVE_PROPERTY_METADATA.runtime
 }
 
@@ -162,17 +161,18 @@ object Indices {
     const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 2
 
     /**
-     * AdaptiveAccessBinding constructor arguments
+     * AdaptiveStateValueBinding constructor arguments
      */
-    const val ADAPTIVE_ACCESS_BINDING_ARGUMENT_COUNT = 4
+    const val ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT = 5
 
-    const val ADAPTIVE_ACCESS_BINDING_OWNER = 0
-    const val ADAPTIVE_ACCESS_BINDING_INDEX_IN_STATE = 1
-    const val ADAPTIVE_ACCESS_BINDING_INDEX_IN_CLOSURE = 2
-    const val ADAPTIVE_ACCESS_BINDING_METADATA = 3
+    const val ADAPTIVE_STATE_VALUE_BINDING_OWNER = 0
+    const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_STATE = 1
+    const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_CLOSURE = 2
+    const val ADAPTIVE_STATE_VALUE_BINDING_METADATA = 3
+    const val ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION = 4
 
     /**
-     * AdaptiveAccessBinding constructor arguments
+     * AdaptivePropertyMetadata constructor arguments
      */
     const val ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT = 1
 

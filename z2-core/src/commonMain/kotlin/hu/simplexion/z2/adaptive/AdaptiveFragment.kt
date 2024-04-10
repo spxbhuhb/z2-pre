@@ -10,7 +10,7 @@ abstract class AdaptiveFragment<BT>(
     val parent: AdaptiveFragment<BT>?,
     val index: Int,
     stateSize: Int
-) : AdaptiveWorker<BT> {
+) {
 
     val id: Long = adapter.newId()
 
@@ -21,7 +21,7 @@ abstract class AdaptiveFragment<BT>(
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
-    var workers : MutableList<AdaptiveWorker<BT>>? = null
+    var workers: MutableList<AdaptiveWorker>? = null
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
     open val thisClosure: AdaptiveClosure<BT> = AdaptiveClosure(arrayOf(this), stateSize)
@@ -42,7 +42,7 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genPatchDescendant")
     }
 
-    open fun invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+    open fun invoke(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
         if (trace) traceSupport("before-Invoke", supportFunction, arguments)
 
         val result = genInvoke(supportFunction, arguments)
@@ -56,11 +56,11 @@ abstract class AdaptiveFragment<BT>(
         return result
     }
 
-    open fun genInvoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+    open fun genInvoke(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
         pluginGenerated("genInvoke")
     }
 
-    open suspend fun invokeSuspend(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+    open suspend fun invokeSuspend(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
         if (trace) traceSupport("before-Invoke-Suspend", supportFunction, arguments)
 
         val result = genInvokeSuspend(supportFunction, arguments)
@@ -74,7 +74,7 @@ abstract class AdaptiveFragment<BT>(
         return result
     }
 
-    open suspend fun genInvokeSuspend(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+    open suspend fun genInvokeSuspend(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
         pluginGenerated("genInvokeSuspend")
     }
 
@@ -82,7 +82,7 @@ abstract class AdaptiveFragment<BT>(
     // Functions that operate on the fragment itself
     // --------------------------------------------------------------------------
 
-    override fun create() {
+    open fun create() {
         if (trace) trace("before-Create")
 
         patch()
@@ -94,10 +94,10 @@ abstract class AdaptiveFragment<BT>(
         if (trace) trace("after-Create")
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
+    open fun mount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Mount", "bridge", bridge)
 
-        workers?.forEach { it.mount(bridge) }
+        workers?.forEach { it.mount() }
 
         containedFragment?.mount(bridge)
 
@@ -133,17 +133,17 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genPatchInternal")
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
+    open fun unmount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Unmount", "bridge", bridge)
 
         containedFragment?.unmount(bridge)
 
-        workers?.forEach { it.unmount(bridge) }
+        workers?.forEach { it.unmount() }
 
         if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
-    override fun dispose() {
+    open fun dispose() {
         if (trace) trace("before-Dispose")
 
         containedFragment?.dispose()
@@ -181,7 +181,7 @@ abstract class AdaptiveFragment<BT>(
     // Worker management
     // --------------------------------------------------------------------------
 
-    fun addWorker(worker: AdaptiveWorker<BT>) {
+    fun addWorker(worker: AdaptiveWorker) {
         if (trace) trace("before-Add-Worker", "worker", worker)
         if (workers == null) workers = mutableListOf()
         workers?.let { it += worker }
@@ -218,11 +218,11 @@ abstract class AdaptiveFragment<BT>(
     open fun stateToTraceString() : String =
         this.state.contentToString()
 
-    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>) {
+    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>) {
         adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
     }
 
-    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction<BT>, result: Any?) {
+    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, result: Any?) {
         adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} result: $result")
     }
 

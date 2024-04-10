@@ -130,6 +130,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/adaptive/producer")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Producer {
+            @Test
+            public void testAllFilesPresentInProducer() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("poll.kt")
+            public void testPoll() throws Exception {
+                runTest("testData/box/adaptive/producer/poll.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/adaptive/select")
         @TestDataPath("$PROJECT_ROOT")
         public class Select {
