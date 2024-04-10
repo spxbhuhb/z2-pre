@@ -31,6 +31,7 @@ object Strings {
     const val GEN_BUILD = "genBuild"
     const val GEN_PATCH_DESCENDANT = "genPatchDescendant"
     const val GEN_INVOKE = "genInvoke"
+    const val GEN_INVOKE_SUSPEND = "genInvokeSuspend"
 
     const val CREATE = "create"
     const val MOUNT = "mount"

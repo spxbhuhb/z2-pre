@@ -184,7 +184,8 @@ class ArmClassBuilder(
     fun buildGenFunctionBodies() {
         genBuildBody()
         genPatchDescendantBody()
-        genInvokeBody()
+        genInvokeBody(Strings.GEN_INVOKE)
+        genInvokeBody(Strings.GEN_INVOKE_SUSPEND)
         genPatchInternalBody()
     }
 
@@ -301,13 +302,14 @@ class ArmClassBuilder(
         )
 
     // ---------------------------------------------------------------------------
-    // Invoke
+    // Invoke and Invoke Suspend
     // ---------------------------------------------------------------------------
 
-    fun genInvokeBody() {
-        if (! armClass.hasInvokeBranch) return
+    fun genInvokeBody(funName : String) {
+        val invokeFun = irClass.getSimpleFunction(funName) !!.owner
 
-        val invokeFun = irClass.getSimpleFunction(Strings.GEN_INVOKE) !!.owner
+        if (!invokeFun.isSuspend && ! armClass.hasInvokeBranch) return
+        if (invokeFun.isSuspend && ! armClass.hasInvokeSuspendBranch) return
 
         invokeFun.isFakeOverride = false
 
@@ -350,7 +352,7 @@ class ArmClassBuilder(
         ).apply {
 
             armClass.rendering.forEach { branch ->
-                if (branch.hasInvokeBranch) {
+                if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (!invokeFun.isSuspend && branch.hasInvokeBranch)) {
                     branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
                 }
             }

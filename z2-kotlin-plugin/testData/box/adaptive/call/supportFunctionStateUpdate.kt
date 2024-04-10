@@ -6,8 +6,6 @@ package hu.simplexion.z2.kotlin.adaptive.success
 import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.*
 
-var a = 0
-
 fun box(): String {
 
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)

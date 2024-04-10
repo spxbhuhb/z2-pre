@@ -3,6 +3,8 @@
  */
 package hu.simplexion.z2.adaptive
 
+import hu.simplexion.z2.adaptive.worker.AdaptiveWorker
+
 abstract class AdaptiveFragment<BT>(
     val adapter: AdaptiveAdapter<BT>,
     val parent: AdaptiveFragment<BT>?,
@@ -19,7 +21,7 @@ abstract class AdaptiveFragment<BT>(
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
-    val workers = mutableListOf<AdaptiveWorker<BT>>()
+    var workers : MutableList<AdaptiveWorker<BT>>? = null
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
     open val thisClosure: AdaptiveClosure<BT> = AdaptiveClosure(arrayOf(this), stateSize)
@@ -58,6 +60,24 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genInvoke")
     }
 
+    open suspend fun invokeSuspend(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+        if (trace) traceSupport("before-Invoke-Suspend", supportFunction, arguments)
+
+        val result = genInvokeSuspend(supportFunction, arguments)
+
+        if (thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
+            patchInternal()
+        }
+
+        if (trace) traceSupport("after-Invoke-Suspend", supportFunction, result)
+
+        return result
+    }
+
+    open suspend fun genInvokeSuspend(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any? {
+        pluginGenerated("genInvokeSuspend")
+    }
+
     // --------------------------------------------------------------------------
     // Functions that operate on the fragment itself
     // --------------------------------------------------------------------------
@@ -67,7 +87,7 @@ abstract class AdaptiveFragment<BT>(
 
         patch()
 
-        workers.forEach { it.create() }
+        workers?.forEach { it.create() }
 
         containedFragment = genBuild(this, 0)
 
@@ -75,13 +95,13 @@ abstract class AdaptiveFragment<BT>(
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Mount", bridge)
+        if (trace) trace("before-Mount", "bridge", bridge)
 
-        workers.forEach { it.mount(bridge) }
+        workers?.forEach { it.mount(bridge) }
 
         containedFragment?.mount(bridge)
 
-        if (trace) trace("after-Mount", bridge)
+        if (trace) trace("after-Mount", "bridge", bridge)
     }
 
     open fun patch() {
@@ -114,13 +134,13 @@ abstract class AdaptiveFragment<BT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Unmount", bridge)
+        if (trace) trace("before-Unmount", "bridge", bridge)
 
         containedFragment?.unmount(bridge)
 
-        workers.forEach { it.unmount(bridge) }
+        workers?.forEach { it.unmount(bridge) }
 
-        if (trace) trace("after-Unmount", bridge)
+        if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
     override fun dispose() {
@@ -128,7 +148,7 @@ abstract class AdaptiveFragment<BT>(
 
         containedFragment?.dispose()
 
-        workers.forEach { it.dispose() }
+        workers?.forEach { it.dispose() }
 
         if (trace) trace("after-Dispose")
     }
@@ -158,6 +178,17 @@ abstract class AdaptiveFragment<BT>(
     }
 
     // --------------------------------------------------------------------------
+    // Worker management
+    // --------------------------------------------------------------------------
+
+    fun addWorker(worker: AdaptiveWorker<BT>) {
+        if (trace) trace("before-Add-Worker", "worker", worker)
+        if (workers == null) workers = mutableListOf()
+        workers?.let { it += worker }
+        if (trace) trace("after-Add-Worker", "worker", worker)
+    }
+
+    // --------------------------------------------------------------------------
     // Utility functions
     // --------------------------------------------------------------------------
 
@@ -173,8 +204,8 @@ abstract class AdaptiveFragment<BT>(
         adapter.trace(this, point, "")
     }
 
-    fun trace(point: String, bridge: AdaptiveBridge<BT>) {
-        adapter.trace(this, point, "bridge: $bridge")
+    fun trace(point: String, label : String, value : Any?) {
+        adapter.trace(this, point, "$label: $value")
     }
 
     @OptIn(ExperimentalStdlibApi::class)

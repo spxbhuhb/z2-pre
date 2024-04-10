@@ -23,18 +23,21 @@ class AdaptiveSequence<BT>(
         get() = state[0] as IntArray
 
     override fun create() {
-        if (adapter.trace) trace("create")
+        if (trace) trace("before-Create")
 
         patch()
 
         for (itemIndex in indices) {
             fragments += createClosure.owner.genBuild(this, itemIndex)
         }
+
+        if (trace) trace("after-Create")
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("mount", bridge)
+        if (trace) trace("before-Mount", "bridge", bridge)
         fragments.forEach { it.mount(bridge) }
+        if (trace) trace("after-Mount", "bridge", bridge)
     }
 
     override fun genPatchInternal() {
@@ -42,13 +45,15 @@ class AdaptiveSequence<BT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("unmount", bridge)
+        if (trace) trace("before-Unmount", "bridge", bridge)
         fragments.forEach { it.unmount(bridge) }
+        if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
     override fun dispose() {
-        if (adapter.trace) trace("dispose")
+        if (trace) trace("before-Dispose")
         fragments.forEach { it.dispose() }
+        if (trace) trace("after-Dispose")
     }
 
     override fun stateToTraceString(): String {

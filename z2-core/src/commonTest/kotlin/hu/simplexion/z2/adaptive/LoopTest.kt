@@ -37,7 +37,7 @@ class LoopTest {
                     TraceEvent("AdaptiveLoopTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
                     TraceEvent("AdaptiveLoopTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
                     TraceEvent("AdaptiveLoopTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
-                    TraceEvent("AdaptiveLoop", 3, "create", ""),
+                    TraceEvent("AdaptiveLoop", 3, "before-Create", ""),
                     TraceEvent("AdaptiveLoop", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,null]"),
                     TraceEvent("AdaptiveLoop", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
                     TraceEvent("AdaptiveLoop", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
@@ -106,9 +106,10 @@ class LoopTest {
                     TraceEvent("AdaptiveT1", 18, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveAnonymous", 17, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveLoop", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("AdaptiveLoop", 3, "after-Create", ""),
                     TraceEvent("AdaptiveLoopTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveLoopTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveLoop", 3, "mount", "bridge: 1"),
+                    TraceEvent("AdaptiveLoop", 3, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveAnonymous", 5, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 6, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 6, "after-Mount", "bridge: 4"),
@@ -125,6 +126,7 @@ class LoopTest {
                     TraceEvent("AdaptiveT1", 18, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 18, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveAnonymous", 17, "after-Mount", "bridge: 4"),
+                    TraceEvent("AdaptiveLoop", 3, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveLoopTest", 2, "after-Mount", "bridge: 1")
                 )
             ),

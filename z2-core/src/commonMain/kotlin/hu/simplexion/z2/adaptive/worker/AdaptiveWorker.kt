@@ -1,4 +1,6 @@
-package hu.simplexion.z2.adaptive
+package hu.simplexion.z2.adaptive.worker
+
+import hu.simplexion.z2.adaptive.AdaptiveBridge
 
 interface AdaptiveWorker<BT> {
     fun create()

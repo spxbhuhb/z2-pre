@@ -20,9 +20,12 @@ class ArmSupportFunctionArgument(
     val supportFunctionIndex: Int,
     val supportFunctionClosure: ArmClosure,
     type : IrType,
-    value: IrFunctionExpression,
+    override val value: IrFunctionExpression,
     dependencies: ArmDependencies,
 ) : ArmValueArgument(armClass, argumentIndex, type, value, dependencies) {
+
+    val isSuspend
+        get() = value.function.isSuspend
 
     override fun toPatchExpression(
         classBuilder: ClassBoundIrBuilder,

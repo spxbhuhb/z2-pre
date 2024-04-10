@@ -27,7 +27,7 @@ fun box() : String {
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
-        TraceEvent("AdaptiveSequence", 3, "create", ""),
+        TraceEvent("AdaptiveSequence", 3, "before-Create", ""),
         TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
         TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
         TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
@@ -56,9 +56,10 @@ fun box() : String {
         TraceEvent("AdaptiveT1", 9, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptiveT1", 9, "after-Create", ""),
         TraceEvent("AdaptiveWithDefault", 8, "after-Create", ""),
+        TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
         TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSequence", 3, "mount", "bridge: 1"),
+        TraceEvent("AdaptiveSequence", 3, "before-Mount", "bridge: 1"),
         TraceEvent("AdaptiveWithDefault", 4, "before-Mount", "bridge: 1"),
         TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 1"),
         TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 1"),
@@ -67,6 +68,7 @@ fun box() : String {
         TraceEvent("AdaptiveT1", 9, "before-Mount", "bridge: 1"),
         TraceEvent("AdaptiveT1", 9, "after-Mount", "bridge: 1"),
         TraceEvent("AdaptiveWithDefault", 8, "after-Mount", "bridge: 1"),
+        TraceEvent("AdaptiveSequence", 3, "after-Mount", "bridge: 1"),
         TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
     ))
 }

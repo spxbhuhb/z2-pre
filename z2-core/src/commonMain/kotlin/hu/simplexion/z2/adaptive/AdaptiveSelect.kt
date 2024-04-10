@@ -34,18 +34,23 @@ class AdaptiveSelect<BT>(
     var shownFragment: AdaptiveFragment<BT>? = null
 
     override fun create() {
-        if (adapter.trace) trace("create")
+        if (trace) trace("before-Create")
 
         state[1] = -1 // initialize showBranch so that we don't have a shown branch
 
         patch()
+
+        if (trace) trace("after-Create")
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("mount", bridge)
+        if (adapter.trace) trace("before-Mount", "bridge", bridge)
+
         mounted = true
         bridge.add(placeholder)
         shownFragment?.mount(placeholder)
+
+        if (adapter.trace) trace("after-Mount", "bridge", bridge)
     }
 
     override fun genPatchInternal() {
@@ -67,15 +72,19 @@ class AdaptiveSelect<BT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
+        if (trace) trace("before-Unmount", "bridge", bridge)
+
         shownFragment?.unmount(placeholder)
         bridge.remove(placeholder)
         mounted = false
-        if (adapter.trace) trace("unmount", bridge)
+
+        if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
     override fun dispose() {
-        if (adapter.trace) trace("dispose")
+        if (trace) trace("before-Dispose")
         shownFragment?.dispose()
+        if (trace) trace("after-Dispose")
     }
 
 }

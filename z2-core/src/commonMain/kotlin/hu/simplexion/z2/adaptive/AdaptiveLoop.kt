@@ -43,18 +43,21 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun create() {
-        if (adapter.trace) trace("create")
+        if (trace) trace("before-Create")
         patch()
+        if (trace) trace("after-Create")
     }
 
     override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("mount", bridge)
+        if (adapter.trace) trace("before-Mount", "bridge", bridge)
 
         bridge.add(placeholder)
 
         for (fragment in fragments) {
             fragment.mount(placeholder)
         }
+
+        if (adapter.trace) trace("after-Mount", "bridge", bridge)
     }
 
     override fun genPatchInternal() {
@@ -95,21 +98,24 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("unmount", bridge)
+        if (trace) trace("before-Unmount", "bridge", bridge)
 
         for (fragment in fragments) {
             fragment.unmount(placeholder)
         }
 
         bridge.remove(placeholder)
+        if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
     override fun dispose() {
-        if (adapter.trace) trace("dispose")
+        if (trace) trace("before-Dispose")
 
         for (f in fragments) {
             f.dispose()
         }
+
+        if (trace) trace("after-Dispose")
     }
 
     override fun stateToTraceString(): String {

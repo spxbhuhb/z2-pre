@@ -15,7 +15,7 @@ open class ArmValueArgument(
     armClass: ArmClass,
     val argumentIndex: Int,
     val type : IrType,
-    val value: IrExpression,
+    open val value: IrExpression,
     dependencies: ArmDependencies
 ) : ArmExpression(armClass, value, dependencies) {
 

@@ -18,6 +18,10 @@ class AdaptiveSupportFunction<BT>(
         return declaringFragment.invoke(this, arguments)
     }
 
+    suspend fun invokeSuspend(vararg arguments: Any?): Any? {
+        return declaringFragment.invokeSuspend(this, arguments)
+    }
+
     override fun toString() =
         "AdaptiveSupportFunction(${declaringFragment.id}, $supportFunctionIndex)"
 }

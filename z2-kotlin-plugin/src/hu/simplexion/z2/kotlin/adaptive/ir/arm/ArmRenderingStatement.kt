@@ -16,5 +16,6 @@ abstract class ArmRenderingStatement(
     abstract fun branchBuilder(parent: ClassBoundIrBuilder) : BranchBuilder
 
     var hasInvokeBranch : Boolean = false
+    var hasInvokeSuspendBranch : Boolean = false
 
 }

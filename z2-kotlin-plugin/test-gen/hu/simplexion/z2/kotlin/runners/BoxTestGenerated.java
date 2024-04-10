@@ -95,6 +95,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
+            @TestMetadata("supportFunctionSuspend.kt")
+            public void testSupportFunctionSuspend() throws Exception {
+                runTest("testData/box/adaptive/call/supportFunctionSuspend.kt");
+            }
+
+            @Test
             @TestMetadata("withDefault.kt")
             public void testWithDefault() throws Exception {
                 runTest("testData/box/adaptive/call/withDefault.kt");

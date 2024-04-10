@@ -15,10 +15,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.util.dump
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
-import org.jetbrains.kotlin.ir.util.isFunction
-import org.jetbrains.kotlin.ir.util.statements
+import org.jetbrains.kotlin.ir.util.*
 
 /**
  * Transforms an original function into a [ArmClass]. This is a somewhat complex transformation.
@@ -239,9 +236,14 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument }) {
+        if (armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }) {
             armClass.hasInvokeBranch = true
             armCall.hasInvokeBranch = true
+        }
+
+        if (armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }) {
+            armClass.hasInvokeSuspendBranch = true
+            armCall.hasInvokeSuspendBranch = true
         }
 
         return armCall.add()
@@ -268,7 +270,9 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument }
+        // FIXME do we need invoke branch for argument call?
+        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }
+        armCall.hasInvokeSuspendBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }
 
         return armCall.add()
     }
@@ -313,7 +317,7 @@ class IrFunction2ArmClass(
                 null
             }
 
-            parameterType.isFunction() -> {
+            parameterType.isFunction() || parameterType.isSuspendFunction() -> {
                 if (expression is IrFunctionExpression) {
                     ArmSupportFunctionArgument(
                         armClass,

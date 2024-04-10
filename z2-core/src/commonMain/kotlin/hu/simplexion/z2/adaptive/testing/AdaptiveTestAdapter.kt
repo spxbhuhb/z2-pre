@@ -15,13 +15,13 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override val trace = true
 
-    val traceLock = Lock()
-
     override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
     override val rootBridge = AdaptiveTestBridge(newId())
+
+    val lock = Lock()
 
     val traceEvents = mutableListOf<TraceEvent>()
 
@@ -34,13 +34,13 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
     }
 
     override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
-        traceLock.use {
+        lock.use {
             traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
         }
     }
 
     fun actual(dumpCode: Boolean = false): String =
-        traceLock.use {
+        lock.use {
             traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
         }
 
