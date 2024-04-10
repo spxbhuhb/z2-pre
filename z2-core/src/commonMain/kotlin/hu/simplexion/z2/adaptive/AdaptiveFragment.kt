@@ -8,7 +8,7 @@ abstract class AdaptiveFragment<BT>(
     val parent: AdaptiveFragment<BT>?,
     val index: Int,
     stateSize: Int
-) {
+) : AdaptiveWorker<BT> {
 
     val id: Long = adapter.newId()
 
@@ -18,6 +18,8 @@ abstract class AdaptiveFragment<BT>(
         get() = parent?.thisClosure
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
+
+    val workers = mutableListOf<AdaptiveWorker<BT>>()
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
     open val thisClosure: AdaptiveClosure<BT> = AdaptiveClosure(arrayOf(this), stateSize)
@@ -60,18 +62,22 @@ abstract class AdaptiveFragment<BT>(
     // Functions that operate on the fragment itself
     // --------------------------------------------------------------------------
 
-    open fun create() {
+    override fun create() {
         if (trace) trace("before-Create")
 
         patch()
+
+        workers.forEach { it.create() }
 
         containedFragment = genBuild(this, 0)
 
         if (trace) trace("after-Create")
     }
 
-    open fun mount(bridge: AdaptiveBridge<BT>) {
+    override fun mount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Mount", bridge)
+
+        workers.forEach { it.mount(bridge) }
 
         containedFragment?.mount(bridge)
 
@@ -107,18 +113,22 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genPatchInternal")
     }
 
-    open fun unmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Unmount", bridge)
 
         containedFragment?.unmount(bridge)
 
+        workers.forEach { it.unmount(bridge) }
+
         if (trace) trace("after-Unmount", bridge)
     }
 
-    open fun dispose() {
+    override fun dispose() {
         if (trace) trace("before-Dispose")
 
         containedFragment?.dispose()
+
+        workers.forEach { it.dispose() }
 
         if (trace) trace("after-Dispose")
     }

@@ -7,6 +7,7 @@ import hu.simplexion.z2.browser.material.button.filledLaunchButton
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.material.modal.Modals
 import hu.simplexion.z2.browser.material.vh
+import hu.simplexion.z2.browser.material.vw
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.runtime.localized
 import hu.simplexion.z2.localization.text.LocalizedText
@@ -52,6 +53,10 @@ class ModalBuilder {
         this.title = title.localized
     }
 
+    fun title(title: LocalizedText) {
+        this.title = title
+    }
+
     fun header(builder: Z2Builder) {
         headerBuilder = builder
     }
@@ -64,11 +69,11 @@ class ModalBuilder {
         footerBuilder = builder
     }
 
-    fun save(saveFun: suspend () -> Unit) {
+    fun save(label: LocalizedText? = null, saveFun: suspend () -> Unit) {
         footerBuilder = {
             defaultFooter {
                 textButton(browserStrings.cancel) { close() }
-                filledLaunchButton(browserStrings.save) {
+                filledLaunchButton(label ?: browserStrings.save) {
                     saveFun()
                 }
             }
@@ -113,6 +118,7 @@ class ModalBuilder {
             gridTemplateRows = "min-content 1fr"
 
             style.maxHeight = 98.vh
+            style.maxWidth = 98.vw
 
             addCss(
                 boxSizingBorderBox,
