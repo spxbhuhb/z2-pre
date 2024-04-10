@@ -39,6 +39,7 @@ class AdaptivePluginContext(
     val adaptiveSupportFunctionClass = classSymbol(FqNames.ADAPTIVE_SUPPORT_FUNCTION)
     val adaptiveSupportFunctionInvoke = checkNotNull(adaptiveSupportFunctionClass.getSimpleFunction(Strings.SUPPORT_FUNCTION_INVOKE))
     val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
+    val adaptiveSupportFunctionReceivingFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT))
 
     val adaptiveAccessBindingClass = classSymbol(FqNames.ADAPTIVE_ACCESS_BINDING)
     val adaptivePropertyMetadataClass = classSymbol(FqNames.ADAPTIVE_PROPERTY_METADATA)
@@ -46,13 +47,8 @@ class AdaptivePluginContext(
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
 
-    val genBuild = function(Strings.GEN_BUILD)
-    val genPatchDescendant = function(Strings.GEN_PATCH_DESCENDANT)
-    val genInvoke = function(Strings.GEN_INVOKE)
-
     val create = function(Strings.CREATE)
     val mount = function(Strings.MOUNT)
-    val genPatchInternal = function(Strings.GEN_PATCH_INTERNAL)
 
     val haveToPatch = function(Strings.HAVE_TO_PATCH)
     val getCreateClosureDirtyMask = function(Strings.GET_CREATE_CLOSURE_DIRTY_MASK)

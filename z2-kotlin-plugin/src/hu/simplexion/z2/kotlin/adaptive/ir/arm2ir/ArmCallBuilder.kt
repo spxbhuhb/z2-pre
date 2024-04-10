@@ -124,10 +124,11 @@ class ArmCallBuilder(
             }
 
         return IrBlockImpl(
-            functionToTransform.startOffset, functionToTransform.endOffset,
+            functionToTransform.startOffset,
+            functionToTransform.endOffset,
             functionToTransform.returnType
         ).apply {
-            val transform = SupportFunctionTransform(this@ArmCallBuilder, transformClosure, callingFragment, arguments)
+            val transform = SupportFunctionTransform(this@ArmCallBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter!!) }, callingFragment, arguments)
 
             functionToTransform.body!!.statements.forEach {
                 statements += it.transformStatement(transform)

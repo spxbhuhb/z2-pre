@@ -48,13 +48,8 @@ object Strings {
     const val PARENT = "parent"
     const val INDEX = "index"
     const val STATE = "state"
-    const val DECLARATION_INDEX = "declarationIndex"
-    const val FRAGMENT = "fragment"
-    const val SUPPORT_FUNCTION = "supportFunction"
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
-    const val SUPPORT_FUNCTION_DECLARING_FRAGMENT = "declaringFragment"
-    const val CALLING_FRAGMENT = "callingFragment"
-    const val ARGUMENTS = "arguments"
+    const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
 
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
 
@@ -71,18 +66,6 @@ object Names {
     val ADAPTER = Name.identifier(Strings.ADAPTER)
 
     val BT = Name.identifier(Strings.BT)
-
-    val GEN_BUILD = Name.identifier(Strings.GEN_BUILD)
-    val GEN_PATCH_DESCENDANT = Name.identifier(Strings.GEN_PATCH_DESCENDANT)
-    val GEN_INVOKE = Name.identifier(Strings.GEN_INVOKE)
-
-    val GEN_PATCH_INTERNAL = Name.identifier(Strings.GEN_PATCH_INTERNAL)
-
-    val FRAGMENT = Name.identifier(Strings.FRAGMENT)
-    val DECLARATION_INDEX = Name.identifier(Strings.DECLARATION_INDEX)
-    val SUPPORT_FUNCTION = Name.identifier(Strings.SUPPORT_FUNCTION)
-    val CALLING_FRAGMENT = Name.identifier(Strings.CALLING_FRAGMENT)
-    val ARGUMENTS = Name.identifier(Strings.ARGUMENTS)
 
     val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
 }
@@ -129,16 +112,15 @@ object Indices {
     const val BUILD_DECLARATION_INDEX = 1
 
     /**
-     * `patchExternal(fragment)` arguments
+     * `patchDescendant(fragment)` arguments
      */
-    const val PATCH_EXTERNAL_FRAGMENT = 0
+    const val PATCH_DESCENDANT_FRAGMENT = 0
 
     /**
-     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, callingFragment: AdaptiveFragment<BT>, arguments: Array<out Any?>): Any?` arguments
+     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?` arguments
      */
     const val INVOKE_SUPPORT_FUNCTION = 0
-    const val INVOKE_CALLING_FRAGMENT = 1
-    const val INVOKE_ARGUMENTS = 2
+    const val INVOKE_ARGUMENTS = 1
 
     /**
      * `setStateVariable(index, value)` arguments
@@ -157,15 +139,6 @@ object Indices {
     const val GET_CLOSURE_VARIABLE_INDEX = 0
 
     /**
-     * Adapter trace function arguments
-     */
-    const val ADAPTIVE_TRACE_ARGUMENT_COUNT = 3
-
-    const val ADAPTIVE_TRACE_ARGUMENT_NAME = 0
-    const val ADAPTIVE_TRACE_ARGUMENT_POINT = 1
-    const val ADAPTIVE_TRACE_ARGUMENT_DATA = 2
-
-    /**
      * Bridge type parameter for classes.
      */
     const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
@@ -181,10 +154,11 @@ object Indices {
     /**
      * AdaptiveSupportFunction constructor arguments
      */
-    const val ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT = 2
+    const val ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT = 3
 
-    const val ADAPTIVE_SUPPORT_FUNCTION_FRAGMENT = 0
-    const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 1
+    const val ADAPTIVE_SUPPORT_FUNCTION_DECLARING_FRAGMENT = 0
+    const val ADAPTIVE_SUPPORT_FUNCTION_RECEIVING_FRAGMENT = 1
+    const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 2
 
     /**
      * AdaptiveAccessBinding constructor arguments

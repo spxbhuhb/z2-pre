@@ -18,7 +18,8 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 class SupportFunctionTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
-    private val callingFragment: IrVariable,
+    private val declaringFragment: () -> IrExpression,
+    private val receivingFragment: IrVariable,
     private val arguments: IrVariable
 ) : IrElementTransformerVoidWithContext() {
 
@@ -77,7 +78,7 @@ class SupportFunctionTransform(
                 Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
             ).also {
 
-                it.dispatchReceiver = irBuilder.irGet(callingFragment)
+                it.dispatchReceiver = irBuilder.irGet(receivingFragment)
 
                 it.putValueArgument(
                     Indices.GET_CLOSURE_VARIABLE_INDEX,
@@ -101,7 +102,7 @@ class SupportFunctionTransform(
             Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also {
 
-            it.dispatchReceiver = irBuilder.irGet(callingFragment)
+            it.dispatchReceiver = declaringFragment()
 
             it.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,

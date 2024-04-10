@@ -257,7 +257,7 @@ class ArmClassBuilder(
                     pluginContext.getCreateClosureDirtyMask,
                     0, 0
                 ).also {
-                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_EXTERNAL_FRAGMENT])
+                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
                 }
             )
 
@@ -268,7 +268,7 @@ class ArmClassBuilder(
                     pluginContext.index.single().owner.getter !!.symbol,
                     0, 0
                 ).also {
-                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_EXTERNAL_FRAGMENT])
+                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
                 }
             )
 
@@ -324,19 +324,25 @@ class ArmClassBuilder(
                 }
             )
 
-            val callingFragment = irTemporary(
-                irGet(invokeFun.valueParameters[Indices.INVOKE_CALLING_FRAGMENT])
+            val receivingFragment = irTemporary(
+                IrCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    classBoundFragmentType,
+                    pluginContext.adaptiveSupportFunctionReceivingFragment,
+                    0, 0
+                ).also {
+                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
+                }
             )
-
             val arguments = irTemporary(
                 irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
             )
 
-            + genInvokeWhen(invokeFun, supportFunctionIndex, callingFragment, arguments)
+            + genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments)
         }
     }
 
-    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, callingFragment: IrVariable, arguments: IrVariable): IrExpression =
+    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, receivingFragment: IrVariable, arguments: IrVariable): IrExpression =
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
@@ -345,7 +351,7 @@ class ArmClassBuilder(
 
             armClass.rendering.forEach { branch ->
                 if (branch.hasInvokeBranch) {
-                    branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, callingFragment, arguments)
+                    branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
                 }
             }
 

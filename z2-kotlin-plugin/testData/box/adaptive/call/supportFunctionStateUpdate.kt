@@ -20,7 +20,7 @@ fun box(): String {
 
     val s1 = adapter.rootFragment.containedFragment as AdaptiveS1<TestNode>
 
-    s1.s0.invoke(adapter.rootFragment, 45)
+    s1.s0.invoke(45)
 
     return AdaptiveTestAdapter.assert(
         listOf(
@@ -40,7 +40,7 @@ fun box(): String {
             TraceEvent("AdaptiveS1", 3, "before-Mount", "bridge: 1"),
             TraceEvent("AdaptiveS1", 3, "after-Mount", "bridge: 1"),
             TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "before-Invoke", "callingFragment: AdaptiveRootSupportFunctionStateUpdate421 @ 2 index: 0 arguments: [45]"),
+            TraceEvent("<root>", 2, "before-Invoke", "index: 0 arguments: [45]"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [13]"),
             TraceEvent("AdaptiveS1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [AdaptiveSupportFunction(2, 0)]"),
             TraceEvent("AdaptiveS1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [AdaptiveSupportFunction(2, 0)]"),

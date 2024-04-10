@@ -97,7 +97,7 @@ class AdaptiveSupportFunctionTest(
                     fragment.setStateVariable(0, 12)
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
-                    fragment.setStateVariable(1, AdaptiveSupportFunction(this, 0))
+                    fragment.setStateVariable(1, AdaptiveSupportFunction(this, fragment, 0))
                 }
             }
         }
@@ -114,17 +114,17 @@ class AdaptiveSupportFunctionTest(
     @Suppress("RedundantNullableReturnType")
     override fun genInvoke(
         supportFunction: AdaptiveSupportFunction<TestNode>,
-        callingFragment: AdaptiveFragment<TestNode>,
         arguments: Array<out Any?>
     ): Any? {
 
-        val fragment = supportFunction.declaringFragment
+        val declaringFragment = supportFunction.declaringFragment
+        val receivingFragment = supportFunction.receivingFragment
 
         return when (supportFunction.supportFunctionIndex) {
             0 -> {
-                fragment.setStateVariable(
+                declaringFragment.setStateVariable(
                     0,
-                    11 + (arguments[0] as Int) + (fragment.getThisClosureVariable(0) as Int)
+                    11 + (arguments[0] as Int) + (receivingFragment.getCreateClosureVariable(0) as Int)
                 )
             }
 
@@ -144,7 +144,7 @@ class AdaptiveSupportFunctionInner(
     }
 
     override fun genPatchInternal() {
-        (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(this, getThisClosureVariable(0))
+        (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(getThisClosureVariable(0))
     }
 
 }
