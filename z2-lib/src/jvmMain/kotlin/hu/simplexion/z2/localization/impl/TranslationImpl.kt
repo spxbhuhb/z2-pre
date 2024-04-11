@@ -1,6 +1,7 @@
 package hu.simplexion.z2.localization.impl
 
-import hu.simplexion.z2.auth.context.ensureSecurityOfficer
+import hu.simplexion.z2.application.securityOfficerRole
+import hu.simplexion.z2.auth.context.ensureOneOf
 import hu.simplexion.z2.auth.context.ensuredByLogic
 import hu.simplexion.z2.localization.api.TranslationApi
 import hu.simplexion.z2.localization.model.Locale
@@ -14,6 +15,8 @@ class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
 
     companion object {
         val translationImpl = TranslationImpl().internal
+
+        var translationEditRoles = arrayOf(securityOfficerRole.uuid)
     }
 
     override suspend fun list(locale: UUID<Locale>): List<Translation> {
@@ -22,7 +25,7 @@ class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
     }
 
     override suspend fun put(translation: Translation) {
-        ensureSecurityOfficer()
+        ensureOneOf(*translationEditRoles)
         translationTable.put(translation)
     }
 
@@ -39,7 +42,7 @@ class TranslationImpl : TranslationApi, ServiceImpl<TranslationImpl> {
     }
 
     fun put(key : String, value : String) {
-        for (locale in localeTable.list()) {
+        for (locale in localeTable.query()) {
             translationTable.put(Translation().also {
                 it.locale = locale.uuid
                 it.key = key

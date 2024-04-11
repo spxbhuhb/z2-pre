@@ -29,7 +29,7 @@ class ModalBuilder {
     var contentBuilder: Z2Builder = {
         div(positionRelative) {
             style.overflowY = "scroll"
-            div(pl24, pr24, heightMinContent) {
+            div(p24, heightMinContent) {
                 supportingTextBuilder()
                 bodyBuilder()
             }

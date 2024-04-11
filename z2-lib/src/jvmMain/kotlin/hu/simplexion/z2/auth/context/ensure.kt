@@ -98,11 +98,21 @@ fun ServiceImpl<*>.ensureAny(vararg roles: Role) {
 
 /**
  * Ensures that the block runs only when there context contains **ANY**
- * of the specified roles.
+ * of the specified roles (same as [ensureOneOf]).
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
 fun ServiceImpl<*>.ensureAny(vararg roleUuids: UUID<Role>) {
+    if (serviceContext.hasAny(*roleUuids) != ContextCheckResult.Allow) throw AccessDenied()
+}
+
+/**
+ * Ensures that the block runs only when there context contains **AT LEAST ONE**
+ * of the specified roles (same as [ensureAny]).
+ *
+ * @throws   AccessDenied  None of the roles are in the context.
+ */
+fun ServiceImpl<*>.ensureOneOf(vararg roleUuids: UUID<Role>) {
     if (serviceContext.hasAny(*roleUuids) != ContextCheckResult.Allow) throw AccessDenied()
 }
 
