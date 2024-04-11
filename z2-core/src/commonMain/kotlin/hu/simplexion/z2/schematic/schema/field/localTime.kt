@@ -15,6 +15,9 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 interface LocalTimeSchemaFieldCommon {
+    var min: LocalTime?
+    var max: LocalTime?
+
      fun toTypedValueCommon(anyValue: Any?, fails: MutableList<ValidationFailInfo>): LocalTime? {
         return when (anyValue) {
             is LocalTime -> anyValue
@@ -25,10 +28,17 @@ interface LocalTimeSchemaFieldCommon {
             }
         }
     }
+
+    fun validateValueCommon(value: LocalTime, fails: MutableList<ValidationFailInfo>) {
+        min?.let { if (value < it) fails += fail(validationStrings.minValueFail, it) }
+        max?.let { if (value > it) fails += fail(validationStrings.maxValueFail, it) }
+    }
 }
 
 open class LocalTimeSchemaField(
-    override var definitionDefault: LocalTime?
+    override var definitionDefault: LocalTime?,
+    override var min: LocalTime?,
+    override var max: LocalTime?
 ) : SchemaField<LocalTime>, LocalTimeSchemaFieldCommon {
 
     override val type: SchemaFieldType get() = SchemaFieldType.LocalTime
@@ -40,6 +50,10 @@ open class LocalTimeSchemaField(
 
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): LocalTime? {
         return toTypedValueCommon(anyValue, fails)
+    }
+
+    override fun validateValue(value: LocalTime, fails: MutableList<ValidationFailInfo>) {
+        validateValueCommon(value, fails)
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
@@ -58,13 +72,15 @@ open class LocalTimeSchemaField(
     }
 
     fun nullable() : NullableLocalTimeSchemaField {
-        return NullableLocalTimeSchemaField(definitionDefault)
+        return NullableLocalTimeSchemaField(definitionDefault, min, max)
     }
 
 }
 
 open class NullableLocalTimeSchemaField(
-    override var definitionDefault: LocalTime?
+    override var definitionDefault: LocalTime?,
+    override var min: LocalTime?,
+    override var max: LocalTime?
 ) : SchemaField<LocalTime?>, LocalTimeSchemaFieldCommon {
 
     override val type: SchemaFieldType get() = SchemaFieldType.LocalTime
@@ -76,6 +92,11 @@ open class NullableLocalTimeSchemaField(
     override fun toTypedValue(anyValue: Any?, fails: MutableList<ValidationFailInfo>): LocalTime? {
         if (anyValue == null) return null
         return toTypedValueCommon(anyValue, fails)
+    }
+
+    override fun validateValue(value: LocalTime?, fails: MutableList<ValidationFailInfo>) {
+        if (value == null) return
+        validateValueCommon(value, fails)
     }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {

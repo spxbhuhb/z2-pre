@@ -149,7 +149,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
 
         fun localDate(default: LocalDate? = null) = LocalDateSchemaField(default)
 
-        fun localTime(default: LocalTime? = null) = LocalTimeSchemaField(default)
+        fun localTime(default: LocalTime? = null, min: LocalTime? = null, max: LocalTime? = null) = LocalTimeSchemaField(default, min, max)
 
         fun localDateTime(default: LocalDateTime? = null) = LocalDateTimeSchemaField(default)
 
