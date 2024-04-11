@@ -3,21 +3,22 @@
  */
 package hu.simplexion.z2.adaptive
 
-class AdaptiveAccessBinding<T>(
+class AdaptiveStateValueBinding<VT>(
     val owner: AdaptiveFragment<*>,
     val indexInState: Int,
     val indexInClosure: Int,
-    val metadata: AdaptivePropertyMetadata
+    val metadata: AdaptivePropertyMetadata,
+    val supportFunction: Int
 ) {
     @Suppress("UNCHECKED_CAST")
-    var value: T
-        get() = owner.getThisClosureVariable(indexInClosure) as T
+    var value: VT
+        get() = owner.getThisClosureVariable(indexInClosure) as VT
         set(v) {
             owner.setStateVariable(indexInState, v)
             owner.patchInternal()
         }
 
     override fun toString(): String {
-        return "AdaptiveAccessBinding(owner=$owner, indexInState=$indexInState, indexInClosure=$indexInClosure type=${metadata.type})"
+        return "AdaptiveStateValueBinding(owner=$owner, indexInState=$indexInState, indexInClosure=$indexInClosure type=${metadata.type}) supportFunction:$supportFunction"
     }
 }

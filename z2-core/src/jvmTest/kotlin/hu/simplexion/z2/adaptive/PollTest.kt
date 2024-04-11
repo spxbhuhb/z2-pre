@@ -4,13 +4,9 @@
 package hu.simplexion.z2.adaptive
 
 import hu.simplexion.z2.adaptive.testing.*
-import hu.simplexion.z2.adaptive.worker.AdaptivePoll
 import hu.simplexion.z2.adaptive.worker.poll
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Before
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration
@@ -19,46 +15,27 @@ var counter = 12
 
 @Suppress("unused")
 fun Adaptive.pollTest() {
-    val i = poll(Duration.ZERO, 2) { counter ++ }
+    val i = poll(Duration.ZERO, 2, counter) { counter++ }
     T1(i)
 }
 
 @Suppress("OPT_IN_USAGE")
 class PollTest {
 
-    private val mainThreadSurrogate = newSingleThreadContext("test thread")
-
-    @Before
-    fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
-    }
-
     @Test
     fun test() {
-        Dispatchers.setMain(Dispatchers.Default)
-
         val adapter = AdaptiveTestAdapter()
         val root = AdaptiveTestBridge(1)
 
-        runBlocking(Dispatchers.Main) {
+        adapter.dispatcher = newSingleThreadContext("test thread")
+
+        runBlocking(adapter.dispatcher) {
             AdaptivePollTest(adapter, null, 0).apply {
                 create()
                 mount(root)
             }
 
-            withTimeout(1000) {
-                while (true) {
-                    val done = adapter.traceEvents.lastOrNull()?.let { it.point == "after-Invoke-Suspend" && it.data.lastOrNull() == "index: 0 result: 14" } ?: false
-                    if (done) break
-                    delay(10)
-                }
-            }
+            adapter.waitFor(Regex.fromLiteral("after-Invoke-Suspend"), Regex.fromLiteral("index: 0 result: 14"))
 
             assertEquals(
                 adapter.expected(
@@ -68,8 +45,8 @@ class PollTest {
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveSupportFunction(2, 0), indexInState=0, interval=0s, repeat=2)"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveSupportFunction(2, 0), indexInState=0, interval=0s, repeat=2)"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(owner=AdaptivePollTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.int) supportFunction:0, interval=0s, repeatLimit=2)"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(owner=AdaptivePollTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.int) supportFunction:0, interval=0s, repeatLimit=2)"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [0]"),
                         TraceEvent("AdaptiveT1", 3, "before-Create", ""),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -148,19 +125,25 @@ class AdaptivePollTest(
 
     override fun genPatchInternal() {
         if (getThisClosureDirtyMask() == adaptiveInitStateMask) {
-            this.setStateVariable(0, 0)
-            AdaptivePoll(this, 0, 0, Duration.ZERO, 2)
+            this.setStateVariable(
+                0,
+                poll(
+                    Duration.ZERO, 2, 0,
+                    AdaptiveStateValueBinding(this, 0, 0, AdaptivePropertyMetadata("kotlin.int"), 0),
+                    null
+                )
+            )
         }
     }
 
     @Suppress("RedundantNullableReturnType")
     override suspend fun genInvokeSuspend(
-        supportFunction: AdaptiveSupportFunction<TestNode>,
+        supportFunction: AdaptiveSupportFunction,
         arguments: Array<out Any?>
     ): Any? {
 
         return when (supportFunction.supportFunctionIndex) {
-            0 -> counter ++
+            0 -> counter++
             else -> invalidIndex(supportFunction.supportFunctionIndex)
         }
 

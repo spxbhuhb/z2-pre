@@ -8,6 +8,8 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
 import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.Node
 
 /**
@@ -24,6 +26,9 @@ open class AdaptiveDOMAdapter(
     override val rootBridge = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)
     }
+
+    override val dispatcher: CoroutineDispatcher
+        get() = Dispatchers.Default
 
     override var trace = false
 

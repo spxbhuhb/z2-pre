@@ -3,11 +3,15 @@
  */
 package hu.simplexion.z2.adaptive
 
+import kotlinx.coroutines.CoroutineDispatcher
+
 interface AdaptiveAdapter<BT> : Adaptive {
 
     var rootFragment : AdaptiveFragment<BT>
 
     val rootBridge: AdaptiveBridge<BT>
+
+    val dispatcher: CoroutineDispatcher
 
     val trace : Boolean
 

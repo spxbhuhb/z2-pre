@@ -3,9 +3,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmDependencies
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -21,10 +19,8 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.*
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.transformStatement
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -180,6 +176,86 @@ open class ClassBoundIrBuilder(
                 Indices.GET_CLOSURE_VARIABLE_INDEX,
                 irConst(stateVariableIndex)
             )
+        }
+
+    fun genInvokeBranch(
+        invokeFun: IrSimpleFunction,
+        supportFunctionIndex: IrVariable,
+        callingFragment: IrVariable,
+        arguments: IrVariable,
+        armSupportFunctionArgument: ArmSupportFunctionArgument
+    ): IrBranch =
+        IrBranchImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irEqual(
+                irGet(supportFunctionIndex),
+                irConst(armSupportFunctionArgument.supportFunctionIndex)
+            ),
+            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
+        )
+
+    private fun genInvokeBranchBody(
+        invokeFun: IrSimpleFunction,
+        callingFragment: IrVariable,
+        arguments: IrVariable,
+        armSupportFunctionArgument: ArmSupportFunctionArgument
+    ): IrExpression {
+        val functionToTransform = (armSupportFunctionArgument.irExpression as IrFunctionExpression).function
+        val originalClosure = armSupportFunctionArgument.supportFunctionClosure
+
+        val transformClosure =
+            originalClosure + functionToTransform.valueParameters.mapIndexed { indexInState, parameter ->
+                ArmSupportStateVariable(
+                    armSupportFunctionArgument.armClass,
+                    indexInState,
+                    originalClosure.size + indexInState,
+                    parameter
+                )
+            }
+
+        return IrBlockImpl(
+            functionToTransform.startOffset,
+            functionToTransform.endOffset,
+            functionToTransform.returnType
+        ).apply {
+            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter!!) }, callingFragment, arguments)
+
+            functionToTransform.body!!.statements.forEach {
+                statements += it.transformStatement(transform)
+            }
+        }
+    }
+
+    fun genStateValueBindingInstance(
+        func: IrSimpleFunction,
+        indexInState: Int,
+        indexInClosure: Int,
+        boundType: IrType,
+        supportFunctionIndex: Int
+    ) =
+        IrConstructorCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            pluginContext.adaptiveStateValueBindingClass.defaultType,
+            pluginContext.adaptiveStateValueBindingClass.constructors.first(),
+            0, 0,
+            Indices.ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT,
+        ).apply {
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_OWNER, irGet(func.dispatchReceiverParameter!!))
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_STATE, irConst(indexInState))
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_CLOSURE, irConst(indexInClosure))
+            putValueArgument(
+                Indices.ADAPTIVE_STATE_VALUE_BINDING_METADATA,
+                IrConstructorCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    pluginContext.adaptivePropertyMetadataClass.defaultType,
+                    pluginContext.adaptivePropertyMetadataClass.constructors.first(),
+                    0, 0,
+                    Indices.ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT,
+                ).apply {
+                    putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(boundType.classFqName!!.asString()))
+                }
+            )
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION, irConst(supportFunctionIndex))
         }
 
     fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =

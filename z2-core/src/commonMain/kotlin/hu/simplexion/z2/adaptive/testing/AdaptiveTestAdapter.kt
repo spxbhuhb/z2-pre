@@ -8,6 +8,10 @@ import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
 import hu.simplexion.z2.util.Lock
 import hu.simplexion.z2.util.use
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
@@ -15,11 +19,13 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override val trace = true
 
-    override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
+    override fun newId(): Long = nextId++ // This is not thread safe, OK for testing, but beware.
 
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
     override val rootBridge = AdaptiveTestBridge(newId())
+
+    override var dispatcher: CoroutineDispatcher = Dispatchers.Main
 
     val lock = Lock()
 
@@ -46,6 +52,19 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     fun expected(expected: List<TraceEvent>): String =
         expected.joinToString("\n")
+
+    suspend fun waitFor(point: Regex, data: Regex) {
+        withTimeout(1000) {
+            while (true) {
+                val done = lock.use {
+                    traceEvents.lastOrNull()?.let { e -> point.matches(e.point) && e.data.lastOrNull()?.let { data.matches(it) } == true }
+                        ?: false
+                }
+                if (done) break
+                delay(10)
+            }
+        }
+    }
 
     companion object {
         // Unit tests use this property when they run the generated fragment.

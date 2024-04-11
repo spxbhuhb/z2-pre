@@ -35,7 +35,7 @@ interface AdaptiveNonAnnotationBasedExtension {
     fun IrType.isAccessSelector(previousType: IrType?): Boolean {
         if (previousType == null) return false
         if (! isFunctionOrKFunction()) return false
-        return previousType.isSubtypeOfClass(adaptiveContext.adaptiveAccessBindingClass)
+        return previousType.isSubtypeOfClass(adaptiveContext.adaptiveStateValueBindingClass)
     }
 
 }

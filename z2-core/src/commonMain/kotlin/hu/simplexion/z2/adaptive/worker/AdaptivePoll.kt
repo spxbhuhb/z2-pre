@@ -1,37 +1,34 @@
 package hu.simplexion.z2.adaptive.worker
 
-import hu.simplexion.z2.adaptive.AdaptiveBridge
-import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.AdaptiveStateValueBinding
 import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
-class AdaptivePoll<BT>(
-    val fragment : AdaptiveFragment<BT>,
-    supportFunctionIndex : Int,
-    val indexInState: Int,
+class AdaptivePoll<VT>(
+    val stateValueBinding: AdaptiveStateValueBinding<VT>,
     val interval: Duration,
     var repeatLimit: Int? = null
-) : AdaptiveWorker<BT> {
+) : AdaptiveWorker {
 
-    val pollFunction = AdaptiveSupportFunction(fragment, fragment, supportFunctionIndex)
+    val pollFunction = AdaptiveSupportFunction(
+        stateValueBinding.owner,
+        stateValueBinding.owner,
+        stateValueBinding.supportFunction
+    )
 
     var scope: CoroutineScope? = null
-
-    init {
-        fragment.addWorker(this)
-    }
 
     override fun create() {
 
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
-        scope = CoroutineScope(Dispatchers.Main).apply {
+    override fun mount() {
+        scope = CoroutineScope(stateValueBinding.owner.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
                     val value = pollFunction.invokeSuspend(pollFunction.declaringFragment)
-                    pollFunction.declaringFragment.setStateVariable(indexInState, value)
+                    pollFunction.declaringFragment.setStateVariable(stateValueBinding.indexInState, value)
                     delay(interval)
                     repeatLimit?.let { if (it > 0) repeatLimit = (it - 1) else cancel() }
                 }
@@ -39,7 +36,7 @@ class AdaptivePoll<BT>(
         }
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount() {
         checkNotNull(scope).cancel()
         scope = null
     }
@@ -49,7 +46,7 @@ class AdaptivePoll<BT>(
     }
 
     override fun toString(): String {
-        return "AdaptivePoll($pollFunction, indexInState=$indexInState, interval=$interval, repeat=$repeatLimit)"
+        return "AdaptivePoll($stateValueBinding, interval=$interval, repeatLimit=$repeatLimit)"
     }
 
 }

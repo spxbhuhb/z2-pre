@@ -113,7 +113,7 @@ class AdaptiveSupportFunctionTest(
 
     @Suppress("RedundantNullableReturnType")
     override fun genInvoke(
-        supportFunction: AdaptiveSupportFunction<TestNode>,
+        supportFunction: AdaptiveSupportFunction,
         arguments: Array<out Any?>
     ): Any? {
 
@@ -144,7 +144,7 @@ class AdaptiveSupportFunctionInner(
     }
 
     override fun genPatchInternal() {
-        (getThisClosureVariable(1) as AdaptiveSupportFunction<*>).invoke(getThisClosureVariable(0))
+        (getThisClosureVariable(1) as AdaptiveSupportFunction).invoke(getThisClosureVariable(0))
     }
 
 }

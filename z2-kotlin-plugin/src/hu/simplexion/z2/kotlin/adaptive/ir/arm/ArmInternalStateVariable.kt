@@ -3,6 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmInternalStateVariableBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.types.IrType
@@ -12,6 +14,7 @@ class ArmInternalStateVariable(
     override val indexInState: Int,
     override val indexInClosure: Int,
     val irVariable: IrVariable,
+    val producer: ArmValueProducer?,
     dependencies: ArmDependencies
 ) : ArmStateDefinitionStatement(irVariable, dependencies), ArmStateVariable {
 
@@ -21,5 +24,8 @@ class ArmInternalStateVariable(
         get() = irVariable.type
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
+
+    fun builder(parent: ClassBoundIrBuilder) =
+        ArmInternalStateVariableBuilder(parent, this)
 
 }

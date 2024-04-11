@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
+import org.jetbrains.kotlin.ir.expressions.IrReturn
 import org.jetbrains.kotlin.ir.expressions.IrSetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
@@ -114,6 +115,11 @@ class SupportFunctionTransform(
                 expression.value.transform(this, null)
             )
         }
+    }
+
+    override fun visitReturn(expression: IrReturn): IrExpression {
+        // FIXME support function return
+        return expression.value
     }
 
 }

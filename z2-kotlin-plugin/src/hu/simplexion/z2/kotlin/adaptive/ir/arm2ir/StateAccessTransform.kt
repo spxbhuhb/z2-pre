@@ -33,6 +33,8 @@ class StateAccessTransform(
 
     override fun visitGetValue(expression: IrGetValue): IrExpression {
         val name = expression.symbol.owner.name
+        if (name.isSpecial) return super.visitGetValue(expression)
+
         val id = name.identifier
 
         val stateVariable = closure.firstOrNull { it.name == id } ?: return expression

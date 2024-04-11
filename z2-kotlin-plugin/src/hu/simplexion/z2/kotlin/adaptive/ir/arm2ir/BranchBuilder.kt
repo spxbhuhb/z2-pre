@@ -7,9 +7,13 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 
 interface BranchBuilder {
 
-    fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression
+    fun genBuildConstructorCall(buildFun: IrSimpleFunction): IrExpression {
+        throw IllegalStateException("should not be called, this is a plugin error")
+    }
 
-    fun genPatchDescendantBranch(patchFun : IrSimpleFunction, closureMask: IrVariable): IrExpression
+    fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression {
+        throw IllegalStateException("should not be called, this is a plugin error")
+    }
 
     fun genInvokeBranches(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, callingFragment: IrVariable, arguments: IrVariable) : List<IrBranch> {
         throw IllegalStateException("should not be called, this is a plugin error")

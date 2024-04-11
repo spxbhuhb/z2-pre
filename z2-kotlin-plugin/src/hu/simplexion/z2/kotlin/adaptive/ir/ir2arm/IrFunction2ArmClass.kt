@@ -53,7 +53,8 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         armClass = ArmClass(adaptiveContext, irFunction)
 
-        StateDefinitionTransform(adaptiveContext, armClass).transform()
+        val definitionTransform = StateDefinitionTransform(adaptiveContext, armClass).apply { transform() }
+        supportIndex = definitionTransform.supportFunctionIndex
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
@@ -370,13 +371,14 @@ class IrFunction2ArmClass(
         val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != - 1 }
         val indexInState = state.indexOfFirst { it.name == stateVariableName }
 
-        val argument = ArmAccessBindingArgument(
+        val argument = ArmStateValueBindingArgument(
             armClass,
             armCall.arguments.size - 1,
             indexInState,
             indexInClosure,
             expression.function.returnType,
-            adaptiveContext.adaptiveAccessBindingClass.defaultType,
+            -1,
+            adaptiveContext.adaptiveStateValueBindingClass.defaultType,
             expression,
             expression.dependencies()
         )

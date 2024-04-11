@@ -3,9 +3,9 @@
  */
 package hu.simplexion.z2.adaptive
 
-class AdaptiveSupportFunction<BT>(
-    val declaringFragment: AdaptiveFragment<BT>,
-    val receivingFragment: AdaptiveFragment<BT>,
+class AdaptiveSupportFunction(
+    val declaringFragment: AdaptiveFragment<*>,
+    val receivingFragment: AdaptiveFragment<*>,
     val supportFunctionIndex : Int
 ) {
 

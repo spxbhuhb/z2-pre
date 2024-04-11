@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
+import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
@@ -11,8 +12,13 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.deepCopyWithVariables
+import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.types.isClassType
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.isFunction
+import org.jetbrains.kotlin.ir.util.isSuspendFunction
 
 
 /**
@@ -28,6 +34,8 @@ class StateDefinitionTransform(
 
     // incremented by `register`
     var stateVariableIndex = 0
+
+    var supportFunctionIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
         val visitor = DependencyVisitor(armClass.stateVariables)
@@ -76,7 +84,15 @@ class StateDefinitionTransform(
             when {
                 statement is IrVariable -> {
                     armClass.stateDefinitionStatements +=
-                        ArmInternalStateVariable(armClass, stateVariableIndex, stateVariableIndex, statement, statement.dependencies()).apply {
+
+                        ArmInternalStateVariable(
+                            armClass,
+                            stateVariableIndex,
+                            stateVariableIndex,
+                            statement,
+                            getValueProducer(statement),
+                            statement.dependencies()
+                        ).apply {
                             register(statement)
                         }
                 }
@@ -92,6 +108,40 @@ class StateDefinitionTransform(
         }
     }
 
+    private fun getValueProducer(statement: IrVariable): ArmValueProducer? {
+        val originalInitializer = statement.initializer!!
+
+        if (originalInitializer !is IrCall) return null
+
+        val calledFun = originalInitializer.symbol.owner
+        val parameterCount = calledFun.valueParameters.size
+
+        if (parameterCount < 2) return null
+
+        val binding = calledFun.valueParameters[parameterCount - 2]
+        val function = calledFun.valueParameters[parameterCount - 1]
+
+        if (!binding.type.isClassType(FqNames.ADAPTIVE_STATE_VALUE_BINDING.toUnsafe(), true)) return null
+        if (!function.type.isFunction() && !function.type.isSuspendFunction()) return null
+
+        val supportFunction = originalInitializer.getValueArgument(parameterCount - 1)!!
+        if (supportFunction !is IrFunctionExpression) return null
+
+        if (function.type.isSuspendFunction()) {
+            armClass.hasInvokeSuspendBranch = true
+        } else {
+            armClass.hasInvokeBranch = true
+        }
+
+        return ArmValueProducer(
+            armClass,
+            parameterCount - 1,
+            supportFunctionIndex++,
+            supportFunction,
+            supportFunction.dependencies()
+        )
+    }
+
     fun ArmStateVariable.register(declaration: IrDeclaration) {
 
         check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
@@ -100,7 +150,7 @@ class StateDefinitionTransform(
 
         check(name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
-        stateVariableIndex ++
+        stateVariableIndex++
         names += name
         armClass.stateVariables += this
     }
