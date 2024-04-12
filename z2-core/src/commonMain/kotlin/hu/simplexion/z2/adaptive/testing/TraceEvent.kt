@@ -3,6 +3,8 @@
  */
 package hu.simplexion.z2.adaptive.testing
 
+import hu.simplexion.z2.util.vmNowMicro
+
 class TraceEvent(
     val name: String,
     val id: Long,
@@ -12,6 +14,8 @@ class TraceEvent(
 
     constructor(name: String, id: Long, point: String, vararg data: Any?) : this(name, id, point, data.map { it.toString() })
 
+    val createdAt = vmNowMicro()
+
     override fun toString(): String {
         return "[ ${name.padEnd(30)} ${id.toString().padStart(4)} ]  ${point.padEnd(25)}  |  ${data.joinToString(" ")}"
     }
@@ -19,6 +23,11 @@ class TraceEvent(
     fun toCode(): String {
         val nameOrRoot = if (name.startsWith("AdaptiveRoot")) "<root>" else name
         return "TraceEvent(\"$nameOrRoot\", ${id}, \"${point}\"${if (data.isNotEmpty()) ", " else ""}${data.joinToString(", ") { "\"$it\"" }})"
+    }
+
+    fun println(startedAt: Long): TraceEvent {
+        println("${((createdAt - startedAt) / 1000).toString().padStart(9, ' ')}  $this")
+        return this
     }
 
     override fun equals(other: Any?): Boolean {

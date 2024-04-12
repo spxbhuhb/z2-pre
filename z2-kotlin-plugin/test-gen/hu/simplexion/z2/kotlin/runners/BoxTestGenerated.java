@@ -77,24 +77,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
-            @TestMetadata("supportFunctionOutreach.kt")
-            public void testSupportFunctionOutreach() throws Exception {
-                runTest("testData/box/adaptive/call/supportFunctionOutreach.kt");
-            }
-
-            @Test
-            @TestMetadata("supportFunctionStateUpdate.kt")
-            public void testSupportFunctionStateUpdate() throws Exception {
-                runTest("testData/box/adaptive/call/supportFunctionStateUpdate.kt");
-            }
-
-            @Test
-            @TestMetadata("supportFunctionSuspend.kt")
-            public void testSupportFunctionSuspend() throws Exception {
-                runTest("testData/box/adaptive/call/supportFunctionSuspend.kt");
-            }
-
-            @Test
             @TestMetadata("withDefault.kt")
             public void testWithDefault() throws Exception {
                 runTest("testData/box/adaptive/call/withDefault.kt");
@@ -120,6 +102,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("list.kt")
             public void testList() throws Exception {
                 runTest("testData/box/adaptive/loop/list.kt");
+            }
+
+            @Test
+            @TestMetadata("patch.kt")
+            public void testPatch() throws Exception {
+                runTest("testData/box/adaptive/loop/patch.kt");
             }
         }
 
@@ -216,6 +204,52 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("sequence.kt")
             public void testSequence() throws Exception {
                 runTest("testData/box/adaptive/sequence/sequence.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/support")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Support {
+            @Test
+            public void testAllFilesPresentInSupport() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("supportFunctionCallOut.kt")
+            public void testSupportFunctionCallOut() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionCallOut.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionFromRoot.kt")
+            public void testSupportFunctionFromRoot() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionFromRoot.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionOutreach.kt")
+            public void testSupportFunctionOutreach() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionOutreach.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionReturn.kt")
+            public void testSupportFunctionReturn() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionReturn.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionStateUpdate.kt")
+            public void testSupportFunctionStateUpdate() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionStateUpdate.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionSuspend.kt")
+            public void testSupportFunctionSuspend() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionSuspend.kt");
             }
         }
 

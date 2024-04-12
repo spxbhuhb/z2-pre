@@ -42,9 +42,9 @@ fun box(): String {
         listOf(
             //@formatter:off
             TraceEvent("<root>", 2, "before-Create", ""),
-            TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-            TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "before-Create", ""),
             TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -129,7 +129,7 @@ fun box(): String {
             TraceEvent("AdaptiveHigherFun", 4, "after-Mount", "bridge: 1"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "after-Mount", "bridge: 1"),
             TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [120]"),
+            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [120]"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [120]"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [120]"),

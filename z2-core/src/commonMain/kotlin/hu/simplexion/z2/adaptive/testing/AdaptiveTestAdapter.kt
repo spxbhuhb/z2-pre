@@ -8,6 +8,7 @@ import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
 import hu.simplexion.z2.util.Lock
 import hu.simplexion.z2.util.use
+import hu.simplexion.z2.util.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -31,6 +32,8 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     val traceEvents = mutableListOf<TraceEvent>()
 
+    override val startedAt = vmNowMicro()
+
     init {
         lastTrace = traceEvents
     }
@@ -41,7 +44,7 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
         lock.use {
-            traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { println(it.toString()) }
+            traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
         }
     }
 

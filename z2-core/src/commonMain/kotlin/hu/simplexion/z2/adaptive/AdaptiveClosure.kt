@@ -84,4 +84,15 @@ class AdaptiveClosure<BT>(
         return "$owner"
     }
 
+    fun dump(): String {
+        val builder = StringBuilder()
+        builder.append("AdaptiveClosure:\n")
+        builder.append("Owner: $owner\n")
+        builder.append("Components:\n")
+        for (component in components) {
+            builder.append("\t$component  ${component.state.contentToString()}\n")
+        }
+        return builder.toString()
+    }
+
 }

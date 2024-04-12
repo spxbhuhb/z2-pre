@@ -7,11 +7,10 @@ import hu.simplexion.z2.adaptive.Adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 
 @Suppress("UNUSED_PARAMETER")
-fun Adaptive.text(content: String) {
+fun Adaptive.text(content: Any?) {
 }
 
 class AdaptiveText(
@@ -23,7 +22,7 @@ class AdaptiveText(
     override val receiver = org.w3c.dom.Text()
 
     val content: String
-        get() = state[0] as String
+        get() = state[0]?.toString() ?: ""
 
     override fun genPatchInternal() {
         val closureMask = getThisClosureDirtyMask()
@@ -42,7 +41,7 @@ class AdaptiveText(
     }
 
     override fun add(child: AdaptiveBridge<Node>) {
-        (receiver as HTMLElement).appendChild(child.receiver)
+        throw IllegalStateException()
     }
 
 

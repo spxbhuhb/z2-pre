@@ -9,6 +9,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
@@ -40,7 +41,7 @@ class IrFunction2ArmClass(
     var fragmentIndex = 0
 
     val nextFragmentIndex
-        get() = fragmentIndex ++
+        get() = fragmentIndex++
 
     var supportIndex = 0
 
@@ -130,10 +131,14 @@ class IrFunction2ArmClass(
         } else {
             val sequenceIndex = nextFragmentIndex
 
+            val sequenceState = listOf(
+                ArmImplicitStateVariable(armClass, 0, closure.size, irNull()),
+            )
+
             ArmSequence(
                 armClass, sequenceIndex, closure,
                 armClass.boundary.startOffset,
-                statements.map { transformStatement(it) }
+                statements.map { withClosure(sequenceState) { transformStatement(it) } }
             ).add()
         }
     }
@@ -237,7 +242,7 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }) {
+        if (armCall.arguments.any { it is ArmSupportFunctionArgument && !it.isSuspend }) {
             armClass.hasInvokeBranch = true
             armCall.hasInvokeBranch = true
         }
@@ -252,7 +257,7 @@ class IrFunction2ArmClass(
 
     fun transformArgumentCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall)
-        val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
+        val arguments = (irCall.dispatchReceiver!!.type as IrSimpleTypeImpl).arguments
 
         // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]
         //     kotlin.Function2<
@@ -272,7 +277,7 @@ class IrFunction2ArmClass(
         }
 
         // FIXME do we need invoke branch for argument call?
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }
+        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && !it.isSuspend }
         armCall.hasInvokeSuspendBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }
 
         return armCall.add()
@@ -323,7 +328,7 @@ class IrFunction2ArmClass(
                     ArmSupportFunctionArgument(
                         armClass,
                         armCall.arguments.size,
-                        supportIndex ++,
+                        supportIndex++,
                         closure,
                         parameterType,
                         expression,
@@ -350,7 +355,7 @@ class IrFunction2ArmClass(
             ArmExternalStateVariable(
                 armClass,
                 indexInState,
-                stateVariableIndex ++,
+                stateVariableIndex++,
                 parameter.name.identifier,
                 parameter.type,
                 parameter.symbol
@@ -358,7 +363,7 @@ class IrFunction2ArmClass(
         }
 
         return withClosure(innerState) {
-            transformBlock(expression.function.body !!.statements)
+            transformBlock(expression.function.body!!.statements)
         }
     }
 
@@ -368,7 +373,7 @@ class IrFunction2ArmClass(
         val stateVariableName = flattenGetValues(expression).last()
 
         val indexInClosure = armCall.closure.indexOfFirst { it.name == stateVariableName }
-        val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != - 1 }
+        val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != -1 }
         val indexInState = state.indexOfFirst { it.name == stateVariableName }
 
         val argument = ArmStateValueBindingArgument(
@@ -425,7 +430,6 @@ class IrFunction2ArmClass(
         return result
     }
 
-
     // ---------------------------------------------------------------------------
     // When
     // ---------------------------------------------------------------------------
@@ -460,18 +464,34 @@ class IrFunction2ArmClass(
             closure,
             statement.startOffset,
             subject?.symbol,
-            subject?.let { ArmExpression(armClass, it.initializer !!, it.initializer !!.dependencies()) }
+            subject?.let { ArmExpression(armClass, it.initializer!!, it.initializer!!.dependencies()) }
+        )
+
+        val selectState = listOf(
+            ArmImplicitStateVariable(armClass, 0, closure.size, irNull()),
+            ArmImplicitStateVariable(armClass, 1, closure.size + 1, irNull())
         )
 
         armSelect.branches += statement.branches.map { irBranch ->
             ArmBranch(
                 armClass,
                 ArmExpression(armClass, irBranch.condition, irBranch.dependencies()),
-                transformStatement(irBranch.result)
+                withClosure(selectState) { transformStatement(irBranch.result) }
             )
         }
 
         return armSelect.add()
     }
 
+    // ---------------------------------------------------------------------------
+    // Utility
+    // ---------------------------------------------------------------------------
+
+    fun irNull() = IrConstImpl(
+        UNDEFINED_OFFSET,
+        UNDEFINED_OFFSET,
+        adaptiveContext.irBuiltIns.anyNType,
+        IrConstKind.Null,
+        null
+    )
 }

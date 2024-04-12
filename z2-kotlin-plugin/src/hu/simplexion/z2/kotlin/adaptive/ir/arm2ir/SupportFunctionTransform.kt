@@ -34,7 +34,7 @@ class SupportFunctionTransform(
 
         val name = expression.symbol.owner.name.identifier
 
-        val stateVariable = closure.firstOrNull { it.name == name } ?: return expression
+        val stateVariable = closure.firstOrNull { it.name == name } ?: return super.visitGetValue(expression)
 
         if (stateVariable is ArmSupportStateVariable) {
             return getInvokeArgument(stateVariable)
@@ -119,7 +119,7 @@ class SupportFunctionTransform(
 
     override fun visitReturn(expression: IrReturn): IrExpression {
         // FIXME support function return
-        return expression.value
+        return expression.value.transform(this, null)
     }
 
 }

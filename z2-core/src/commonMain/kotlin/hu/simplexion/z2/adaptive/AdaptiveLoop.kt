@@ -70,6 +70,7 @@ class AdaptiveLoop<BT, IT>(
                 f.mount(placeholder)
             } else {
                 fragments[index].also {
+                    it.setStateVariable(0, loopVariable)
                     it.patch()
                 }
             }
@@ -111,8 +112,8 @@ class AdaptiveLoop<BT, IT>(
     }
 
     override fun stateToTraceString(): String {
-        val s0 = state[0]?.let { it::class.simpleName } ?: "null"
-        val s1 = state[1]?.toString() ?: "null"
+        val s0 = state[0]?.let { it::class.simpleName ?: "<iterator>" }
+        val s1 = state[1]?.toString()
         return "[$s0,$s1]"
     }
 

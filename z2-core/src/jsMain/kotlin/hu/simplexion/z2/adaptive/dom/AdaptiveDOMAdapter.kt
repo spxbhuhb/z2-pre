@@ -7,6 +7,7 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.util.vmNowMicro
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,8 @@ open class AdaptiveDOMAdapter(
 ) : AdaptiveAdapter<Node> {
 
     var nextId = 1L
+
+    override val startedAt = vmNowMicro()
 
     override lateinit var rootFragment: AdaptiveFragment<Node>
 

@@ -14,21 +14,21 @@ abstract class AdaptiveFragment<BT>(
 
     val id: Long = adapter.newId()
 
-    var trace : Boolean = adapter.trace
-
-    open val createClosure: AdaptiveClosure<BT>?
-        get() = parent?.thisClosure
+    var trace: Boolean = adapter.trace
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
-
-    var workers: MutableList<AdaptiveWorker>? = null
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
     open val thisClosure: AdaptiveClosure<BT> = AdaptiveClosure(arrayOf(this), stateSize)
 
+    open val createClosure: AdaptiveClosure<BT>
+        get() = parent?.thisClosure ?: thisClosure
+
     var dirtyMask: AdaptiveStateVariableMask = adaptiveInitStateMask
 
     var containedFragment: AdaptiveFragment<BT>? = null
+
+    var workers: MutableList<AdaptiveWorker>? = null
 
     // --------------------------------------------------------------------------
     // Functions that support the descendants of this fragment
@@ -116,7 +116,9 @@ abstract class AdaptiveFragment<BT>(
     open fun patchExternal() {
         if (trace) traceWithState("before-Patch-External")
 
-        createClosure?.owner?.genPatchDescendant(this)
+        if (parent != null) { // root components has no parent which can patch them
+            createClosure.owner.genPatchDescendant(this)
+        }
 
         if (trace) traceWithState("after-Patch-External")
     }
@@ -172,10 +174,10 @@ abstract class AdaptiveFragment<BT>(
         thisClosure.closureDirtyMask()
 
     fun getCreateClosureDirtyMask(): AdaptiveStateVariableMask =
-        createClosure?.closureDirtyMask() ?: adaptiveCleanStateMask
+        createClosure.closureDirtyMask()
 
     fun getCreateClosureVariable(variableIndex: Int): Any? =
-        createClosure?.get(variableIndex)
+        createClosure.get(variableIndex)
 
     fun getThisClosureVariable(variableIndex: Int): Any? =
         thisClosure.get(variableIndex)
@@ -212,7 +214,7 @@ abstract class AdaptiveFragment<BT>(
         adapter.trace(this, point, "")
     }
 
-    fun trace(point: String, label : String, value : Any?) {
+    fun trace(point: String, label: String, value: Any?) {
         adapter.trace(this, point, "$label: $value")
     }
 
@@ -223,11 +225,11 @@ abstract class AdaptiveFragment<BT>(
         adapter.trace(this, point, "createMask: 0x$createMask thisMask: 0x$thisMask state: ${stateToTraceString()}")
     }
 
-    open fun stateToTraceString() : String =
+    open fun stateToTraceString(): String =
         this.state.contentToString()
 
     fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>) {
-        adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} arguments: ${arguments.contentToString()}")
+        adapter.trace(this, point, "$supportFunction arguments: ${arguments.contentToString()}")
     }
 
     fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, result: Any?) {

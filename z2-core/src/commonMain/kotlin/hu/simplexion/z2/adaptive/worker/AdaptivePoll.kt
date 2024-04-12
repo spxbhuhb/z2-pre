@@ -27,7 +27,7 @@ class AdaptivePoll<VT>(
         scope = CoroutineScope(stateValueBinding.owner.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
-                    val value = pollFunction.invokeSuspend(pollFunction.declaringFragment)
+                    val value = pollFunction.invokeSuspend()
                     pollFunction.declaringFragment.setStateVariable(stateValueBinding.indexInState, value)
                     delay(interval)
                     repeatLimit?.let { if (it > 0) repeatLimit = (it - 1) else cancel() }

@@ -19,7 +19,7 @@ abstract class AdaptiveDOMNodeFragment(
 
     @Suppress("UNCHECKED_CAST")
     fun getStyles(variableIndex : Int) =
-        state[variableIndex] as Array<out AdaptiveCssStyle>
+        state[variableIndex] as? Array<out AdaptiveCssStyle> ?: emptyArray()
 
     @Suppress("UNCHECKED_CAST")
     fun getFragmentFactory(variableIndex : Int) =

@@ -14,7 +14,7 @@ class AdaptiveAnonymous<BT>(
     override val createClosure : AdaptiveClosure<BT>
         get() = parent!!.thisClosure
 
-    override val thisClosure = extendWith(this, factory.declaringFragment)
+    override val thisClosure = extendWith(this, factory.declaringFragment) //.also { println(it.dump()) }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
         factory.declaringFragment.genPatchDescendant(fragment)

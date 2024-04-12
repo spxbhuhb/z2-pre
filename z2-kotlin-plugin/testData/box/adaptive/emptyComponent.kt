@@ -23,9 +23,9 @@ fun box() : String {
 
     return AdaptiveTestAdapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),
-        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
         TraceEvent("AdaptiveEmpty", 3, "before-Create", ""),
         TraceEvent("AdaptiveEmpty", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),

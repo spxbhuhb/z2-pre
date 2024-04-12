@@ -23,5 +23,5 @@ class AdaptiveSupportFunction(
     }
 
     override fun toString() =
-        "AdaptiveSupportFunction(${declaringFragment.id}, $supportFunctionIndex)"
+        "AdaptiveSupportFunction(${declaringFragment.id}, ${receivingFragment.id}, $supportFunctionIndex)"
 }

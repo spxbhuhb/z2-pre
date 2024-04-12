@@ -39,7 +39,7 @@ class AdaptiveButton(
 
         if (haveToPatch(closureMask, 2)) {
             receiver.onclick = {
-                onClick.invoke(this)
+                onClick.invoke()
                 onClick.declaringFragment.patch()
             }
         }

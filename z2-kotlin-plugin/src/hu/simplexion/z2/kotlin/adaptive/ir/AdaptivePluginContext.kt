@@ -21,6 +21,9 @@ class AdaptivePluginContext(
 
     override val runtimePackage = Strings.RUNTIME_PACKAGE
 
+    val irBuiltIns
+        get() = irContext.irBuiltIns
+
     val messages = mutableListOf<PluginMessage>()
 
     val adaptiveNamespaceClass = classSymbol(FqNames.ADAPTIVE_NAMESPACE)

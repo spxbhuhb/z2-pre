@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.adaptive
 
+import hu.simplexion.z2.adaptive.testing.TraceEvent
 import kotlinx.coroutines.CoroutineDispatcher
 
 interface AdaptiveAdapter<BT> : Adaptive {
@@ -15,15 +16,14 @@ interface AdaptiveAdapter<BT> : Adaptive {
 
     val trace : Boolean
 
+    val startedAt: Long
+
     fun createPlaceholder(): AdaptiveBridge<BT>
 
     fun newId(): Long
 
     fun trace(fragment: AdaptiveFragment<BT>, point: String, data : String) {
-        // FIXME should we escape the data string? think about security
-        val name = (fragment::class.simpleName ?: "").padEnd(30)
-        val id = fragment.id.toString().padStart(4, ' ')
-        println("[ $name @ $id ] ${point.padEnd(20)}  |  $data")
+        TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
     }
 
 }
