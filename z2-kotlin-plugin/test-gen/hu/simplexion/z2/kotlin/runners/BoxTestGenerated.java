@@ -55,12 +55,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
             runTest("testData/box/adaptive/root.kt");
         }
 
-        @Test
-        @TestMetadata("sequence.kt")
-        public void testSequence() throws Exception {
-            runTest("testData/box/adaptive/sequence.kt");
-        }
-
         @Nested
         @TestMetadata("testData/box/adaptive/call")
         @TestDataPath("$PROJECT_ROOT")
@@ -200,6 +194,28 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("whenSubjectConditions.kt")
             public void testWhenSubjectConditions() throws Exception {
                 runTest("testData/box/adaptive/select/whenSubjectConditions.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/sequence")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Sequence {
+            @Test
+            public void testAllFilesPresentInSequence() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/sequence"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("inHigherOrder.kt")
+            public void testInHigherOrder() throws Exception {
+                runTest("testData/box/adaptive/sequence/inHigherOrder.kt");
+            }
+
+            @Test
+            @TestMetadata("sequence.kt")
+            public void testSequence() throws Exception {
+                runTest("testData/box/adaptive/sequence/sequence.kt");
             }
         }
 

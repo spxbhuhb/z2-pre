@@ -69,7 +69,7 @@ class IrFunction2ArmClass(
     }
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(states.peek())
+        val visitor = DependencyVisitor(closure)
         accept(visitor, null)
         return visitor.dependencies
     }

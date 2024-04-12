@@ -12,7 +12,7 @@ import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
 
 fun main() {
-    adaptive(AdaptiveDOMAdapter(window.document.body !!).also { it.trace = true }) {
+    adaptive(AdaptiveDOMAdapter(window.document.body!!).also { it.trace = false }) {
         var counter = 0
         val time = poll(1.seconds, default = Clock.System.now()) { Clock.System.now() }
         div(displayFlex, flexDirectionColumn, p24) {
