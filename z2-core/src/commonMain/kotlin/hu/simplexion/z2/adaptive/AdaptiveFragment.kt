@@ -34,7 +34,7 @@ abstract class AdaptiveFragment<BT>(
     // Functions that support the descendants of this fragment
     // --------------------------------------------------------------------------
 
-    open fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    open fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
         pluginGenerated("genBuild")
     }
 
@@ -99,9 +99,13 @@ abstract class AdaptiveFragment<BT>(
 
         workers?.forEach { it.mount() }
 
-        containedFragment?.mount(bridge)
+        innerMount(bridge)
 
         if (trace) trace("after-Mount", "bridge", bridge)
+    }
+
+    open fun innerMount(bridge: AdaptiveBridge<BT>) {
+        containedFragment?.mount(bridge)
     }
 
     open fun patch() {
@@ -136,11 +140,15 @@ abstract class AdaptiveFragment<BT>(
     open fun unmount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Unmount", "bridge", bridge)
 
-        containedFragment?.unmount(bridge)
+        innerUnmount(bridge)
 
         workers?.forEach { it.unmount() }
 
         if (trace) trace("after-Unmount", "bridge", bridge)
+    }
+
+    open fun innerUnmount(bridge: AdaptiveBridge<BT>) {
+        containedFragment?.unmount(bridge)
     }
 
     open fun dispose() {

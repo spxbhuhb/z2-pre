@@ -28,6 +28,11 @@ application {
     mainClass.set("MainKt")
 }
 
+z2 {
+    pluginDebug = true
+    pluginLogDir = projectDir.toPath().resolve("build/z2-logs")
+}
+
 kotlin {
     sourceSets.all {
         languageSettings {

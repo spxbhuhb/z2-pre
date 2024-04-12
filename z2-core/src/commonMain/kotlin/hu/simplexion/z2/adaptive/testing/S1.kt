@@ -5,7 +5,10 @@
 
 package hu.simplexion.z2.adaptive.testing
 
-import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.Adaptive
+import hu.simplexion.z2.adaptive.AdaptiveAdapter
+import hu.simplexion.z2.adaptive.AdaptiveFragment
+import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 
 @Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
 fun Adaptive.S1(supportFun : (i : Int) -> Unit) {
@@ -19,17 +22,11 @@ class AdaptiveS1<BT>(
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
-        return AdaptivePlaceholder(adapter, parent, -1)
-    }
+    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
 
-    }
-
-    override fun genPatchInternal() {
-
-    }
+    override fun genPatchInternal() = Unit
 
     var s0: AdaptiveSupportFunction
         get() = state[0] as AdaptiveSupportFunction

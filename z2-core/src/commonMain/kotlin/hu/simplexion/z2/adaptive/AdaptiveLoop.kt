@@ -12,14 +12,6 @@ class AdaptiveLoop<BT, IT>(
     override val createClosure : AdaptiveClosure<BT>
         get() = parent!!.thisClosure
 
-//    override val thisClosure
-//        get() = createClosure
-
-//    override val thisClosure = AdaptiveClosure(
-//        createClosure.components + this,
-//        createClosure.closureSize + state.size
-//    )
-
     @Suppress("UNCHECKED_CAST")
     val iterator
         get() = state[0] as Iterator<IT>

@@ -66,8 +66,6 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [0]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
-                        TraceEvent("AdaptivePlaceholder", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
-                        TraceEvent("AdaptivePlaceholder", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 13"),
@@ -76,15 +74,13 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
-                        TraceEvent("AdaptivePlaceholder", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
-                        TraceEvent("AdaptivePlaceholder", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [13]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 14")
                         //@formatter:on
                     )
                 ),
-                adapter.actual(dumpCode = true)
+                adapter.actual(dumpCode = false)
             )
         }
     }

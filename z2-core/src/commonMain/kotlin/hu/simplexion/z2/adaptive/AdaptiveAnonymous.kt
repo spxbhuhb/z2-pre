@@ -20,7 +20,7 @@ class AdaptiveAnonymous<BT>(
         factory.declaringFragment.genPatchDescendant(fragment)
     }
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
         return factory.build(this)
     }
 

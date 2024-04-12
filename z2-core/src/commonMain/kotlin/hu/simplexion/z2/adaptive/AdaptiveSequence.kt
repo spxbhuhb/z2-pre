@@ -28,7 +28,7 @@ class AdaptiveSequence<BT>(
         patch()
 
         for (itemIndex in indices) {
-            fragments += createClosure.owner.genBuild(this, itemIndex)
+            createClosure.owner.genBuild(this, itemIndex)?.let { fragments += it }
         }
 
         if (trace) trace("after-Create")

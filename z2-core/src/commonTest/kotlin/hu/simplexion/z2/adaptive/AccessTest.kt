@@ -36,6 +36,7 @@ class AccessTest {
         assertEquals(
             adapter.expected(
                 listOf(
+                    //@formatter:off
                     TraceEvent("AdaptiveAccessBindingTest", 2, "before-Create", ""),
                     TraceEvent("AdaptiveAccessBindingTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -43,24 +44,9 @@ class AccessTest {
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
                     TraceEvent("AdaptiveAccessor", 3, "before-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent(
-                        "AdaptiveAccessor",
-                        3,
-                        "after-Patch-External",
-                        "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-                    ),
-                    TraceEvent(
-                        "AdaptiveAccessor",
-                        3,
-                        "before-Patch-Internal",
-                        "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-                    ),
-                    TraceEvent(
-                        "AdaptiveAccessor",
-                        3,
-                        "after-Patch-Internal",
-                        "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-                    ),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(owner=AdaptiveAccessBindingTest @ 2, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -75,9 +61,10 @@ class AccessTest {
                     TraceEvent("AdaptiveT1", 4, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveAccessor", 3, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Mount", "bridge: 1")
+                    //@formatter:on
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 }
@@ -116,7 +103,7 @@ class AdaptiveAccessBindingTest(
                             0,
                             0,
                             AdaptivePropertyMetadata("kotlin.Int"),
-                            -1
+                            - 1
                         )
                     )
                 }

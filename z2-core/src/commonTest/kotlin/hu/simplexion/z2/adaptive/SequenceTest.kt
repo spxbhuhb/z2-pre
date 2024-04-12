@@ -44,25 +44,25 @@ class SequenceTest {
                     TraceEvent("AdaptiveT0", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
                     TraceEvent("AdaptiveT0", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveT0", 4, "after-Create", ""),
-                    TraceEvent("AdaptiveT1", 7, "before-Create", ""),
-                    TraceEvent("AdaptiveT1", 7, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveT1", 7, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 7, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 7, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-                    TraceEvent("AdaptiveT1", 7, "after-Create", ""),
+                    TraceEvent("AdaptiveT1", 5, "before-Create", ""),
+                    TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "after-Create", ""),
                     TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSequenceTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSequenceTest", 2, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequence", 3, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "before-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveT0", 4, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 7, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 7, "after-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequence", 3, "after-Mount", "bridge: 1"),
                     TraceEvent("AdaptiveSequenceTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 }

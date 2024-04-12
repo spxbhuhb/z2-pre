@@ -8,8 +8,8 @@ import hu.simplexion.z2.adaptive.adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.testing.*
 
-fun Adaptive.higherOrderTest() {
-    higherFun(12) { lowerFunI1 ->
+fun Adaptive.higherOrderTest(i : Int) {
+    higherFun(i) { lowerFunI1 ->
         higherFun(lowerFunI1) { lowerFunI2 ->
             T1(lowerFunI1 + lowerFunI2)
         }
@@ -31,21 +31,26 @@ fun box(): String {
     AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
 
     adaptive {
-        higherOrderTest()
+        val i = 12
+        higherOrderTest(i)
+    }.apply {
+        rootFragment.setStateVariable(0, 120)
+        rootFragment.patchInternal()
     }
 
     return AdaptiveTestAdapter.assert(
         listOf(
+            //@formatter:off
             TraceEvent("<root>", 2, "before-Create", ""),
-            TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+            TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+            TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "before-Create", ""),
-            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
             TraceEvent("AdaptiveHigherFun", 4, "before-Create", ""),
             TraceEvent("AdaptiveHigherFun", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("AdaptiveHigherFun", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveFragmentFactory(3,1)]"),
@@ -123,7 +128,50 @@ fun box(): String {
             TraceEvent("AdaptiveHigherFunInner", 5, "after-Mount", "bridge: 1"),
             TraceEvent("AdaptiveHigherFun", 4, "after-Mount", "bridge: 1"),
             TraceEvent("AdaptiveHigherOrderTest", 3, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+            TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
+            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [120]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [120]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [120]"),
+            TraceEvent("AdaptiveHigherFun", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12, AdaptiveFragmentFactory(3,1)]"),
+            TraceEvent("AdaptiveHigherFun", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [120, AdaptiveFragmentFactory(3,1)]"),
+            TraceEvent("AdaptiveHigherFun", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [120, AdaptiveFragmentFactory(3,1)]"),
+            TraceEvent("AdaptiveHigherFunInner", 5, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [24, AdaptiveFragmentFactory(4,1)]"),
+            TraceEvent("AdaptiveHigherFunInner", 5, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [240, AdaptiveFragmentFactory(4,1)]"),
+            TraceEvent("AdaptiveHigherFunInner", 5, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [240, AdaptiveFragmentFactory(4,1)]"),
+            TraceEvent("AdaptiveAnonymous", 6, "before-Patch-External", "createMask: 0x00000003 thisMask: 0x00000001 state: [25]"),
+            TraceEvent("AdaptiveAnonymous", 6, "after-Patch-External", "createMask: 0x00000003 thisMask: 0x00000005 state: [241]"),
+            TraceEvent("AdaptiveAnonymous", 6, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000005 state: [241]"),
+            TraceEvent("AdaptiveAnonymous", 7, "before-Patch-External", "createMask: 0x00000005 thisMask: 0x00000001 state: [37]"),
+            TraceEvent("AdaptiveAnonymous", 7, "after-Patch-External", "createMask: 0x00000005 thisMask: 0x00000003 state: [361]"),
+            TraceEvent("AdaptiveAnonymous", 7, "before-Patch-Internal", "createMask: 0x00000005 thisMask: 0x00000003 state: [361]"),
+            TraceEvent("AdaptiveHigherFun", 8, "before-Patch-External", "createMask: 0x00000003 thisMask: 0x00000000 state: [37, AdaptiveFragmentFactory(3,2)]"),
+            TraceEvent("AdaptiveHigherFun", 8, "after-Patch-External", "createMask: 0x00000003 thisMask: 0x00000003 state: [361, AdaptiveFragmentFactory(3,2)]"),
+            TraceEvent("AdaptiveHigherFun", 8, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000003 state: [361, AdaptiveFragmentFactory(3,2)]"),
+            TraceEvent("AdaptiveHigherFunInner", 9, "before-Patch-External", "createMask: 0x00000003 thisMask: 0x00000000 state: [74, AdaptiveFragmentFactory(8,1)]"),
+            TraceEvent("AdaptiveHigherFunInner", 9, "after-Patch-External", "createMask: 0x00000003 thisMask: 0x00000003 state: [722, AdaptiveFragmentFactory(8,1)]"),
+            TraceEvent("AdaptiveHigherFunInner", 9, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000003 state: [722, AdaptiveFragmentFactory(8,1)]"),
+            TraceEvent("AdaptiveAnonymous", 10, "before-Patch-External", "createMask: 0x00000003 thisMask: 0x00000003 state: [75]"),
+            TraceEvent("AdaptiveAnonymous", 10, "after-Patch-External", "createMask: 0x00000003 thisMask: 0x00000007 state: [723]"),
+            TraceEvent("AdaptiveAnonymous", 10, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000007 state: [723]"),
+            TraceEvent("AdaptiveAnonymous", 11, "before-Patch-External", "createMask: 0x00000007 thisMask: 0x00000003 state: [112]"),
+            TraceEvent("AdaptiveAnonymous", 11, "after-Patch-External", "createMask: 0x00000007 thisMask: 0x00000007 state: [1084]"),
+            TraceEvent("AdaptiveAnonymous", 11, "before-Patch-Internal", "createMask: 0x00000007 thisMask: 0x00000007 state: [1084]"),
+            TraceEvent("AdaptiveT1", 12, "before-Patch-External", "createMask: 0x00000007 thisMask: 0x00000000 state: [149]"),
+            TraceEvent("AdaptiveT1", 12, "after-Patch-External", "createMask: 0x00000007 thisMask: 0x00000001 state: [1445]"),
+            TraceEvent("AdaptiveT1", 12, "before-Patch-Internal", "createMask: 0x00000007 thisMask: 0x00000001 state: [1445]"),
+            TraceEvent("AdaptiveT1", 12, "after-Patch-Internal", "createMask: 0x00000007 thisMask: 0x00000000 state: [1445]"),
+            TraceEvent("AdaptiveAnonymous", 11, "after-Patch-Internal", "createMask: 0x00000007 thisMask: 0x00000003 state: [1084]"),
+            TraceEvent("AdaptiveAnonymous", 10, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000003 state: [723]"),
+            TraceEvent("AdaptiveHigherFunInner", 9, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [722, AdaptiveFragmentFactory(8,1)]"),
+            TraceEvent("AdaptiveHigherFun", 8, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [361, AdaptiveFragmentFactory(3,2)]"),
+            TraceEvent("AdaptiveAnonymous", 7, "after-Patch-Internal", "createMask: 0x00000005 thisMask: 0x00000001 state: [361]"),
+            TraceEvent("AdaptiveAnonymous", 6, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000001 state: [241]"),
+            TraceEvent("AdaptiveHigherFunInner", 5, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [240, AdaptiveFragmentFactory(4,1)]"),
+            TraceEvent("AdaptiveHigherFun", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [120, AdaptiveFragmentFactory(3,1)]"),
+            TraceEvent("AdaptiveHigherOrderTest", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [120]"),
+            TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [120]")
+            //@formatter:on
         )
     )
 }

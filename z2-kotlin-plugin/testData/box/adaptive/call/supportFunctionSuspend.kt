@@ -46,8 +46,6 @@ fun box(): String {
             TraceEvent("AdaptiveSuspendS1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [AdaptiveSupportFunction(2, 0)]"),
             TraceEvent("AdaptiveSuspendS1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [AdaptiveSupportFunction(2, 0)]"),
             TraceEvent("AdaptiveSuspendS1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [AdaptiveSupportFunction(2, 0)]"),
-            TraceEvent("AdaptivePlaceholder", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
-            TraceEvent("AdaptivePlaceholder", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0xffffffff state: []"),
             TraceEvent("AdaptiveSuspendS1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [AdaptiveSupportFunction(2, 0)]"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [58]"),
             TraceEvent("<root>", 2, "after-Invoke-Suspend", "index: 0 result: kotlin.Unit")
