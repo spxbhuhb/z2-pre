@@ -44,9 +44,9 @@ class HigherOrderTest {
             adapter.expected(
                 listOf(
                     TraceEvent("AdaptiveHigherOrderTest", 2, "before-Create", ""),
-                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveHigherOrderTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveHigherOrderTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
                     TraceEvent("AdaptiveHigherOrderTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveHigherFun", 3, "before-Create", ""),
                     TraceEvent("AdaptiveHigherFun", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),

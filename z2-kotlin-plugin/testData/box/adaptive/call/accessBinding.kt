@@ -31,6 +31,7 @@ fun box() : String {
     }
 
     return AdaptiveTestAdapter.assert(listOf(
+        //@formatter:off
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
@@ -43,24 +44,9 @@ fun box() : String {
         TraceEvent("AdaptiveAccessTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
         TraceEvent("AdaptiveAccessor", 4, "before-Create", ""),
         TraceEvent("AdaptiveAccessor", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-        TraceEvent(
-            "AdaptiveAccessor",
-            4,
-            "after-Patch-External",
-            "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-        ),
-        TraceEvent(
-            "AdaptiveAccessor",
-            4,
-            "before-Patch-Internal",
-            "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-        ),
-        TraceEvent(
-            "AdaptiveAccessor",
-            4,
-            "after-Patch-Internal",
-            "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(owner=AdaptiveAccessTest @ 3, indexInState=0, indexInClosure=0 type=kotlin.Int) supportFunction:-1]"
-        ),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
         TraceEvent("AdaptiveT1", 5, "before-Create", ""),
         TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
         TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -78,5 +64,6 @@ fun box() : String {
         TraceEvent("AdaptiveAccessor", 4, "after-Mount", "bridge: 1"),
         TraceEvent("AdaptiveAccessTest", 3, "after-Mount", "bridge: 1"),
         TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        //@formatter:on
     ))
 }

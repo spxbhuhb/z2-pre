@@ -87,8 +87,6 @@ abstract class AdaptiveFragment<BT>(
 
         patch()
 
-        workers?.forEach { it.create() }
-
         containedFragment = genBuild(this, 0)
 
         if (trace) trace("after-Create")
@@ -96,8 +94,6 @@ abstract class AdaptiveFragment<BT>(
 
     open fun mount(bridge: AdaptiveBridge<BT>) {
         if (trace) trace("before-Mount", "bridge", bridge)
-
-        workers?.forEach { it.mount() }
 
         innerMount(bridge)
 
@@ -144,7 +140,8 @@ abstract class AdaptiveFragment<BT>(
 
         innerUnmount(bridge)
 
-        workers?.forEach { it.unmount() }
+        // converting to array so we can safely remove
+        workers?.toTypedArray()?.forEach { removeWorker(it) }
 
         if (trace) trace("after-Unmount", "bridge", bridge)
     }
@@ -157,8 +154,6 @@ abstract class AdaptiveFragment<BT>(
         if (trace) trace("before-Dispose")
 
         containedFragment?.dispose()
-
-        workers?.forEach { it.dispose() }
 
         if (trace) trace("after-Dispose")
     }
@@ -193,9 +188,26 @@ abstract class AdaptiveFragment<BT>(
 
     fun addWorker(worker: AdaptiveWorker) {
         if (trace) trace("before-Add-Worker", "worker", worker)
-        if (workers == null) workers = mutableListOf()
-        workers?.let { it += worker }
+
+        val workers = workers ?: mutableListOf<AdaptiveWorker>().also { workers = it }
+
+        workers.filter { worker.replaces(it) }.forEach { other ->
+            removeWorker(other)
+        }
+
+        workers += worker
+        worker.start()
+
         if (trace) trace("after-Add-Worker", "worker", worker)
+    }
+
+    fun removeWorker(worker: AdaptiveWorker) {
+        if (trace) trace("before-Remove-Worker", "worker", worker)
+
+        requireNotNull(workers).remove(worker)
+        worker.stop()
+
+        if (trace) trace("after-Remove-Worker", "worker", worker)
     }
 
     // --------------------------------------------------------------------------

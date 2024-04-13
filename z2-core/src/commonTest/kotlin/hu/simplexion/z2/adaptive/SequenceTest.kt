@@ -29,9 +29,9 @@ class SequenceTest {
             adapter.expected(
                 listOf(
                     TraceEvent("AdaptiveSequenceTest", 2, "before-Create", ""),
-                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveSequenceTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
                     TraceEvent("AdaptiveSequenceTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveSequence", 3, "before-Create", ""),
                     TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),

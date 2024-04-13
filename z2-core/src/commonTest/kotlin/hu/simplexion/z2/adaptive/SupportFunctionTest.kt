@@ -40,19 +40,19 @@ class SupportFunctionTest {
             adapter.expected(
                 listOf(
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Create", ""),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 0)]"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Invoke", "index: 0 arguments: [12]"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [36]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Invoke", "AdaptiveSupportFunction(2, 3, 0) arguments: [12]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [36]"),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [36]"),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Invoke", "index: 0 result: kotlin.Unit"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, AdaptiveSupportFunction(2, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount", "bridge: 1"),
@@ -61,7 +61,7 @@ class SupportFunctionTest {
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
-            adapter.actual(dumpCode = false)
+            adapter.actual(dumpCode = true)
         )
     }
 }

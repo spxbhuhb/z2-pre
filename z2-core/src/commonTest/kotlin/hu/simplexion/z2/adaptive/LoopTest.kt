@@ -33,9 +33,9 @@ class LoopTest {
             adapter.expected(
                 listOf(
                     TraceEvent("AdaptiveLoopTest", 2, "before-Create", ""),
-                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
-                    TraceEvent("AdaptiveLoopTest", 2, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
-                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [3]"),
+                    TraceEvent("AdaptiveLoopTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [3]"),
                     TraceEvent("AdaptiveLoopTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
                     TraceEvent("AdaptiveLoop", 3, "before-Create", ""),
                     TraceEvent("AdaptiveLoop", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,null]"),

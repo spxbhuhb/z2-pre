@@ -19,11 +19,10 @@ class AdaptivePoll<VT>(
 
     var scope: CoroutineScope? = null
 
-    override fun create() {
+    override fun replaces(other: AdaptiveWorker): Boolean =
+        other is AdaptivePoll<*> && other.stateValueBinding == this.stateValueBinding
 
-    }
-
-    override fun mount() {
+    override fun start() {
         scope = CoroutineScope(stateValueBinding.owner.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
@@ -36,17 +35,13 @@ class AdaptivePoll<VT>(
         }
     }
 
-    override fun unmount() {
+    override fun stop() {
         checkNotNull(scope).cancel()
         scope = null
     }
 
-    override fun dispose() {
-
-    }
-
     override fun toString(): String {
-        return "AdaptivePoll($stateValueBinding, interval=$interval, repeatLimit=$repeatLimit)"
+        return "AdaptivePoll($stateValueBinding, $interval, $repeatLimit)"
     }
 
 }
