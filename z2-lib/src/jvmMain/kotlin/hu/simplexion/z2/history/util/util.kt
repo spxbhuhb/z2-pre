@@ -3,20 +3,20 @@ package hu.simplexion.z2.history.util
 import hu.simplexion.z2.auth.context.principal
 import hu.simplexion.z2.auth.context.principalOrNull
 import hu.simplexion.z2.auth.model.Principal
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.history.impl.HistoryImpl.Companion.historyImpl
 import hu.simplexion.z2.history.model.HistoryFlags
 import hu.simplexion.z2.localization.format
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 fun ServiceImpl<*>.securityHistory(topic: LocalizedText, verb : LocalizedText, subject : UUID<*>, vararg parameters: Any?) {
-    historyImpl.add(serviceContext.principalOrNull, HistoryFlags.SECURITY, topic, verb, parameters.joinToString())
+    historyImpl.add(serviceContext.principalOrNull, HistoryFlags.SECURITY, topic, verb, subject, "text/plain", parameters.joinToString())
 }
 
-fun securityHistory(principal: UUID<Principal>?, topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {
-    historyImpl.add(principal, HistoryFlags.SECURITY, topic, verb, parameters.joinToString())
+fun securityHistory(principal: UUID<Principal>?, topic: LocalizedText, verb : LocalizedText, subject : UUID<*>, vararg parameters: Any?) {
+    historyImpl.add(principal, HistoryFlags.SECURITY, topic, verb, subject, "text/plain", parameters.joinToString())
 }
 
 fun ServiceImpl<*>.businessHistory(topic: LocalizedText, verb : LocalizedText, vararg parameters: Any?) {

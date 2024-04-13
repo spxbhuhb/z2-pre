@@ -1,0 +1,217 @@
+.text-field {
+    position: relative;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 56px min-content;
+    min-width: 0;
+}
+
+.text-field-main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: min-content minmax(0, 1fr) min-content;
+    grid-template-rows: 56px;
+    min-width: 0;
+}
+
+.text-field-leading-icon {
+    padding-left: 12px;
+    align-self: center;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.text-field-input {
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    width: 100%;
+    padding-left: 13.5px;
+    padding-right: 14px;
+    align-self: center;
+    justify-content: flex-start;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface);
+    caret-color: var(--md-sys-color-primary);
+}
+
+.text-field-input::placeholder {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.text-field-input.field-error::placeholder {
+    color: var(--md-sys-color-error);
+}
+
+.text-field-input:focus {
+    outline: none;
+    border: none;
+}
+
+.text-field-input:focus::placeholder {
+    color: transparent;
+}
+
+.text-field-trailing-icon {
+    padding-right: 12px;
+    align-self: center;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.text-field-trailing-icon.field-error {
+    color: var(--md-sys-color-error);
+}
+
+/*********************************************************************/
+/* Filled                                                            */
+/*********************************************************************/
+
+.text-field-main.filled {
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-top-left-radius: var(--md-sys-shape-corner-extra-small);
+    border-top-right-radius: var(--md-sys-shape-corner-extra-small);
+    padding: 2px 2px 1px;
+    border-bottom: 1px solid var(--md-sys-color-outline);
+}
+
+.text-field-main.filled.field-error {
+    border-bottom: 1px solid var(--md-sys-color-error);
+}
+
+.text-field-main.filled.focused {
+    border-bottom: 2px solid var(--md-sys-color-primary);
+}
+
+.text-field-main.filled.focused.field-error {
+    border-bottom: 2px solid var(--md-sys-color-error);
+}
+
+.text-field-label-filled {
+    padding-left: 14px;
+}
+
+.text-field-label-filled.focused {
+    color: var(--md-sys-color-primary);
+}
+
+.text-field-label-filled.focused.field-error {
+    color: var(--md-sys-color-error);
+}
+
+.text-field.filled:focus {
+    border-bottom: 2px solid var(--md-sys-color-outline);
+}
+
+/*********************************************************************/
+/* Outlined                                                          */
+/*********************************************************************/
+
+.text-field-main.outlined {
+    box-sizing: border-box;
+    border: 1px solid var(--md-sys-color-outline);
+    border-top: none;
+    padding: 1px;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+}
+
+.text-field-main.outlined.field-error {
+    border: 1px solid var(--md-sys-color-error);
+    border-top: none;
+}
+
+.text-field-main.outlined.focused {
+    border: 2px solid var(--md-sys-color-primary);
+    padding: 1px 0 0;
+    border-top: none;
+}
+
+.text-field-main.outlined.focused.field-error {
+    border: 2px solid var(--md-sys-color-error);
+    border-top: none;
+}
+
+.text-field-label-outer {
+    display: grid;
+    grid-template-columns: 12px min-content 1fr;
+    grid-template-rows: 16px;
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.text-field-label-inner {
+    margin-top: -9px; /* TODO check text field label position, it's a line-height in the specs */
+}
+
+.text-field-label-inner.focused {
+    color: var(--md-sys-color-primary);
+}
+
+.text-field-label-inner.focused.field-error {
+    color: var(--md-sys-color-error);
+}
+
+.text-field-label-outlined-content {
+    padding-left: 4px;
+    padding-right: 4px;
+    white-space: nowrap;
+}
+
+.text-field-top-left-corner {
+    height: 4px;
+    align-self: start;
+    border-left: 1px solid var(--md-sys-color-outline);
+    border-top: 1px solid var(--md-sys-color-outline);
+    border-top-left-radius: var(--md-sys-shape-corner-extra-small);
+}
+
+.text-field-top-left-corner.field-error {
+    border-left: 1px solid var(--md-sys-color-error);
+    border-top: 1px solid var(--md-sys-color-error);
+}
+
+.text-field-top-right-corner {
+    height: 4px;
+    align-self: start;
+    border-right: 1px solid var(--md-sys-color-outline);
+    border-top: 1px solid var(--md-sys-color-outline);
+    border-top-right-radius: var(--md-sys-shape-corner-extra-small);
+}
+
+.text-field-top-right-corner.field-error {
+    border-right: 1px solid var(--md-sys-color-error);
+    border-top: 1px solid var(--md-sys-color-error);
+}
+
+.text-field-label-outer.focused .text-field-top-left-corner {
+    border-left: 2px solid var(--md-sys-color-primary);
+    border-top: 2px solid var(--md-sys-color-primary);
+}
+
+.text-field-label-outer.focused .text-field-top-right-corner {
+    border-right: 2px solid var(--md-sys-color-primary);
+    border-top: 2px solid var(--md-sys-color-primary);
+}
+
+.text-field-label-outer.focused .text-field-top-left-corner.field-error {
+    border-left: 2px solid var(--md-sys-color-error);
+    border-top: 2px solid var(--md-sys-color-error);
+}
+
+.text-field-label-outer.focused .text-field-top-right-corner.field-error {
+    border-right: 2px solid var(--md-sys-color-error);
+    border-top: 2px solid var(--md-sys-color-error);
+}
+
+/*********************************************************************/
+/* Support                                                           */
+/*********************************************************************/
+
+.text-field-support {
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 4px 16px 0 16px;
+}
+
+.text-field-support.field-error {
+    color: var(--md-sys-color-error);
+}

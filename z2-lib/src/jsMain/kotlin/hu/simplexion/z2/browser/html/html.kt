@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.displayGrid
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.adaptive.browser.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.*
 
@@ -61,6 +61,9 @@ fun Z2.ul(vararg classes: CssClass, builder: Z2.() -> Unit = {  }): Z2 =
 
 fun Z2.li(vararg classes: CssClass, builder: Z2.() -> Unit = {  }): Z2 =
     Z2(this, document.createElement("li") as HTMLLIElement, classes, builder)
+
+fun Z2.canvas(vararg classes: CssClass, builder: Z2.() -> Unit = {  }): Z2 =
+    Z2(this, document.createElement("canvas") as HTMLCanvasElement, classes, builder)
 
 /**
  * A plain HTML table tag. Decided to use a different name because I use this

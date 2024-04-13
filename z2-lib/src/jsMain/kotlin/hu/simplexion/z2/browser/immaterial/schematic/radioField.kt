@@ -2,6 +2,8 @@ package hu.simplexion.z2.browser.immaterial.schematic
 
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.material.radiobutton.radioButtonGroup
+import hu.simplexion.z2.browser.material.textfield.FieldConfig.Companion.defaultFieldStyle
+import hu.simplexion.z2.localization.label
 import hu.simplexion.z2.schematic.SchematicAccessFunction
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
 import hu.simplexion.z2.schematic.dump
@@ -22,7 +24,7 @@ fun <T> Z2.radioField(context: SchematicAccessContext? = null, @Suppress("UNUSED
 
         BoundSelectField(this, context) {
             val value = field.getValue(context.schematic)
-            radioButtonGroup(value, emptyList()) {
+            radioButtonGroup(value, emptyList(), label = label, style = defaultFieldStyle) {
                 context.schematic.schematicChange(context.field, it)
             }
         } as BoundSelectField<T>

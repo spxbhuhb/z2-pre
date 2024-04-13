@@ -8,7 +8,7 @@ class RoutedRenderer<R>(
     override val label: LocalizedText? = null,
     override val icon: LocalizedIcon? = null,
     override val loggedIn: Boolean = false,
-    override val roles: List<String> = emptyList(),
+    override var visibility: ((target: RoutingTarget<R>) -> Boolean)? = null,
     val renderFun: R.() -> Unit
 ) : RoutingTarget<R> {
 

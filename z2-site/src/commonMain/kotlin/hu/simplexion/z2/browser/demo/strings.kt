@@ -5,6 +5,7 @@ import hu.simplexion.z2.localization.text.IDateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.IValidationStrings
 
 object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
+    val adaptive = static("adaptive")
     val enum = static("enum")
     val select = static("Select")
     val components = static("Components")
@@ -21,11 +22,13 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val segment2 = static("Segment 2")
     val segment3 = static("Segment 3")
     val textField = static("Text Field")
+    val entitySelect = static("entity select")
     val label = static("Label")
     val supportingText = static("Supporting Text")
     val modal = static("Modal")
     val confirmDialog = static("Confirm Dialog")
     val confirmMessage = static("Nothing happens, whichever button you click.")
+    val chart = static("Chart")
     val card = static("Card")
     val loremShort = static("Lorem ipsum dolor sit amet, consectetur adipiscing elit")
     val lorem =
@@ -40,9 +43,11 @@ object strings : IBaseStrings, IDateTimeStrings, IValidationStrings {
     val click = static("Click")
     val switch = static("Switch")
     val table = static("Table")
+    val schematicTable = static("Schematic Table")
     val container = static("Container")
     val decimal = static("decimal")
     val datepicker = static("Date Picker")
+    val datetimepicker = static("Date Time Picker")
     val navigationDrawer = static("Navigation Drawer")
     val inbox = static("Inbox")
     val outbox = static("Outbox")

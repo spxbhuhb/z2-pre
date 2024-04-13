@@ -11,11 +11,11 @@ open class NavRouter(
     label: LocalizedText? = null,
     icon: LocalizedIcon? = null,
     loggedIn : Boolean = true,
-    roles : List<String> = emptyList(),
+    visibility: ((target: RoutingTarget<Z2>) -> Boolean)? = null,
     open var useParentNav: Boolean = false,
     open var default : Z2Builder = {  }
 ) : Router<Z2>(
-    label, icon, loggedIn, roles
+    label, icon, loggedIn, visibility
 ) {
 
     open var nav: Z2Builder = {
@@ -32,10 +32,10 @@ open class NavRouter(
         label: LocalizedText?,
         icon: LocalizedIcon?,
         loggedIn: Boolean,
-        roles: List<String>,
+        visibility: ((target: RoutingTarget<Z2>) -> Boolean)?,
         renderFun: Z2Builder
     ): RoutedRenderer<Z2> {
-        return super.render(label, icon, loggedIn, roles) { defaultLayout(this@NavRouter, nav, renderFun) }
+        return super.render(label, icon, loggedIn, visibility) { defaultLayout(this@NavRouter, nav, renderFun) }
     }
 
     override fun default(receiver: Z2, path: List<String>) {

@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.routing
 
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.util.UUID
 
 interface RoutingTarget<R> {
 
@@ -19,7 +19,7 @@ interface RoutingTarget<R> {
 
     val loggedIn : Boolean
 
-    val roles : List<String>
+    var visibility: ((target: RoutingTarget<R>) -> Boolean)?
 
     fun accepts(path: List<String>): Boolean {
         return path.first() == relativePath
@@ -61,10 +61,6 @@ interface RoutingTarget<R> {
 
     fun visible() : Boolean {
         if (loggedIn && ! isLoggedIn) return false
-        if (roles.isEmpty()) return true
-        for (role in effectiveRoles) {
-            if (role in this.roles) return true
-        }
-        return false
+        return visibility?.invoke(this) ?: true
     }
 }

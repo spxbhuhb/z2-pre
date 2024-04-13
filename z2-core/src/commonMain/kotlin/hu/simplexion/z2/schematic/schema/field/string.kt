@@ -106,9 +106,14 @@ open class NullableStringSchemaField(
     override var pattern: Regex?
 ) : SchemaField<String?>, StringSchemaFieldCommon {
 
-    override val type: SchemaFieldType get() = SchemaFieldType.String
-    override val isNullable: Boolean = true
-    override val naturalDefault = null
+    override val type: SchemaFieldType
+        get() = SchemaFieldType.String
+
+    override val isNullable
+        get() = true
+
+    override val naturalDefault
+        get() = null
 
     override var name: String = ""
 
@@ -168,13 +173,13 @@ class StringListSchemaField(
     maxLength: Int?,
     blank: Boolean?,
     pattern: Regex?
-) : hu.simplexion.z2.schematic.schema.ListSchemaField<String> {
+) : ListSchemaField<String, StringSchemaField>(
+    StringSchemaField(null, minLength, maxLength, blank, pattern)
+) {
 
     override var name: String = ""
 
-    override val itemSchemaField = StringSchemaField(null, minLength, maxLength, blank, pattern)
-
-    override var definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+    override var definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
@@ -183,31 +188,12 @@ class StringListSchemaField(
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.stringList(fieldNumber).toMutableList()
-        schematic.schematicValues[name] = SchematicList(schematic, value, this)
+        schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 
     infix fun default(value: MutableList<String>?): StringListSchemaField {
-        definitionDefault = value?.let { SchematicList(null, it, this) }
+        definitionDefault = value?.let { SchematicList(it, this) }
         return this
     }
 
-    infix fun minLength(value: Int): StringListSchemaField {
-        itemSchemaField.minLength = value
-        return this
-    }
-
-    infix fun maxLength(value: Int): StringListSchemaField {
-        itemSchemaField.maxLength = value
-        return this
-    }
-
-    infix fun blank(value: Boolean): StringListSchemaField {
-        itemSchemaField.blank = value
-        return this
-    }
-
-    infix fun pattern(value: Regex): StringListSchemaField {
-        itemSchemaField.pattern = value
-        return this
-    }
 }

@@ -16,7 +16,7 @@ class DockedTimePicker(
 ) : Z2(parent), ValueField<LocalTime> {
 
     override var value: LocalTime
-        get() = checkNotNull(valueOrNull)
+        get() = checkNotNull(valueOrNull) { "DockedTimePicker.value.get" }
         set(value) {
             valueOrNull = value
         }
@@ -24,17 +24,17 @@ class DockedTimePicker(
     override var valueOrNull: LocalTime? = hereAndNow().time
         set(value) {
             field = value
-            textField.value = if (value != null) {
-                "${value.hour}:${value.minute.toString().padStart(2, '0')}"
-            } else {
-                ""
+            if (textField.valueOrNull?.toLocalTimeOrNull() != value) {
+                textField.valueOrNull = value?.let { "${it.hour}:${it.minute.toString().padStart(2, '0')}" }
             }
         }
 
-    val textField: TextField = TextField(this, state, FieldConfig(decodeFromString = { it }).also {
+    val textField = TextField(this, state, FieldConfig(decodeFromString = { it }).also {
         it.leadingIcon = config.leadingIcon
         it.trailingIcon = config.trailingIcon
+        it.onChange = { onTextChanged() }
     }).main()
+
 
     val selector = div(positionRelative, displayNone) { zIndex = 100 }
 
@@ -69,6 +69,35 @@ class DockedTimePicker(
         }.onMouseDown {
             it.preventDefault()
         }
+    }
+
+    fun onTextChanged() {
+        val input = textField.value.toLocalTimeOrNull()
+
+        if (input == null) {
+            state.invalidInput = true
+            return
+        }
+
+        if (input == valueOrNull) {
+            return
+        }
+
+        value = input
+        config.onChange?.invoke(this, input)
+    }
+
+    fun String.toLocalTimeOrNull(): LocalTime? {
+        if (!Regex("[0-9]{1,2}:[0-9]{1,2}").matches(this)) {
+            return null
+        }
+        val (hourText, minuteText) = this.split(":")
+        val hour = hourText.toInt()
+        val minute = minuteText.toInt()
+        if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+            return null
+        }
+        return LocalTime(hour, minute)
     }
 
 }

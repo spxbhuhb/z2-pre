@@ -3,7 +3,9 @@ package hu.simplexion.z2.history.table
 import hu.simplexion.z2.auth.table.PrincipalTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.exposed.SchematicUuidTable
+import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.history.model.HistoryEntry
+import hu.simplexion.z2.util.UUID
 import kotlinx.datetime.Instant
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
@@ -20,12 +22,12 @@ open class HistoryEntryTable(
         val historyEntryTable = HistoryEntryTable(principalTable)
     }
 
-    val createdAt = timestamp("createdAt")
+    val createdAt = timestamp("createdAt").index()
     val createdBy = reference("createdBy", principalTable).nullable()
     val flags = integer("flags")
     val topic = varchar("topic", 120)
     val verb = varchar("verb", 120)
-    val subject = uuid("subject").nullable()
+    val subject = uuid("subject").nullable().index()
     val contentType = varchar("contentType", 120)
     val textContent = text("textContent")
 
@@ -34,6 +36,12 @@ open class HistoryEntryTable(
             .andWhere { createdAt lessEq end }
             .andWhere { (flags bitwiseAnd inFlags) neq 0 }
             .limit(limit)
+            .map {
+                it.toSchematic(this, newInstance())
+            }
+
+    fun queryBySubject(uuid : UUID<*>) =
+        select { subject eq uuid.jvm }
             .map {
                 it.toSchematic(this, newInstance())
             }

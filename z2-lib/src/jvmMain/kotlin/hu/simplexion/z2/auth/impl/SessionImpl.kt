@@ -1,6 +1,5 @@
 package hu.simplexion.z2.auth.impl
 
-import hu.simplexion.z2.auth.anonymousUuid
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -8,7 +7,6 @@ import hu.simplexion.z2.auth.model.*
 import hu.simplexion.z2.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.z2.auth.model.Session.Companion.LOGOUT_TOKEN_UUID
 import hu.simplexion.z2.auth.model.Session.Companion.SESSION_TOKEN_UUID
-import hu.simplexion.z2.auth.securityOfficerRole
 import hu.simplexion.z2.auth.table.CredentialsTable.Companion.credentialsTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
@@ -16,14 +14,14 @@ import hu.simplexion.z2.auth.table.SessionTable.Companion.sessionTable
 import hu.simplexion.z2.auth.util.AuthenticationFail
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.fourRandomInt
-import hu.simplexion.z2.util.vmNowSecond
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.site.boot.housekeepingScope
+import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.util.fourRandomInt
+import hu.simplexion.z2.util.vmNowSecond
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -97,7 +95,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         }
 
         private fun Session.history(event: LocalizedText) {
-            securityHistory(principal, baseStrings.session, event, baseStrings.session, uuid, baseStrings.account, principal)
+            securityHistory(principal, baseStrings.session, event, uuid, baseStrings.session, principal, baseStrings.account)
         }
 
         init {
@@ -114,7 +112,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         return serviceContext.getSessionOrNull()?.principal
     }
 
-    override suspend fun roles(): List<Role> {
+    override suspend fun roles(): List<UUID<Role>> {
         ensuredByLogic("Session owner gets own roles.")
         return serviceContext.getSessionOrNull()?.roles ?: emptyList()
     }
@@ -123,14 +121,14 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         val principal = principalTable.getByNameOrNull(name)
 
         if (principal == null) {
-            securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, baseStrings.accountNotFound)
+            securityHistory(baseStrings.account, baseStrings.authenticateFail, UUID.NIL, baseStrings.accountNotFound)
             throw AuthenticationFail("Unknown", false)
         }
 
         try {
             authenticate(principal.uuid, password, true, CredentialType.PASSWORD, authAdminImpl.getPolicy())
         } catch (ex: AuthenticationFail) {
-            securityHistory(anonymousUuid, baseStrings.account, baseStrings.authenticateFail, ex.reason, ex.locked)
+            securityHistory(baseStrings.account, baseStrings.authenticateFail, UUID.NIL, ex.reason, ex.locked)
             throw ex
         }
 
@@ -139,7 +137,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             it.principal = principal.uuid
             it.vmCreatedAt = vmNowSecond()
             it.lastActivity = it.vmCreatedAt
-            it.roles = roleGrantTable.rolesOf(principal.uuid, null)
+            it.roles = roleGrantTable.rolesUuidsOf(principal.uuid, null)
         }
 
         session.history(baseStrings.created)
@@ -188,12 +186,12 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     }
 
     override suspend fun logout(session: UUID<Session>) {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         // TODO forced logout
     }
 
     override suspend fun list(): List<Session> {
-        ensureAll(securityOfficerRole)
+        ensureSecurityOfficer()
         return sessionTable.query()
     }
 
@@ -209,7 +207,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         password: String,
         checkCredentials: Boolean,
         credentialType: String,
-        policy : SecurityPolicy
+        policy: SecurityPolicy
     ) {
 
         // FIXME check credential expiration
@@ -263,7 +261,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     private fun lockState(principalId: UUID<Principal>) {
         var success = false
-        for (tryNumber in 1..5) {
+        for (tryNumber in 1 .. 5) {
             success = authenticateLock.withLock {
                 if (principalId in authenticateInProgress) {
                     Thread.sleep(100)

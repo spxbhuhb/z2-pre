@@ -1,16 +1,15 @@
 package hu.simplexion.z2.localization.table
 
-import hu.simplexion.z2.util.Lock
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.use
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.exposed.z2
 import hu.simplexion.z2.localization.model.Locale
 import hu.simplexion.z2.localization.model.Translation
 import hu.simplexion.z2.localization.table.LocaleTable.Companion.localeTable
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import hu.simplexion.z2.util.Lock
+import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.util.use
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.util.concurrent.ConcurrentHashMap
 
 open class TranslationTable : Table(
@@ -48,13 +47,16 @@ open class TranslationTable : Table(
     }
 
     fun put(translation: Translation) {
+        deleteWhere { (locale eq translation.locale.jvm) and (key eq translation.key) }
+
         insert {
             it[locale] = translation.locale.jvm
             it[key] = translation.key
             it[value] = translation.value
             it[verified] = translation.verified
-            cache.clear()
         }
+
+        cache.clear()
     }
 
     fun load(uuid: UUID<Locale>, table: ByteArray) {

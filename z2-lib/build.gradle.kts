@@ -3,7 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2") version "2024.02.02"
+    id("hu.simplexion.z2") version "2024.04.03"
     java
     signing
     `maven-publish`
@@ -37,8 +37,14 @@ kotlin {
         browser()
         binaries.library()
     }
-    sourceSets {
 
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
+
+    sourceSets {
         commonMain {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
@@ -70,6 +76,15 @@ kotlin {
             api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
 
             api("com.sun.mail:javax.mail:${javamail_version}")
+
+            implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
+
+            implementation("org.docx4j:docx4j-JAXB-ReferenceImpl:11.4.7") {
+                exclude("org.slf4j", "slf4j-api")
+            }
+            implementation("org.docx4j:docx4j-export-fo:11.4.7") {
+                exclude("org.slf4j", "slf4j-api")
+            }
         }
 
         sourceSets["jvmTest"].dependencies {

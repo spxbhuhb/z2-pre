@@ -3,9 +3,9 @@
 package hu.simplexion.z2.kotlin.runners;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +20,278 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @Test
     public void testAllFilesPresentInBox() throws Exception {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Nested
+    @TestMetadata("testData/box/adaptive")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Adaptive {
+        @Test
+        public void testAllFilesPresentInAdaptive() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+
+        @Test
+        @TestMetadata("basic.kt")
+        public void testBasic() throws Exception {
+            runTest("testData/box/adaptive/basic.kt");
+        }
+
+        @Test
+        @TestMetadata("emptyComponent.kt")
+        public void testEmptyComponent() throws Exception {
+            runTest("testData/box/adaptive/emptyComponent.kt");
+        }
+
+        @Test
+        @TestMetadata("emptyEntry.kt")
+        public void testEmptyEntry() throws Exception {
+            runTest("testData/box/adaptive/emptyEntry.kt");
+        }
+
+        @Test
+        @TestMetadata("root.kt")
+        public void testRoot() throws Exception {
+            runTest("testData/box/adaptive/root.kt");
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/call")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Call {
+            @Test
+            @TestMetadata("accessBinding.kt")
+            public void testAccessBinding() throws Exception {
+                runTest("testData/box/adaptive/call/accessBinding.kt");
+            }
+
+            @Test
+            public void testAllFilesPresentInCall() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/call"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("higherOrder.kt")
+            public void testHigherOrder() throws Exception {
+                runTest("testData/box/adaptive/call/higherOrder.kt");
+            }
+
+            @Test
+            @TestMetadata("withDefault.kt")
+            public void testWithDefault() throws Exception {
+                runTest("testData/box/adaptive/call/withDefault.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/loop")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Loop {
+            @Test
+            public void testAllFilesPresentInLoop() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/loop"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/loop/basic.kt");
+            }
+
+            @Test
+            @TestMetadata("list.kt")
+            public void testList() throws Exception {
+                runTest("testData/box/adaptive/loop/list.kt");
+            }
+
+            @Test
+            @TestMetadata("patch.kt")
+            public void testPatch() throws Exception {
+                runTest("testData/box/adaptive/loop/patch.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/producer")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Producer {
+            @Test
+            public void testAllFilesPresentInProducer() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("poll.kt")
+            public void testPoll() throws Exception {
+                runTest("testData/box/adaptive/producer/poll.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/select")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Select {
+            @Test
+            public void testAllFilesPresentInSelect() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/select"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("ifElse.kt")
+            public void testIfElse() throws Exception {
+                runTest("testData/box/adaptive/select/ifElse.kt");
+            }
+
+            @Test
+            @TestMetadata("ifElsePatch.kt")
+            public void testIfElsePatch() throws Exception {
+                runTest("testData/box/adaptive/select/ifElsePatch.kt");
+            }
+
+            @Test
+            @TestMetadata("ifOnlyFalse.kt")
+            public void testIfOnlyFalse() throws Exception {
+                runTest("testData/box/adaptive/select/ifOnlyFalse.kt");
+            }
+
+            @Test
+            @TestMetadata("ifOnlyTrue.kt")
+            public void testIfOnlyTrue() throws Exception {
+                runTest("testData/box/adaptive/select/ifOnlyTrue.kt");
+            }
+
+            @Test
+            @TestMetadata("whenNoSubjectElse.kt")
+            public void testWhenNoSubjectElse() throws Exception {
+                runTest("testData/box/adaptive/select/whenNoSubjectElse.kt");
+            }
+
+            @Test
+            @TestMetadata("whenNoSubjectNoElse.kt")
+            public void testWhenNoSubjectNoElse() throws Exception {
+                runTest("testData/box/adaptive/select/whenNoSubjectNoElse.kt");
+            }
+
+            @Test
+            @TestMetadata("whenSubjectCalc.kt")
+            public void testWhenSubjectCalc() throws Exception {
+                runTest("testData/box/adaptive/select/whenSubjectCalc.kt");
+            }
+
+            @Test
+            @TestMetadata("whenSubjectConditions.kt")
+            public void testWhenSubjectConditions() throws Exception {
+                runTest("testData/box/adaptive/select/whenSubjectConditions.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/sequence")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Sequence {
+            @Test
+            public void testAllFilesPresentInSequence() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/sequence"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("inHigherOrder.kt")
+            public void testInHigherOrder() throws Exception {
+                runTest("testData/box/adaptive/sequence/inHigherOrder.kt");
+            }
+
+            @Test
+            @TestMetadata("sequence.kt")
+            public void testSequence() throws Exception {
+                runTest("testData/box/adaptive/sequence/sequence.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/support")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Support {
+            @Test
+            public void testAllFilesPresentInSupport() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("supportFunctionCallOut.kt")
+            public void testSupportFunctionCallOut() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionCallOut.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionFromRoot.kt")
+            public void testSupportFunctionFromRoot() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionFromRoot.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionOutreach.kt")
+            public void testSupportFunctionOutreach() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionOutreach.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionReturn.kt")
+            public void testSupportFunctionReturn() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionReturn.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionStateUpdate.kt")
+            public void testSupportFunctionStateUpdate() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionStateUpdate.kt");
+            }
+
+            @Test
+            @TestMetadata("supportFunctionSuspend.kt")
+            public void testSupportFunctionSuspend() throws Exception {
+                runTest("testData/box/adaptive/support/supportFunctionSuspend.kt");
+            }
+        }
+
+        @Nested
+        @TestMetadata("testData/box/adaptive/variables")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Variables {
+            @Test
+            public void testAllFilesPresentInVariables() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/variables"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/adaptive/variables/basic.kt");
+            }
+
+            @Test
+            @TestMetadata("many.kt")
+            public void testMany() throws Exception {
+                runTest("testData/box/adaptive/variables/many.kt");
+            }
+
+            @Test
+            @TestMetadata("onlyExternal.kt")
+            public void testOnlyExternal() throws Exception {
+                runTest("testData/box/adaptive/variables/onlyExternal.kt");
+            }
+
+            @Test
+            @TestMetadata("onlyInternal.kt")
+            public void testOnlyInternal() throws Exception {
+                runTest("testData/box/adaptive/variables/onlyInternal.kt");
+            }
+
+            @Test
+            @TestMetadata("variables.kt")
+            public void testVariables() throws Exception {
+                runTest("testData/box/adaptive/variables/variables.kt");
+            }
+        }
     }
 
     @Nested
@@ -54,9 +326,45 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
+        @TestMetadata("companion.kt")
+        public void testCompanion() throws Exception {
+            runTest("testData/box/schematic/companion.kt");
+        }
+
+        @Test
         @TestMetadata("defaults.kt")
         public void testDefaults() throws Exception {
             runTest("testData/box/schematic/defaults.kt");
+        }
+
+        @Test
+        @TestMetadata("entityCompanion.kt")
+        public void testEntityCompanion() throws Exception {
+            runTest("testData/box/schematic/entityCompanion.kt");
+        }
+
+        @Test
+        @TestMetadata("entityReference.kt")
+        public void testEntityReference() throws Exception {
+            runTest("testData/box/schematic/entityReference.kt");
+        }
+
+        @Test
+        @TestMetadata("entityStore.kt")
+        public void testEntityStore() throws Exception {
+            runTest("testData/box/schematic/entityStore.kt");
+        }
+
+        @Test
+        @TestMetadata("fqName.kt")
+        public void testFqName() throws Exception {
+            runTest("testData/box/schematic/fqName.kt");
+        }
+
+        @Test
+        @TestMetadata("generic.kt")
+        public void testGeneric() throws Exception {
+            runTest("testData/box/schematic/generic.kt");
         }
 
         @Test
@@ -69,6 +377,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
         @TestMetadata("infix.kt")
         public void testInfix() throws Exception {
             runTest("testData/box/schematic/infix.kt");
+        }
+
+        @Test
+        @TestMetadata("list.kt")
+        public void testList() throws Exception {
+            runTest("testData/box/schematic/list.kt");
+        }
+
+        @Test
+        @TestMetadata("listGeneric.kt")
+        public void testListGeneric() throws Exception {
+            runTest("testData/box/schematic/listGeneric.kt");
         }
 
         @Test
@@ -148,15 +468,15 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
-        @TestMetadata("local.kt")
-        public void testLocal() throws Exception {
-            runTest("testData/box/services/local.kt");
-        }
-
-        @Test
         @TestMetadata("serviceName.kt")
         public void testServiceName() throws Exception {
             runTest("testData/box/services/serviceName.kt");
+        }
+
+        @Test
+        @TestMetadata("serviceTransport.kt")
+        public void testServiceTransport() throws Exception {
+            runTest("testData/box/services/serviceTransport.kt");
         }
 
         @Test

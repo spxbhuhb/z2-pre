@@ -9,7 +9,10 @@ import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.serialization.builtin.LocalDateCoder
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
 import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 interface LocalDateSchemaFieldCommon {
      fun toTypedValueCommon(anyValue: Any?, fails: MutableList<ValidationFailInfo>): LocalDate? {
@@ -30,7 +33,8 @@ open class LocalDateSchemaField(
 
     override val type: SchemaFieldType get() = SchemaFieldType.LocalDate
     override val isNullable: Boolean = false
-    override val naturalDefault = LocalDate.fromEpochDays(0)
+    override val naturalDefault
+        get() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
     override var name: String = ""
 

@@ -33,7 +33,8 @@ open class InstantSchemaField(
 
     override val type: SchemaFieldType get() = SchemaFieldType.Instant
     override val isNullable: Boolean = false
-    override val naturalDefault = Clock.System.now()
+    override val naturalDefault
+        get() = Clock.System.now()
 
     override var name: String = ""
 

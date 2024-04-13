@@ -1,0 +1,128 @@
+/* --------------------------------------------------------------- */
+/* Navigation rail                                                 */
+/* --------------------------------------------------------------- */
+
+.navigation-rail-container {
+    box-sizing: border-box;
+    background-color: var(--md-sys-color-surface-container-highest);
+    width: 80px;
+    display: grid;
+    grid-auto-rows: 56px;
+    grid-template-columns: 80px;
+    grid-auto-flow: row;
+    grid-gap: 12px;
+}
+
+.navigation-rail-item {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    height: 56px;
+    cursor: pointer;
+}
+
+.navigation-rail-active-indicator-with-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    margin-left: 12px;
+    margin-right: 12px;
+    height: 32px;
+    width: 56px;
+    border-radius: 16px;
+}
+
+.navigation-rail-active-indicator-with-text:hover::before {
+    content: "";
+    position: fixed;
+    height: 32px;
+    width: 56px;
+    border-radius: 16px;
+    background-color: var(--md-sys-color-on-surface);
+    opacity: 0.08;
+}
+
+.navigation-rail-active-indicator-with-no-text {
+    box-sizing: border-box;
+    margin-left: 12px;
+    margin-right: 12px;
+    height: 32px;
+    width: 56px;
+    border-radius: 16px;
+}
+
+.navigation-rail-label-text-active {
+    color: var(--md-sys-color-on-surface);
+    text-align: center;
+}
+
+.navigation-rail-label-text-inactive {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.navigation-rail-icon-active {
+    color: var(--md-sys-color-on-secondary-container);
+}
+
+.navigation-rail-icon-inactive {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.navigation-rail-active-indicator {
+    background: var(--md-sys-color-secondary-container);
+}
+
+.navigation-rail-menu-icon {
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+/* --------------------------------------------------------------- */
+/* Navigation drawer                                               */
+/* --------------------------------------------------------------- */
+
+.navigation-drawer-container {
+    box-sizing: border-box;
+    width: 240px;
+    height: 100%;
+    overflow-y: auto;
+    background-color: var(--md-sys-color-surface);
+    border-radius: var(--md-sys-shape-corner-large-end);
+    padding: 12px;
+}
+
+.navigation-drawer-item {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 44px;
+    height: 48px;
+    border-radius: 24px;
+    padding: 2px 24px 2px 16px;
+    cursor: pointer;
+}
+
+.navigation-drawer-icon {
+    box-sizing: border-box;
+    height: 24px;
+    width: 24px;
+    align-self: center;
+    margin-right: 12px;
+}
+
+.navigation-drawer-label {
+    align-self: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.navigation-drawer-badge {
+    height: 24px;
+    width: 24px;
+    align-self: center;
+}
+
+.navigation-drawer-item:hover {
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+}

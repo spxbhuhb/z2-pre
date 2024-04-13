@@ -19,7 +19,7 @@ fun Z2.list() =
 
             table<Role> {
 
-                title {
+                header {
                     text = baseStrings.roles
                     action(baseStrings.addRole) { add() }
                 }

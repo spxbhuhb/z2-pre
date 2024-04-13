@@ -1,0 +1,10 @@
+:root {
+    --md-sys-color-surface-container-lowest: var(--md-ref-palette-neutral100); /* 96 in token table */
+    --md-sys-color-surface-container-low: var(--md-ref-palette-neutral99); /* 96 in token table */
+    --md-sys-color-surface-container: var(--md-ref-palette-neutral98); /* 92 in token table */
+    --md-sys-color-surface-container-high: var(--md-ref-palette-neutral95); /* 92 in token table */
+    --md-sys-color-surface-container-highest: var(--md-ref-palette-neutral90); /* 90 in token table */
+    --md-sys-elevation-level-1: 0 1px 1px 0 #848484;
+    --md-sys-elevation-level-2: 0 2px 2px 0 #848484;
+    --md-sys-elevation-level-3: 0 3px 3px 0 #848484;
+}

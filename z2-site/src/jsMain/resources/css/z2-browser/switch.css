@@ -1,0 +1,69 @@
+.switch-track {
+    box-sizing: border-box;
+    width: 52px;
+    height: 32px;
+    border-radius: 16px;
+    cursor: pointer;
+}
+
+.switch-track.selected {
+    background-color: var(--md-sys-color-primary);
+    border: 2px solid var(--md-sys-color-primary);
+}
+
+.switch-track.unselected {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border: 2px solid var(--md-sys-color-outline);
+}
+
+.switch-thumb.selected {
+    background-color: var(--md-sys-color-on-primary);
+    color: var(--md-sys-color-primary);
+    height: 24px;
+    width: 24px;
+    border-radius: 14px;
+    margin-left: 22px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.switch-thumb.unselected {
+    background-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-surface-container-highest);
+    height: 16px;
+    width: 16px;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.switch-thumb-icon.selected {
+    background-color: var(--md-sys-color-on-primary);
+    color: var(--md-sys-color-primary);
+    height: 24px;
+    width: 24px;
+    border-radius: 14px;
+    margin-left: 22px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.switch-thumb-icon.unselected {
+    background-color: var(--md-sys-color-outline);
+    color: var(--md-sys-color-surface-container-highest);
+    height: 22px;
+    width: 22px;
+    border-radius: 14px;
+    margin-top: 3px;
+    margin-left: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

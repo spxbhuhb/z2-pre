@@ -18,10 +18,13 @@ package hu.simplexion.z2.gradle
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
-import org.jetbrains.kotlin.gradle.plugin.*
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
+import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
+import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
 
-const val PLUGIN_VERSION = "2024.02.02"
+const val PLUGIN_VERSION = "2024.04.03"
 const val KOTLIN_COMPILER_PLUGIN_ID = "z2"  // this is how the compiler identifies the plugin
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "hu.simplexion.z2"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "z2-kotlin-plugin"
@@ -79,7 +82,12 @@ class Z2GradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         val options = mutableListOf<SubpluginOption>()
 
-        options += InternalSubpluginOption("resource-output-dir", getResourceOutputDir(project, sourceSetName, target).path)
+        options += SubpluginOption(key = "resource-dir", extension.resourceDir.get().toString())
+        options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.get().toString())
+
+        extension.pluginLogDir.get()?.let {
+            options += SubpluginOption(key = "plugin-log-dir", it.toString())
+        }
 
         return project.provider { options }
     }

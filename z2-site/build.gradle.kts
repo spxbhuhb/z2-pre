@@ -3,7 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.z2") version "2024.02.02"
+    id("hu.simplexion.z2") version "2024.04.03"
 
     java
     application
@@ -29,8 +29,15 @@ application {
 }
 
 kotlin {
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
+
+    jvmToolchain(11)
+
     jvm {
-        jvmToolchain(11)
         withJava()
     }
 
@@ -40,13 +47,14 @@ kotlin {
 
         val targetDirectory = file("$buildDir/processedResources/js/main/")
 
-        tasks.register("z2BrowserExtract") {
+        tasks.register("z2CssExtract") {
             doLast {
                 targetDirectory.mkdirs()
                 compilations["main"].runtimeDependencyFiles.firstOrNull {
-                    "z2-browser" in it.name
+                    "z2-lib" in it.name
                 }?.let {
                     copy {
+                        include("**/*.css")
                         from(zipTree(it))
                         into(targetDirectory)
                         duplicatesStrategy = DuplicatesStrategy.WARN
@@ -55,7 +63,7 @@ kotlin {
             }
         }
 
-        tasks["jsBrowserDistribution"].dependsOn("z2BrowserExtract")
+        tasks["jsBrowserDistribution"].dependsOn("z2CssExtract")
     }
 
     sourceSets["commonMain"].dependencies {

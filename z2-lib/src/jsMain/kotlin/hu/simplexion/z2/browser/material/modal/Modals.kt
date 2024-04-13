@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.browser.material.modal
 
+import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.removeCss
@@ -11,7 +12,6 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.vh
 import hu.simplexion.z2.browser.material.vw
-import hu.simplexion.z2.adaptive.browser.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 
@@ -44,6 +44,10 @@ object Modals : Z2(
         }
 
         if (layers.isEmpty()) htmlElement.addCss(displayNone)
+    }
+
+    fun close() {
+        layers.lastOrNull()?.let { this -= it.children.first() }
     }
 
     fun Z2.layer(child: Z2) =

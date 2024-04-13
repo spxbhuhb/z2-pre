@@ -1,10 +1,8 @@
 package hu.simplexion.z2.kotlin.ir
 
-import hu.simplexion.z2.kotlin.ir.schematic.RUNTIME_PACKAGE
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.IrMessageLogger
 import org.jetbrains.kotlin.ir.util.fileEntry
 import org.jetbrains.kotlin.name.ClassId
@@ -25,13 +23,12 @@ interface Z2PluginContext {
 
     val moduleFragment : IrModuleFragment
 
-    fun String.runtimeClass(pkg: String = RUNTIME_PACKAGE) =
+    fun String.runtimeClass(pkg: String) =
         checkNotNull(irContext.referenceClass(ClassId(FqName(pkg), Name.identifier(this)))) {
             "Missing runtime class: $pkg.$this. Maybe the gradle dependency on \"hu.simplexion.z2:z2-core\" is missing."
         }
 
-    fun classSymbol(name: FqName): IrClassSymbol =
-        name.shortName().toString().runtimeClass(name.parent().asString())
+
 
     fun output(title: String, content: String, declaration: IrDeclaration? = null) {
 

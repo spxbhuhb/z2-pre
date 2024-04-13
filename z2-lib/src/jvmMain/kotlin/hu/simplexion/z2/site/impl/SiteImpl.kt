@@ -7,7 +7,7 @@ import hu.simplexion.z2.auth.context.publicAccess
 import hu.simplexion.z2.auth.util.runAsSecurityOfficer
 import hu.simplexion.z2.auth.util.runTransactionAsSecurityOfficer
 import hu.simplexion.z2.services.ServiceImpl
-import hu.simplexion.z2.setting.impl.SettingImpl.Companion.settingImpl
+import hu.simplexion.z2.setting.settingImpl
 import hu.simplexion.z2.site.api.SiteApi
 import hu.simplexion.z2.site.model.SiteSettings
 
@@ -17,6 +17,8 @@ class SiteImpl : SiteApi, ServiceImpl<SiteImpl> {
         val siteImpl = SiteImpl().internal
 
         const val SITE_SETTINGS_KEY = "site" // TODO think about hard-coded keys
+
+        val siteSettings = lazy { SiteSettings() }
     }
 
     override suspend fun siteUrl(): String {

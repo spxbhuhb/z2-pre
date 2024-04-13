@@ -16,8 +16,12 @@ val scmPath = "spxbhuhb/z2"
 val kotlin_version: String by project.properties
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
+}
+
+kotlin {
+    jvmToolchain(11)
 }
 
 sourceSets {
@@ -70,6 +74,7 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         languageVersion = "2.0"
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
+        freeCompilerArgs += "-Xcontext-receivers"
     }
 }
 

@@ -3,6 +3,7 @@ package hu.simplexion.z2.setting.util
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.setting.model.Setting
 
+
 /**
  * Decodes the values from [settings] into this schematic. Sets any values not present
  * in [settings] to their schematic default.

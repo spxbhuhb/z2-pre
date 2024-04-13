@@ -19,7 +19,7 @@ internal fun Z2.list() =
 
             table<Principal> {
 
-                title {
+                header {
                     text = baseStrings.accounts
                     action(baseStrings.addAccount) { add() }
                 }

@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
+import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.api.PrincipalApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -15,10 +16,10 @@ import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
 import hu.simplexion.z2.auth.table.RoleGrantTable.Companion.roleGrantTable
 import hu.simplexion.z2.auth.util.BCrypt
 import hu.simplexion.z2.baseStrings
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 import kotlinx.datetime.Clock.System.now
 
 class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
@@ -26,9 +27,9 @@ class PrincipalImpl : PrincipalApi, ServiceImpl<PrincipalImpl> {
     companion object {
         val principalImpl = PrincipalImpl().internal
 
-        var addRoles = emptyArray<Role>()
-        var getRoles = emptyArray<Role>()
-        var updateRoles = emptyArray<Role>()
+        var addRoles = arrayOf(technicalAdminRole.uuid)
+        var getRoles = arrayOf(technicalAdminRole.uuid)
+        var updateRoles = arrayOf(technicalAdminRole.uuid)
     }
 
     override suspend fun list(): List<Principal> {

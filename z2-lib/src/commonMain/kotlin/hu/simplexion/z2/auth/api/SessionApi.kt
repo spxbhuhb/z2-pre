@@ -10,7 +10,7 @@ interface SessionApi : Service {
 
     suspend fun owner() : UUID<Principal>?
 
-    suspend fun roles() : List<Role>
+    suspend fun roles() : List<UUID<Role>>
 
     suspend fun login(name : String, password : String) : Session
 

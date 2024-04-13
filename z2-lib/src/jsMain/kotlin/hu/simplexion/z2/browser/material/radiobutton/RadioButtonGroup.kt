@@ -5,10 +5,13 @@ import hu.simplexion.z2.browser.css.cursorPointer
 import hu.simplexion.z2.browser.css.displayFlex
 import hu.simplexion.z2.browser.css.pl8
 import hu.simplexion.z2.browser.field.FieldState
+import hu.simplexion.z2.browser.field.FieldStyle
 import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
+import hu.simplexion.z2.browser.layout.scrolledBoxWithLabel
+import hu.simplexion.z2.localization.runtime.localized
 
 class RadioButtonGroup<T>(
     parent: Z2,
@@ -45,6 +48,12 @@ class RadioButtonGroup<T>(
 
     fun update() {
         clear()
+        scrolledBoxWithLabel((state.label ?: "").localized, border = (config.style == FieldStyle.Outlined)) {
+            renderItems()
+        }
+    }
+
+    fun Z2.renderItems() {
         for (entry in config.options) {
             div(displayFlex, alignItemsCenter) {
                 buttons += radioButton(entry == valueOrNull, false) { onChange(entry) }

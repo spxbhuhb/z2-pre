@@ -1,0 +1,32 @@
+.border-bottom-error { border-bottom: 1px solid var(--md-sys-color-error); }
+.border-bottom-error { border-bottom: 1px solid var(--md-sys-color-error); }
+.border-bottom-left-radius-extra-small { border-bottom-left-radius: var(--md-sys-shape-corner-extra-small); }
+.border-bottom-outline { border-bottom: 1px solid var(--md-sys-color-outline); }
+.border-bottom-outline-variant { border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+.border-bottom-primary { border-bottom: 1px solid var(--md-sys-color-primary); }
+.border-bottom-right-radius-extra-small { border-bottom-right-radius: var(--md-sys-shape-corner-extra-small); }
+.border-color-error { border-color: var(--md-sys-color-error); }
+.border-color-outline { border-color: var(--md-sys-color-outline-variant); }
+.border-color-primary { border-color: var(--md-sys-color-primary); }
+.border-error { border: 1px solid var(--md-sys-color-error); }
+.border-outline { border: 1px solid var(--md-sys-color-outline-variant); }
+.border-primary { border: 1px solid var(--md-sys-color-primary); }
+.border-top-left-radius-extra-small { border-top-left-radius: var(--md-sys-shape-corner-extra-small); }
+.border-top-outline-variant { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.border-top-right-radius-extra-small { border-top-right-radius: var(--md-sys-shape-corner-extra-small); }
+.border-radius-extra-small { border-radius: var(--md-sys-shape-corner-extra-small); }
+.caret-color-primary { caret-color: var(--md-sys-color-primary) }
+.elevation-level-1 { box-shadow: var(--md-sys-elevation-level-1); }
+.elevation-level-2 { box-shadow: var(--md-sys-elevation-level-2); }
+.elevation-level-3 { box-shadow: var(--md-sys-elevation-level-3); }
+.error-text { color: var(--md-sys-color-error); }
+.shape-corner-large { border-radius: var(--md-sys-shape-corner-large); }
+.state-layer-opacity-drag { opacity: 16%; }
+.state-layer-opacity-focus { opacity: 12%; }
+.state-layer-opacity-hover { opacity: 8%; }
+.state-layer-opacity-press { opacity: 12%; }
+.surface-container { background-color: var(--md-sys-color-surface-container); }
+.surface-container-high { background-color: var(--md-sys-color-surface-container-high); }
+.surface-container-highest { background-color: var(--md-sys-color-surface-container-highest); }
+.surface-container-low { background-color: var(--md-sys-color-surface-container-low); }
+.surface-container-lowest { background-color: var(--md-sys-color-surface-container-lowest); }

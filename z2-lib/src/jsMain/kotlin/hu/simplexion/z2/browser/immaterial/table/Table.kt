@@ -4,6 +4,8 @@
 
 package hu.simplexion.z2.browser.immaterial.table
 
+import hu.simplexion.z2.adaptive.event.AnonymousEventListener
+import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.browser.css.borderNone
 import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.css.p0
@@ -14,8 +16,6 @@ import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry
 import hu.simplexion.z2.browser.util.launchApply
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.datetime.*
@@ -28,11 +28,11 @@ import kotlin.math.min
 
 class Table<T>(
     parent: Z2? = null,
-    builder: TableBuilder<T>.() -> Unit
+    builder: (table: Table<T>) -> TableBuilder<T>,
 ) : Z2(
     parent,
     document.createElement("div") as HTMLElement,
-    arrayOf("table-outer-container".css),
+    tableOuterContainerStyles,
     null
 ) {
 
@@ -55,6 +55,7 @@ class Table<T>(
     var traceScroll = false
     var traceColumnResize = false
     var traceMultiLevel = false
+    var traceMatch = false
 
     var firstOnResume = true
 
@@ -129,18 +130,20 @@ class Table<T>(
     var searchText: String? = null
 
     init {
-        TableBuilder(this).also { build ->
-            build.builder()
-            configuration = build
-            columns = build.columns.map { it.toColumn(this) }
-            query = build.query
-            state = build.state
-            getRowId = checkNotNull(build.rowId) { "rowId has to be set in the table builder" }
-            build.data?.let { setData(it) }
-            build.state?.let { setData(it.value) }
+        builder(this).also { tableBuilder ->
+            configuration = tableBuilder
+            columns = tableBuilder.columns.map { it.toColumn(this) }
+            query = tableBuilder.query
+            state = tableBuilder.state
+            getRowId = checkNotNull(tableBuilder.rowId) { "rowId has to be set in the table builder" }
+            tableBuilder.data?.let { setData(it) }
+            tableBuilder.state?.let { setData(it.value) }
         }
 
-        configuration.titleBuilder?.build(this)
+        configuration.headerBuilder?.build(this)
+
+        gridTemplateRows = if (configuration.header) "min-content 1fr" else "1fr"
+        gridTemplateColumns = "1fr"
 
         div("table-content-container".css) {
             contentContainer = this

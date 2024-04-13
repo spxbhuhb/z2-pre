@@ -2,20 +2,27 @@
  * Copyright © 2020-2023, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.z2.adaptive.field.registerFieldImpl
+import hu.simplexion.z2.adaptive.field.select.demo.entitySelectDemo
+import hu.simplexion.z2.adaptive.field.select.demo.selectFieldPlayground
+import hu.simplexion.z2.adaptive.field.text.demo.textFieldPlayground
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.demo.calendar.calendarDemo
+import hu.simplexion.z2.browser.demo.chart.chartDemo
 import hu.simplexion.z2.browser.demo.components.select.selectDemo
 import hu.simplexion.z2.browser.demo.field.stereotype.decimalDemo
 import hu.simplexion.z2.browser.demo.form.formDemo
+import hu.simplexion.z2.browser.demo.immaterial.dateTimePickerDemo
 import hu.simplexion.z2.browser.demo.layout.containerDemo
 import hu.simplexion.z2.browser.demo.material.*
 import hu.simplexion.z2.browser.demo.pages.loginDemo
 import hu.simplexion.z2.browser.demo.routing.routingRouter
 import hu.simplexion.z2.browser.demo.search.searchDemo
 import hu.simplexion.z2.browser.demo.strings
+import hu.simplexion.z2.browser.demo.table.schematicTableDemo
 import hu.simplexion.z2.browser.demo.table.tableDemo
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.layout.Content
@@ -27,15 +34,17 @@ import hu.simplexion.z2.browser.material.searchbar.searchBar
 import hu.simplexion.z2.browser.routing.BrowserRouter
 import hu.simplexion.z2.browser.routing.NavRouter
 import hu.simplexion.z2.browser.routing.Router
-import hu.simplexion.z2.util.localLaunch
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
 import hu.simplexion.z2.site.boot.bootJs
+import hu.simplexion.z2.util.localLaunch
 
 fun main() {
     localLaunch {
         bootJs()
+
+        registerFieldImpl()
 
         commonStrings = strings
         dateTimeStrings = strings
@@ -56,6 +65,7 @@ object mainRouter : BrowserRouter() {
 
     // @formatter:off
     val components       by componentRouter
+    val adaptive         by adaptiveRouter
     val pages            by pagesRouter
     val other            by otherRouter
     // @formatter:on
@@ -77,13 +87,14 @@ object componentRouter : NavRouter(loggedIn = false) {
     val button           by render(strings.button)           { buttonDemo() }
     val calendar         by render(strings.calendar)         { calendarDemo() }
     val card             by render(strings.card)             { cardDemo() }
+    val chart            by render(strings.chart)            { chartDemo() }
     val container        by render(strings.container)        { containerDemo() }
     val datepicker       by render(strings.datepicker)       { datepickerDemo() }
+    val dateTimePicker   by render(strings.datetimepicker)   { dateTimePickerDemo() }
     val decimal          by render(strings.decimal)          { decimalDemo() }
     val enum             by render(strings.enum)             { enumDemo() }
     val form             by render(strings.form)             { formDemo() }
     val menu             by render(strings.menu)             { menuDemo() }
-    val modal            by render(strings.modal)            { modalDemo() }
     val navigationDrawer by render(strings.navigationDrawer) { navigationDrawerDemo() }
     val popup            by render(strings.popup)            { popupDemo() }
     val radioButton      by render(strings.radioButton)      { radioButtonDemo() }
@@ -92,8 +103,21 @@ object componentRouter : NavRouter(loggedIn = false) {
     val snackbar         by render(strings.snackbar)         { snackbarDemo() }
     val switch           by render(strings.switch)           { switchDemo() }
     val table            by render(strings.table)            { tableDemo() }
+    val schematicTable   by render(strings.schematicTable)   { schematicTableDemo() }
     val timepicker       by render(strings.timepicker)       { timepickerDemo() }
     val textField        by render(strings.textField)        { textFieldDemo() }
+    // @formatter:on
+}
+
+@Suppress("unused")
+object adaptiveRouter : NavRouter(loggedIn = false) {
+    override val label = strings.adaptive
+
+    // @formatter:off
+    val text           by render(strings.textField)         { textFieldPlayground() }
+    val entitySelect   by render(strings.entitySelect)      { entitySelectDemo() }
+    val modal          by render(strings.modal)             { hu.simplexion.z2.adaptive.modal.modalDemo(this) }
+    val select         by render(strings.select)            { selectFieldPlayground() }
     // @formatter:on
 }
 

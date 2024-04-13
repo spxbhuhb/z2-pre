@@ -4,6 +4,7 @@ import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.NonLocalized
 import hu.simplexion.z2.schematic.access.SchematicAccessContext
+import hu.simplexion.z2.schematic.entity.SchematicEntity
 import hu.simplexion.z2.schematic.schema.Schema
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.field.*
@@ -12,7 +13,8 @@ import hu.simplexion.z2.schematic.schema.field.stereotype.PhoneNumberSchemaField
 import hu.simplexion.z2.schematic.schema.field.stereotype.SecretSchemaField
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
 import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.nextHandle
+import hu.simplexion.z2.util.Z2Handle
+import hu.simplexion.z2.util.placeholder
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -21,14 +23,17 @@ import kotlin.time.Duration
 
 abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvider {
 
-    @NonLocalized
-    override var schematicParent: SchematicNode? = null
+    var schematicStateOrNull: SchematicState? = null
 
-    @NonLocalized
-    override val schematicHandle = nextHandle()
+    /**
+     * The state of this schematic instance. The state is created on-demand, typically
+     * when a listener is attached to the schematic.
+     */
+    override val schematicState: SchematicState
+        get() = schematicStateOrNull ?: SchematicState(this).also { schematicStateOrNull = it }
 
-    @NonLocalized
-    override var schematicListenerCount = 0
+    val schematicHandle: Z2Handle
+        get() = schematicState.handle
 
     /**
      * The actual values stored in this schematic. Key is the name of the
@@ -43,6 +48,8 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
      */
     @NonLocalized
     open val schematicSchema: Schema<ST>
+        // this is necessary because of generic types
+        // if replaced `schematicCompanion.schematicSchema` the compiler throws an error
         get() = placeholder()
 
     /**
@@ -50,7 +57,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
      */
     @NonLocalized
     open val schematicFqName: String
-        get() = this::class.simpleName.toString()
+        get() = schematicCompanion.schematicFqName
 
     /**
      * Get the companion object of this schematic.
@@ -84,7 +91,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
     /**
      * Changes the value of a field if it can be converted to the given data type.
      * Throws exception if the conversion fails.
-     * If there are any listeners (that is, [listenerCount] is not 0), validates
+     * If there are any listeners (that is, [schematicListenerCount] is not 0), validates
      * the schematic and fires a [SchematicFieldEvent].
      */
     fun schematicChange(field: SchemaField<*>, value: Any?) {
@@ -94,7 +101,8 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
         check(fails.isEmpty()) { "cannot change field value: ${this::class.simpleName}.${field.name} value is type of ${value?.let { it::class.simpleName }}" }
 
         if (typedValue is SchematicNode) {
-            typedValue.schematicParent = this
+            // TODO think about setting the schematic parent, is it a problem if there is already a parent?
+            typedValue.schematicState.parent = this
         }
 
         schematicValues[field.name] = typedValue
@@ -110,9 +118,9 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
     }
 
     override fun fireEvent(field: SchemaField<*>) {
-        if (schematicListenerCount <= 0) return
+        if (schematicState.listenerCount <= 0) return
         val validationResult = schematicSchema.validate(this)
-        EventCentral.fire(SchematicFieldEvent(schematicHandle, this, field, validationResult))
+        EventCentral.fire(SchematicFieldEvent(schematicState.handle, this, field, validationResult))
     }
 
     // -----------------------------------------------------------------------------------
@@ -141,7 +149,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
 
         fun localDate(default: LocalDate? = null) = LocalDateSchemaField(default)
 
-        fun localTime(default: LocalTime? = null) = LocalTimeSchemaField(default)
+        fun localTime(default: LocalTime? = null, min: LocalTime? = null, max: LocalTime? = null) = LocalTimeSchemaField(default, min, max)
 
         fun localDateTime(default: LocalDateTime? = null) = LocalDateTimeSchemaField(default)
 
@@ -152,6 +160,19 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
         fun <VT : Schematic<VT>> schematicList(default: MutableList<VT>? = null) = SchematicListSchemaField(default)
 
         fun phoneNumber(blank: Boolean? = null) = PhoneNumberSchemaField(blank)
+
+        fun <RT : SchematicEntity<RT>> reference(
+            validForCreate: Boolean = false,
+            default: UUID<RT>? = null,
+            nil: Boolean? = null
+        ) = ReferenceSchemaField(default, nil, validForCreate)
+
+        fun <RT : SchematicEntity<RT>> referenceList(
+            default: MutableList<UUID<RT>>? = null,
+            nil: Boolean? = null
+        ) = ReferenceListSchemaField(default, nil)
+
+        fun <ST : SchematicEntity<ST>> self() = UuidSchemaField<ST>(null, null, true)
 
         fun secret(
             default: String? = null,
@@ -187,6 +208,9 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
             nil: Boolean? = null
         ) = UuidListSchemaField(default, nil)
 
+        fun <GT> generic() = GenericSchemaField<GT>()
+
+        fun <LT> list() = ListSchemaField<LT, GenericSchemaField<LT>>(GenericSchemaField())
     }
 
     // -----------------------------------------------------------------------------------

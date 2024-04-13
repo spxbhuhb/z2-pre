@@ -1,10 +1,10 @@
 package hu.simplexion.z2.exposed
 
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaFieldType
 import hu.simplexion.z2.schematic.schema.field.DecimalSchemaFieldDefault
 import hu.simplexion.z2.schematic.schema.validation.ValidationFailInfo
+import hu.simplexion.z2.util.UUID
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
@@ -58,6 +58,13 @@ open class SchematicUuidTable<T : Schematic<T>>(
         }
     }
 
+    fun getOrNull(uuid: UUID<T>): T? =
+        select { id eq uuid.jvm }
+            .map {
+                it.toSchematic(this, newInstance())
+            }
+            .firstOrNull()
+
     operator fun get(uuid: UUID<T>): T =
         select { id eq uuid.jvm }
             .map {
@@ -68,6 +75,9 @@ open class SchematicUuidTable<T : Schematic<T>>(
     operator fun plusAssign(schematic: T) {
         insert(schematic)
     }
+
+    operator fun contains(uuid: UUID<T>) : Boolean =
+        (select { id eq uuid.jvm }.count() != 0L)
 
     fun insert(schematic: T): UUID<T> {
         val uuid: UUID<T> = checkNotNull(
@@ -83,6 +93,16 @@ open class SchematicUuidTable<T : Schematic<T>>(
             @Suppress("UNCHECKED_CAST") // FIXME make a SchematicEntity class with a uuid field, or something
             schematic.schematicGet("uuid") as UUID<T>
         }
+    }
+
+    fun insertWithId(schematic: T): UUID<T> {
+        insert {
+            it.fromSchematic(this, schematic, false)
+        }
+
+        @Suppress("UNCHECKED_CAST") // FIXME make a SchematicEntity class with a uuid field, or something
+
+        return schematic.schematicGet("uuid") as UUID<T>
     }
 
     fun update(uuid: UUID<T>, schematic: T) {

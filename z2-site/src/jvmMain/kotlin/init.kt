@@ -3,6 +3,7 @@ import hu.simplexion.z2.localization.impl.LocaleImpl.Companion.localeImpl
 import hu.simplexion.z2.localization.model.Locale
 
 fun init() {
+
     runTransactionAsSecurityOfficer { context ->
 
         val impl = localeImpl(context)

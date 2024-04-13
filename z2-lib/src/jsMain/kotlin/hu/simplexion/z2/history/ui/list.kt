@@ -24,7 +24,7 @@ internal fun Z2.list() =
 
             table<HistoryEntry> {
 
-                title {
+                header {
                     text = baseStrings.historyOverview
                 }
 

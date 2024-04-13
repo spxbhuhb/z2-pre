@@ -1,13 +1,17 @@
 package hu.simplexion.z2.browser.html
 
+import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.adaptive.event.AnonymousEventListener
+import hu.simplexion.z2.adaptive.event.EventCentral
+import hu.simplexion.z2.adaptive.event.Z2Event
+import hu.simplexion.z2.adaptive.event.Z2EventListener
+import hu.simplexion.z2.adaptive.impl.AdaptiveImpl
 import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.material.icon.icon
-import hu.simplexion.z2.adaptive.browser.CssClass
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2EventListener
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.schematic.Schematic
 import kotlinx.browser.document
 import kotlinx.dom.addClass
 import kotlinx.dom.appendText
@@ -19,7 +23,7 @@ open class Z2(
     val htmlElement: HTMLElement = document.createElement("div") as HTMLElement,
     classes: Array<out CssClass>? = null,
     val builder: (Z2.() -> Unit)? = null,
-) {
+) : AdaptiveImpl {
     val style
         get() = htmlElement.style
 
@@ -142,6 +146,18 @@ open class Z2(
         clear()
     }
 
+    fun attach(vararg schematics: Schematic<*>) {
+        for (schematic in schematics) {
+            val listener = AnonymousEventListener(schematic.schematicHandle, ::onSchematicEvent)
+            schematic.attach(listener)
+            listeners += listener
+        }
+    }
+
+    open fun onSchematicEvent(event : Z2Event) {
+
+    }
+
     inline fun text(builder: () -> Any?) {
         builder()?.let { htmlElement.appendText(it.toString()) }
     }
@@ -158,12 +174,14 @@ open class Z2(
         icon(this@unaryPlus)
     }
 
-    infix fun Z2.gridRow(value : String) {
-        gridColumn = value
+    infix fun Z2.gridRow(value: String): Z2 {
+        gridRow = value
+        return this
     }
 
-    infix fun Z2.gridColumn(value : String) {
+    infix fun Z2.gridColumn(value: String): Z2 {
         gridColumn = value
+        return this
     }
 
 }

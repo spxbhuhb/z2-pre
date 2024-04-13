@@ -1,0 +1,15 @@
+.scroll-auto-hide:not(:hover) {
+    scrollbar-width: none;
+}
+
+.scroll-auto-hide:hover {
+    scrollbar-width: thin;
+}
+
+.scroll-auto-hide:not(:hover)::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-auto-hide:hover::-webkit-scrollbar {
+    width: 4px;
+}

@@ -128,7 +128,7 @@ class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
 
 Register the service implementation during application startup, so the server knows that they are available.
 
-Use [defaultServiceImplFactory](./z2-service-runtime/src/commonMain/kotlin/hu/simplexion/z2/service/runtime/globals.kt)
+Use [defaultServiceImplFactory](/z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/globals.kt)
 or implement your own way to store the services. These factories are used by the transports to find the service.
 
 ```kotlin
@@ -216,23 +216,15 @@ data class BasicServiceContext(
 Transports move the call arguments and the return values between the client and the server. The library uses Protocol Buffers as
 transport format, but it does not really care about how the packets reach the other side.
 
-There is a very basic transport implementation for Ktor in the `z2-service-ktor` module. This module has to be added to the project
-as a dependency to use them:
-
-```kotlin
-implementation("hu.simplexion.z2:z2-service-ktor:${z2_service_version}")
-```
+There is a very basic transport implementation for Ktor in `z2-lib`. 
 
 #### Client Side
 
-The [defaultServiceCallTransport](z2-service-runtime/src/commonMain/kotlin/hu/simplexion/z2/service/runtime/globals.kt)
+The [defaultServiceCallTransport](../z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/globals.kt)
 global variable contains the transport. Set this during application startup as the example shows below.
 
-[BasicWebSocketServiceTransport](z2-service-ktor/src/commonMain/kotlin/hu/simplexion/z2/service/ktor/client/BasicWebSocketServiceTransport.kt)
-from `z2-service-ktor` provides a basic web socket transport implementation for clients.
-
 ```kotlin
-defaultServiceCallTransport = BasicWebSocketServiceTransport(
+defaultServiceCallTransport = BasicWebSocketServiceCallTransport(
     window.location.hostname,
     window.location.port.toInt(),
     "/z2/services"
@@ -240,6 +232,18 @@ defaultServiceCallTransport = BasicWebSocketServiceTransport(
     it.start()
 }
 ```
+
+Each service consumer has a `serviceCallTransport` property which may be set to use specific call transport for the service.
+
+```kotlin
+val service = getService<TestApi>().also { it.serviceCallTransport = LocalServiceCallTransport() }
+```
+
+[BasicWebSocketServiceCallTransport](../z2-lib/src/commonMain/kotlin/hu/simplexion/z2/ktor/BasicWebSocketServiceCallTransport.kt) 
+from `z2-lib` provides a basic web socket transport implementation for clients.
+
+[LocalServiceCallTransport](../z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/transport/LocalServiceCallTransport.kt)
+from `z2-core` provides a basic web socket transport implementation for clients.
 
 #### Server Side
 

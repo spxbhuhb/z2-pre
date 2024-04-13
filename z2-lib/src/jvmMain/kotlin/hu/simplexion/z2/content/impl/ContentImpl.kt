@@ -2,7 +2,6 @@ package hu.simplexion.z2.content.impl
 
 import hu.simplexion.z2.auth.context.ensureInternal
 import hu.simplexion.z2.auth.context.ensuredByLogic
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.content.api.ContentApi
 import hu.simplexion.z2.content.impl.upload.ChunkData
 import hu.simplexion.z2.content.impl.upload.Upload
@@ -12,16 +11,20 @@ import hu.simplexion.z2.content.model.ContentStatus
 import hu.simplexion.z2.content.table.ContentTable.Companion.contentTable
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.get
-import hu.simplexion.z2.setting.util.fromEnvironment
-import hu.simplexion.z2.setting.util.fromEnvironmentMandatory
+import hu.simplexion.z2.setting.dsl.setting
+import hu.simplexion.z2.util.UUID
+import java.nio.file.Path
 import java.nio.file.Paths
 
 open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
 
     companion object {
-        // TODO content placement strategy settings
-        var globalContentPlacementStrategy: ContentPlacementStrategy =
-            BasicPlacementStrategy(Paths.get("CONTENT_PATH".fromEnvironment ?: "./var/tmp")) // FIXME hard coded CONTENT_PATH default
+        /**
+         * The file system path to the directory to store content files.
+         */
+        val contentPath by setting<Path> { "CONTENT_PATH" } default Paths.get("./var/tmp")
+
+        var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(contentPath)
 
         val contentImpl = ContentImpl().internal
 

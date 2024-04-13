@@ -161,13 +161,13 @@ open class NullableSchematicSchemaField<T : Schematic<T>>(
 
 class SchematicListSchemaField<T : Schematic<T>>(
     definitionDefault : MutableList<T>?
-) : hu.simplexion.z2.schematic.schema.ListSchemaField<T> {
+) : ListSchemaField<T, SchematicSchemaField<T>>(
+    SchematicSchemaField(null)
+) {
 
     override var name: String = ""
 
-    override val itemSchemaField = SchematicSchemaField<T>(null)
-
-    override val definitionDefault = definitionDefault?.let { SchematicList(null, definitionDefault, this) }
+    override val definitionDefault = definitionDefault?.let { SchematicList(definitionDefault, this) }
 
     // called by the compiler plugin to set the companion
     fun setCompanion(companion: SchematicCompanion<T>) : SchematicListSchemaField<T> {
@@ -182,6 +182,6 @@ class SchematicListSchemaField<T : Schematic<T>>(
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
         val value = message.instanceList(fieldNumber, itemSchemaField.companion)
-        schematic.schematicValues[name] = SchematicList(schematic, value, this)
+        schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 }

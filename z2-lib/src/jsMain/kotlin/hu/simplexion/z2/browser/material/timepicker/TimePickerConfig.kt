@@ -28,7 +28,7 @@ class TimePickerConfig(
             update?.invoke()
         }
 
-    var onChange: (TimePickerConfig.(value: LocalTime) -> Unit)? = null
+    var onChange: (DockedTimePicker.(value: LocalTime) -> Unit)? = null
         set(value) {
             field = value
             update?.invoke()

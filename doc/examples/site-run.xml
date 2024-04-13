@@ -1,0 +1,42 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="z2-site [run]" type="GradleRunConfiguration" factoryName="Gradle">
+        <ExternalSystemSettings>
+            <option name="env">
+                <map>
+                    <entry key="Z2_DB_DRIVER_CLASS_NAME" value="org.postgresql.Driver"/>
+                    <entry key="Z2_DB_JDBC_URL" value="jdbc:postgresql://127.0.0.1/<db-name>"/>
+                    <entry key="Z2_DB_PASSWORD" value="<db-password>"/>
+                    <entry key="Z2_DB_USER" value="<db-user>"/>
+                    <entry key="Z2_EMAIL_HOST" value="smtp.gmail.com"/>
+                    <entry key="Z2_EMAIL_PASSWORD" value="<email-password>"/>
+                    <entry key="Z2_EMAIL_PORT" value="587"/>
+                    <entry key="Z2_EMAIL_USER" value="<email-user>"/>
+                    <entry key="Z2_INTERNAL_PORT" value="8080"/>
+                    <entry key="Z2_SITE_MODE" value="test"/>
+                    <entry key="Z2_SITE_PORT" value="3000"/>
+                    <entry key="Z2_SITE_STATIC" value="build/processedResources/js/main"/>
+                    <entry key="Z2_TEST_EMAIL" value="<test-email-address>"/>
+                </map>
+            </option>
+            <option name="executionName"/>
+            <option name="externalProjectPath" value="$PROJECT_DIR$/z2-site"/>
+            <option name="externalSystemIdString" value="GRADLE"/>
+            <option name="passParentEnvs" value="false"/>
+            <option name="scriptParameters" value=""/>
+            <option name="taskDescriptions">
+                <list/>
+            </option>
+            <option name="taskNames">
+                <list>
+                    <option value="run"/>
+                </list>
+            </option>
+            <option name="vmOptions"/>
+        </ExternalSystemSettings>
+        <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+        <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+        <DebugAllEnabled>false</DebugAllEnabled>
+        <RunAsTest>false</RunAsTest>
+        <method v="2"/>
+    </configuration>
+</component>

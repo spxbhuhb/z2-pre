@@ -9,9 +9,9 @@ class SimpleRouter(
     label: LocalizedText? = null,
     icon: LocalizedIcon? = null,
     loggedIn : Boolean = true,
-    roles : List<String> = emptyList(),
+    visibility: ((target: RoutingTarget<Z2>) -> Boolean)? = null,
     val builder : Z2Builder
-) : Router<Z2>(label, icon, loggedIn, roles) {
+) : Router<Z2>(label, icon, loggedIn, visibility) {
     override fun default(receiver: Z2, path: List<String>) {
         receiver.builder()
     }

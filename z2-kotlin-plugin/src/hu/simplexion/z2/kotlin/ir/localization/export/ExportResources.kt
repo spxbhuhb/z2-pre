@@ -11,7 +11,7 @@ class ExportResources(
     val pluginContext: LocalizationPluginContext
 ) {
     fun export() {
-        val path = pluginContext.options.resourceOutputDir.toPath()
+        val path = pluginContext.options.resourceOutputDir?.toPath() ?: return
         Files.createDirectories(path)
         Files.write(
             path.resolve("localization." + moduleFragment.safeName + ".txt"),
