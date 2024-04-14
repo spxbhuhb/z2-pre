@@ -53,11 +53,11 @@ open class IntSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.int(fieldNumber, value)
+        builder.int(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.int(fieldNumber)
+        val value = message.int(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -106,11 +106,11 @@ open class NullableIntSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.intOrNull(fieldNumber, fieldNumber + 1, value)
+        builder.intOrNull(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.intOrNull(fieldNumber, fieldNumber + 1)
+        val value = message.intOrNull(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 

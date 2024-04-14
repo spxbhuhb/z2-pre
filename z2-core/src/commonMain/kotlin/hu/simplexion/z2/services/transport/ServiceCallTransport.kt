@@ -1,9 +1,9 @@
 package hu.simplexion.z2.services.transport
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
+import hu.simplexion.z2.serialization.Message
 
 interface ServiceCallTransport {
 
-    suspend fun <T> call(serviceName : String, funName : String, payload: ByteArray, decoder : ProtoDecoder<T>): T
+    suspend fun call(serviceName : String, funName : String, payload: ByteArray): Message
 
 }

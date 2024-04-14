@@ -42,11 +42,11 @@ open class DurationSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, DurationCoder, value)
+        builder.instance(fieldNumber, name, DurationCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, DurationCoder)
+        val value = message.instance(fieldNumber, name, DurationCoder)
         schematic.schematicValues[name] = value
     }
 
@@ -78,11 +78,11 @@ open class NullableDurationSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, DurationCoder, value)
+        builder.instanceOrNull(fieldNumber, name, DurationCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, DurationCoder)
+        val value = message.instanceOrNull(fieldNumber, name, DurationCoder)
         schematic.schematicValues[name] = value
     }
 

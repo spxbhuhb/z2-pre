@@ -77,11 +77,11 @@ open class SchematicSchemaField<T : Schematic<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, schema.companion, value)
+        builder.instance(fieldNumber, name, schema.companion, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, schema.companion)
+        val value = message.instance(fieldNumber, name, schema.companion)
         schematic.schematicValues[name] = value
     }
 
@@ -138,11 +138,11 @@ open class NullableSchematicSchemaField<T : Schematic<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, schema.companion, value)
+        builder.instanceOrNull(fieldNumber, name, schema.companion, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, schema.companion)
+        val value = message.instanceOrNull(fieldNumber, name, schema.companion)
         schematic.schematicValues[name] = value
     }
 
@@ -177,11 +177,11 @@ class SchematicListSchemaField<T : Schematic<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instanceList(fieldNumber, itemSchemaField.companion, value)
+        builder.instanceList(fieldNumber, name, itemSchemaField.companion, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceList(fieldNumber, itemSchemaField.companion)
+        val value = message.instanceList(fieldNumber, name, itemSchemaField.companion)
         schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 }

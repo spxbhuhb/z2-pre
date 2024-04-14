@@ -40,11 +40,11 @@ open class BooleanSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.boolean(fieldNumber, value)
+        builder.boolean(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.boolean(fieldNumber)
+        val value = message.boolean(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -76,11 +76,11 @@ open class NullableBooleanSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.booleanOrNull(fieldNumber, fieldNumber + 1, value)
+        builder.booleanOrNull(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.booleanOrNull(fieldNumber, fieldNumber + 1)
+        val value = message.booleanOrNull(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 

@@ -1,29 +1,24 @@
 package hu.simplexion.z2.serialization
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
-import hu.simplexion.z2.serialization.protobuf.ProtoEncoder
-import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
-
 data class B(
     var a: A = A(),
     var s: String = ""
 ) {
-    companion object : ProtoEncoder<B>, ProtoDecoder<B> {
+    companion object : InstanceEncoder<B>, InstanceDecoder<B> {
 
-        override fun decodeProto(message: ProtoMessage?): B {
+        override fun encodeInstance(builder: MessageBuilder, value: B): ByteArray =
+            builder
+                .instance(1, "a", A, value.a)
+                .string(2, "s", value.s)
+                .pack()
+
+        override fun decodeInstance(message: Message?): B {
             if (message == null) return B()
 
             return B(
-                message.instance(1, A),
-                message.string(2)
+                message.instance(1, "a", A),
+                message.string(2, "s")
             )
         }
-
-        override fun encodeProto(value: B): ByteArray =
-            ProtoMessageBuilder()
-                .instance(1, A, value.a)
-                .string(2, value.s)
-                .pack()
     }
 }

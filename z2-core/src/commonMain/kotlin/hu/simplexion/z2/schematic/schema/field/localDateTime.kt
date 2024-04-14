@@ -47,11 +47,11 @@ open class LocalDateTimeSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.instance(fieldNumber, LocalDateTimeCoder, value)
+        builder.instance(fieldNumber, name, LocalDateTimeCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instance(fieldNumber, LocalDateTimeCoder)
+        val value = message.instance(fieldNumber, name, LocalDateTimeCoder)
         schematic.schematicValues[name] = value
     }
 
@@ -83,11 +83,11 @@ open class NullableLocalDateTimeSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateTimeCoder, value)
+        builder.instanceOrNull(fieldNumber, name, LocalDateTimeCoder, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.instanceOrNull(fieldNumber, fieldNumber + 1, LocalDateTimeCoder)
+        val value = message.instanceOrNull(fieldNumber, name, LocalDateTimeCoder)
         schematic.schematicValues[name] = value
     }
 

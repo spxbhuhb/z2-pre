@@ -27,7 +27,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun booleanOrNull(fieldNumber: Int, fieldName: String, value: Boolean?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.bool(fieldNumber, value)
         }
@@ -45,7 +45,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun booleanListOrNull(fieldNumber: Int, fieldName: String, values: List<Boolean>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             booleanList(fieldNumber, fieldName, values)
         }
@@ -63,7 +63,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun intOrNull(fieldNumber: Int, fieldName: String, value: Int?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.sint32(fieldNumber, value)
         }
@@ -81,7 +81,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             intList(fieldNumber, fieldName, values)
         }
@@ -99,7 +99,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun longOrNull(fieldNumber: Int, fieldName: String, value: Long?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.sint64(fieldNumber, value)
         }
@@ -117,7 +117,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun longListOrNull(fieldNumber: Int, fieldName: String, values: List<Long>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             longList(fieldNumber, fieldName, values)
         }
@@ -135,7 +135,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun stringOrNull(fieldNumber: Int, fieldName: String, value: String?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.string(fieldNumber, value)
         }
@@ -153,7 +153,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String, values: List<String>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             stringList(fieldNumber, fieldName, values)
         }
@@ -172,7 +172,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.bytes(fieldNumber, value)
         }
@@ -190,7 +190,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String, values: List<ByteArray>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             byteArrayList(fieldNumber, fieldName, values)
         }
@@ -213,7 +213,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun uuidOrNull(fieldNumber: Int, fieldName: String, value: UUID<*>?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.bytes(fieldNumber, value.toByteArray())
         }
@@ -235,7 +235,7 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun uuidListOrNull(fieldNumber: Int, fieldName: String, values: List<UUID<*>>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             uuidList(fieldNumber, fieldName, values)
         }
@@ -247,32 +247,32 @@ class ProtoMessageBuilder : MessageBuilder {
     // ----------------------------------------------------------------------------
 
     override fun <T> instance(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, value: T): ProtoMessageBuilder {
-        writer.bytes(fieldNumber, encoder.encodeInstance(this, value))
+        writer.bytes(fieldNumber, encoder.encodeInstance(ProtoMessageBuilder(), value))
         return this
     }
 
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, value: T?): ProtoMessageBuilder {
         if (value == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            writer.bytes(fieldNumber, encoder.encodeInstance(this, value))
+            writer.bytes(fieldNumber, encoder.encodeInstance(ProtoMessageBuilder(), value))
         }
         return this
     }
 
     override fun <T> instanceList(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>): ProtoMessageBuilder {
         for (value in values) {
-            writer.bytes(fieldNumber, encoder.encodeInstance(this, value))
+            writer.bytes(fieldNumber, encoder.encodeInstance(ProtoMessageBuilder(), value))
         }
         return this
     }
 
     override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>?): ProtoMessageBuilder {
         if (values == null) {
-            writer.bool(fieldNumber + 1, true)
+            writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             for (value in values) {
-                writer.bytes(fieldNumber, encoder.encodeInstance(this, value))
+                writer.bytes(fieldNumber, encoder.encodeInstance(ProtoMessageBuilder(), value))
             }
         }
         return this

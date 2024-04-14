@@ -30,6 +30,10 @@ class ProtoBufferWriter(
         if (value) varint(1UL) else varint(0UL)
     }
 
+    fun bool(value: Boolean) {
+        if (value) varint(1UL) else varint(0UL)
+    }
+
     fun int32(fieldNumber: Int, value: Int) {
         tag(fieldNumber, VARINT)
         varint(value.toULong())
@@ -100,40 +104,29 @@ class ProtoBufferWriter(
 
     fun string(fieldNumber: Int, value: String) {
         tag(fieldNumber, LEN)
-        put(value.encodeToByteArray())
+        string(value)
+    }
+
+    fun string(value: String) {
+        val byteArray = value.encodeToByteArray()
+        varint(byteArray.size.toULong())
+        put(byteArray)
     }
 
     fun uuid(fieldNumber: Int, value: UUID<*>) {
         tag(fieldNumber, LEN)
-        string(value.toString())
+        val byteArray = value.toByteArray()
+        varint(byteArray.size.toULong())
+        put(byteArray)
     }
 
     fun bytes(fieldNumber: Int, value: ByteArray) {
         tag(fieldNumber, LEN)
-        put(value)
+        bytes(value)
     }
 
-    // ------------------------------------------------------------------------
-    // Functions without tag number, these are dangerous
-    // ------------------------------------------------------------------------
-
-    internal fun bool(value: Boolean) {
-        if (value) varint(1UL) else varint(0UL)
-    }
-
-    internal fun int32(value: Int) {
-        varint(value.toULong())
-    }
-
-    internal fun string(value: String) {
-        put(value.encodeToByteArray())
-    }
-
-    internal fun uuid(value: UUID<*>) {
-        string(value.toString())
-    }
-
-    internal fun bytes(value: ByteArray) {
+    fun bytes(value: ByteArray) {
+        varint(value.size.toULong())
         put(value)
     }
 
@@ -141,7 +134,7 @@ class ProtoBufferWriter(
     // Wire format writers
     // ------------------------------------------------------------------------
 
-    private fun tag(fieldNumber: Int, type: Int) {
+    fun tag(fieldNumber: Int, type: Int) {
         val tag = (fieldNumber.toULong() shl 3) or type.toULong()
         varint(tag)
     }
@@ -181,10 +174,6 @@ class ProtoBufferWriter(
     // Constants for the wire format
     // ------------------------------------------------------------------------
 
-    override fun put(byteArray: ByteArray) {
-        varint(byteArray.size.toULong())
-        super.put(byteArray)
-    }
 
     companion object {
         const val continuation = 0x80.toByte()

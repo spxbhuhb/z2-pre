@@ -1,8 +1,8 @@
 package hu.simplexion.z2.services.transport
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
+import hu.simplexion.z2.serialization.Message
+import hu.simplexion.z2.serialization.SerializationConfig
 import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.defaultServiceImplFactory
@@ -14,7 +14,7 @@ import hu.simplexion.z2.services.defaultServiceImplFactory
  * as it avoids the encoding and decoding overhead.
  */
 class DirectServiceCallTransport(
-    val implementation : ServiceImpl<*>
+    val implementation: ServiceImpl<*>
 ) : ServiceCallTransport {
 
     companion object {
@@ -22,12 +22,13 @@ class DirectServiceCallTransport(
         val directServiceContext = BasicServiceContext()
     }
 
-    override suspend fun <T> call(serviceName: String, funName: String, payload: ByteArray, decoder: ProtoDecoder<T>): T {
-        val responseBuilder = ProtoMessageBuilder()
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): Message {
+        val responseBuilder = SerializationConfig.defaultSerialization.messageBuilder()
 
         implementation.newInstance(directServiceContext).dispatch(funName, ProtoMessage(payload), responseBuilder)
 
-        return decoder.decodeProto(ProtoMessage(responseBuilder.pack()))
+        return SerializationConfig.defaultSerialization.toMessage(responseBuilder.pack())
+
     }
 
 }

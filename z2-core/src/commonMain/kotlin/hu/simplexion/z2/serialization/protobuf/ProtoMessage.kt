@@ -27,12 +27,12 @@ class ProtoMessage(
     override fun boolean(fieldNumber: Int, fieldName: String): Boolean = get(fieldNumber)?.let { it.value == 1UL } ?: false
 
     override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
-        if (get(fieldNumber + 1) != null) null else boolean(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else boolean(fieldNumber, fieldName)
 
     override fun booleanList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.bool() }, { varint().bool() })
 
     override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
-        if (get(fieldNumber + 1) != null) null else booleanList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else booleanList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Int
@@ -41,12 +41,12 @@ class ProtoMessage(
     override fun int(fieldNumber: Int, fieldName: String): Int = get(fieldNumber)?.value?.sint32() ?: 0
 
     override fun intOrNull(fieldNumber: Int, fieldName: String): Int? =
-        if (get(fieldNumber + 1) != null) null else int(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else int(fieldNumber, fieldName)
 
     override fun intList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.sint32() }, { varint().sint32() })
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
-        if (get(fieldNumber + 1) != null) null else intList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else intList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Long
@@ -55,12 +55,12 @@ class ProtoMessage(
     override fun long(fieldNumber: Int, fieldName: String): Long = get(fieldNumber)?.value?.sint64() ?: 0L
 
     override fun longOrNull(fieldNumber: Int, fieldName: String): Long? =
-        if (get(fieldNumber + 1) != null) null else long(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else long(fieldNumber, fieldName)
 
     override fun longList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { value.sint64() }, { varint().sint64() })
 
     override fun longListOrNull(fieldNumber: Int, fieldName: String): List<Long>? =
-        if (get(fieldNumber + 1) != null) null else longList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else longList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // String
@@ -69,12 +69,12 @@ class ProtoMessage(
     override fun string(fieldNumber: Int, fieldName: String): String = get(fieldNumber)?.string() ?: ""
 
     override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
-        if (get(fieldNumber + 1) != null) null else string(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else string(fieldNumber, fieldName)
 
     override fun stringList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { string() }, { string() })
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
-        if (get(fieldNumber + 1) != null) null else stringList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else stringList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
@@ -83,12 +83,12 @@ class ProtoMessage(
     override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray = get(fieldNumber)?.bytes() ?: ByteArray(0)
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String): ByteArray? =
-        if (get(fieldNumber + 1) != null) null else byteArray(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArray(fieldNumber, fieldName)
 
     override fun byteArrayList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { bytes() }, { bytes() })
 
     override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String): List<ByteArray>? =
-        if (get(fieldNumber + 1) != null) null else byteArrayList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArrayList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // UUID
@@ -97,12 +97,12 @@ class ProtoMessage(
     override fun <T> uuid(fieldNumber: Int, fieldName: String): UUID<T> = get(fieldNumber)?.uuid() ?: UUID.nil()
 
     override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
-        if (get(fieldNumber + 1) != null) null else uuid(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else uuid(fieldNumber, fieldName)
 
     override fun <T> uuidList(fieldNumber: Int, fieldName: String): List<UUID<T>> = scalarList(fieldNumber, { uuid() }, { uuid() })
 
     override fun <T> uuidListOrNull(fieldNumber: Int, fieldName: String): List<UUID<T>>? =
-        if (get(fieldNumber + 1) != null) null else uuidList(fieldNumber, fieldName)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else uuidList(fieldNumber, fieldName)
 
     // -----------------------------------------------------------------------------------------
     // Instance
@@ -115,7 +115,7 @@ class ProtoMessage(
     }
 
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): T? =
-        if (get(fieldNumber + 1) != null) null else instance(fieldNumber, fieldName, decoder)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else instance(fieldNumber, fieldName, decoder)
 
     override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): MutableList<T> {
         val list = mutableListOf<T>()
@@ -128,7 +128,7 @@ class ProtoMessage(
     }
 
     override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): List<T>? =
-        if (get(fieldNumber + 1) != null) null else instanceList(fieldNumber, fieldName, decoder)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else instanceList(fieldNumber, fieldName, decoder)
 
     // --------------------------------------------------------------------------------------
     // Helpers

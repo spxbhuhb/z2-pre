@@ -11,7 +11,8 @@ class JsonString(val value: String) : JsonElement {
     override val asByteArray
         get() = value.hexToByteArray()
 
-    override val asUuid
-        get() = UUID<Any>(value)
+    override fun <T> asUuid(): UUID<T> {
+        return UUID(value)
+    }
 
 }

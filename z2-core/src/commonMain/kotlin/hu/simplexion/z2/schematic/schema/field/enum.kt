@@ -50,11 +50,11 @@ open class EnumSchemaField<E : Enum<E>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.int(fieldNumber, value.ordinal)
+        builder.int(fieldNumber, name, value.ordinal)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.int(fieldNumber)
+        val value = message.int(fieldNumber, name)
         schematic.schematicValues[name] = entries[value]
     }
 
@@ -91,11 +91,11 @@ open class NullableEnumSchemaField<E : Enum<E>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.intOrNull(fieldNumber, fieldNumber + 1, value?.ordinal)
+        builder.intOrNull(fieldNumber, name, value?.ordinal)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.intOrNull(fieldNumber, fieldNumber + 1)
+        val value = message.intOrNull(fieldNumber, name)
         schematic.schematicValues[name] = value?.let { entries[value] }
     }
 

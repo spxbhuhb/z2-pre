@@ -22,6 +22,7 @@ interface JsonElement {
     val asByteArray: ByteArray
         get() = throw IllegalStateException()
 
-    val asUuid: UUID<*>
-        get() = throw IllegalStateException()
+    fun <T> asUuid(): UUID<T> {
+        throw IllegalStateException()
+    }
 }

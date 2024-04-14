@@ -53,11 +53,11 @@ open class LongSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.long(fieldNumber, value)
+        builder.long(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.long(fieldNumber)
+        val value = message.long(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -106,11 +106,11 @@ open class NullableLongSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.longOrNull(fieldNumber, fieldNumber + 1, value)
+        builder.longOrNull(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.longOrNull(fieldNumber, fieldNumber + 1)
+        val value = message.longOrNull(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 

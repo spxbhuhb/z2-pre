@@ -8,9 +8,9 @@ class DumpTest {
     @Test
     fun testDump() {
         val dump = ProtoMessageBuilder()
-            .int(1, 12)
-            .string(2, "Hello")
-            .instance(3, A, A(false, 123, "World", mutableListOf(12)))
+            .int(1, "i", 12)
+            .string(2, "s", "Hello")
+            .instance(3, "a", A, A(false, 123, "World", mutableListOf(12)))
             .pack()
             .dumpProto()
 

@@ -61,11 +61,11 @@ open class PhoneNumberSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.string(fieldNumber, value)
+        builder.string(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.string(fieldNumber)
+        val value = message.string(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -103,11 +103,11 @@ open class NullablePhoneNumberSchemaField(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.stringOrNull(fieldNumber, fieldNumber + 1, value)
+        builder.stringOrNull(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.stringOrNull(fieldNumber, fieldNumber + 1)
+        val value = message.stringOrNull(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 

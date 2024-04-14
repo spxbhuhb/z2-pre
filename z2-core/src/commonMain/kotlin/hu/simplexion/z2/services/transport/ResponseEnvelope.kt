@@ -1,6 +1,11 @@
 package hu.simplexion.z2.services.transport
 
-import hu.simplexion.z2.serialization.protobuf.*
+import hu.simplexion.z2.serialization.InstanceDecoder
+import hu.simplexion.z2.serialization.InstanceEncoder
+import hu.simplexion.z2.serialization.Message
+import hu.simplexion.z2.serialization.MessageBuilder
+import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.serialization.protobuf.dumpProto
 import hu.simplexion.z2.util.UUID
 
 /**
@@ -16,22 +21,22 @@ class ResponseEnvelope(
     val payload: ByteArray,
 ) {
 
-    companion object : ProtoEncoder<ResponseEnvelope>, ProtoDecoder<ResponseEnvelope> {
+    companion object : InstanceEncoder<ResponseEnvelope>, InstanceDecoder<ResponseEnvelope> {
 
-        override fun decodeProto(message: ProtoMessage?): ResponseEnvelope {
+        override fun decodeInstance(message: Message?): ResponseEnvelope {
             requireNotNull(message)
             return ResponseEnvelope(
-                message.uuid(1),
-                requireNotNull(message.int(2)).let { mv -> ServiceCallStatus.entries.first { it.value == mv } },
-                message.byteArray(3)
+                message.uuid(1, "callId"),
+                requireNotNull(message.int(2, "status")).let { mv -> ServiceCallStatus.entries.first { it.value == mv } },
+                message.byteArray(3, "payload")
             )
         }
 
-        override fun encodeProto(value: ResponseEnvelope): ByteArray =
-            ProtoMessageBuilder()
-                .uuid(1, value.callId)
-                .int(2, value.status.value)
-                .byteArray(3, value.payload)
+        override fun encodeInstance(builder: MessageBuilder, value: ResponseEnvelope): ByteArray =
+            builder
+                .uuid(1, "callId", value.callId)
+                .int(2, "status", value.status.value)
+                .byteArray(3, "payload", value.payload)
                 .pack()
     }
 

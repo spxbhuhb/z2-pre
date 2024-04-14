@@ -1,9 +1,9 @@
 package hu.simplexion.z2.services.transport
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
-import hu.simplexion.z2.serialization.protobuf.ProtoEncoder
-import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.InstanceDecoder
+import hu.simplexion.z2.serialization.InstanceEncoder
+import hu.simplexion.z2.serialization.Message
+import hu.simplexion.z2.serialization.MessageBuilder
 import hu.simplexion.z2.util.UUID
 
 class RequestEnvelope(
@@ -13,24 +13,24 @@ class RequestEnvelope(
     val payload: ByteArray
 ) {
 
-    companion object : ProtoEncoder<RequestEnvelope>, ProtoDecoder<RequestEnvelope> {
+    companion object : InstanceDecoder<RequestEnvelope>, InstanceEncoder<RequestEnvelope> {
 
-        override fun decodeProto(message: ProtoMessage?): RequestEnvelope {
+        override fun decodeInstance(message: Message?): RequestEnvelope {
             requireNotNull(message)
             return RequestEnvelope(
-                message.uuid(1),
-                message.string(2),
-                message.string(3),
-                message.byteArray(4)
+                message.uuid(1, "callId"),
+                message.string(2, "serviceName"),
+                message.string(3, "funName"),
+                message.byteArray(4, "payload")
             )
         }
 
-        override fun encodeProto(value: RequestEnvelope): ByteArray =
-            ProtoMessageBuilder()
-                .uuid(1, value.callId)
-                .string(2, value.serviceName)
-                .string(3, value.funName)
-                .byteArray(4, value.payload)
+        override fun encodeInstance(builder: MessageBuilder, value: RequestEnvelope): ByteArray =
+            builder
+                .uuid(1, "callId", value.callId)
+                .string(2, "serviceName", value.serviceName)
+                .string(3, "funName", value.funName)
+                .byteArray(4, "payLoad", value.payload)
                 .pack()
     }
 

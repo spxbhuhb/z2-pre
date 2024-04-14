@@ -66,11 +66,11 @@ open class ReferenceSchemaField<T : SchematicEntity<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.uuid(fieldNumber, value)
+        builder.uuid(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.uuid<T>(fieldNumber)
+        val value = message.uuid<T>(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -122,11 +122,11 @@ open class NullableReferenceSchemaField<T : SchematicEntity<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf())
-        builder.uuidOrNull(fieldNumber, fieldNumber + 1, value)
+        builder.uuidOrNull(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.uuidOrNull<T>(fieldNumber, fieldNumber + 1)
+        val value = message.uuidOrNull<T>(fieldNumber, name)
         schematic.schematicValues[name] = value
     }
 
@@ -165,11 +165,11 @@ class ReferenceListSchemaField<T : SchematicEntity<T>>(
 
     override fun encodeProto(schematic: Schematic<*>, fieldNumber: Int, builder: ProtoMessageBuilder) {
         val value = toTypedValue(schematic.schematicValues[name], mutableListOf()) ?: return
-        builder.uuidList(fieldNumber, value)
+        builder.uuidList(fieldNumber, name, value)
     }
 
     override fun decodeProto(schematic: Schematic<*>, fieldNumber: Int, message: ProtoMessage) {
-        val value = message.uuidList<T>(fieldNumber).toMutableList()
+        val value = message.uuidList<T>(fieldNumber, name).toMutableList()
         schematic.schematicValues[name] = SchematicList(value, this).also { it.schematicState.parent = schematic }
     }
 

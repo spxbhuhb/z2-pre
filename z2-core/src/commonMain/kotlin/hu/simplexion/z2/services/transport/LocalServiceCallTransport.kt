@@ -1,8 +1,7 @@
 package hu.simplexion.z2.services.transport
 
-import hu.simplexion.z2.serialization.protobuf.ProtoDecoder
-import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.Message
+import hu.simplexion.z2.serialization.SerializationConfig
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.defaultServiceImplFactory
 
@@ -17,15 +16,18 @@ class LocalServiceCallTransport : ServiceCallTransport {
         val localServiceContext = BasicServiceContext()
     }
 
-    override suspend fun <T> call(serviceName: String, funName: String, payload: ByteArray, decoder: ProtoDecoder<T>): T {
+    val serializationConfig
+        get() = SerializationConfig.defaultSerialization
+
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): Message {
 
         val service = requireNotNull(defaultServiceImplFactory[serviceName, localServiceContext])
 
-        val responseBuilder = ProtoMessageBuilder()
+        val responseBuilder = serializationConfig.messageBuilder()
 
-        service.dispatch(funName, ProtoMessage(payload), responseBuilder)
+        service.dispatch(funName, serializationConfig.toMessage(payload), responseBuilder)
 
-        return decoder.decodeProto(ProtoMessage(responseBuilder.pack()))
+        return serializationConfig.toMessage(responseBuilder.pack())
     }
 
 }

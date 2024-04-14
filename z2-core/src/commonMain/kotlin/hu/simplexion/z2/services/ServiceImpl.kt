@@ -1,7 +1,7 @@
 package hu.simplexion.z2.services
 
-import hu.simplexion.z2.serialization.protobuf.ProtoMessage
-import hu.simplexion.z2.serialization.protobuf.ProtoMessageBuilder
+import hu.simplexion.z2.serialization.Message
+import hu.simplexion.z2.serialization.MessageBuilder
 import hu.simplexion.z2.util.UUID
 
 interface ServiceImpl<T : ServiceImpl<T>> : Service {
@@ -34,8 +34,8 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
      */
     suspend fun dispatch(
         funName: String,
-        payload: ProtoMessage,
-        response: ProtoMessageBuilder
+        payload: Message,
+        response: MessageBuilder
     ) {
         placeholder()
     }

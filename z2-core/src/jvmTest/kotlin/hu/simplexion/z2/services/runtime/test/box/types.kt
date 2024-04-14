@@ -1,6 +1,8 @@
 package hu.simplexion.z2.services.runtime.test.box
 
-import hu.simplexion.z2.serialization.protobuf.*
+import hu.simplexion.z2.serialization.*
+import hu.simplexion.z2.serialization.protobuf.ProtoMessage
+import hu.simplexion.z2.serialization.protobuf.dumpProto
 import hu.simplexion.z2.services.*
 import hu.simplexion.z2.services.transport.ServiceCallTransport
 import hu.simplexion.z2.util.UUID
@@ -285,28 +287,26 @@ data class A(
     var s: String = "",
     var l: MutableList<Int> = mutableListOf()
 ) {
-    companion object : ProtoEncoder<A>, ProtoDecoder<A> {
+    companion object : InstanceEncoder<A>, InstanceDecoder<A> {
 
-        override fun decodeProto(message: ProtoMessage?): A {
+        override fun encodeInstance(builder: MessageBuilder, value: A): ByteArray =
+            builder
+                .boolean(1, "b", value.b)
+                .int(2, "i", value.i)
+                .string(3, "s", value.s)
+                .intList(4, "l", value.l)
+                .pack()
+
+        override fun decodeInstance(message: Message?): A {
             if (message == null) return A()
 
-            println(message.dumpProto())
-
             return A(
-                message.boolean(1),
-                message.int(2),
-                message.string(3),
-                message.intList(4)
+                message.boolean(1, "b"),
+                message.int(2, "i"),
+                message.string(3, "s"),
+                message.intList(4, "l").toMutableList()
             )
         }
-
-        override fun encodeProto(value: A): ByteArray =
-            ProtoMessageBuilder()
-                .boolean(1, value.b)
-                .int(2, value.i)
-                .string(3, value.s)
-                .intList(4, value.l)
-                .pack()
     }
 }
 
@@ -314,22 +314,22 @@ data class B(
     var a: A = A(),
     var s: String = ""
 ) {
-    companion object : ProtoEncoder<B>, ProtoDecoder<B> {
+    companion object : InstanceEncoder<B>, InstanceDecoder<B> {
 
-        override fun decodeProto(message: ProtoMessage?): B {
+        override fun encodeInstance(builder: MessageBuilder, value: B): ByteArray =
+            builder
+                .instance(1, "a", A, value.a)
+                .string(2, "s", value.s)
+                .pack()
+
+        override fun decodeInstance(message: Message?): B {
             if (message == null) return B()
 
             return B(
-                message.instance(1, A),
-                message.string(2)
+                message.instance(1, "a", A),
+                message.string(2, "s")
             )
         }
-
-        override fun encodeProto(value: B): ByteArray =
-            ProtoMessageBuilder()
-                .instance(1, A, value.a)
-                .string(2, value.s)
-                .pack()
     }
 }
 
@@ -339,7 +339,8 @@ enum class E {
 }
 
 class DumpTransport : ServiceCallTransport {
-    override suspend fun <T> call(serviceName: String, funName: String, payload: ByteArray, decoder: ProtoDecoder<T>): T {
+
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): Message {
         println("==== REQUEST ====")
         println(serviceName)
         println(funName)
@@ -347,15 +348,14 @@ class DumpTransport : ServiceCallTransport {
 
         val service = requireNotNull(defaultServiceImplFactory[serviceName, BasicServiceContext()])
 
-        val responseBuilder = ProtoMessageBuilder()
+        val responseBuilder = SerializationConfig.defaultSerialization.messageBuilder()
 
         service.dispatch(funName, ProtoMessage(payload), responseBuilder)
 
         val responsePayload = responseBuilder.pack()
         println("==== RESPONSE ====")
         println(responsePayload.dumpProto())
-        println(decoder::class.qualifiedName)
 
-        return decoder.decodeProto(ProtoMessage(responseBuilder.pack()))
+        return SerializationConfig.defaultSerialization.toMessage(responsePayload)
     }
 }

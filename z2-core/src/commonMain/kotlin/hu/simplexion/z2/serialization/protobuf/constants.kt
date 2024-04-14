@@ -7,3 +7,5 @@ internal const val I32 = 5
 
 internal const val continuation = 0x80UL
 internal const val valueMask = 0x7fUL
+
+const val NULL_SHIFT = 20000
