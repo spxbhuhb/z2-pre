@@ -4,17 +4,21 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.Indices
+import hu.simplexion.z2.kotlin.adaptive.Names
+import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmSupportStateVariable
+import hu.simplexion.z2.kotlin.util.property
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrGetValue
-import org.jetbrains.kotlin.ir.expressions.IrReturn
-import org.jetbrains.kotlin.ir.expressions.IrSetValue
+import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.name.Name
 
 class SupportFunctionTransform(
     private val irBuilder: ClassBoundIrBuilder,
@@ -43,7 +47,7 @@ class SupportFunctionTransform(
         }
     }
 
-    fun getInvokeArgument(stateVariable: ArmSupportStateVariable) : IrExpression {
+    fun getInvokeArgument(stateVariable: ArmSupportStateVariable): IrExpression {
         val type = irBuilder.stateVariableType(stateVariable)
 
         return irBuilder.irImplicitAs(
@@ -66,7 +70,7 @@ class SupportFunctionTransform(
         )
     }
 
-    fun getStateVariable(stateVariable: ArmStateVariable) : IrExpression {
+    fun getStateVariable(stateVariable: ArmStateVariable): IrExpression {
         val type = irBuilder.stateVariableType(stateVariable)
 
         return irBuilder.irImplicitAs(
@@ -122,4 +126,35 @@ class SupportFunctionTransform(
         return expression.value.transform(this, null)
     }
 
+    override fun visitCall(expression: IrCall): IrExpression {
+        if (expression.symbol !in pluginContext.helperFunctions) {
+            return super.visitCall(expression)
+        }
+
+        return when (expression.symbol.owner.name.identifier) {
+            Strings.HELPER_ADAPTER -> getPropertyValue(Names.HELPER_ADAPTER)
+            Strings.HELPER_FRAGMENT -> declaringFragment()
+            Strings.HELPER_THIS_STATE -> getThisState(expression)
+            else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
+        }
+    }
+
+    fun getPropertyValue(name: Name) =
+        irBuilder.irGetValue(irBuilder.irClass.property(name), declaringFragment())
+
+    fun getThisState(expression: IrCall): IrExpression {
+        val type = expression.getTypeArgument(0)
+        checkNotNull(type) { "unknown return type for thisState()" }
+
+        check(type.isSubtypeOfClass(pluginContext.adaptiveStateApiClass)) { "requested state class is not subclass of AdaptiveStateApi" }
+
+        return IrConstructorCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            type,
+            pluginContext.adaptiveStateApiClass.constructors.first(),
+            0, 0, 1
+        ).apply {
+            putValueArgument(0, declaringFragment())
+        }
+    }
 }

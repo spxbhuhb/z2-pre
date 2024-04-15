@@ -10,12 +10,10 @@ import kotlin.time.Duration
  * the given component.
  *
  * @param  interval  The interval of execution.
- * @param  repeatLimit  Stop calling [pollFun] after it's been executed [repeatLimit] times.
  * @param  pollFun  The poll function to call.
  */
 fun <VT> poll(
     interval: Duration,
-    repeatLimit: Int? = null,
     default: VT,
     stateValueBinding: AdaptiveStateValueBinding<VT>? = null,
     pollFun: (suspend () -> VT)?
@@ -23,8 +21,15 @@ fun <VT> poll(
     checkNotNull(stateValueBinding)
 
     stateValueBinding.owner.addWorker(
-        AdaptivePoll(stateValueBinding, interval, repeatLimit)
+        AdaptivePoll(stateValueBinding, interval)
     )
 
     return default
+}
+
+/**
+ * Cancels the worker by returning from the coroutine. Throws [AdaptiveWorkerCancel].
+ */
+fun cancelWorker(message : String? = null) : Nothing {
+    throw AdaptiveWorkerCancel(message)
 }

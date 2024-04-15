@@ -84,6 +84,34 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/adaptive/helpers")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Helpers {
+            @Test
+            @TestMetadata("adapter.kt")
+            public void testAdapter() throws Exception {
+                runTest("testData/box/adaptive/helpers/adapter.kt");
+            }
+
+            @Test
+            public void testAllFilesPresentInHelpers() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adaptive/helpers"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("fragment.kt")
+            public void testFragment() throws Exception {
+                runTest("testData/box/adaptive/helpers/fragment.kt");
+            }
+
+            @Test
+            @TestMetadata("thisState.kt")
+            public void testThisState() throws Exception {
+                runTest("testData/box/adaptive/helpers/thisState.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/adaptive/loop")
         @TestDataPath("$PROJECT_ROOT")
         public class Loop {

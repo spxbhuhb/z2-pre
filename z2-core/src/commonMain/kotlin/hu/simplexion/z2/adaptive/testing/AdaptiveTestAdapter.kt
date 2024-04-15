@@ -20,7 +20,7 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override val trace = true
 
-    override fun newId(): Long = nextId++ // This is not thread safe, OK for testing, but beware.
+    override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
@@ -33,6 +33,12 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
     val traceEvents = mutableListOf<TraceEvent>()
 
     override val startedAt = vmNowMicro()
+
+    var done: Boolean = false
+        get() = lock.use { field }
+        set(value) {
+            lock.use { field = value }
+        }
 
     init {
         lastTrace = traceEvents
@@ -56,13 +62,9 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
     fun expected(expected: List<TraceEvent>): String =
         expected.joinToString("\n")
 
-    suspend fun waitFor(point: Regex, data: Regex) {
+    suspend fun waitFor() {
         withTimeout(1000) {
             while (true) {
-                val done = lock.use {
-                    traceEvents.lastOrNull()?.let { e -> point.matches(e.point) && e.data.lastOrNull()?.let { data.matches(it) } == true }
-                        ?: false
-                }
                 if (done) break
                 delay(10)
             }

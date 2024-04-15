@@ -15,7 +15,6 @@ data class AdaptiveStateValueBinding<VT>(
         get() = owner.getThisClosureVariable(indexInClosure) as VT
         set(v) {
             owner.setStateVariable(indexInState, v)
-            owner.patchInternal()
         }
 
     override fun toString(): String {

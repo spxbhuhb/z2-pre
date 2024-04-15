@@ -47,10 +47,6 @@ abstract class AdaptiveFragment<BT>(
 
         val result = genInvoke(supportFunction, arguments)
 
-        if (thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
-            patchInternal()
-        }
-
         if (trace) traceSupport("after-Invoke", supportFunction, result)
 
         return result
@@ -64,10 +60,6 @@ abstract class AdaptiveFragment<BT>(
         if (trace) traceSupport("before-Invoke-Suspend", supportFunction, arguments)
 
         val result = genInvokeSuspend(supportFunction, arguments)
-
-        if (thisClosure.closureDirtyMask() != adaptiveCleanStateMask) {
-            patchInternal()
-        }
 
         if (trace) traceSupport("after-Invoke-Suspend", supportFunction, result)
 

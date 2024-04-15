@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.Z2Options
+import hu.simplexion.z2.kotlin.adaptive.CallableIds
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
@@ -23,8 +24,6 @@ class AdaptivePluginContext(
 
     val irBuiltIns
         get() = irContext.irBuiltIns
-
-    val messages = mutableListOf<PluginMessage>()
 
     val adaptiveNamespaceClass = classSymbol(FqNames.ADAPTIVE_NAMESPACE)
 
@@ -62,24 +61,19 @@ class AdaptivePluginContext(
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
+    val helperFunctions = listOf(
+        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_ADAPTER).single(),
+        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_FRAGMENT).single(),
+        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_THIS_STATE).single()
+    )
+
+    val adaptiveStateApiClass = classSymbol(FqNames.ADAPTIVE_STATE_API)
+
     private fun property(name: String) =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()
 
     private fun function(name: String) =
         adaptiveFragmentClass.functions.single { it.owner.name.asString() == name }
 
-    class PluginMessage(
-        val severity: IrMessageLogger.Severity,
-        val message: String,
-        val location: IrMessageLogger.Location
-    ) {
-        override fun toString(): String {
-            return ("[$severity]  $location  $message")
-        }
-    }
-
-    fun report(severity: IrMessageLogger.Severity, message: String, location: IrMessageLogger.Location) {
-        messages += PluginMessage(severity, message, location).also { println(it) }
-    }
 }
 

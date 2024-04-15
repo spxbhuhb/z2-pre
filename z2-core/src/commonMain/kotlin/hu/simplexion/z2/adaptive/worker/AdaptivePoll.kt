@@ -7,8 +7,7 @@ import kotlin.time.Duration
 
 class AdaptivePoll<VT>(
     val stateValueBinding: AdaptiveStateValueBinding<VT>,
-    val interval: Duration,
-    var repeatLimit: Int? = null
+    val interval: Duration
 ) : AdaptiveWorker {
 
     val pollFunction = AdaptiveSupportFunction(
@@ -26,10 +25,17 @@ class AdaptivePoll<VT>(
         scope = CoroutineScope(stateValueBinding.owner.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
-                    val value = pollFunction.invokeSuspend()
-                    pollFunction.declaringFragment.setStateVariable(stateValueBinding.indexInState, value)
-                    delay(interval)
-                    repeatLimit?.let { if (it > 0) repeatLimit = (it - 1) else cancel() }
+
+                    try {
+                        @Suppress("UNCHECKED_CAST")
+                        stateValueBinding.value = pollFunction.invokeSuspend() as VT
+                        stateValueBinding.owner.patchInternal()
+                        delay(interval)
+
+                    } catch (e: AdaptiveWorkerCancel) {
+                        cancel()
+                        break
+                    }
                 }
             }
         }
@@ -41,7 +47,7 @@ class AdaptivePoll<VT>(
     }
 
     override fun toString(): String {
-        return "AdaptivePoll($stateValueBinding, $interval, $repeatLimit)"
+        return "AdaptivePoll($stateValueBinding, $interval)"
     }
 
 }

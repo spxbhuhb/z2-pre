@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive
 
+import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
@@ -17,7 +18,6 @@ object Strings {
     const val ADAPTIVE_FRAGMENT = "AdaptiveFragment"
     const val ADAPTIVE_CLOSURE = "AdaptiveClosure"
     const val ADAPTIVE_ADAPTER = "AdaptiveAdapter"
-    const val ADAPTIVE_BRIDGE = "AdaptiveBridge"
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
@@ -25,6 +25,7 @@ object Strings {
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
     const val ADAPTIVE_STATE_VALUE_BINDING = "AdaptiveStateValueBinding"
     const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
+    const val ADAPTIVE_STATE_API = "AdaptiveStateApi"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -52,6 +53,10 @@ object Strings {
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
     const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
 
+    const val HELPER_ADAPTER = "adapter"
+    const val HELPER_FRAGMENT = "fragment"
+    const val HELPER_THIS_STATE = "thisState"
+
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
@@ -66,6 +71,10 @@ object Names {
 
     val ADAPTER = Name.identifier(Strings.ADAPTER)
 
+    val HELPER_ADAPTER = Name.identifier(Strings.HELPER_ADAPTER)
+    val HELPER_FRAGMENT = Name.identifier(Strings.HELPER_FRAGMENT)
+    val HELPER_THIS_STATE = Name.identifier(Strings.HELPER_THIS_STATE)
+
     val BT = Name.identifier(Strings.BT)
 
     val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
@@ -75,6 +84,7 @@ object FqNames {
     val String.runtime
         get() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
 
+    val ADAPTIVE_PACKAGE = FqName(Strings.RUNTIME_PACKAGE)
     val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
@@ -88,6 +98,13 @@ object FqNames {
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
     val ADAPTIVE_STATE_VALUE_BINDING = Strings.ADAPTIVE_STATE_VALUE_BINDING.runtime
     val ADAPTIVE_PROPERTY_METADATA = Strings.ADAPTIVE_PROPERTY_METADATA.runtime
+    val ADAPTIVE_STATE_API = Strings.ADAPTIVE_STATE_API.runtime
+}
+
+object CallableIds {
+    val HELPER_FUNCTION_ADAPTER = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_ADAPTER)
+    val HELPER_FUNCTION_FRAGMENT = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_FRAGMENT)
+    val HELPER_FUNCTION_THIS_STATE = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_THIS_STATE)
 }
 
 object Indices {

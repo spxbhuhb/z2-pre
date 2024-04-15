@@ -3,37 +3,44 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
-import hu.simplexion.z2.adaptive.AdaptiveStateValueBinding
+import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.*
 import hu.simplexion.z2.adaptive.worker.*
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
+var done = false
 fun mock(i: Int) = i + 100
 
 @Suppress("OPT_IN_USAGE")
 fun box(): String {
 
-    val adapter = AdaptiveTestAdapter()
-    adapter.dispatcher = newSingleThreadContext("test thread")
+    val testAdapter = AdaptiveTestAdapter()
+    testAdapter.dispatcher = newSingleThreadContext("test thread")
 
     try {
 
-        adaptive(adapter) {
-            val i = 12
-            val j = poll(Duration.ZERO, 1, i + 1) { mock(i) }
-            T1(j)
-        }
+        runBlocking(testAdapter.dispatcher) {
 
-        runBlocking(adapter.dispatcher) {
-            adapter.waitFor(Regex.fromLiteral("after-Invoke-Suspend"), Regex.fromLiteral("index: 0 result: 112"))
+            adaptive(testAdapter) {
+                val i = 12
+                val j = poll(Duration.ZERO, i + 1) {
+                    if (done) {
+                        (adapter() as AdaptiveTestAdapter).done = true
+                        cancelWorker()
+                    } else {
+                        done = true
+                        mock(i)
+                    }
+                }
+                T1(j)
+            }
+
+            testAdapter.waitFor()
         }
 
     } finally {
-        (adapter.dispatcher as CloseableCoroutineDispatcher).close()
+        (testAdapter.dispatcher as CloseableCoroutineDispatcher).close()
     }
 
     return AdaptiveTestAdapter.assert(
@@ -43,8 +50,8 @@ fun box(): String {
             TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
-            TraceEvent("<root>", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 1, 1, AdaptivePropertyMetadata(kotlin.Int), 0), 0s, 1)"),
-            TraceEvent("<root>", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 1, 1, AdaptivePropertyMetadata(kotlin.Int), 0), 0s, 1)"),
+            TraceEvent("<root>", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 1, 1, AdaptivePropertyMetadata(kotlin.Int), 0), 0s)"),
+            TraceEvent("<root>", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 1, 1, AdaptivePropertyMetadata(kotlin.Int), 0), 0s)"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, 13]"),
             TraceEvent("AdaptiveT1", 3, "before-Create", ""),
             TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -59,14 +66,13 @@ fun box(): String {
             TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
             TraceEvent("<root>", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []"),
             TraceEvent("<root>", 2, "after-Invoke-Suspend", "index: 0 result: 112"),
-            TraceEvent("<root>", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000002 state: [12, 112]"),
             TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000002 thisMask: 0x00000000 state: [13]"),
             TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000002 thisMask: 0x00000001 state: [112]"),
             TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000001 state: [112]"),
             TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000000 state: [112]"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, 112]"),
-            TraceEvent("<root>", 2, "after-Invoke-Suspend", "index: 0 result: 112")
+            TraceEvent("<root>", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []")
             //@formatter:on
         )
     )
