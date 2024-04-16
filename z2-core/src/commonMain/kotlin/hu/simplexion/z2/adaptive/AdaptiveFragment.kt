@@ -3,8 +3,8 @@
  */
 package hu.simplexion.z2.adaptive
 
+import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.worker.AdaptiveWorker
-import hu.simplexion.z2.meta.ValueBinding
 
 abstract class AdaptiveFragment<BT>(
     val adapter: AdaptiveAdapter<BT>,
@@ -31,7 +31,7 @@ abstract class AdaptiveFragment<BT>(
 
     var workers: MutableList<AdaptiveWorker>? = null
 
-    var bindings : MutableList<ValueBinding<*>>? = null
+    var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
     // --------------------------------------------------------------------------
     // Functions that support the descendants of this fragment
@@ -176,15 +176,17 @@ abstract class AdaptiveFragment<BT>(
         setStateVariable(index, value, null)
     }
 
-    fun setStateVariable(index: Int, value: Any?, origin: ValueBinding<*>?) {
+    fun setStateVariable(index: Int, value: Any?, origin: AdaptiveStateVariableBinding<*>?) {
         if (state[index] == value) return
 
         state[index] = value
+
+        setDirty(index, origin != null)
+    }
+
+    fun setDirty(index: Int, callPatch : Boolean) {
         dirtyMask = dirtyMask or (1 shl index)
-
-        bindings?.forEach { if (it !== origin) it.callback?.invoke(it) }
-
-        if (origin != null) {
+        if (callPatch) {
             patchInternal()
         }
     }
@@ -221,21 +223,17 @@ abstract class AdaptiveFragment<BT>(
     // Binding management
     // --------------------------------------------------------------------------
 
-    fun addValueBinding(binding: ValueBinding<*>) {
+    fun addValueBinding(binding: AdaptiveStateVariableBinding<*>) {
         if (trace) trace("before-Add-Binding", "binding", binding)
 
-        val bindings = bindings ?: mutableListOf<ValueBinding<*>>().also { bindings = it }
-
-        bindings.filter { binding.replaces(it) }.forEach { other ->
-            removeBinding(other)
-        }
+        val bindings = bindings ?: mutableListOf<AdaptiveStateVariableBinding<*>>().also { bindings = it }
 
         bindings += binding
 
         if (trace) trace("after-Add-Binding", "binding", binding)
     }
 
-    fun removeBinding(binding: ValueBinding<*>) {
+    fun removeBinding(binding: AdaptiveStateVariableBinding<*>) {
         if (trace) trace("before-Remove-Binding", "binding", binding)
 
         requireNotNull(bindings).remove(binding)

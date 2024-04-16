@@ -226,7 +226,7 @@ open class ClassBoundIrBuilder(
         }
     }
 
-    fun genStateValueBindingInstance(
+    fun genStateVariableBindingInstance(
         func: IrSimpleFunction,
         indexInState: Int,
         indexInClosure: Int,
@@ -249,14 +249,15 @@ open class ClassBoundIrBuilder(
                 Indices.ADAPTIVE_STATE_VARIABLE_BINDING_METADATA,
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.propertyMetadataClass.defaultType,
-                    pluginContext.propertyMetadataClass.constructors.first(),
+                    pluginContext.adaptivePropertyMetadataClass.defaultType,
+                    pluginContext.adaptivePropertyMetadataClass.constructors.first(),
                     0, 0,
                     Indices.ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT,
                 ).apply {
                     putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(boundType.classFqName!!.asString()))
                 }
             )
+            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_PATH, irNull())
             putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK, irNull())
         }
 

@@ -2,7 +2,7 @@
 
 package hu.simplexion.z2.adaptive.worker
 
-import hu.simplexion.z2.adaptive.AdaptiveStateVariableBinding
+import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import kotlin.time.Duration
 
 /**
@@ -20,7 +20,7 @@ fun <VT> poll(
 ): VT {
     checkNotNull(binding)
 
-    binding.owner.addWorker(
+    binding.sourceFragment.addWorker(
         AdaptivePoll(binding, interval)
     )
 

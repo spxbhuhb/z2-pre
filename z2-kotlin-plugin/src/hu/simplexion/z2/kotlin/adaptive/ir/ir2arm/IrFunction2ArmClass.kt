@@ -376,7 +376,7 @@ class IrFunction2ArmClass(
         val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != -1 }
         val indexInState = state.indexOfFirst { it.name == stateVariableName }
 
-        val argument = ArmStateValueBindingArgument(
+        val argument = ArmStateVariableBindingArgument(
             armClass,
             armCall.arguments.size - 1,
             indexInState,

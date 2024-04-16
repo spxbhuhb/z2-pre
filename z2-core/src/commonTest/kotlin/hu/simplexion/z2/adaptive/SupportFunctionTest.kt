@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.adaptive
 
+import hu.simplexion.z2.adaptive.structural.AdaptivePlaceholder
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.adaptive.testing.AdaptiveTestBridge
 import hu.simplexion.z2.adaptive.testing.TestNode

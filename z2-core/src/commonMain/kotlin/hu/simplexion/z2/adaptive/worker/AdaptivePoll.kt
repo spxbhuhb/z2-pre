@@ -1,7 +1,7 @@
 package hu.simplexion.z2.adaptive.worker
 
-import hu.simplexion.z2.adaptive.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
+import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -11,8 +11,8 @@ class AdaptivePoll<VT>(
 ) : AdaptiveWorker {
 
     val pollFunction = AdaptiveSupportFunction(
-        binding.owner,
-        binding.owner,
+        binding.sourceFragment,
+        binding.sourceFragment,
         binding.supportFunction
     )
 
@@ -22,13 +22,12 @@ class AdaptivePoll<VT>(
         other is AdaptivePoll<*> && other.binding == this.binding
 
     override fun start() {
-        scope = CoroutineScope(binding.owner.adapter.dispatcher).apply {
+        scope = CoroutineScope(binding.sourceFragment.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
 
                     try {
-                        @Suppress("UNCHECKED_CAST")
-                        binding.value = pollFunction.invokeSuspend() as VT
+                        binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
                         delay(interval)
 
                     } catch (e: AdaptiveWorkerCancel) {

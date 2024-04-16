@@ -1,7 +1,9 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.adaptive
+package hu.simplexion.z2.adaptive.structural
+
+import hu.simplexion.z2.adaptive.*
 
 class AdaptiveLoop<BT, IT>(
     adapter: AdaptiveAdapter<BT>,

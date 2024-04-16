@@ -1,15 +1,15 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.arm2ir
 
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
-import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateValueBindingArgument
+import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariableBindingArgument
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 
-class ArmStateValueBindingArgumentBuilder(
+class ArmStateVariableBindingArgumentBuilder(
     parent: ClassBoundIrBuilder,
-    val argument: ArmStateValueBindingArgument,
+    val argument: ArmStateVariableBindingArgument,
     closure: ArmClosure,
     fragment: IrValueParameter,
     closureDirtyMask: IrVariable
@@ -19,7 +19,7 @@ class ArmStateValueBindingArgumentBuilder(
         irSetDescendantStateVariable(
             patchFun,
             argument.argumentIndex,
-            genStateValueBindingInstance(
+            genStateVariableBindingInstance(
                 patchFun,
                 argument.indexInState,
                 argument.indexInClosure,

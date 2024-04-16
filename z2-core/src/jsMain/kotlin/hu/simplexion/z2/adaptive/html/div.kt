@@ -6,9 +6,9 @@ package hu.simplexion.z2.adaptive.html
 
 import hu.simplexion.z2.adaptive.Adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveAnonymous
 import hu.simplexion.z2.adaptive.AdaptiveFragment
 import hu.simplexion.z2.adaptive.css.AdaptiveCssStyle
+import hu.simplexion.z2.adaptive.structural.AdaptiveAnonymous
 import kotlinx.browser.document
 import org.w3c.dom.Node
 

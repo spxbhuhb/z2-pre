@@ -3,10 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
-import hu.simplexion.z2.adaptive.AdaptiveStateVariableBinding
+import hu.simplexion.z2.adaptive.*
+import hu.simplexion.z2.adaptive.binding.*
 import hu.simplexion.z2.adaptive.testing.*
 
 fun Adaptive.accessTest() {
@@ -44,9 +42,9 @@ fun box() : String {
         TraceEvent("AdaptiveAccessTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
         TraceEvent("AdaptiveAccessor", 4, "before-Create", ""),
         TraceEvent("AdaptiveAccessor", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(3, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
         TraceEvent("AdaptiveT1", 5, "before-Create", ""),
         TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
         TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),

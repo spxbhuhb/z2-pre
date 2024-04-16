@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
 class AdaptivePluginContext(
@@ -45,8 +46,8 @@ class AdaptivePluginContext(
     val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
     val adaptiveSupportFunctionReceivingFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT))
 
-    val adaptiveStateVariableBindingClass = classSymbol(FqNames.ADAPTIVE_STATE_VARIABLE_BINDING)
-    val propertyMetadataClass = checkNotNull(irContext.referenceClass(ClassIds.PROPERTY_METADATA))
+    val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol
+    val adaptivePropertyMetadataClass = ClassIds.ADAPTIVE_PROPERTY_METADATA.classSymbol
 
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
@@ -77,5 +78,7 @@ class AdaptivePluginContext(
     private fun function(name: String, filter: (IrSimpleFunctionSymbol) -> Boolean = { true }) =
         adaptiveFragmentClass.functions.single { it.owner.name.asString() == name && filter(it) }
 
+    val ClassId.classSymbol
+        get() = checkNotNull(irContext.referenceClass(this))
 }
 

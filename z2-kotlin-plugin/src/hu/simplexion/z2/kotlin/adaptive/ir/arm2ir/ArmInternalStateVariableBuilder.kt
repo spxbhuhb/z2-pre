@@ -17,7 +17,7 @@ open class ArmInternalStateVariableBuilder(
 
         call.putValueArgument(
             producer.argumentIndex - 1,
-            genStateValueBindingInstance(
+            genStateVariableBindingInstance(
                 internalPatchFun,
                 stateVariable.indexInState,
                 stateVariable.indexInClosure,

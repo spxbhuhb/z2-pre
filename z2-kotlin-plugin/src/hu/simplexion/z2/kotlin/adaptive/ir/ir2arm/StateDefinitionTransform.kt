@@ -4,7 +4,7 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
-import hu.simplexion.z2.kotlin.adaptive.FqNames
+import hu.simplexion.z2.kotlin.adaptive.ClassIds
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtension
@@ -121,7 +121,7 @@ class StateDefinitionTransform(
         val binding = calledFun.valueParameters[parameterCount - 2]
         val function = calledFun.valueParameters[parameterCount - 1]
 
-        if (!binding.type.isClassType(FqNames.ADAPTIVE_STATE_VARIABLE_BINDING.toUnsafe(), true)) return null
+        if (!binding.type.isClassType(ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.asSingleFqName().toUnsafe(), true)) return null
         if (!function.type.isFunction() && !function.type.isSuspendFunction()) return null
 
         val supportFunction = originalInitializer.getValueArgument(parameterCount - 1)!!

@@ -10,7 +10,8 @@ import org.jetbrains.kotlin.name.Name
 
 object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive"
-    const val META_PACKAGE = "hu.simplexion.z2.meta"
+    const val BINDING_PACKAGE = "hu.simplexion.z2.adaptive.binding"
+    const val STRUCTURAL_PACKAGE = "hu.simplexion.z2.adaptive.structural"
 
     const val ADAPTIVE_NAMESPACE = "Adaptive"
     const val ENTRY_FUNCTION = "adaptive"
@@ -28,7 +29,7 @@ object Strings {
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
     const val ADAPTIVE_STATE_API = "AdaptiveStateApi"
 
-    const val PROPERTY_METADATA = "PropertyMetadata"
+    const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -82,34 +83,40 @@ object Names {
 
     val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
 
-    val PROPERTY_METADATA = Name.identifier(Strings.PROPERTY_METADATA)
+    val ADAPTIVE_STATE_VARIABLE_BINDING = Name.identifier(Strings.ADAPTIVE_STATE_VARIABLE_BINDING)
+    val PROPERTY_METADATA = Name.identifier(Strings.ADAPTIVE_PROPERTY_METADATA)
 }
 
 object FqNames {
     val String.runtime
         get() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
 
+    val String.structural
+        get() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
+
     val ADAPTIVE_PACKAGE = FqName(Strings.RUNTIME_PACKAGE)
-    val META_PACKAGE = FqName(Strings.META_PACKAGE)
+    val BINDING_PACKAGE = FqName(Strings.BINDING_PACKAGE)
 
     val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.runtime
-    val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.runtime
-    val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.runtime
-    val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.runtime
+
+    val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural
+    val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural
+    val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural
+    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.structural
+
     val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime
-    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
-    val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.runtime
     val ADAPTIVE_STATE_API = Strings.ADAPTIVE_STATE_API.runtime
 
 }
 
 object ClassIds {
-    val PROPERTY_METADATA = ClassId(FqNames.META_PACKAGE, Names.PROPERTY_METADATA)
+    val ADAPTIVE_PROPERTY_METADATA = ClassId(FqNames.BINDING_PACKAGE, Names.PROPERTY_METADATA)
+    val ADAPTIVE_STATE_VARIABLE_BINDING = ClassId(FqNames.BINDING_PACKAGE, Names.ADAPTIVE_STATE_VARIABLE_BINDING)
 }
 
 object CallableIds {
@@ -191,17 +198,18 @@ object Indices {
     /**
      * AdaptiveStateVariableBinding constructor arguments
      */
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_ARGUMENT_COUNT = 6
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_ARGUMENT_COUNT = 7
 
     const val ADAPTIVE_STATE_VARIABLE_BINDING_OWNER = 0
     const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_STATE = 1
     const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_CLOSURE = 2
     const val ADAPTIVE_STATE_VARIABLE_BINDING_SUPPORT_FUNCTION = 3
     const val ADAPTIVE_STATE_VARIABLE_BINDING_METADATA = 4
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK = 5
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_PATH = 5
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK = 6
 
     /**
-     * PropertyMetadata constructor arguments
+     * AdaptivePropertyMetadata constructor arguments
      */
     const val ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT = 1
 

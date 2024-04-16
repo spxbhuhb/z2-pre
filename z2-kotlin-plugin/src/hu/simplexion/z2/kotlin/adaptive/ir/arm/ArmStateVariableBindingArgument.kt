@@ -3,7 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.ir.arm
 
-import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmStateValueBindingArgumentBuilder
+import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ArmStateVariableBindingArgumentBuilder
 import hu.simplexion.z2.kotlin.adaptive.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 /**
  * A function argument that is an AdaptiveStateVariableBinding.
  */
-class ArmStateValueBindingArgument(
+class ArmStateVariableBindingArgument(
     armClass: ArmClass,
     argumentIndex: Int,
     val indexInState: Int,
@@ -33,7 +33,7 @@ class ArmStateValueBindingArgument(
         fragmentParameter: IrValueParameter,
         closureDirtyMask: IrVariable
     ) =
-        ArmStateValueBindingArgumentBuilder(
+        ArmStateVariableBindingArgumentBuilder(
             classBuilder,
             this,
             closure,

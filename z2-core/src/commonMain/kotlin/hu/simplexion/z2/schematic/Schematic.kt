@@ -1,5 +1,7 @@
 package hu.simplexion.z2.schematic
 
+import hu.simplexion.z2.adaptive.binding.AdaptivePropertyProvider
+import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import hu.simplexion.z2.deprecated.event.EventCentral
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.NonLocalized
@@ -21,7 +23,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlin.time.Duration
 
-abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvider {
+abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvider, AdaptivePropertyProvider {
 
     var schematicStateOrNull: SchematicState? = null
 
@@ -121,6 +123,28 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
         if (schematicState.listenerCount <= 0) return
         val validationResult = schematicSchema.validate(this)
         EventCentral.fire(SchematicFieldEvent(schematicState.handle, this, field, validationResult))
+    }
+
+    // -----------------------------------------------------------------------------------
+    // Adaptive Support
+    // -----------------------------------------------------------------------------------
+
+    override fun getValue(path: Array<String>): Any? {
+        require(path.size == 1) { "deep paths are not supported yet" }
+        return schematicValues[path[0]]
+    }
+
+    override fun setValue(path: Array<String>, value: Any?) {
+        require(path.size == 1) { "deep paths are not supported yet" }
+        schematicValues[path[0]] = value
+    }
+
+    override fun addBinding(binding: AdaptiveStateVariableBinding<*>) {
+        // FIXME bindings += binding
+    }
+
+    override fun removeBinding(binding: AdaptiveStateVariableBinding<*>) {
+        // FIXME bindings += binding
     }
 
     // -----------------------------------------------------------------------------------
