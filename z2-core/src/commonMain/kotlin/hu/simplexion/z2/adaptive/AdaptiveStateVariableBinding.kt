@@ -20,7 +20,6 @@ data class AdaptiveStateVariableBinding<VT>(
         get() = owner.getThisClosureVariable(indexInClosure) as VT
         set(v) {
             owner.setStateVariable(indexInState, v, this)
-            owner.patchInternal()
         }
 
     override fun replaces(other: ValueBinding<*>) : Boolean {

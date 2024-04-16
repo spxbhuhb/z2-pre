@@ -177,9 +177,16 @@ abstract class AdaptiveFragment<BT>(
     }
 
     fun setStateVariable(index: Int, value: Any?, origin: ValueBinding<*>?) {
+        if (state[index] == value) return
+
         state[index] = value
         dirtyMask = dirtyMask or (1 shl index)
+
         bindings?.forEach { if (it !== origin) it.callback?.invoke(it) }
+
+        if (origin != null) {
+            patchInternal()
+        }
     }
 
     // --------------------------------------------------------------------------
