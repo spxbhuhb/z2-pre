@@ -1,7 +1,7 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
 import hu.simplexion.z2.browser.html.Z2
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
 import hu.simplexion.z2.schematic.SchematicEvent
 import hu.simplexion.z2.schematic.SchematicNode
 

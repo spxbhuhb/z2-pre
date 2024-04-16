@@ -4,8 +4,6 @@
 
 package hu.simplexion.z2.browser.immaterial.table
 
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
 import hu.simplexion.z2.browser.css.borderNone
 import hu.simplexion.z2.browser.css.css
 import hu.simplexion.z2.browser.css.p0
@@ -16,6 +14,8 @@ import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry
 import hu.simplexion.z2.browser.util.launchApply
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.datetime.*

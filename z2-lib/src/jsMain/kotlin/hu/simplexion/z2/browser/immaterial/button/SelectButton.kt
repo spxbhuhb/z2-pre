@@ -11,7 +11,7 @@ import hu.simplexion.z2.browser.material.menu.dropdownMenu
 import hu.simplexion.z2.browser.material.menu.menuItem
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.stateLayer
-import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.deprecated.browser.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 

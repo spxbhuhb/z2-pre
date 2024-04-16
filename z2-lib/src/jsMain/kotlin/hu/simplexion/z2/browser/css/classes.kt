@@ -2,7 +2,7 @@
 
 package hu.simplexion.z2.browser.css
 
-import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.deprecated.browser.CssClass
 
 val alignItemsCenter = CssClass("align-items-center")
 val alignSelfCenter = CssClass("align-self-center")

@@ -1,8 +1,8 @@
 package hu.simplexion.z2.adaptive.field
 
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
-import hu.simplexion.z2.adaptive.event.Z2EventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
+import hu.simplexion.z2.deprecated.event.Z2EventListener
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicFieldEvent
 import hu.simplexion.z2.schematic.SchematicValidation

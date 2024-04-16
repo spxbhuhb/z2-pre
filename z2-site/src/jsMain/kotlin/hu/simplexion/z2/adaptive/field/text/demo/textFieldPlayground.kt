@@ -1,6 +1,5 @@
 package hu.simplexion.z2.adaptive.field.text.demo
 
-import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.FieldConfig
 import hu.simplexion.z2.adaptive.field.FieldState
 import hu.simplexion.z2.adaptive.field.FieldValue
@@ -16,6 +15,7 @@ import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.html.gridAutoRows
 import hu.simplexion.z2.browser.immaterial.schematic.field
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.schematic.Schematic
 
 fun Z2.textFieldPlayground() {

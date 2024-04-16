@@ -1,6 +1,6 @@
 package hu.simplexion.z2.schematic
 
-import hu.simplexion.z2.adaptive.event.Z2Event
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.schematic.schema.SchemaField
 import hu.simplexion.z2.schematic.schema.field.ListSchemaField
 import hu.simplexion.z2.schematic.schema.validation.SchematicValidationResult

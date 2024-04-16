@@ -1,7 +1,5 @@
 package hu.simplexion.z2.adaptive.field.select.impl
 
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.FieldRenderer
 import hu.simplexion.z2.adaptive.field.RequestBlurEvent
 import hu.simplexion.z2.adaptive.field.isOf
@@ -17,6 +15,8 @@ import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.material.stateLayer
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.schematic.SchematicFieldEvent
 import hu.simplexion.z2.util.UUID
 import kotlinx.browser.document

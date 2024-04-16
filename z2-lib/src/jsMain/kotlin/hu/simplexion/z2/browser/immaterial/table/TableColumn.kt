@@ -3,13 +3,13 @@
  */
 package hu.simplexion.z2.browser.immaterial.table
 
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.displayNone
 import hu.simplexion.z2.browser.css.labelMedium
 import hu.simplexion.z2.browser.css.selectNone
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.px
 import hu.simplexion.z2.browser.util.uniqueNodeId
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.schema.SchemaField

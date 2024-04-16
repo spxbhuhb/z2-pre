@@ -1,11 +1,11 @@
 package hu.simplexion.z2.browser.layout
 
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.gridTemplateRows
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.text.LocalizedText
 
 fun Z2.surfaceContainerLowest(vararg classes: CssClass, scroll: Boolean = true, fullHeight: Boolean = true, builder: Z2.() -> Unit) =

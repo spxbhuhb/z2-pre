@@ -3,9 +3,9 @@ package hu.simplexion.z2.browser.material.modal
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.material.button.textButton
 import hu.simplexion.z2.browser.util.EditMode
-import hu.simplexion.z2.adaptive.browser.CssClass
-import hu.simplexion.z2.util.localLaunch
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.text.LocalizedText
+import hu.simplexion.z2.util.localLaunch
 
 /**
  * Create and open a modal without a return value, built by [builder].

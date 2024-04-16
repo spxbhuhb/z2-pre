@@ -8,10 +8,10 @@ import hu.simplexion.z2.browser.material.icon.actionIcon
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.menu.menuItem
 import hu.simplexion.z2.browser.material.px
-import hu.simplexion.z2.adaptive.browser.CssClass
-import hu.simplexion.z2.util.hereAndNow
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.text.monthNameTable
 import hu.simplexion.z2.localization.text.monthShortNameTable
+import hu.simplexion.z2.util.hereAndNow
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus

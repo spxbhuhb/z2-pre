@@ -1,8 +1,8 @@
 package hu.simplexion.z2.adaptive.event
 
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.BasicEvent
-import hu.simplexion.z2.adaptive.event.EventCentral
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.BasicEvent
+import hu.simplexion.z2.deprecated.event.EventCentral
 import hu.simplexion.z2.util.nextHandle
 import kotlin.test.Test
 import kotlin.test.assertEquals

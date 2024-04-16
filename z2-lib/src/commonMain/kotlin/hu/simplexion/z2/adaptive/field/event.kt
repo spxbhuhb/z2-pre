@@ -1,6 +1,6 @@
 package hu.simplexion.z2.adaptive.field
 
-import hu.simplexion.z2.adaptive.event.Z2Event
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicEvent
 import hu.simplexion.z2.util.Z2Handle

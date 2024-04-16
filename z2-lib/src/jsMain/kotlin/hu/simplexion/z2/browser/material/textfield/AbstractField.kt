@@ -1,6 +1,5 @@
 package hu.simplexion.z2.browser.material.textfield
 
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.field.FieldState
 import hu.simplexion.z2.browser.field.FieldStyle
@@ -8,6 +7,7 @@ import hu.simplexion.z2.browser.field.ValueField
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.deprecated.browser.CssClass
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLInputElement

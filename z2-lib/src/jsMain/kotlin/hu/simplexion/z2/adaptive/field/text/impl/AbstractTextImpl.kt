@@ -1,9 +1,5 @@
 package hu.simplexion.z2.adaptive.field.text.impl
 
-import hu.simplexion.z2.adaptive.browser.CssClass
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
 import hu.simplexion.z2.adaptive.field.EnterKeyEvent
 import hu.simplexion.z2.adaptive.field.EscapeKeyEvent
 import hu.simplexion.z2.adaptive.field.FieldRenderer
@@ -14,6 +10,10 @@ import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.*
 import hu.simplexion.z2.browser.material.icon.icon
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.deprecated.browser.CssClass
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.schematic.SchematicEvent
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass

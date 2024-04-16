@@ -1,12 +1,12 @@
 package hu.simplexion.z2.browser.immaterial.table.builders
 
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.css.*
 import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.grid
 import hu.simplexion.z2.browser.immaterial.table.Table
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.locales.localeCapitalized
 import hu.simplexion.z2.localization.text.LocalizedText
 

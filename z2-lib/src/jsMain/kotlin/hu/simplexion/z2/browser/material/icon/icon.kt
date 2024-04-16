@@ -6,7 +6,7 @@ import hu.simplexion.z2.browser.html.Z2
 import hu.simplexion.z2.browser.html.div
 import hu.simplexion.z2.browser.html.onClick
 import hu.simplexion.z2.browser.html.onMouseDown
-import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.deprecated.browser.CssClass
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
 import org.w3c.dom.events.Event

@@ -1,4 +1,4 @@
-package hu.simplexion.z2.adaptive.event
+package hu.simplexion.z2.deprecated.event
 
 import hu.simplexion.z2.util.Z2Handle
 import hu.simplexion.z2.util.nextHandle

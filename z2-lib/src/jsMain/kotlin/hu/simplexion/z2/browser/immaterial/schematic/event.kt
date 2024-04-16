@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
-import hu.simplexion.z2.adaptive.event.EventCentral
+import hu.simplexion.z2.deprecated.event.EventCentral
 import hu.simplexion.z2.schematic.Schematic
 import hu.simplexion.z2.schematic.SchematicEvent
 import hu.simplexion.z2.schematic.schema.validation.SchematicValidationResult

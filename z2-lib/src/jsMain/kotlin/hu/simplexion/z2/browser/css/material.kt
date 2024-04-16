@@ -1,6 +1,6 @@
 package hu.simplexion.z2.browser.css
 
-import hu.simplexion.z2.adaptive.browser.CssClass
+import hu.simplexion.z2.deprecated.browser.CssClass
 
 val bodyLarge = CssClass("body-large")
 val bodyMedium = CssClass("body-medium")

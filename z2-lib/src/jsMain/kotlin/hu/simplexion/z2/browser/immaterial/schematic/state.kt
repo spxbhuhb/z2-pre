@@ -1,9 +1,9 @@
 package hu.simplexion.z2.browser.immaterial.schematic
 
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.util.Z2Handle
 import hu.simplexion.z2.util.nextHandle
 

@@ -1,6 +1,6 @@
 package hu.simplexion.z2.schematic
 
-import hu.simplexion.z2.adaptive.event.EventCentral
+import hu.simplexion.z2.deprecated.event.EventCentral
 import hu.simplexion.z2.localization.LocalizationProvider
 import hu.simplexion.z2.localization.NonLocalized
 import hu.simplexion.z2.schematic.access.SchematicAccessContext

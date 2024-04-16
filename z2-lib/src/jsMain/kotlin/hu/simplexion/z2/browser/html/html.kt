@@ -1,8 +1,8 @@
 package hu.simplexion.z2.browser.html
 
-import hu.simplexion.z2.adaptive.browser.CssClass
 import hu.simplexion.z2.browser.css.displayGrid
 import hu.simplexion.z2.browser.material.px
+import hu.simplexion.z2.deprecated.browser.CssClass
 import kotlinx.browser.document
 import org.w3c.dom.*
 

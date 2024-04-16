@@ -1,14 +1,14 @@
 package hu.simplexion.z2.browser.html
 
-import hu.simplexion.z2.adaptive.browser.CssClass
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
-import hu.simplexion.z2.adaptive.event.Z2EventListener
 import hu.simplexion.z2.adaptive.impl.AdaptiveImpl
 import hu.simplexion.z2.browser.css.addCss
 import hu.simplexion.z2.browser.css.removeCss
 import hu.simplexion.z2.browser.material.icon.icon
+import hu.simplexion.z2.deprecated.browser.CssClass
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
+import hu.simplexion.z2.deprecated.event.Z2EventListener
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.schematic.Schematic

@@ -1,16 +1,16 @@
 package hu.simplexion.z2.email.worker
 
-import hu.simplexion.z2.adaptive.event.AnonymousEventListener
-import hu.simplexion.z2.adaptive.event.EventCentral
-import hu.simplexion.z2.adaptive.event.Z2Event
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.localLaunch
+import hu.simplexion.z2.deprecated.event.AnonymousEventListener
+import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.deprecated.event.Z2Event
 import hu.simplexion.z2.email.emailBusHandle
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailSettings
 import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
+import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.util.localLaunch
 import hu.simplexion.z2.worker.model.BackgroundWorker
 import hu.simplexion.z2.worker.model.WorkerRegistration
 import kotlinx.coroutines.CancellationException
