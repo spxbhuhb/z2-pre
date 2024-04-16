@@ -237,25 +237,27 @@ open class ClassBoundIrBuilder(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             pluginContext.adaptiveStateValueBindingClass.defaultType,
             pluginContext.adaptiveStateValueBindingClass.constructors.first(),
-            0, 0,
+            1, 0,
             Indices.ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT,
         ).apply {
+            putTypeArgument(0, boundType)
             putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_OWNER, irGet(func.dispatchReceiverParameter!!))
             putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_STATE, irConst(indexInState))
             putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_CLOSURE, irConst(indexInClosure))
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION, irConst(supportFunctionIndex))
             putValueArgument(
                 Indices.ADAPTIVE_STATE_VALUE_BINDING_METADATA,
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.adaptivePropertyMetadataClass.defaultType,
-                    pluginContext.adaptivePropertyMetadataClass.constructors.first(),
+                    pluginContext.propertyMetadataClass.defaultType,
+                    pluginContext.propertyMetadataClass.constructors.first(),
                     0, 0,
                     Indices.ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT,
                 ).apply {
                     putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(boundType.classFqName!!.asString()))
                 }
             )
-            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION, irConst(supportFunctionIndex))
+            putValueArgument(Indices.ADAPTIVE_STATE_VALUE_BINDING_CALLBACK, irNull())
         }
 
     fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =

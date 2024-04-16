@@ -4,11 +4,13 @@
 package hu.simplexion.z2.kotlin.adaptive
 
 import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.z2.adaptive"
+    const val META_PACKAGE = "hu.simplexion.z2.meta"
 
     const val ADAPTIVE_NAMESPACE = "Adaptive"
     const val ENTRY_FUNCTION = "adaptive"
@@ -24,8 +26,9 @@ object Strings {
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
     const val ADAPTIVE_STATE_VALUE_BINDING = "AdaptiveStateValueBinding"
-    const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
     const val ADAPTIVE_STATE_API = "AdaptiveStateApi"
+
+    const val PROPERTY_METADATA = "PropertyMetadata"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -78,6 +81,8 @@ object Names {
     val BT = Name.identifier(Strings.BT)
 
     val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
+
+    val PROPERTY_METADATA = Name.identifier(Strings.PROPERTY_METADATA)
 }
 
 object FqNames {
@@ -85,6 +90,8 @@ object FqNames {
         get() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
 
     val ADAPTIVE_PACKAGE = FqName(Strings.RUNTIME_PACKAGE)
+    val META_PACKAGE = FqName(Strings.META_PACKAGE)
+
     val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
@@ -97,8 +104,12 @@ object FqNames {
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
     val ADAPTIVE_STATE_VALUE_BINDING = Strings.ADAPTIVE_STATE_VALUE_BINDING.runtime
-    val ADAPTIVE_PROPERTY_METADATA = Strings.ADAPTIVE_PROPERTY_METADATA.runtime
     val ADAPTIVE_STATE_API = Strings.ADAPTIVE_STATE_API.runtime
+
+}
+
+object ClassIds {
+    val PROPERTY_METADATA = ClassId(FqNames.META_PACKAGE, Names.PROPERTY_METADATA)
 }
 
 object CallableIds {
@@ -180,16 +191,17 @@ object Indices {
     /**
      * AdaptiveStateValueBinding constructor arguments
      */
-    const val ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT = 5
+    const val ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT = 6
 
     const val ADAPTIVE_STATE_VALUE_BINDING_OWNER = 0
     const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_STATE = 1
     const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_CLOSURE = 2
-    const val ADAPTIVE_STATE_VALUE_BINDING_METADATA = 3
-    const val ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION = 4
+    const val ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION = 3
+    const val ADAPTIVE_STATE_VALUE_BINDING_METADATA = 4
+    const val ADAPTIVE_STATE_VALUE_BINDING_CALLBACK = 5
 
     /**
-     * AdaptivePropertyMetadata constructor arguments
+     * PropertyMetadata constructor arguments
      */
     const val ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT = 1
 

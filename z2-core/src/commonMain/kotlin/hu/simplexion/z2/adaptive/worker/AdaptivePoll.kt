@@ -29,7 +29,6 @@ class AdaptivePoll<VT>(
                     try {
                         @Suppress("UNCHECKED_CAST")
                         stateValueBinding.value = pollFunction.invokeSuspend() as VT
-                        stateValueBinding.owner.patchInternal()
                         delay(interval)
 
                     } catch (e: AdaptiveWorkerCancel) {

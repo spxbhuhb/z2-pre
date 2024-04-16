@@ -4,6 +4,7 @@
 package hu.simplexion.z2.adaptive
 
 import hu.simplexion.z2.adaptive.testing.*
+import hu.simplexion.z2.meta.PropertyMetadata
 import hu.simplexion.z2.schematic.Schematic
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -49,9 +50,9 @@ class SchematicAccessTest {
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
                     TraceEvent("AdaptiveAccessor", 3, "before-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -107,8 +108,8 @@ class AdaptiveSchematicAccessBindingTest(
                             this,
                             0,
                             0,
-                            AdaptivePropertyMetadata("kotlin.Int"),
-                            - 1
+                            - 1,
+                            PropertyMetadata("kotlin.Int")
                         )
                     )
                 }

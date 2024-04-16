@@ -4,6 +4,7 @@
 package hu.simplexion.z2.adaptive
 
 import hu.simplexion.z2.adaptive.worker.AdaptiveWorker
+import hu.simplexion.z2.meta.ValueBinding
 
 abstract class AdaptiveFragment<BT>(
     val adapter: AdaptiveAdapter<BT>,
@@ -29,6 +30,8 @@ abstract class AdaptiveFragment<BT>(
     var containedFragment: AdaptiveFragment<BT>? = null
 
     var workers: MutableList<AdaptiveWorker>? = null
+
+    var bindings : MutableList<ValueBinding<*>>? = null
 
     // --------------------------------------------------------------------------
     // Functions that support the descendants of this fragment
@@ -170,8 +173,13 @@ abstract class AdaptiveFragment<BT>(
         thisClosure.get(variableIndex)
 
     fun setStateVariable(index: Int, value: Any?) {
+        setStateVariable(index, value, null)
+    }
+
+    fun setStateVariable(index: Int, value: Any?, origin: ValueBinding<*>?) {
         state[index] = value
         dirtyMask = dirtyMask or (1 shl index)
+        bindings?.forEach { if (it !== origin) it.callback?.invoke(it) }
     }
 
     // --------------------------------------------------------------------------
@@ -200,6 +208,32 @@ abstract class AdaptiveFragment<BT>(
         worker.stop()
 
         if (trace) trace("after-Remove-Worker", "worker", worker)
+    }
+
+    // --------------------------------------------------------------------------
+    // Binding management
+    // --------------------------------------------------------------------------
+
+    fun addValueBinding(binding: ValueBinding<*>) {
+        if (trace) trace("before-Add-Binding", "binding", binding)
+
+        val bindings = bindings ?: mutableListOf<ValueBinding<*>>().also { bindings = it }
+
+        bindings.filter { binding.replaces(it) }.forEach { other ->
+            removeBinding(other)
+        }
+
+        bindings += binding
+
+        if (trace) trace("after-Add-Binding", "binding", binding)
+    }
+
+    fun removeBinding(binding: ValueBinding<*>) {
+        if (trace) trace("before-Remove-Binding", "binding", binding)
+
+        requireNotNull(bindings).remove(binding)
+
+        if (trace) trace("after-Remove-Binding", "binding", binding)
     }
 
     // --------------------------------------------------------------------------

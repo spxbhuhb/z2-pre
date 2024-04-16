@@ -5,6 +5,7 @@ package hu.simplexion.z2.kotlin.adaptive.ir
 
 import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.adaptive.CallableIds
+import hu.simplexion.z2.kotlin.adaptive.ClassIds
 import hu.simplexion.z2.kotlin.adaptive.FqNames
 import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClass
@@ -12,6 +13,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmEntryPoint
 import hu.simplexion.z2.kotlin.util.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 
@@ -44,7 +46,7 @@ class AdaptivePluginContext(
     val adaptiveSupportFunctionReceivingFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT))
 
     val adaptiveStateValueBindingClass = classSymbol(FqNames.ADAPTIVE_STATE_VALUE_BINDING)
-    val adaptivePropertyMetadataClass = classSymbol(FqNames.ADAPTIVE_PROPERTY_METADATA)
+    val propertyMetadataClass = checkNotNull(irContext.referenceClass(ClassIds.PROPERTY_METADATA))
 
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
@@ -57,7 +59,7 @@ class AdaptivePluginContext(
     val getThisClosureDirtyMask = function(Strings.GET_THIS_CLOSURE_DIRTY_MASK)
     val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
     val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
-    val setStateVariable = function(Strings.SET_STATE_VARIABLE)
+    val setStateVariable = function(Strings.SET_STATE_VARIABLE) { it.owner.valueParameters.size == 2 }
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
@@ -72,8 +74,8 @@ class AdaptivePluginContext(
     private fun property(name: String) =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()
 
-    private fun function(name: String) =
-        adaptiveFragmentClass.functions.single { it.owner.name.asString() == name }
+    private fun function(name: String, filter: (IrSimpleFunctionSymbol) -> Boolean = { true }) =
+        adaptiveFragmentClass.functions.single { it.owner.name.asString() == name && filter(it) }
 
 }
 
