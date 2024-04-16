@@ -20,7 +20,7 @@ fun Adaptive.schematicAccessTest() {
 }
 
 fun <T> Adaptive.schematicAccessor(
-    binding: AdaptiveStateValueBinding<T>? = null,
+    binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("UNUSED_PARAMETER") selector: () -> T
 ) {
     checkNotNull(binding)
@@ -50,9 +50,9 @@ class SchematicAccessTest {
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
                     TraceEvent("AdaptiveAccessor", 3, "before-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -104,7 +104,7 @@ class AdaptiveSchematicAccessBindingTest(
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     fragment.setStateVariable(
                         0,
-                        AdaptiveStateValueBinding<Int>(
+                        AdaptiveStateVariableBinding<Int>(
                             this,
                             0,
                             0,

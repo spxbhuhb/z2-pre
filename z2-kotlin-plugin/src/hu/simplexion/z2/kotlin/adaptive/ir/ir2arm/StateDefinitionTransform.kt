@@ -121,7 +121,7 @@ class StateDefinitionTransform(
         val binding = calledFun.valueParameters[parameterCount - 2]
         val function = calledFun.valueParameters[parameterCount - 1]
 
-        if (!binding.type.isClassType(FqNames.ADAPTIVE_STATE_VALUE_BINDING.toUnsafe(), true)) return null
+        if (!binding.type.isClassType(FqNames.ADAPTIVE_STATE_VARIABLE_BINDING.toUnsafe(), true)) return null
         if (!function.type.isFunction() && !function.type.isSuspendFunction()) return null
 
         val supportFunction = originalInitializer.getValueArgument(parameterCount - 1)!!

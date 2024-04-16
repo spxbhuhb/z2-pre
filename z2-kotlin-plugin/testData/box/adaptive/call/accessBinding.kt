@@ -6,7 +6,7 @@ package hu.simplexion.z2.kotlin.adaptive.success
 import hu.simplexion.z2.adaptive.Adaptive
 import hu.simplexion.z2.adaptive.adaptive
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
-import hu.simplexion.z2.adaptive.AdaptiveStateValueBinding
+import hu.simplexion.z2.adaptive.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.testing.*
 
 fun Adaptive.accessTest() {
@@ -15,7 +15,7 @@ fun Adaptive.accessTest() {
 }
 
 fun <T> Adaptive.accessor(
-    binding: AdaptiveStateValueBinding<T>? = null,
+    binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("UNUSED_PARAMETER") selector: () -> T
 ) {
     checkNotNull(binding)
@@ -44,9 +44,9 @@ fun box() : String {
         TraceEvent("AdaptiveAccessTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
         TraceEvent("AdaptiveAccessor", 4, "before-Create", ""),
         TraceEvent("AdaptiveAccessor", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateValueBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
-        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateValueBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
+        TraceEvent("AdaptiveAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(3, 0, 0, PropertyMetadata(kotlin.Int), -1)]"),
         TraceEvent("AdaptiveT1", 5, "before-Create", ""),
         TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
         TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),

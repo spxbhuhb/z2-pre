@@ -1,34 +1,34 @@
 package hu.simplexion.z2.adaptive.worker
 
-import hu.simplexion.z2.adaptive.AdaptiveStateValueBinding
+import hu.simplexion.z2.adaptive.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.AdaptiveSupportFunction
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
 class AdaptivePoll<VT>(
-    val stateValueBinding: AdaptiveStateValueBinding<VT>,
+    val binding: AdaptiveStateVariableBinding<VT>,
     val interval: Duration
 ) : AdaptiveWorker {
 
     val pollFunction = AdaptiveSupportFunction(
-        stateValueBinding.owner,
-        stateValueBinding.owner,
-        stateValueBinding.supportFunction
+        binding.owner,
+        binding.owner,
+        binding.supportFunction
     )
 
     var scope: CoroutineScope? = null
 
     override fun replaces(other: AdaptiveWorker): Boolean =
-        other is AdaptivePoll<*> && other.stateValueBinding == this.stateValueBinding
+        other is AdaptivePoll<*> && other.binding == this.binding
 
     override fun start() {
-        scope = CoroutineScope(stateValueBinding.owner.adapter.dispatcher).apply {
+        scope = CoroutineScope(binding.owner.adapter.dispatcher).apply {
             launch {
                 while (isActive) {
 
                     try {
                         @Suppress("UNCHECKED_CAST")
-                        stateValueBinding.value = pollFunction.invokeSuspend() as VT
+                        binding.value = pollFunction.invokeSuspend() as VT
                         delay(interval)
 
                     } catch (e: AdaptiveWorkerCancel) {
@@ -46,7 +46,7 @@ class AdaptivePoll<VT>(
     }
 
     override fun toString(): String {
-        return "AdaptivePoll($stateValueBinding, $interval)"
+        return "AdaptivePoll($binding, $interval)"
     }
 
 }

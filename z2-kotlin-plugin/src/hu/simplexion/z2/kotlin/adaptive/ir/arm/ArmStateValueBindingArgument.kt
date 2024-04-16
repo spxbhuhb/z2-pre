@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.types.IrType
 
 /**
- * A function argument that is an AdaptiveStateValueBinding.
+ * A function argument that is an AdaptiveStateVariableBinding.
  */
 class ArmStateValueBindingArgument(
     armClass: ArmClass,

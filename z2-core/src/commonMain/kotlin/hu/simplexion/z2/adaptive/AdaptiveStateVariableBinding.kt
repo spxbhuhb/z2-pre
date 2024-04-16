@@ -6,7 +6,7 @@ package hu.simplexion.z2.adaptive
 import hu.simplexion.z2.meta.PropertyMetadata
 import hu.simplexion.z2.meta.ValueBinding
 
-data class AdaptiveStateValueBinding<VT>(
+data class AdaptiveStateVariableBinding<VT>(
     val owner: AdaptiveFragment<*>,
     val indexInState: Int,
     val indexInClosure: Int,
@@ -29,6 +29,6 @@ data class AdaptiveStateValueBinding<VT>(
     }
 
     override fun toString(): String {
-        return "AdaptiveStateValueBinding(${owner.id}, $indexInState, $indexInClosure, $metadata, $supportFunction)"
+        return "AdaptiveStateVariableBinding(${owner.id}, $indexInState, $indexInClosure, $metadata, $supportFunction)"
     }
 }

@@ -25,7 +25,7 @@ object Strings {
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
-    const val ADAPTIVE_STATE_VALUE_BINDING = "AdaptiveStateValueBinding"
+    const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
     const val ADAPTIVE_STATE_API = "AdaptiveStateApi"
 
     const val PROPERTY_METADATA = "PropertyMetadata"
@@ -103,7 +103,7 @@ object FqNames {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
-    val ADAPTIVE_STATE_VALUE_BINDING = Strings.ADAPTIVE_STATE_VALUE_BINDING.runtime
+    val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.runtime
     val ADAPTIVE_STATE_API = Strings.ADAPTIVE_STATE_API.runtime
 
 }
@@ -189,16 +189,16 @@ object Indices {
     const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 2
 
     /**
-     * AdaptiveStateValueBinding constructor arguments
+     * AdaptiveStateVariableBinding constructor arguments
      */
-    const val ADAPTIVE_STATE_VALUE_BINDING_ARGUMENT_COUNT = 6
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_ARGUMENT_COUNT = 6
 
-    const val ADAPTIVE_STATE_VALUE_BINDING_OWNER = 0
-    const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_STATE = 1
-    const val ADAPTIVE_STATE_VALUE_BINDING_INDEX_IN_CLOSURE = 2
-    const val ADAPTIVE_STATE_VALUE_BINDING_SUPPORT_FUNCTION = 3
-    const val ADAPTIVE_STATE_VALUE_BINDING_METADATA = 4
-    const val ADAPTIVE_STATE_VALUE_BINDING_CALLBACK = 5
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_OWNER = 0
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_STATE = 1
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_CLOSURE = 2
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_SUPPORT_FUNCTION = 3
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_METADATA = 4
+    const val ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK = 5
 
     /**
      * PropertyMetadata constructor arguments

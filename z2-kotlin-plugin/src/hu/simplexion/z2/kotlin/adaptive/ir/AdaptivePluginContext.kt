@@ -45,7 +45,7 @@ class AdaptivePluginContext(
     val adaptiveSupportFunctionIndex = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_INDEX))
     val adaptiveSupportFunctionReceivingFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT))
 
-    val adaptiveStateValueBindingClass = classSymbol(FqNames.ADAPTIVE_STATE_VALUE_BINDING)
+    val adaptiveStateVariableBindingClass = classSymbol(FqNames.ADAPTIVE_STATE_VARIABLE_BINDING)
     val propertyMetadataClass = checkNotNull(irContext.referenceClass(ClassIds.PROPERTY_METADATA))
 
     val index = property(Strings.INDEX)

@@ -54,8 +54,8 @@ class PollTest {
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.int), 0), 0s)"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateValueBinding(2, 0, 0, PropertyMetadata(kotlin.int), 0), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, PropertyMetadata(kotlin.int), 0), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, PropertyMetadata(kotlin.int), 0), 0s)"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "before-Create", ""),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -133,7 +133,7 @@ class AdaptivePollTest(
                 0,
                 poll(
                     Duration.ZERO, 2,
-                    AdaptiveStateValueBinding(this, 0, 0, 0, PropertyMetadata("kotlin.int")),
+                    AdaptiveStateVariableBinding(this, 0, 0, 0, PropertyMetadata("kotlin.int")),
                     null
                 )
             )

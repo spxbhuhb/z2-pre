@@ -383,7 +383,7 @@ class IrFunction2ArmClass(
             indexInClosure,
             expression.function.returnType,
             -1,
-            adaptiveContext.adaptiveStateValueBindingClass.defaultType,
+            adaptiveContext.adaptiveStateVariableBindingClass.defaultType,
             expression,
             expression.dependencies()
         )
