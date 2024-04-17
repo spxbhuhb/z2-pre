@@ -3,7 +3,6 @@
  */
 package hu.simplexion.z2.adaptive
 
-import hu.simplexion.z2.adaptive.binding.AdaptivePropertyMetadata
 import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.testing.*
 import kotlin.test.Test
@@ -46,9 +45,11 @@ class AccessTest {
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveAccessor", 3, "before-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1, null)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1, null)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.Int), -1, null)]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, -1, AdaptivePropertyMetadata(kotlin.Int))"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, -1, AdaptivePropertyMetadata(kotlin.Int))"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, -1, AdaptivePropertyMetadata(kotlin.Int))]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, -1, AdaptivePropertyMetadata(kotlin.Int))]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, -1, AdaptivePropertyMetadata(kotlin.Int))]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -66,7 +67,7 @@ class AccessTest {
                     //@formatter:on
                 )
             ),
-            adapter.actual(dumpCode = false)
+            adapter.actual(dumpCode = true)
         )
     }
 }
@@ -98,19 +99,7 @@ class AdaptiveAccessBindingTest(
         when (fragment.index) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
-                    fragment.setStateVariable(
-                        0,
-                        AdaptiveStateVariableBinding<Int>(
-                            this,
-                            0,
-                            0,
-                            this,
-                            0,
-                            null,
-                            - 1,
-                            AdaptivePropertyMetadata("kotlin.Int")
-                        )
-                    )
+                    setBinding(0, fragment, 0, null, "kotlin.Int")
                 }
             }
         }

@@ -8,6 +8,6 @@ interface AdaptivePropertyProvider {
 
     fun getValue(path : Array<String>) : Any?
 
-    fun setValue(path : Array<String>, value : Any?)
+    fun setValue(path : Array<String>, value : Any?, fromBinding: AdaptiveStateVariableBinding<*>)
 
 }

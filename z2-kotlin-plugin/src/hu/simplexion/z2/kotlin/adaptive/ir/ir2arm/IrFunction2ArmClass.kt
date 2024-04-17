@@ -370,7 +370,8 @@ class IrFunction2ArmClass(
     private fun transformAccessSelector(armCall: ArmCall, expression: IrExpression) {
         check(expression is IrFunctionExpression)
 
-        val stateVariableName = flattenGetValues(expression).last()
+        val path = flattenGetValues(expression)
+        val stateVariableName = path.last()
 
         val indexInClosure = armCall.closure.indexOfFirst { it.name == stateVariableName }
         val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != -1 }
@@ -383,6 +384,7 @@ class IrFunction2ArmClass(
             indexInClosure,
             expression.function.returnType,
             -1,
+            path.dropLast(1),
             adaptiveContext.adaptiveStateVariableBindingClass.defaultType,
             expression,
             expression.dependencies()

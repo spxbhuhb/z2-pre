@@ -77,6 +77,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
+            @TestMetadata("propertyAccessBinding.kt")
+            public void testPropertyAccessBinding() throws Exception {
+                runTest("testData/box/adaptive/call/propertyAccessBinding.kt");
+            }
+
+            @Test
             @TestMetadata("withDefault.kt")
             public void testWithDefault() throws Exception {
                 runTest("testData/box/adaptive/call/withDefault.kt");

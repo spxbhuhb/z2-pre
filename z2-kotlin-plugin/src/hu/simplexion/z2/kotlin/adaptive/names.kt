@@ -49,6 +49,8 @@ object Strings {
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
     const val INVALID_INDEX = "invalidIndex"
+    const val LOCAL_BINDING = "localBinding"
+    const val SET_BINDING = "setBinding"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
@@ -115,7 +117,6 @@ object FqNames {
 }
 
 object ClassIds {
-    val ADAPTIVE_PROPERTY_METADATA = ClassId(FqNames.BINDING_PACKAGE, Names.PROPERTY_METADATA)
     val ADAPTIVE_STATE_VARIABLE_BINDING = ClassId(FqNames.BINDING_PACKAGE, Names.ADAPTIVE_STATE_VARIABLE_BINDING)
 }
 
@@ -194,26 +195,6 @@ object Indices {
     const val ADAPTIVE_SUPPORT_FUNCTION_DECLARING_FRAGMENT = 0
     const val ADAPTIVE_SUPPORT_FUNCTION_RECEIVING_FRAGMENT = 1
     const val ADAPTIVE_SUPPORT_FUNCTION_INDEX = 2
-
-    /**
-     * AdaptiveStateVariableBinding constructor arguments
-     */
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_ARGUMENT_COUNT = 7
-
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_OWNER = 0
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_STATE = 1
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_CLOSURE = 2
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_SUPPORT_FUNCTION = 3
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_METADATA = 4
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_PATH = 5
-    const val ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK = 6
-
-    /**
-     * AdaptivePropertyMetadata constructor arguments
-     */
-    const val ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT = 1
-
-    const val ADAPTIVE_PROPERTY_METADATA_TYPE = 0
 
     /**
      * Structural fragment state indices

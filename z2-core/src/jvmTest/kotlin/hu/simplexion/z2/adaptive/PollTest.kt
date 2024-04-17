@@ -3,8 +3,6 @@
  */
 package hu.simplexion.z2.adaptive
 
-import hu.simplexion.z2.adaptive.binding.AdaptivePropertyMetadata
-import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.testing.*
 import hu.simplexion.z2.adaptive.worker.cancelWorker
 import hu.simplexion.z2.adaptive.worker.poll
@@ -55,8 +53,8 @@ class PollTest {
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.int), 0), 0s)"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, AdaptivePropertyMetadata(kotlin.int), 0), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "before-Create", ""),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -130,14 +128,7 @@ class AdaptivePollTest(
 
     override fun genPatchInternal() {
         if (getThisClosureDirtyMask() == adaptiveInitStateMask) {
-            this.setStateVariable(
-                0,
-                poll(
-                    Duration.ZERO, 2,
-                    AdaptiveStateVariableBinding(this, 0, 0, this, 0, null, -1, AdaptivePropertyMetadata("kotlin.int")),
-                    null
-                )
-            )
+            this.setStateVariable(0, poll(Duration.ZERO, 2, localBinding(0, 0, "kotlin.int"), null))
         }
     }
 

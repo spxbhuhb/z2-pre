@@ -129,7 +129,11 @@ class StateAccessTransform(
         val getValue = expression.dispatchReceiver as? IrGetValue ?: return transformNonSupportCall(expression)
         val valueParameterSymbol = getValue.symbol as? IrValueParameterSymbol ?: return transformNonSupportCall(expression)
 
-        val stateVariable = closure.first { it.name == valueParameterSymbol.owner.name.identifier }
+        val name = valueParameterSymbol.owner.name
+
+        if (name.isSpecial) return transformNonSupportCall(expression)
+
+        val stateVariable = closure.first { it.name == name.identifier }
 
         return IrCallImpl(
             expression.startOffset, expression.endOffset,

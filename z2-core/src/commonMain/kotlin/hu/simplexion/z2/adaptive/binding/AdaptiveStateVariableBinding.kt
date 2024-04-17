@@ -12,7 +12,7 @@ class AdaptiveStateVariableBinding<VT>(
     val targetFragment: AdaptiveFragment<*>,
     val indexInTargetState: Int,
     val path: Array<String>?,
-    val supportFunction: Int,
+    val supportFunctionIndex: Int,
     val metadata: AdaptivePropertyMetadata,
 ) {
 
@@ -35,22 +35,26 @@ class AdaptiveStateVariableBinding<VT>(
             val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 
             check(provider is AdaptivePropertyProvider)
+
             if (setProviderValue) {
-                provider.setValue(path, value)
+                provider.setValue(path, value, this)
             }
 
+            // FIXME setting dirty masks and change propagation at bound value change
+            // the line above behave very strange, find out why
+            // sourceFragment.setDirty(indexInSourceState, true)
             targetFragment.setDirty(indexInTargetState, true)
         }
     }
 
-    val propertyProvider: Any?
+    val propertyProvider: AdaptivePropertyProvider
         get() {
             check(path != null) { "this binding does not have a property provider" }
-            return sourceFragment.getThisClosureVariable(indexInSourceClosure)
+            return sourceFragment.getThisClosureVariable(indexInSourceClosure) as AdaptivePropertyProvider
         }
 
     override fun toString(): String {
-        return "AdaptiveStateVariableBinding(${sourceFragment.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $supportFunction, $metadata)"
+        return "AdaptiveStateVariableBinding(${sourceFragment.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $supportFunctionIndex, $metadata)"
     }
 
 }

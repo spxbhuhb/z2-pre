@@ -13,7 +13,7 @@ class AdaptivePoll<VT>(
     val pollFunction = AdaptiveSupportFunction(
         binding.sourceFragment,
         binding.sourceFragment,
-        binding.supportFunction
+        binding.supportFunctionIndex
     )
 
     var scope: CoroutineScope? = null

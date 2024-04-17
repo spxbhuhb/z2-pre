@@ -20,7 +20,10 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.transformStatement
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.makeNullable
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -96,7 +99,7 @@ open class ClassBoundIrBuilder(
         return constructorCall
     }
 
-    fun irFragmentFactoryFromPatch(patchFun : IrSimpleFunction, index: Int): IrExpression {
+    fun irFragmentFactoryFromPatch(patchFun: IrSimpleFunction, index: Int): IrExpression {
         val constructorCall =
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -115,7 +118,7 @@ open class ClassBoundIrBuilder(
         return constructorCall
     }
 
-    fun irSetDescendantStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
+    fun irSetDescendantStateVariable(patchFun: IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
@@ -138,7 +141,7 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun irSetStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
+    fun irSetStateVariable(patchFun: IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
         IrCallImpl(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
@@ -161,7 +164,7 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun irGetThisStateVariable(patchFun : IrSimpleFunction, stateVariableIndex: Int) =
+    fun irGetThisStateVariable(patchFun: IrSimpleFunction, stateVariableIndex: Int) =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.anyNType,
@@ -170,7 +173,7 @@ open class ClassBoundIrBuilder(
             Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
         ).also {
 
-            it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!)
+            it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
 
             it.putValueArgument(
                 Indices.GET_CLOSURE_VARIABLE_INDEX,
@@ -218,53 +221,18 @@ open class ClassBoundIrBuilder(
             functionToTransform.endOffset,
             functionToTransform.returnType
         ).apply {
-            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter!!) }, callingFragment, arguments)
+            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter !!) }, callingFragment, arguments)
 
-            functionToTransform.body!!.statements.forEach {
+            functionToTransform.body !!.statements.forEach {
                 statements += it.transformStatement(transform)
             }
         }
     }
 
-    fun genStateVariableBindingInstance(
-        func: IrSimpleFunction,
-        indexInState: Int,
-        indexInClosure: Int,
-        boundType: IrType,
-        supportFunctionIndex: Int
-    ) =
-        IrConstructorCallImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            pluginContext.adaptiveStateVariableBindingClass.defaultType,
-            pluginContext.adaptiveStateVariableBindingClass.constructors.first(),
-            1, 0,
-            Indices.ADAPTIVE_STATE_VARIABLE_BINDING_ARGUMENT_COUNT,
-        ).apply {
-            putTypeArgument(0, boundType)
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_OWNER, irGet(func.dispatchReceiverParameter!!))
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_STATE, irConst(indexInState))
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_INDEX_IN_CLOSURE, irConst(indexInClosure))
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_SUPPORT_FUNCTION, irConst(supportFunctionIndex))
-            putValueArgument(
-                Indices.ADAPTIVE_STATE_VARIABLE_BINDING_METADATA,
-                IrConstructorCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.adaptivePropertyMetadataClass.defaultType,
-                    pluginContext.adaptivePropertyMetadataClass.constructors.first(),
-                    0, 0,
-                    Indices.ADAPTIVE_PROPERTY_METADATA_ARGUMENT_COUNT,
-                ).apply {
-                    putValueArgument(Indices.ADAPTIVE_PROPERTY_METADATA_TYPE, irConst(boundType.classFqName!!.asString()))
-                }
-            )
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_PATH, irNull())
-            putValueArgument(Indices.ADAPTIVE_STATE_VARIABLE_BINDING_CALLBACK, irNull())
-        }
-
     fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
         transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getCreateClosureVariable, false, irGetFragment), null)
 
-    fun IrStatement.transformThisStateAccess(closure: ArmClosure, transformInvoke : Boolean = true, irGetFragment: () -> IrExpression): IrExpression =
+    fun IrStatement.transformThisStateAccess(closure: ArmClosure, transformInvoke: Boolean = true, irGetFragment: () -> IrExpression): IrExpression =
         transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getThisClosureVariable, transformInvoke, irGetFragment), null) as IrExpression
 
     fun ArmDependencies.toDirtyMask(): IrExpression {

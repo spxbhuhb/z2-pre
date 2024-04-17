@@ -3,6 +3,7 @@
  */
 package hu.simplexion.z2.adaptive
 
+import hu.simplexion.z2.adaptive.binding.AdaptivePropertyMetadata
 import hu.simplexion.z2.adaptive.binding.AdaptiveStateVariableBinding
 import hu.simplexion.z2.adaptive.worker.AdaptiveWorker
 
@@ -135,9 +136,6 @@ abstract class AdaptiveFragment<BT>(
 
         innerUnmount(bridge)
 
-        // converting to array so we can safely remove
-        workers?.toTypedArray()?.forEach { removeWorker(it) }
-
         if (trace) trace("after-Unmount", "bridge", bridge)
     }
 
@@ -149,6 +147,10 @@ abstract class AdaptiveFragment<BT>(
         if (trace) trace("before-Dispose")
 
         containedFragment?.dispose()
+
+        // converting to array so we can safely remove
+        workers?.toTypedArray()?.forEach { removeWorker(it) }
+        bindings?.toTypedArray()?.forEach { removeBinding(it) }
 
         if (trace) trace("after-Dispose")
     }
@@ -184,7 +186,7 @@ abstract class AdaptiveFragment<BT>(
         setDirty(index, origin != null)
     }
 
-    fun setDirty(index: Int, callPatch : Boolean) {
+    fun setDirty(index: Int, callPatch: Boolean) {
         dirtyMask = dirtyMask or (1 shl index)
         if (callPatch) {
             patchInternal()
@@ -223,23 +225,75 @@ abstract class AdaptiveFragment<BT>(
     // Binding management
     // --------------------------------------------------------------------------
 
-    fun addValueBinding(binding: AdaptiveStateVariableBinding<*>) {
+    fun addBinding(binding: AdaptiveStateVariableBinding<*>) {
         if (trace) trace("before-Add-Binding", "binding", binding)
 
         val bindings = bindings ?: mutableListOf<AdaptiveStateVariableBinding<*>>().also { bindings = it }
 
         bindings += binding
 
+        if (binding.path != null) {
+            binding.propertyProvider.addBinding(binding)
+        }
+
         if (trace) trace("after-Add-Binding", "binding", binding)
     }
 
+    /**
+     * Creates and sets a binding between a state variable of this fragment and the [descendant] fragment.
+     *
+     * When [path] is not null, the binding is between a property of a state variable from this
+     * fragment and a state variable of the descendant fragment. In this case the state variable
+     * must be implement `AdaptivePropertyProvider`.
+     */
+    fun setBinding(
+        indexInThis: Int,
+        descendant: AdaptiveFragment<BT>,
+        indexInTarget: Int,
+        path: Array<String>? = null,
+        boundType: String,
+    ): AdaptiveStateVariableBinding<*> =
+
+        AdaptiveStateVariableBinding<Int>(
+            sourceFragment = this,
+            indexInSourceState = indexInThis,
+            indexInSourceClosure = indexInTarget,
+            targetFragment = descendant,
+            indexInTargetState = indexInTarget,
+            path = path,
+            metadata = AdaptivePropertyMetadata(boundType),
+            supportFunctionIndex = -1
+        ).also {
+            addBinding(it)
+            descendant.setStateVariable(indexInTarget, it)
+        }
+
     fun removeBinding(binding: AdaptiveStateVariableBinding<*>) {
         if (trace) trace("before-Remove-Binding", "binding", binding)
+
+        if (binding.path != null) {
+            binding.propertyProvider.removeBinding(binding)
+        }
 
         requireNotNull(bindings).remove(binding)
 
         if (trace) trace("after-Remove-Binding", "binding", binding)
     }
+
+    /**
+     * Creates a binding for producer use.
+     */
+    fun localBinding(indexInState : Int, supportFunctionIndex: Int, boundType : String) =
+        AdaptiveStateVariableBinding<Int>(
+            sourceFragment = this,
+            indexInSourceState = indexInState,
+            indexInSourceClosure = indexInState,
+            targetFragment = this,
+            indexInTargetState = indexInState,
+            path = null,
+            metadata = AdaptivePropertyMetadata(boundType),
+            supportFunctionIndex = supportFunctionIndex
+        )
 
     // --------------------------------------------------------------------------
     // Utility functions

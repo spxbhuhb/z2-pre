@@ -21,6 +21,7 @@ class ArmStateVariableBindingArgument(
     val indexInClosure: Int,
     val boundType: IrType,
     val supportFunctionIndex: Int,
+    val path : List<String>,
     type : IrType,
     value: IrFunctionExpression,
     dependencies: ArmDependencies,

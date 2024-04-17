@@ -47,7 +47,6 @@ class AdaptivePluginContext(
     val adaptiveSupportFunctionReceivingFragment = checkNotNull(adaptiveSupportFunctionClass.getPropertyGetter(Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT))
 
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol
-    val adaptivePropertyMetadataClass = ClassIds.ADAPTIVE_PROPERTY_METADATA.classSymbol
 
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
@@ -61,6 +60,8 @@ class AdaptivePluginContext(
     val getCreateClosureVariable = function(Strings.GET_CREATE_CLOSURE_VARIABLE)
     val getThisClosureVariable = function(Strings.GET_THIS_CLOSURE_VARIABLE)
     val setStateVariable = function(Strings.SET_STATE_VARIABLE) { it.owner.valueParameters.size == 2 }
+    val localBinding = function(Strings.LOCAL_BINDING)
+    val setBinding = function(Strings.SET_BINDING)
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
