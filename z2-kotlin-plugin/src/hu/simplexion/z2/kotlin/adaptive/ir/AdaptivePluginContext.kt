@@ -48,6 +48,8 @@ class AdaptivePluginContext(
 
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol
 
+    val adaptiveTransformInterfaceClass = ClassIds.ADAPTIVE_TRANSFORM_INTERFACE.classSymbol
+
     val index = property(Strings.INDEX)
     val parent = property(Strings.PARENT)
 
@@ -70,8 +72,6 @@ class AdaptivePluginContext(
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_FRAGMENT).single(),
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_THIS_STATE).single()
     )
-
-    val adaptiveStateApiClass = classSymbol(FqNames.ADAPTIVE_STATE_API)
 
     private fun property(name: String) =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == name }.map { it.symbol }.toList()

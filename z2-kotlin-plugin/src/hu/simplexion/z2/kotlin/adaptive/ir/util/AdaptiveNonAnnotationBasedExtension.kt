@@ -32,6 +32,9 @@ interface AdaptiveNonAnnotationBasedExtension {
     val IrCall.isArgumentAdaptiveCall: Boolean
         get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver !!.type.isAdaptive // TODO better check for kotlin invoke
 
+    val IrCall.isTransformInterfaceCall: Boolean
+        get() = dispatchReceiver !!.type.isSubtypeOfClass(adaptiveContext.adaptiveTransformInterfaceClass)
+
     fun IrType.isAccessSelector(previousType: IrType?): Boolean {
         if (previousType == null) return false
         if (! isFunctionOrKFunction()) return false

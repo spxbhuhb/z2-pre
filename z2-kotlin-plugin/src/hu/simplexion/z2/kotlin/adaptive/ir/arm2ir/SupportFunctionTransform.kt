@@ -14,10 +14,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.name.Name
 
 class SupportFunctionTransform(
@@ -134,7 +131,7 @@ class SupportFunctionTransform(
         return when (expression.symbol.owner.name.identifier) {
             Strings.HELPER_ADAPTER -> getPropertyValue(Names.HELPER_ADAPTER)
             Strings.HELPER_FRAGMENT -> declaringFragment()
-            Strings.HELPER_THIS_STATE -> getThisState(expression)
+            Strings.HELPER_THIS_STATE -> declaringFragment()
             else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
         }
     }
@@ -142,19 +139,4 @@ class SupportFunctionTransform(
     fun getPropertyValue(name: Name) =
         irBuilder.irGetValue(irBuilder.irClass.property(name), declaringFragment())
 
-    fun getThisState(expression: IrCall): IrExpression {
-        val type = expression.getTypeArgument(0)
-        checkNotNull(type) { "unknown return type for thisState()" }
-
-        check(type.isSubtypeOfClass(pluginContext.adaptiveStateApiClass)) { "requested state class is not subclass of AdaptiveStateApi" }
-
-        return IrConstructorCallImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            type,
-            pluginContext.adaptiveStateApiClass.constructors.first(),
-            0, 0, 1
-        ).apply {
-            putValueArgument(0, declaringFragment())
-        }
-    }
 }

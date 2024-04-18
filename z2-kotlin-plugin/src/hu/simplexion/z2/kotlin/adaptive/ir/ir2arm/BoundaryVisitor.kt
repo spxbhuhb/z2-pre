@@ -9,6 +9,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.util.AdaptiveNonAnnotationBasedExtens
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrReturn
 import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
@@ -29,7 +30,11 @@ class BoundaryVisitor(
         declaration.body?.statements?.let { statements ->
 
             statements.forEachIndexed { index, irStatement ->
-                irStatement.acceptVoid(this)
+                if (irStatement is IrReturn) {
+                    found = true
+                } else {
+                    irStatement.acceptVoid(this)
+                }
                 if (found) return ArmBoundary(irStatement.startOffset, index)
             }
 
@@ -51,5 +56,4 @@ class BoundaryVisitor(
             else -> super.visitCall(expression)
         }
     }
-
 }

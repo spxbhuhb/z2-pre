@@ -8,6 +8,7 @@ import hu.simplexion.z2.kotlin.adaptive.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.z2.kotlin.adaptive.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
@@ -31,4 +32,6 @@ class ArmClass(
 
     var hasInvokeBranch = false
     var hasInvokeSuspendBranch = false
+
+    var stateInterface : IrClassSymbol? = null
 }

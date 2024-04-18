@@ -63,6 +63,7 @@ class ArmCallBuilder(
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->
+
                 for (argument in armCall.arguments) {
                     argument.toPatchExpression(
                         this,
@@ -73,6 +74,18 @@ class ArmCallBuilder(
                     )?.also {
                         block.statements += it
                     }
+                }
+
+                armCall.transforms?.forEach { transform ->
+                    block.statements += transform.irCall
+                        .also {
+                            it.dispatchReceiver =
+                                irImplicitAs(
+                                    it.dispatchReceiver!!.type,
+                                    irGet(patchFun.valueParameters.first())
+                                )
+                        }
+                        .transformCreateStateAccess(armCall.closure) { irGet(patchFun.dispatchReceiverParameter!!) }
                 }
             }
     }

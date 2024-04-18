@@ -58,8 +58,12 @@ class ArmClassBuilder(
         typeParameters()
 
         irClass.parent = originalFunction.file
-        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
         irClass.metadata = armClass.originalFunction.metadata
+        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+
+        armClass.stateInterface?.let {
+            irClass.superTypes += it.defaultType
+        }
 
         thisReceiver()
         constructor()
@@ -199,6 +203,12 @@ class ArmClassBuilder(
         buildFun.isFakeOverride = false
 
         buildFun.body = DeclarationIrBuilder(irContext, buildFun.symbol).irBlockBody {
+
+            if (armClass.rendering.isEmpty()) {
+                + irReturn(irNull())
+                return@irBlockBody
+            }
+
             val fragment = irTemporary(genBuildWhen(buildFun))
 
             + IrCallImpl(

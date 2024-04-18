@@ -6,14 +6,9 @@ package hu.simplexion.z2.kotlin.adaptive.success
 import hu.simplexion.z2.adaptive.*
 import hu.simplexion.z2.adaptive.testing.*
 
-var actual : TestState? = null
+var actual : AdaptiveFragment<*>? = null
 
-class TestState(
-    override val fragment : AdaptiveFragment<*>
-) : AdaptiveStateApi {
-    override val state
-        get() = fragment.state
-}
+interface TestState : AdaptiveTransformInterface
 
 fun box() : String {
 
@@ -23,8 +18,8 @@ fun box() : String {
         actual = thisState()
     }
 
-    val expected = testAdapter.rootFragment.state
+    val expected = testAdapter.rootFragment
 
-    return if (expected === actual?.state) "OK" else "Fail: returned fragment is not the same: $expected $actual"
+    return if (expected === actual) "OK" else "Fail: returned fragment is not the same: $expected $actual"
     
 }

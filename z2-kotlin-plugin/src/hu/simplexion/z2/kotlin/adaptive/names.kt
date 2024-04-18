@@ -27,9 +27,7 @@ object Strings {
     const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
-    const val ADAPTIVE_STATE_API = "AdaptiveStateApi"
-
-    const val ADAPTIVE_PROPERTY_METADATA = "AdaptivePropertyMetadata"
+    const val ADAPTIVE_TRANSFORM_INTERFACE = "AdaptiveTransformInterface"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -86,7 +84,7 @@ object Names {
     val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
 
     val ADAPTIVE_STATE_VARIABLE_BINDING = Name.identifier(Strings.ADAPTIVE_STATE_VARIABLE_BINDING)
-    val PROPERTY_METADATA = Name.identifier(Strings.ADAPTIVE_PROPERTY_METADATA)
+    val ADAPTIVE_TRANSFORM_INTERFACE = Name.identifier(Strings.ADAPTIVE_TRANSFORM_INTERFACE)
 }
 
 object FqNames {
@@ -112,12 +110,11 @@ object FqNames {
     val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
-    val ADAPTIVE_STATE_API = Strings.ADAPTIVE_STATE_API.runtime
-
 }
 
 object ClassIds {
     val ADAPTIVE_STATE_VARIABLE_BINDING = ClassId(FqNames.BINDING_PACKAGE, Names.ADAPTIVE_STATE_VARIABLE_BINDING)
+    val ADAPTIVE_TRANSFORM_INTERFACE = ClassId(FqNames.ADAPTIVE_PACKAGE, Names.ADAPTIVE_TRANSFORM_INTERFACE)
 }
 
 object CallableIds {

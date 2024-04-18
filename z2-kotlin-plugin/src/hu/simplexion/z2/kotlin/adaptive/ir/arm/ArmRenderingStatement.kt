@@ -17,5 +17,6 @@ abstract class ArmRenderingStatement(
 
     var hasInvokeBranch : Boolean = false
     var hasInvokeSuspendBranch : Boolean = false
+    var transforms : MutableList<ArmTransformCall>? = null
 
 }

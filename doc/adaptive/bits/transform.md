@@ -1,23 +1,26 @@
 # Transform
 
-Transform functions change the state of a fragment after it is created but before it is mounted.
-
-They simply make code easier to read.
+Transforms change the state of a fragment **after** their external state variables are set but
+**before** their internal state variables are calculated.
 
 ```kotlin
 fun Adaptive.example() {
-    val a = 12
-    subject() readOnly true 
+    val authorFilter = ""
+    editor { authorFilter }
+    select() query { authorService.query(authorFilter) }
 }
 
-interface SubjectState : AdaptiveState {
-    infix fun readonly(value : Boolean) {
+interface SelectTransformApi : AdaptiveTransformApi {
+    infix fun query(value: suspend () -> List<String>) {
         setStateVariable(0, value)
-        patch()
     }
 }
 
-fun Adaptive.subject() : SubjectState {
+fun Adaptive.select(query: (suspend () -> List<String>)? = null): SelectTransformApi {
+    val authors = fetch(emptyList()) { query?.invoke() }
+
+    /* ... */
+
     return thisState()
 }
 ```

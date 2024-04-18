@@ -4,18 +4,22 @@
 package hu.simplexion.z2.kotlin.adaptive.ir.ir2arm
 
 import hu.simplexion.z2.kotlin.adaptive.ADAPTIVE_STATE_VARIABLE_LIMIT
+import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
 import hu.simplexion.z2.kotlin.adaptive.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
+import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 
 /**
@@ -41,7 +45,7 @@ class IrFunction2ArmClass(
     var fragmentIndex = 0
 
     val nextFragmentIndex
-        get() = fragmentIndex++
+        get() = fragmentIndex ++
 
     var supportIndex = 0
 
@@ -59,6 +63,8 @@ class IrFunction2ArmClass(
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
+
+        returnValue()
 
         transformBlock(armClass.originalRenderingStatements)
 
@@ -80,7 +86,7 @@ class IrFunction2ArmClass(
         return this
     }
 
-    fun withClosure(state: ArmState, transform: () -> ArmRenderingStatement): ArmRenderingStatement {
+    fun withClosure(state: ArmState, transform: () -> ArmRenderingStatement?): ArmRenderingStatement? {
         states.push(state)
         closures.push(states.flatten())
 
@@ -94,8 +100,18 @@ class IrFunction2ArmClass(
         return result
     }
 
-    fun transformStatement(statement: IrStatement): ArmRenderingStatement =
+    fun placeholder(statement: IrStatement) =
+        ArmSequence(
+            armClass,
+            nextFragmentIndex,
+            closure,
+            statement.startOffset,
+            emptyList()
+        ).add()
+
+    fun transformStatement(statement: IrStatement): ArmRenderingStatement? =
         when (statement) {
+
             is IrBlock -> {
                 when (statement.origin) {
                     IrStatementOrigin.FOR_LOOP -> transformLoop(statement)
@@ -108,16 +124,9 @@ class IrFunction2ArmClass(
 
             is IrWhen -> transformWhen(statement)
 
-            is IrReturn -> ArmSequence(
-                armClass,
-                nextFragmentIndex,
-                closure,
-                statement.startOffset,
-                emptyList()
-            ).add() // TODO better check on return statement
+            is IrReturn -> transformReturn(statement)
 
             else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}")
-
         }
 
 
@@ -125,7 +134,7 @@ class IrFunction2ArmClass(
     // Block (may be whatever block: when, if, loop)
     // ---------------------------------------------------------------------------
 
-    fun transformBlock(statements: List<IrStatement>): ArmRenderingStatement {
+    fun transformBlock(statements: List<IrStatement>): ArmRenderingStatement? {
         return if (statements.size == 1) {
             transformStatement(statements.first())
         } else {
@@ -138,7 +147,7 @@ class IrFunction2ArmClass(
             ArmSequence(
                 armClass, sequenceIndex, closure,
                 armClass.boundary.startOffset,
-                statements.map { withClosure(sequenceState) { transformStatement(it) } }
+                statements.mapNotNull { withClosure(sequenceState) { transformStatement(it) } }
             ).add()
         }
     }
@@ -202,7 +211,7 @@ class IrFunction2ArmClass(
 
         val rendering = withClosure(renderingState) {
             transformStatement(block)
-        }
+        } ?: placeholder(block)
 
         return ArmLoop(
             armClass,
@@ -224,10 +233,11 @@ class IrFunction2ArmClass(
     // Call
     // ---------------------------------------------------------------------------
 
-    fun transformCall(irCall: IrCall): ArmRenderingStatement =
+    fun transformCall(irCall: IrCall): ArmRenderingStatement? =
         when {
             irCall.isDirectAdaptiveCall -> transformDirectCall(irCall)
             irCall.isArgumentAdaptiveCall -> transformArgumentCall(irCall)
+            irCall.isTransformInterfaceCall -> transformTransformCallChain(irCall)
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
@@ -242,7 +252,7 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && !it.isSuspend }) {
+        if (armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }) {
             armClass.hasInvokeBranch = true
             armCall.hasInvokeBranch = true
         }
@@ -257,7 +267,7 @@ class IrFunction2ArmClass(
 
     fun transformArgumentCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall)
-        val arguments = (irCall.dispatchReceiver!!.type as IrSimpleTypeImpl).arguments
+        val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
         // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]
         //     kotlin.Function2<
@@ -277,7 +287,7 @@ class IrFunction2ArmClass(
         }
 
         // FIXME do we need invoke branch for argument call?
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && !it.isSuspend }
+        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }
         armCall.hasInvokeSuspendBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }
 
         return armCall.add()
@@ -328,7 +338,7 @@ class IrFunction2ArmClass(
                     ArmSupportFunctionArgument(
                         armClass,
                         armCall.arguments.size,
-                        supportIndex++,
+                        supportIndex ++,
                         closure,
                         parameterType,
                         expression,
@@ -355,7 +365,7 @@ class IrFunction2ArmClass(
             ArmExternalStateVariable(
                 armClass,
                 indexInState,
-                stateVariableIndex++,
+                stateVariableIndex ++,
                 parameter.name.identifier,
                 parameter.type,
                 parameter.symbol
@@ -363,18 +373,18 @@ class IrFunction2ArmClass(
         }
 
         return withClosure(innerState) {
-            transformBlock(expression.function.body!!.statements)
-        }
+            transformBlock(expression.function.body !!.statements)
+        } ?: placeholder(expression.function)
     }
 
     private fun transformAccessSelector(armCall: ArmCall, expression: IrExpression) {
         check(expression is IrFunctionExpression)
 
-        val path = flattenGetValues(expression)
+        val path = flattenAccessorPath(expression)
         val stateVariableName = path.last()
 
         val indexInClosure = armCall.closure.indexOfFirst { it.name == stateVariableName }
-        val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != -1 }
+        val state = states.first { state -> state.indexOfFirst { it.name == stateVariableName } != - 1 }
         val indexInState = state.indexOfFirst { it.name == stateVariableName }
 
         val argument = ArmStateVariableBindingArgument(
@@ -383,7 +393,7 @@ class IrFunction2ArmClass(
             indexInState,
             indexInClosure,
             expression.function.returnType,
-            -1,
+            - 1,
             path.dropLast(1),
             adaptiveContext.adaptiveStateVariableBindingClass.defaultType,
             expression,
@@ -394,7 +404,19 @@ class IrFunction2ArmClass(
         armCall.arguments[armCall.arguments.size - 1] = argument
     }
 
-    fun flattenGetValues(expression: IrExpression): List<String> {
+    /**
+     * Flatten a get chain for accessors. For example: `editor { a.b.c }`.
+     * These should be like this in IR:
+     *
+     * ```text
+     * irReturn              -- return value of the lambda
+     *   irCall              -- property access 1
+     *     ...
+     *       irCall          -- property access N
+     *         irGetValue    -- the starting variable access
+     * ```
+     */
+    fun flattenAccessorPath(expression: IrExpression): List<String> {
         check(expression is IrFunctionExpression)
 
         val body = checkNotNull(expression.function.body) { "missing function body: ${expression.dump()}" }
@@ -432,6 +454,59 @@ class IrFunction2ArmClass(
         return result
     }
 
+    fun transformTransformCallChain(irCall: IrCall): ArmRenderingStatement? {
+        return flattenTransformCalls(irCall)
+    }
+
+    /**
+     * Flatten a call chain for transforms. For example: `editor { a } readOnly true validate { }`
+     *
+     * These should be like this in IR:
+     *
+     * ```text
+     * irCall                -- validate
+     *   irCall              -- readOnly
+     *     irCall            -- editor
+     * ```
+     *
+     * The dispatch receiver of all calls but the last must be an `AdaptiveTransformSubject`
+     */
+    fun flattenTransformCalls(expression: IrExpression): ArmRenderingStatement? {
+        check(expression is IrCall)
+
+        val transforms = mutableListOf(transformTransformCall(expression))
+
+        var current: IrCall? = expression
+
+        while (current != null) {
+
+            val receiver = current.dispatchReceiver
+            check(receiver is IrCall) { "invalid transform chain: ${expression.dumpKotlinLike()}" }
+
+            when {
+                receiver.isDirectAdaptiveCall || receiver.isArgumentAdaptiveCall -> {
+                    return transformCall(receiver).also {
+                        checkNotNull(it) { "illegal transform chain: ${expression.dumpKotlinLike()}" }
+                            .transforms = transforms
+                    }
+                }
+                receiver.isTransformInterfaceCall -> {
+                    transforms += transformTransformCall(receiver)
+                    current = receiver
+                }
+                else -> {
+                    error {"invalid transform chain: ${expression.dumpKotlinLike()}" }
+                }
+            }
+        }
+
+        error {"invalid transform chain: ${expression.dumpKotlinLike()}" }
+    }
+
+    fun transformTransformCall(irCall: IrCall): ArmTransformCall {
+        return ArmTransformCall(irCall)
+    }
+
     // ---------------------------------------------------------------------------
     // When
     // ---------------------------------------------------------------------------
@@ -466,7 +541,7 @@ class IrFunction2ArmClass(
             closure,
             statement.startOffset,
             subject?.symbol,
-            subject?.let { ArmExpression(armClass, it.initializer!!, it.initializer!!.dependencies()) }
+            subject?.let { ArmExpression(armClass, it.initializer !!, it.initializer !!.dependencies()) }
         )
 
         val selectState = listOf(
@@ -478,11 +553,34 @@ class IrFunction2ArmClass(
             ArmBranch(
                 armClass,
                 ArmExpression(armClass, irBranch.condition, irBranch.dependencies()),
-                withClosure(selectState) { transformStatement(irBranch.result) }
+                withClosure(selectState) { transformStatement(irBranch.result) } ?: placeholder(irBranch.result)
             )
         }
 
         return armSelect.add()
+    }
+
+    // ---------------------------------------------------------------------------
+    // Return
+    // ---------------------------------------------------------------------------
+
+    fun transformReturn(statement: IrStatement) : ArmRenderingStatement? {
+        check(statement is IrReturn)
+        if (statement.type == adaptiveContext.irBuiltIns.unitType) return placeholder(statement)
+        return null
+    }
+
+    fun returnValue() {
+        val type = irFunction.returnType
+
+        if (type == adaptiveContext.irContext.irBuiltIns.unitType) return
+
+        val classSymbol = checkNotNull(type.classOrNull) { "missing class: ${type.asString()} in ${irFunction.name}" }
+
+        check(type.isSubtypeOfClass(adaptiveContext.adaptiveTransformInterfaceClass)) { "return type is not subclass of ${Strings.ADAPTIVE_TRANSFORM_INTERFACE} in ${irFunction.name}" }
+        check(classSymbol.owner.isInterface) { "${type.asString()} is not an interface" }
+
+        armClass.stateInterface = classSymbol
     }
 
     // ---------------------------------------------------------------------------

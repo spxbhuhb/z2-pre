@@ -134,7 +134,7 @@ abstract class Schematic<ST : Schematic<ST>> : SchematicNode, LocalizationProvid
         return schematicValues[path[0]]
     }
 
-    override fun setValue(path: Array<String>, value: Any?) {
+    override fun setValue(path: Array<String>, value: Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
         require(path.size == 1) { "deep paths are not supported yet" }
         schematicValues[path[0]] = value
     }

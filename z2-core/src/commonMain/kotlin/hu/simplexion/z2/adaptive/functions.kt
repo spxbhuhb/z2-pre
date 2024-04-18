@@ -12,6 +12,6 @@ fun fragment() : AdaptiveFragment<*> {
     replacedByPlugin("gets the fragment")
 }
 
-fun <T : AdaptiveStateApi> thisState() : T {
-    replacedByPlugin("gets the state of the fragment wrapped into the given state API")
+fun <T : AdaptiveTransformInterface> thisState() : T {
+    replacedByPlugin("gets the fragment as a transfrom interface")
 }
