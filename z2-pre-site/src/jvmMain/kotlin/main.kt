@@ -1,3 +1,4 @@
+import hu.simplexion.z2.application.bootJvm
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserStrings
 import hu.simplexion.z2.browser.demo.strings
@@ -9,7 +10,6 @@ import hu.simplexion.z2.setting.dsl.settingsFromEnvironment
 import hu.simplexion.z2.setting.dsl.settingsFromPropertyFile
 import hu.simplexion.z2.setting.dsl.settingsFromSqlTable
 import hu.simplexion.z2.setting.persistence.SettingTable.Companion.settingTable
-import hu.simplexion.z2.site.boot.bootJvm
 
 fun main() {
 

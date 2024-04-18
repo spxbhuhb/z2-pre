@@ -3,6 +3,7 @@ package hu.simplexion.z2.exposed
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.defaultServiceImplFactory
 import hu.simplexion.z2.util.UUID
+import io.ktor.util.collections.*
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -29,6 +30,8 @@ fun <T> java.util.UUID.z2() =
 val UUID<*>.jvm: java.util.UUID
     get() = java.util.UUID(this.msb, this.lsb)
 
+val knownTables = ConcurrentSet<Table>()
+
 /**
  * Call [SchemaUtils.createMissingTablesAndColumns] to create and/or update the tables
  * passed as parameters.
@@ -37,6 +40,7 @@ fun tables(vararg tables: Table): Array<out Table> {
     transaction {
         SchemaUtils.createMissingTablesAndColumns(*tables)
     }
+    knownTables.addAll(tables)
     return tables
 }
 

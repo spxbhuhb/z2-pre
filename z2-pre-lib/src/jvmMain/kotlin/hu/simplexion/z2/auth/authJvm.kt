@@ -37,6 +37,7 @@ fun authJvm() {
     val firstTimeInit = isAllEmpty(*tables)
 
     val securityOfficerName = setting<String> { ApplicationSettings.SECURITY_OFFICER_NAME_KEY }.valueOrNull ?: "so"
+    val securityOfficerPassword = setting<String> { ApplicationSettings.SECURITY_OFFICER_INITIAL_PASSWORD_KEY }.valueOrNull ?: "so"
 
     val anonymousUuid = setting<UUID<Principal>> { ApplicationSettings.ANONYMOUS_UUID_KEY }.valueOrNull ?: UUID("065cc983-47fb-7530-8000-4a6a6c4c8022")
     val anonymousName = setting<String> { ApplicationSettings.ANONYMOUS_NAME_KEY }.valueOrNull ?: "anonymous"
@@ -44,7 +45,7 @@ fun authJvm() {
     transaction {
         with(applicationSettings) {
             if (firstTimeInit) {
-                makePrincipal(securityOfficerUuid, securityOfficerName, password = securityOfficerName)
+                makePrincipal(securityOfficerUuid, securityOfficerName, securityOfficerPassword)
 
                 makeRole(securityOfficerRole)
                 makeRoleGrant(securityOfficerRole.uuid, securityOfficerUuid)

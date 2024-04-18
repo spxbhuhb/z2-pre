@@ -13,7 +13,6 @@ class ApplicationImpl : ApplicationApi, ServiceImpl<ApplicationImpl> {
 
     override suspend fun applicationSettings(): ApplicationSettings {
         publicAccess()
-
         return hu.simplexion.z2.application.applicationSettings
     }
 }

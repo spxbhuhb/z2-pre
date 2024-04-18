@@ -1,7 +1,6 @@
-package hu.simplexion.z2.site.boot
+package hu.simplexion.z2.application
 
 import hu.simplexion.z2.IBaseStrings
-import hu.simplexion.z2.application.applicationJs
 import hu.simplexion.z2.auth.authJs
 import hu.simplexion.z2.auth.model.Session
 import hu.simplexion.z2.auth.sessionService

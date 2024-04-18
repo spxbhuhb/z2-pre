@@ -21,7 +21,7 @@ open class TableBuilder<T>(
 
     open fun header(builder: HeaderBuilder<T>.() -> Unit) {
         header = true
-        headerBuilder = HeaderBuilder<T>().apply(builder)
+        headerBuilder = { HeaderBuilder<T>().apply(builder).build(table) }
     }
 
     open fun column(builder : ColumnBuilder<T>.() -> Unit) : ColumnBuilder<T> {

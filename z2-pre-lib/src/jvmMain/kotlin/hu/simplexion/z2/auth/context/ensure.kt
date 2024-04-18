@@ -1,11 +1,11 @@
 package hu.simplexion.z2.auth.context
 
+import hu.simplexion.z2.application.isTest
 import hu.simplexion.z2.application.securityOfficerRole
 import hu.simplexion.z2.application.technicalAdminRole
 import hu.simplexion.z2.auth.model.Principal
 import hu.simplexion.z2.auth.model.Role
 import hu.simplexion.z2.services.ServiceImpl
-import hu.simplexion.z2.site.impl.SiteImpl.Companion.siteImpl
 import hu.simplexion.z2.util.UUID
 
 /**
@@ -178,7 +178,7 @@ fun ServiceImpl<*>.ensureSelfOrTechnicalAdmin(principal: UUID<Principal>) {
  * @throws  AccessDenied
  */
 suspend fun ServiceImpl<*>.ensureTest() {
-    if (!siteImpl(serviceContext).isTest()) throw AccessDenied()
+    if (!isTest) throw AccessDenied()
 }
 
 /**

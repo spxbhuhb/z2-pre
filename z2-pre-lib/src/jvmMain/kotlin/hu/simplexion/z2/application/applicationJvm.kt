@@ -8,6 +8,7 @@ import hu.simplexion.z2.application.model.ApplicationSettings.Companion.APPLICAT
 import hu.simplexion.z2.application.model.ApplicationSettings.Companion.APPLICATION_UUID_KEY
 import hu.simplexion.z2.application.model.ApplicationSettings.Companion.SECURITY_OFFICER_ROLE_NAME_KEY
 import hu.simplexion.z2.application.model.ApplicationSettings.Companion.SECURITY_OFFICER_ROLE_UUID_KEY
+import hu.simplexion.z2.application.model.ApplicationSettings.Companion.STATIC_PATH
 import hu.simplexion.z2.application.model.ApplicationSettings.Companion.TECHNICAL_ADMIN_ROLE_NAME_KEY
 import hu.simplexion.z2.application.model.ApplicationSettings.Companion.TECHNICAL_ADMIN_ROLE_UUID_KEY
 import hu.simplexion.z2.auth.model.Principal
@@ -19,6 +20,14 @@ import hu.simplexion.z2.util.UUID
 fun applicationJvm() {
 
     applicationSettings = ApplicationSettings {
+
+        name = setting<String> { ApplicationSettings.APPLICATION_NAME }.valueOrNull ?: ""
+
+        mode = setting<String> { APPLICATION_MODE }.valueOrNull?.let { ApplicationMode.valueOf(it) } ?: ApplicationMode.Test
+
+        url = setting<String> { APPLICATION_URL }.valueOrNull ?: ""
+
+        static = setting<String> { STATIC_PATH }.valueOrNull ?: "./var/static"
 
         applicationUuid = setting<UUID<Principal>> { APPLICATION_UUID_KEY }.valueOrNull ?: UUID("065ca04c-cd6d-7775-8000-5fa6142b4b7b")
 
@@ -33,10 +42,6 @@ fun applicationJvm() {
             programmaticName = setting<String> { TECHNICAL_ADMIN_ROLE_NAME_KEY }.valueOrNull ?: "technical-admin"
             displayName = programmaticName
         }
-
-        mode = setting<String> { APPLICATION_MODE }.valueOrNull?.let { ApplicationMode.valueOf(it) } ?: ApplicationMode.Test
-
-        url = setting<String> { APPLICATION_URL }.valueOrNull ?: ""
 
     }
 

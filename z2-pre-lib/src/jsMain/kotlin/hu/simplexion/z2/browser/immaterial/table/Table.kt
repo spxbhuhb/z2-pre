@@ -140,7 +140,7 @@ class Table<T>(
             tableBuilder.state?.let { setData(it.value) }
         }
 
-        configuration.headerBuilder?.build(this)
+        configuration.headerBuilder?.invoke(this)
 
         gridTemplateRows = if (configuration.header) "min-content 1fr" else "1fr"
         gridTemplateColumns = "1fr"

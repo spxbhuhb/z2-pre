@@ -6,6 +6,7 @@ import hu.simplexion.z2.adaptive.field.registerFieldImpl
 import hu.simplexion.z2.adaptive.field.select.demo.entitySelectDemo
 import hu.simplexion.z2.adaptive.field.select.demo.selectFieldPlayground
 import hu.simplexion.z2.adaptive.field.text.demo.textFieldPlayground
+import hu.simplexion.z2.application.bootJs
 import hu.simplexion.z2.baseStrings
 import hu.simplexion.z2.browser.browserIcons
 import hu.simplexion.z2.browser.browserStrings
@@ -37,7 +38,6 @@ import hu.simplexion.z2.browser.routing.Router
 import hu.simplexion.z2.localization.text.commonStrings
 import hu.simplexion.z2.localization.text.dateTimeStrings
 import hu.simplexion.z2.schematic.schema.validation.validationStrings
-import hu.simplexion.z2.site.boot.bootJs
 import hu.simplexion.z2.util.localLaunch
 
 fun main() {

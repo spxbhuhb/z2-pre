@@ -1,17 +1,14 @@
 package hu.simplexion.z2.email.table
 
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQueueEntry
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.exposed.jvm
 import hu.simplexion.z2.exposed.z2
+import hu.simplexion.z2.util.UUID
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
-import org.jetbrains.exposed.sql.selectAll
 
 open class EmailQueueTable(
     emailTable: EmailTable
@@ -28,10 +25,20 @@ open class EmailQueueTable(
     val lastTry = timestamp("lastTry").nullable()
     val lastFailMessage = text("lastFailMessage").nullable()
 
-    fun insert(uuid: UUID<Email>) {
+    fun insert(entry: EmailQueueEntry) {
         insert {
-            it[email] = uuid.jvm
-            it[tries] = 0
+            it[email] = entry.email.jvm
+            it[tries] = entry.tries
+            it[lastTry] = entry.lastTry
+            it[lastFailMessage] = entry.lastFailMessage
+        }
+    }
+
+    fun update(entry: EmailQueueEntry) {
+        update({ email eq entry.email.jvm }) {
+            it[tries] = entry.tries
+            it[lastTry] = entry.lastTry
+            it[lastFailMessage] = entry.lastFailMessage
         }
     }
 

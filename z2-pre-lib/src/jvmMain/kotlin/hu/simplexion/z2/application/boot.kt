@@ -1,6 +1,5 @@
-package hu.simplexion.z2.site.boot
+package hu.simplexion.z2.application
 
-import hu.simplexion.z2.application.applicationJvm
 import hu.simplexion.z2.auth.authJvm
 import hu.simplexion.z2.content.contentJvm
 import hu.simplexion.z2.email.emailJvm
@@ -10,8 +9,6 @@ import hu.simplexion.z2.ktor.sessionWebsocketServiceCallTransport
 import hu.simplexion.z2.localization.localizationJvm
 import hu.simplexion.z2.setting.dsl.setting
 import hu.simplexion.z2.setting.settingJvm
-import hu.simplexion.z2.site.impl.SiteSettings
-import hu.simplexion.z2.site.siteJvm
 import hu.simplexion.z2.strictId.strictIdJvm
 import hu.simplexion.z2.worker.workerJvm
 import io.ktor.server.application.*
@@ -22,6 +19,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import java.io.File
 import java.time.Duration
 
 /**
@@ -47,7 +45,7 @@ fun bootJvm(earlyConfig: Application.() -> Unit, siteConfig: Application.() -> U
     }
 }
 
-fun Application.module(earlyConfig: Application.() -> Unit, siteConfig: Application.() -> Unit) {
+fun Application.module(earlyConfig: Application.() -> Unit, config: Application.() -> Unit) {
 
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
@@ -66,16 +64,15 @@ fun Application.module(earlyConfig: Application.() -> Unit, siteConfig: Applicat
     settingJvm()
     strictIdJvm()
     workerJvm()
-    siteJvm()
     contentJvm()
     emailJvm()
 
-    siteConfig()
+    config()
 
     routing {
         session()
         sessionWebsocketServiceCallTransport("/z2/services")
-        staticFiles("/", SiteSettings.static.toFile()) {
+        staticFiles("/", File(applicationSettings.static)) {
             this.default("index.html")
         }
     }

@@ -1,11 +1,11 @@
-package hu.simplexion.z2.site.boot
+package hu.simplexion.z2.application
 
 import hu.simplexion.z2.browser.material.snackbar.errorSnackbar
 import hu.simplexion.z2.browser.material.snackbar.warningSnackbar
 import hu.simplexion.z2.localization.text.commonStrings
-import hu.simplexion.z2.services.transport.ServiceErrorHandler
 import hu.simplexion.z2.services.transport.ResponseEnvelope
 import hu.simplexion.z2.services.transport.ServiceCallStatus
+import hu.simplexion.z2.services.transport.ServiceErrorHandler
 
 /**
  * Shows a snackbar when a service call results in an error. Except for:

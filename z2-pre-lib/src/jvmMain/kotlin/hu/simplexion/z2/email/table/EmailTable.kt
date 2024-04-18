@@ -2,12 +2,12 @@ package hu.simplexion.z2.email.table
 
 import hu.simplexion.z2.auth.table.PrincipalTable
 import hu.simplexion.z2.auth.table.PrincipalTable.Companion.principalTable
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.email.model.Email
 import hu.simplexion.z2.email.model.EmailQuery
 import hu.simplexion.z2.email.model.EmailStatus
 import hu.simplexion.z2.exposed.SchematicUuidTable
 import hu.simplexion.z2.exposed.jvm
+import hu.simplexion.z2.util.UUID
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
@@ -39,9 +39,9 @@ open class EmailTable(
     val contentType = varchar("contentType", 60)
     val contentText = text("contentText")
 
-    fun sent(inUuid : UUID<Email>) {
+    fun status(inUuid: UUID<Email>, inStatus: EmailStatus) {
         update(inUuid) {
-            it[status] = EmailStatus.Sent
+            it[status] = inStatus
             it[sentAt] = now()
         }
     }

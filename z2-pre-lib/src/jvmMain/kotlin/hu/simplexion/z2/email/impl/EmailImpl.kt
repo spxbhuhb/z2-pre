@@ -2,7 +2,6 @@ package hu.simplexion.z2.email.impl
 
 import hu.simplexion.z2.auth.context.ensureInternal
 import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
-import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.content.model.Content
 import hu.simplexion.z2.email.api.EmailApi
 import hu.simplexion.z2.email.model.Email
@@ -13,6 +12,7 @@ import hu.simplexion.z2.email.table.EmailQueueTable.Companion.emailQueueTable
 import hu.simplexion.z2.email.table.EmailTable.Companion.emailTable
 import hu.simplexion.z2.email.worker.EmailQueued
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
 
@@ -31,9 +31,14 @@ class EmailImpl : EmailApi, ServiceImpl<EmailImpl> {
         }
 
         val uuid = emailTable.insert(email)
-        emailQueueTable.insert(uuid)
 
-        EmailQueued(uuid).fire()
+        val queueEntry = EmailQueueEntry().also {
+            it.email = uuid
+        }
+
+        emailQueueTable.insert(queueEntry)
+
+        EmailQueued(queueEntry).fire()
     }
 
     override suspend fun query(query: EmailQuery): List<Email> {

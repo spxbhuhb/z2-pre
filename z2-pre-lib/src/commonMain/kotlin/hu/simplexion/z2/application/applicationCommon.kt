@@ -4,7 +4,7 @@ import hu.simplexion.z2.application.model.ApplicationMode
 import hu.simplexion.z2.application.model.ApplicationSettings
 
 val isTest
-    get() = applicationSettings.mode == ApplicationMode.Test
+    get() = applicationSettings.mode != ApplicationMode.Live
 
 val securityOfficerRole
     get() = applicationSettings.securityOfficerRole

@@ -1,5 +1,6 @@
 package hu.simplexion.z2.auth.impl
 
+import hu.simplexion.z2.application.housekeepingScope
 import hu.simplexion.z2.auth.api.SessionApi
 import hu.simplexion.z2.auth.context.*
 import hu.simplexion.z2.auth.impl.AuthAdminImpl.Companion.authAdminImpl
@@ -18,7 +19,6 @@ import hu.simplexion.z2.history.util.securityHistory
 import hu.simplexion.z2.localization.text.LocalizedText
 import hu.simplexion.z2.services.ServiceContext
 import hu.simplexion.z2.services.ServiceImpl
-import hu.simplexion.z2.site.boot.housekeepingScope
 import hu.simplexion.z2.util.UUID
 import hu.simplexion.z2.util.fourRandomInt
 import hu.simplexion.z2.util.vmNowSecond

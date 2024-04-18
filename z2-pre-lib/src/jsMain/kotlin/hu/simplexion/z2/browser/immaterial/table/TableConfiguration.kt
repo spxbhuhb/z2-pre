@@ -4,7 +4,7 @@
 package hu.simplexion.z2.browser.immaterial.table
 
 import hu.simplexion.z2.browser.html.Z2
-import hu.simplexion.z2.browser.immaterial.table.builders.HeaderBuilder
+import hu.simplexion.z2.browser.html.Z2Builder
 import hu.simplexion.z2.localization.icon.LocalizedIcon
 
 /**
@@ -33,7 +33,7 @@ open class TableConfiguration<T> {
     open var multiLevel = false
     open val rowHeight = 42
 
-    open var headerBuilder: HeaderBuilder<T>? = null
+    open var headerBuilder: Z2Builder? = null
 
     open var searchBar: (Z2.() -> Unit)? = null
 
