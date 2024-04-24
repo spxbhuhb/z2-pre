@@ -43,7 +43,7 @@ open class BrowserRouter: Router<Z2>() {
         browserOpen((target.absolutePath(false) + parameters).joinToString("/"))
     }
 
-    fun browserOpen(pathname: String, search: String = "", hash: String = "", changeState: Boolean = true) {
+    open fun browserOpen(pathname: String, search: String = "", hash: String = "", changeState: Boolean = true) {
         io {
             if (stopNavigationOnPending()) return@io
 

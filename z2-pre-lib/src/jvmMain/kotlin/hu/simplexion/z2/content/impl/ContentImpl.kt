@@ -13,8 +13,10 @@ import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.get
 import hu.simplexion.z2.setting.dsl.setting
 import hu.simplexion.z2.util.UUID
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.concurrent.CopyOnWriteArrayList
 
 open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
 
@@ -25,6 +27,8 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         val contentPath by setting<Path> { "CONTENT_PATH" } default Paths.get("./var/tmp")
 
         var globalContentPlacementStrategy: ContentPlacementStrategy = BasicPlacementStrategy(contentPath)
+
+        val uploadStatusCallbacks: MutableList<UploadStatusCallback> = CopyOnWriteArrayList()
 
         val contentImpl = ContentImpl().internal
 
@@ -73,6 +77,7 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         ensureUpload(uuid) {
             abort(false)
             contentTable.cancelUpload(uuid)
+            uploadStatusCallbacks.forEach { it.invoke(uuid, ContentStatus.Cancelled) }
         }
     }
 
@@ -80,6 +85,8 @@ open class ContentImpl : ContentApi, ServiceImpl<ContentImpl> {
         ensureUpload(uuid) {
             close(sha256)
             contentTable.closeUpload(uuid, sha256)
+            TransactionManager.current().commit()
+            uploadStatusCallbacks.forEach { it.invoke(uuid, ContentStatus.Ready) }
         }
     }
 
