@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
 
-const val PLUGIN_VERSION = "2024.04.18"
+const val PLUGIN_VERSION = "2024.05.27"
 const val KOTLIN_COMPILER_PLUGIN_ID = "z2Pre"  // this is how the compiler identifies the plugin
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "hu.simplexion.z2"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "z2-pre-kotlin-plugin"

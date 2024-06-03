@@ -28,6 +28,10 @@ open class TableBuilder<T>(
         return ColumnBuilder<T>().apply(builder).also { columns += it }
     }
 
+    open fun levelColumn(builder: LevelColumnBuilder<T>.() -> Unit) {
+        columns += LevelColumnBuilder<T>().apply(builder)
+    }
+
     open fun actionColumn(builder : ActionColumnBuilder<T>.() -> Unit) {
         columns += ActionColumnBuilder<T>().apply(builder)
     }

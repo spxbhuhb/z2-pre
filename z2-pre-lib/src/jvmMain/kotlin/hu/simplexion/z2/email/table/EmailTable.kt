@@ -42,7 +42,9 @@ open class EmailTable(
     fun status(inUuid: UUID<Email>, inStatus: EmailStatus) {
         update(inUuid) {
             it[status] = inStatus
-            it[sentAt] = now()
+            if (inStatus == EmailStatus.Sent) {
+                it[sentAt] = now()
+            }
         }
     }
 

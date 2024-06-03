@@ -28,8 +28,8 @@ open class TableColumn<T>(
     val renderer: Z2.(row: T) -> Unit,
     val comparator: (T, T) -> Int,
     val filter: (T, String) -> Boolean,
-    var initialSize: String = "1fr",
-    val exportable: Boolean = true,
+    open var initialSize: String = "1fr",
+    open val exportable: Boolean = true,
     val exportHeader: LocalizedText?,
     val exportFun: ((T) -> Any?)?,
     val schemaField: SchemaField<*>?

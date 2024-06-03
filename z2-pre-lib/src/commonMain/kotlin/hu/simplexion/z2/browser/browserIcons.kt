@@ -28,4 +28,6 @@ interface BrowserIcons : LocalizedIconProvider {
     val edit get() = static("edit")
     val schedule get() = static("schedule")
     val empty get() = static("")
+    val arrowRight get() = static("arrow_right")
+    val arrowDropDown get() = static("arrow_drop_down")
 }

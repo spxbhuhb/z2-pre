@@ -102,7 +102,7 @@ abstract class AbstractLocalizedFormats(
                 val integral = s.substring(0, cutAt).withSeparators(config.thousandSeparator)
                 val decimal = s.substring(cutAt)
 
-                println("$value $s $cutAt $decimals sign:$sign integral:$integral decimal:$decimal")
+                // println("$value $s $cutAt $decimals sign:$sign integral:$integral decimal:$decimal")
 
                 return sign + integral + config.decimalSeparator + decimal
             }

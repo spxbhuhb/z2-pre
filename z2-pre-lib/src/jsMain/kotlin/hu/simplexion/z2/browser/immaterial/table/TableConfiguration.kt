@@ -32,12 +32,15 @@ open class TableConfiguration<T> {
     open var icon: LocalizedIcon? = null
     open var multiLevel = false
     open val rowHeight = 42
+    open var noScroll = false
 
     open var headerBuilder: Z2Builder? = null
 
     open var searchBar: (Z2.() -> Unit)? = null
 
     open var doubleClickFun : ((T) -> Unit)? = null
+
+    open var getRowLevel: ((T) -> Int)? = null
 
     var filterFun: ((row : T) -> Boolean)? = null
 

@@ -16,6 +16,7 @@ import hu.simplexion.z2.browser.util.getDatasetEntry
 import hu.simplexion.z2.browser.util.launchApply
 import hu.simplexion.z2.deprecated.event.AnonymousEventListener
 import hu.simplexion.z2.deprecated.event.EventCentral
+import hu.simplexion.z2.util.localLaunch
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.datetime.*
@@ -194,8 +195,13 @@ class Table<T>(
         when {
             query != null && (configuration.runQueryOnResume || firstOnResume) -> {
                 setData(emptyList())
-                launchApply {
-                    setData(query()) // calls render
+                localLaunch {
+                    try {
+                        setData(query()) // calls render
+                    } catch (ex: Throwable) {
+                        // TODO add a function to Application to channel all errors into one place, notify the user, upload the error report, etc.
+                        ex.printStackTrace()
+                    }
                 }
             }
 
@@ -524,7 +530,11 @@ class Table<T>(
 
     fun adjustBottomPlaceHolder() {
         var placeHolderCell = tableBodyElement.lastElementChild?.firstElementChild as HTMLTableCellElement?
-        val placeHolderHeight = "${rowHeight * (renderData.size - (firstAttachedRowIndex + attachedRowCount))}px"
+        val placeHolderHeight = if (configuration.noScroll) {
+            "0px"
+        } else {
+            "${rowHeight * (renderData.size - (firstAttachedRowIndex + attachedRowCount))}px"
+        }
         while (placeHolderCell != null) {
             placeHolderCell.style.minHeight = placeHolderHeight
             placeHolderCell.style.height = placeHolderHeight
@@ -832,10 +842,10 @@ class Table<T>(
 
         while (index < fullData.size) {
             val row = fullData[index]
-            var match = (searchText == null || filterRow(row.data, lc))
+            var match = filterRow(row.data, lc) // searchText == null ||
 
             if (row.levelState == TableRowLevelState.Single) {
-                println("$index ${row.levelState} ${row.level}")
+                if (traceMultiLevel) println("$index ${row.levelState} ${row.level}")
                 if (match) {
                     filterResult += row
                     renderResult += row
@@ -852,7 +862,7 @@ class Table<T>(
                 filterResult += row
                 filterResult += children
                 renderResult += row
-                println("$index ${row.levelState} ${row.level} ${children.size}")
+                if (traceMultiLevel) println("$index ${row.levelState} ${row.level} ${children.size}")
                 if (row.levelState == TableRowLevelState.Open) {
                     renderResult += children
                 }
@@ -887,7 +897,7 @@ class Table<T>(
      * means that the row is always shown (if not filtered out).
      */
     fun getRowLevel(row: TableRow<T>): Int {
-        return 0
+        return configuration.getRowLevel?.invoke(row.data) ?: 0
     }
 
     fun toggleMultiLevelRow(row: TableRow<T>) {
@@ -906,7 +916,7 @@ class Table<T>(
 
         if (traceMultiLevel) println("openMultiLevel ${row.index}")
 
-        val renderIndex = renderData.indexOf(row)
+        val renderIndex = renderData.indexOfFirst { it.index == row.index }
         val children = getChildren(filteredData, filteredData.indexOf(row), row.level)
 
         renderData.addAll(renderIndex + 1, children)
@@ -922,7 +932,7 @@ class Table<T>(
 
         if (traceMultiLevel) println("closeMultiLevel ${row.index}")
 
-        val renderIndex = renderData.indexOf(row)
+        val renderIndex = renderData.indexOfFirst { it.index == row.index }
         val children = getChildren(filteredData, filteredData.indexOf(row), row.level)
 
         repeat(children.size) {
@@ -940,6 +950,8 @@ class Table<T>(
         if (attachedRowCount - (renderIndex - firstAttachedRowIndex) < addBelowCount) {
             attachedRowCount += addBelowCount
         }
+
+        attachedRowCount = min(attachedRowCount, renderData.size - 1)
 
         redraw()
     }
