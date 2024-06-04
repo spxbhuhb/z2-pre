@@ -13,7 +13,6 @@ import hu.simplexion.z2.browser.immaterial.schematic.State
 import hu.simplexion.z2.browser.immaterial.table.builders.TableBuilder
 import hu.simplexion.z2.browser.util.downloadCsv
 import hu.simplexion.z2.browser.util.getDatasetEntry
-import hu.simplexion.z2.browser.util.launchApply
 import hu.simplexion.z2.deprecated.event.AnonymousEventListener
 import hu.simplexion.z2.deprecated.event.EventCentral
 import hu.simplexion.z2.util.localLaunch
@@ -313,22 +312,25 @@ class Table<T>(
      * @param  data  The data to set.
      */
     fun setData(data: List<T>): Table<T> {
-        launchApply {
+        localLaunch {
+            try {
+                fullData = data.mapIndexed { index, bo -> TableRow(index, bo) }
+
+                buildMultiLevelState()
+
+                columns.forEach { it.onTableSetData() }
+
+                filter()
+
+                render()
+            } catch (ex: Throwable) {
+                // TODO add a function to Application to channel all errors into one place, notify the user, upload the error report, etc.
+                ex.printStackTrace()
+            }
+        }
 //            preloads.forEach {
 //                it.job.join()
 //            }
-
-            fullData = data.mapIndexed { index, bo -> TableRow(index, bo) }
-
-            buildMultiLevelState()
-
-            columns.forEach { it.onTableSetData() }
-
-            filter()
-
-            render()
-        }
-
         return this
     }
 
@@ -366,8 +368,13 @@ class Table<T>(
      * @param  query  The query to execute
      */
     fun setData(query: suspend () -> List<T>) {
-        launchApply {
-            setData(query())
+        localLaunch {
+            try {
+                setData(query())
+            } catch (ex: Throwable) {
+                // TODO add a function to Application to channel all errors into one place, notify the user, upload the error report, etc.
+                ex.printStackTrace()
+            }
         }
     }
 
@@ -951,7 +958,7 @@ class Table<T>(
             attachedRowCount += addBelowCount
         }
 
-        attachedRowCount = min(attachedRowCount, renderData.size - 1)
+        attachedRowCount = min(attachedRowCount, renderData.size)
 
         redraw()
     }
