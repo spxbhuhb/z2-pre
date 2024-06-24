@@ -163,7 +163,14 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     override suspend fun activateSession(securityCode: String): Session {
         val session = preparedSessions[serviceContext.uuid] ?: throw AccessDenied()
-        if (session.securityCode != securityCode) throw AuthenticationFail("Code")
+        if (session.securityCode != securityCode) {
+            // maybe the user opened way too many windows
+            if (
+                preparedSessions.values.none {
+                    it.principal == session.principal && it.securityCode == securityCode
+                }
+            ) throw AuthenticationFail("Code")
+        }
 
         session.history(baseStrings.securityCodeOk)
 
@@ -231,16 +238,16 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             val principal = principalTable[principalId]
 
             val result = when {
-                ! principal.activated && credentialType != ACTIVATION_KEY -> AuthenticationFail("NotActivated")
+                !principal.activated && credentialType != ACTIVATION_KEY -> AuthenticationFail("NotActivated")
                 principal.locked -> AuthenticationFail("Locked", true)
                 principal.expired -> AuthenticationFail("Expired")
                 principal.anonymized -> AuthenticationFail("Anonymized")
-                ! validCredentials -> AuthenticationFail("InvalidCredentials")
+                !validCredentials -> AuthenticationFail("InvalidCredentials")
                 else -> null
             }
 
             if (result != null) {
-                principal.authFailCount ++
+                principal.authFailCount++
                 principal.lastAuthFail = now()
                 principal.locked = principal.locked || (principal.authFailCount > policy.maxFailedAuths)
 
@@ -253,7 +260,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             }
 
             principal.lastAuthSuccess = now()
-            principal.authSuccessCount ++
+            principal.authSuccessCount++
             principal.authFailCount = 0
 
             principalTable.update(principal.uuid, principal)
@@ -268,7 +275,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
 
     private fun lockState(principalId: UUID<Principal>) {
         var success = false
-        for (tryNumber in 1 .. 5) {
+        for (tryNumber in 1..5) {
             success = authenticateLock.withLock {
                 if (principalId in authenticateInProgress) {
                     Thread.sleep(100)
@@ -280,7 +287,7 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
             }
             if (success) break
         }
-        if (! success) throw RuntimeException("couldn't lock principal state in 5 tries")
+        if (!success) throw RuntimeException("couldn't lock principal state in 5 tries")
     }
 
     private fun releaseState(principalId: UUID<Principal>) {
