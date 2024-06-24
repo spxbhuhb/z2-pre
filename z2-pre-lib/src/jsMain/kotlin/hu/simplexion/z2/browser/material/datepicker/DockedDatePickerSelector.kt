@@ -21,7 +21,7 @@ import kotlin.math.max
 class DockedDatePickerSelector(
     parent: Z2? = null,
     value: LocalDate = hereAndNow().date,
-    val onSelected: (date: LocalDate) -> Unit,
+    val onSelected: (date: LocalDate, close: Boolean) -> Unit,
 ) : Z2(parent) {
 
     companion object {
@@ -32,7 +32,7 @@ class DockedDatePickerSelector(
 
     var value: LocalDate = value
         set(value) {
-            onSelected(value)
+            onSelected(value, false)
             field = value
             dayView()
         }
@@ -67,7 +67,7 @@ class DockedDatePickerSelector(
         div(pl12, pr12) {
             month(value.year, value.month, markedDays = listOf(value), dense = false) {
                 value = it
-                onSelected(it)
+                onSelected(it, true)
             }
         }
     }
@@ -171,7 +171,6 @@ class DockedDatePickerSelector(
 
     fun monthSelected(monthNumber: Int) {
         value = LocalDate(value.year, monthNumber, value.dayOfMonth)
-        onSelected(value)
         dayView()
     }
 
@@ -207,7 +206,6 @@ class DockedDatePickerSelector(
 
     fun yearSelected(year: Int) {
         value = LocalDate(year, value.monthNumber, value.dayOfMonth)
-        onSelected(value)
         dayView()
     }
 

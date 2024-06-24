@@ -18,7 +18,7 @@ fun Z2.datepickerDemo() =
         grid(gridGap24) {
             gridTemplateColumns = "min-content min-content min-content"
 
-            DockedDatePickerSelector(this) { }
+            DockedDatePickerSelector(this) { _, _ -> }
 
             datePicker(label = strings.datepicker) { }
 

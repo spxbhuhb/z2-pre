@@ -22,7 +22,6 @@ fun Z2.dateTimePickerDemo() =
             }
             div().attach(test) {
                 pre {
-                    println("aaa")
                     text { test.dateTimeField }
                     text { "\n" }
                     text { test.optionalDateTimeField }

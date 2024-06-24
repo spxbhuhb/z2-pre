@@ -65,11 +65,11 @@ class DockedDatePicker(
     fun Z2.buildContent() {
         clear()
         div(positionAbsolute) {
-            DockedDatePickerSelector(this, valueOrNull ?: hereAndNow().date) {
-                this@DockedDatePicker.value = it
-                textField.value = it.localized
+            DockedDatePickerSelector(this, valueOrNull ?: hereAndNow().date) { date, close ->
+                this@DockedDatePicker.value = date
+                textField.value = date.localized
                 config.onChange?.invoke(this@DockedDatePicker, value)
-                close()
+                if (close) close()
             }
         }.onMouseDown {
             it.preventDefault()
