@@ -143,8 +143,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         session.history(baseStrings.created)
 
         if (authAdminImpl.getPolicy().twoFactorAuthentication) {
-            preparedSessions[serviceContext.uuid] = session
             session.securityCode = abs(fourRandomInt()[0]).toString().padStart(6, '0').substring(0, 6)
+            preparedSessions[serviceContext.uuid] = session
             sendSecurityCode(session)
         } else {
             activeSessions[serviceContext.uuid] = session
