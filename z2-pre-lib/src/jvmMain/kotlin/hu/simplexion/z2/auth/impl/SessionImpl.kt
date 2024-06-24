@@ -39,6 +39,8 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
     companion object {
         val sessionImpl = SessionImpl().internal
 
+        val longSessionRoles = mutableListOf<UUID<Role>>()
+
         /**
          * Sessions waiting for the second step of 2FA.
          */
@@ -63,10 +65,15 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
                 val next = now + 60
 
                 val cutoff = now - policy.sessionExpirationInterval * 60 // any last activity before the cutoff is too old
+                val longCutoff = now - policy.sessionExpirationInterval * 60 * 8
 
                 activeSessions.values
                     .filter {
-                        it.lastActivity < cutoff
+                        when {
+                            it.lastActivity >= cutoff -> false
+                            it.roles.any { r -> r in longSessionRoles } && it.lastActivity >= longCutoff -> false
+                            else -> true
+                        }
                     }
                     .forEach { session ->
                         activeSessions.remove(session.uuid)
