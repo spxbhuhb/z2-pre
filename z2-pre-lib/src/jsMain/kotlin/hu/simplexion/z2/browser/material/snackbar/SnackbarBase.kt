@@ -15,7 +15,7 @@ class SnackbarBase(
     val message: String,
     val label: LocalizedText?,
     val icon: Boolean,
-    val delay: Long = 2000,
+    val delay: Long = 5000,
     val action: ((event: Event) -> Unit)?
 ) : Z2(null) {
 
