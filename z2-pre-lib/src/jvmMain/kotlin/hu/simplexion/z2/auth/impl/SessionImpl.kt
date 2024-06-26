@@ -300,6 +300,9 @@ class SessionImpl : SessionApi, ServiceImpl<SessionImpl> {
         activeSessions.computeIfPresent(sessionUuid) { _, session ->
             session.lastActivity = vmNowSecond()
             session
+        } ?: preparedSessions.computeIfPresent(sessionUuid) { _, session ->
+            session.lastActivity = vmNowSecond()
+            session
         }
 
 }
