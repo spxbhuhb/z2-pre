@@ -29,7 +29,14 @@ class Z2PreCommandLineProcessor : CommandLineProcessor {
     }
 
     fun String.toWritableDirectory(): File =
-        File(this).also { require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" } }
+
+        File(this).also {
+            try {
+                require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" }
+            } catch (ex: Throwable) {
+
+            }
+        }
 
     companion object {
 

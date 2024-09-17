@@ -908,10 +908,10 @@ class Table<T>(
     }
 
     fun toggleMultiLevelRow(row: TableRow<T>) {
-        if (row.levelState == TableRowLevelState.Closed) {
-            openMultiLevelRow(row)
-        } else {
-            closeMultiLevelRow(row)
+        when (row.levelState) {
+            TableRowLevelState.Single -> Unit
+            TableRowLevelState.Open -> closeMultiLevelRow(row)
+            TableRowLevelState.Closed -> openMultiLevelRow(row)
         }
     }
 
