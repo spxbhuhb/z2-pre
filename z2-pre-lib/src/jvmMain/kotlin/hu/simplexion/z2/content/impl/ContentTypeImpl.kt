@@ -1,13 +1,13 @@
 package hu.simplexion.z2.content.impl
 
 import hu.simplexion.z2.auth.context.ensureLoggedIn
-import hu.simplexion.z2.auth.context.ensureSecurityOfficer
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.auth.context.ensureTechnicalAdmin
 import hu.simplexion.z2.content.api.ContentTypeApi
 import hu.simplexion.z2.content.model.ContentType
 import hu.simplexion.z2.content.table.ContentTypeTable.Companion.contentTypeTable
 import hu.simplexion.z2.schematic.ensureValid
 import hu.simplexion.z2.services.ServiceImpl
+import hu.simplexion.z2.util.UUID
 
 open class ContentTypeImpl : ContentTypeApi, ServiceImpl<ContentTypeImpl> {
 
@@ -26,13 +26,13 @@ open class ContentTypeImpl : ContentTypeApi, ServiceImpl<ContentTypeImpl> {
     }
 
     override suspend fun add(contentType: ContentType) {
-        ensureSecurityOfficer()
+        ensureTechnicalAdmin()
         ensureValid(contentType, true)
         contentTypeTable.insert(contentType)
     }
 
     override suspend fun update(contentType: ContentType) {
-        ensureSecurityOfficer()
+        ensureTechnicalAdmin()
         ensureValid(contentType)
         contentTypeTable.update(contentType.uuid, contentType)
     }
