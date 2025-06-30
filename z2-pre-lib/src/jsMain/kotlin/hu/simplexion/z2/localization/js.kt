@@ -13,10 +13,21 @@ val translationService = getService<TranslationApi>()
 
 lateinit var effectiveLocale: Locale
 
-suspend fun localeJs() {
+suspend fun localeJs(language: String? = null, set: Boolean = false) {
     localizationCommon()
 
-    effectiveLocale = localeService.getLocale(window.navigator.language)
+    var effectiveLanguage = language
+    val storedLanguage = window.localStorage.getItem("userLanguage");
+
+    if (effectiveLanguage == null) {
+        effectiveLanguage = storedLanguage ?: window.navigator.language
+    }
+
+    if (set) {
+        window.localStorage.setItem("userLanguage", effectiveLanguage)
+    }
+
+    effectiveLocale = localeService.getLocale(effectiveLanguage)
 
     for (translation in translationService.list(effectiveLocale.uuid)) {
         val text = localizedTextStore[translation.key]
