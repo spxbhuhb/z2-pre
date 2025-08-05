@@ -17,12 +17,12 @@ interface ICommonStrings : LocalizedTextProvider {
     val save get() = static("mentés", name = "save")
     val cancel get() = static("mégse", name = "cancel")
 
-    val communicationError get() = static("Kommunikációs hiba, kérem frissítse az oldalt.")
-    val timeoutError get() = static("A szerver nem válaszolt időben, kérem frissítse az oldalt.")
-    val responseError get() = static("A szerver végrehajtási hibát jelzett, kérem vegye fel a kapcsolatot az üzemeltetéssel.")
-    val expiredSession get() = static("Lejárt munkamenet, kérem frissítse az oldalt.")
-    val expiredSessionRedirectToLogin get() = static("Lejárt munkamenet, kérjük lépjen be újra.")
+    val communicationError get() = static("Kommunikációs hiba, kérem frissítse az oldalt.", name = "communicationError")
+    val timeoutError get() = static("A szerver nem válaszolt időben, kérem frissítse az oldalt.", name = "timeoutError")
+    val responseError get() = static("A szerver végrehajtási hibát jelzett, kérem vegye fel a kapcsolatot az üzemeltetéssel.", name = "responseError")
+    val expiredSession get() = static("Lejárt munkamenet, kérem frissítse az oldalt.", name = "expiredSession")
+    val expiredSessionRedirectToLogin get() = static("Lejárt munkamenet, kérjük lépjen be újra.", name = "expiredSessionRedirectToLogin")
 
-    val lostConnection get() = static("Elveszett a kapcsolat a szerverrel.")
+    val lostConnection get() = static("Elveszett a kapcsolat a szerverrel.", name = "lostConnection")
 
 }
