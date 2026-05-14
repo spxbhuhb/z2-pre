@@ -5,7 +5,7 @@ plugins {
     kotlin("multiplatform") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     java
-    signing
+//    signing
     `maven-publish`
 }
 
@@ -100,12 +100,12 @@ if (isPublishing) {
         }
     }
 
-    signing {
-        if (project.properties["signing.keyId"] == null) {
-            useGpgCmd()
-        }
-        sign(publishing.publications)
-    }
+//    signing {
+//        if (project.properties["signing.keyId"] == null) {
+//            useGpgCmd()
+//        }
+//        sign(publishing.publications)
+//    }
 
     publishing {
 

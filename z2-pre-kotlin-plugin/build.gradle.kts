@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     kotlin("jvm") version "1.9.10"
-    signing
+//    signing
     `maven-publish`
 }
 
@@ -120,12 +120,12 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-signing {
-    if (project.properties["signing.keyId"] == null) {
-        useGpgCmd()
-    }
-    sign(publishing.publications)
-}
+//signing {
+//    if (project.properties["signing.keyId"] == null) {
+//        useGpgCmd()
+//    }
+//    sign(publishing.publications)
+//}
 
 publishing {
 

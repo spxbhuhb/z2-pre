@@ -4,7 +4,7 @@
 plugins {
     id("com.gradle.plugin-publish") version "1.1.0"
     kotlin("jvm") version "1.9.10"
-    signing
+//    signing
     `maven-publish`
 }
 
@@ -50,12 +50,12 @@ val publishUsername = "z2.publish.username".propValue
 val publishPassword = "z2.publish.password".propValue
 val isSnapshot = "SNAPSHOT" in project.version.toString()
 
-signing {
-    if (project.properties["signing.keyId"] == null) {
-        useGpgCmd()
-    }
-    sign(publishing.publications)
-}
+//signing {
+//    if (project.properties["signing.keyId"] == null) {
+//        useGpgCmd()
+//    }
+//    sign(publishing.publications)
+//}
 
 publishing {
 

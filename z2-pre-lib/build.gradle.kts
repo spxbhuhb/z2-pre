@@ -5,7 +5,7 @@ plugins {
     kotlin("multiplatform") version "1.9.10"
     id("hu.simplexion.z2.pre") version "2024.06.24"
     java
-    signing
+//    signing
     `maven-publish`
 }
 
@@ -146,12 +146,12 @@ if (isPublishing) {
         }
     }
 
-    signing {
-        if (project.properties["signing.keyId"] == null) {
-            useGpgCmd()
-        }
-        sign(publishing.publications)
-    }
+//    signing {
+//        if (project.properties["signing.keyId"] == null) {
+//            useGpgCmd()
+//        }
+//        sign(publishing.publications)
+//    }
 
     publishing {
 
